@@ -1,0 +1,1723 @@
+[
+  {
+    "id": "proxmark3-rdv4-iceman",
+    "hardware_id": "proxmark3-rdv4",
+    "name": "Proxmark3 RDV4.01",
+    "firmware": "Iceman (RfidResearchGroup)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/RfidResearchGroup/proxmark3",
+    "firmware_note": "RRG builds both the board and this firmware and ships it pre-flashed, so on an RDV4 'Iceman' is the stock firmware, not a mod. It is also the only tree that supports the RDV4-only hardware: the 256KB external SPI flash, the SIM/SAM slot and the Blue Shark BLE module.",
+    "vendor": "RFID Research Group (ProxGrind)",
+    "vendor_url": "https://proxmark.com",
+    "product_url": "https://lab401.com/products/proxmark-3-rdv4",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-research-platform",
+    "status": "available",
+    "released": "2018",
+    "price_usd": 355,
+    "price_note": "US$355 at Red Team Tools for the standard kit; EUR329-529 at Lab401 depending on pack. Budget more: the Blue Shark battery/BLE module is US$110 (EUR99), long-range LF or HF antenna packs EUR79.99 each, and the accessory pack is US$100. A working field kit lands closer to US$500.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "advanced",
+    "skill_note": "Command-line only, and the client will happily let you run the wrong attack on the wrong card type all day. You need to know what protocol you are looking at before the tool helps you.",
+    "build_effort": "assembled",
+    "build_note": "Ships flashed and with antennas already tuned. Updating is one script (./pm3-flash-all) and there is none of the memory-size roulette that plagues clones.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "The reference RFID research platform: an ARM microcontroller plus an FPGA that does the modulation and demodulation for both 125/134 kHz LF and 13.56 MHz HF in software. Because the radio is an FPGA rather than a fixed-function reader IC, it can talk to protocols nobody has written a driver for yet, sniff raw traffic between a card and a reader, and emulate cards at the bit level. It is the tool the published attacks are written against.",
+    "honest_take": "It does not break modern cards. There is no attack on this or any other device that recovers a MIFARE DESFire EV1/EV2/EV3 AES key, a MIFARE Plus SL3 key, or an iCLASS SE / SEOS credential from the card alone - the Proxmark's own documentation states flatly that for SE/SEOS 'there is no card-only attack vectors'. Essentially every 'watch me clone this badge' video is either LF 125 kHz (unauthenticated by design, trivial) or MIFARE Classic (cryptographically broken since 2008). What you are buying is the ability to find out which of those a site is actually using, and to work with raw protocol when it is neither.",
+    "best_for": [
+      "Auditing which badge technology a site actually deployed, rather than what the integrator claims",
+      "Raw protocol sniffing between an unknown card and its reader",
+      "MIFARE Classic and iCLASS Legacy key recovery",
+      "Writing and testing new RFID attacks - this is the platform published research targets"
+    ],
+    "not_for": [
+      "Cloning DESFire, MIFARE Plus SL3, iCLASS SE or SEOS credentials",
+      "Cloning a contactless bank card or making a payment",
+      "Anyone who wants a one-button cloner - buy an iCopy-X or a T5577 cloner gun instead",
+      "Long-range badge capture - read range is centimetres, not metres"
+    ],
+    "hardware": {
+      "mcu_primary": "AT91SAM7S512",
+      "mcu_primary_note": "ARM7TDMI at 48 MHz, 512KB flash, 64KB RAM. The 512KB matters: the Iceman firmware now requires a 512KB part.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "XC2S30",
+          "role": "rfid-lf-hf",
+          "note": "Xilinx Spartan-II FPGA, 30k gates, 5V tolerant. Does the digital modulation/demodulation for both LF and HF. This is why the Proxmark can handle undocumented protocols: it is not a reader chip with a fixed command set, it is reconfigurable logic driving a discrete analog front end."
+        },
+        {
+          "ic": null,
+          "role": "analog-front-end",
+          "note": "Discrete LF and HF analog front ends with swappable antennas. LF ~70mm read at 65V drive; HF 40-85mm at 44V with the stock antenna, up to 100-120mm with the long-range HF antenna. Exact AFE part numbers not published as a single BOM."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery in the base unit - it is USB powered. The optional Blue Shark module adds a Li-Po and Bluetooth LE, which is what makes the standalone modes usable away from a laptop.",
+      "charging": "USB micro-B",
+      "pmic": null,
+      "storage": "256KB external SPI flash for key dictionaries and standalone-mode dumps (RDV4 only - generic Proxmark3 boards do not have this)",
+      "connectivity": [
+        "USB micro-B",
+        "FPC multiplexing connector",
+        "SIM/SAM slot",
+        "Bluetooth LE (Blue Shark add-on)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "87 x 54 x 10",
+      "weight_g": null,
+      "case": "ABS",
+      "notable_physical": [
+        "Swappable, individually tuned LF and HF antennas",
+        "SIM/SAM slot - takes a genuine HID SAM, which is what enables 'hf iclass sam' and 'hf seos pacs'",
+        "Antenna Q-switch and a 125/134 kHz frequency switch (both new in the .01 revision)",
+        "Gold-plated FPC connector and reduced supply noise vs the original RDV4"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM410x, HID Prox, Indala, AWID, ioProx, Paradox, Viking, Keri, Nedap, FDX-B, Hitag, EM4x05/4x50/4x70 and more. None of these authenticate - the card broadcasts its ID to anything that energises it. Cloning LF is a solved, unauthenticated problem and always has been."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "T5577 is the universal writable blank and the client has a dedicated guide for it; EM4305/EM4x05 and Hitag also writable. 'lf hid clone', 'lf em 410x clone' etc. write a captured ID straight to a blank."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "'lf simfsk/simask/simpsk' and per-format sim commands. Also brute-force standalone modes (LF_HIDBRUTE, LF_PROXBRUTE, LF_HIDFCBRUTE) that walk card numbers within a facility code at a reader."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443A and B, ISO15693, FeliCa, Legic, Topaz, iCLASS/PicoPass, CIPURSE, ISO7816 smartcards via the SAM slot. Reading an iCLASS SE or SEOS card gets you its identity and structure; 'hf seos pacs' and 'hf iclass sam' can extract the PACS payload but only with a genuine HID SAM module fitted in the SIM/SAM slot - the Proxmark is not breaking the crypto, it is asking HID's own security module to do the decode."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Writes to 'magic' Gen1a/Gen2/Gen3/Gen4 MIFARE Classic blanks, NTAG/Ultralight, T5577's HF equivalents, iCLASS/PicoPass blanks, and ISO15693 tags. Writing to a genuine locked card still requires its keys."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "'hf mf sim', 'hf 14a sim', 'hf iclass sim', 'hf 15 sim', 'hf felica sim', 'hf seos sim'. Emulation is bit-level via the FPGA, so it can present cards whose behaviour a fixed-function emulator cannot reproduce."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "The full published set: darkside, nested, staticnested, hardnested, and 'hf mf autopwn' which chains them automatically. Split of work matters: nonce capture happens on the device, but the hardnested key search is compute-bound and runs on the PC client (it is marked as available offline in the command table because it is pure computation). 'hf mf fchk' does a fast dictionary check using keys held in the RDV4's SPI flash. MIFARE Classic's CRYPTO1 has been broken since 2008; this is not a novel capability, it is table stakes."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "THIS IS THE HONEST LINE. Full DESFire EV1/EV2/EV3 command set ('hf mfdes' - auth, chk, changekey, dump, read, write, detect) but it is authenticate-with-a-key-you-already-have. 'hf mfdes chk' is a dictionary check against default/known keys, not cryptanalysis. There is no command in the tree that recovers a DESFire AES key, because no such attack is publicly known. Against a properly keyed DESFire deployment you get the UID and the application/file structure and nothing else. The same is true of 'hf mfp' for MIFARE Plus - auth, chk, dump, rdbl, no attacks."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "'hf ndef' reads and writes NFC Forum Type 4 NDEF on NTAG4xx and DESFire. Worth being blunt about what this column means anywhere you see it: NDEF is a data format for records the tag is configured to hand to any reader that asks. Reading NDEF off a Type 4 tag is reading a public file. It is not a security bypass and it says nothing about whether you can clone the card."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "READ THIS BEFORE BELIEVING ANY 'NFC EMV' COLUMN. The Proxmark has a real EMV contactless kernel ('emv pse/search/select/gpo/readrec/exec/genac/scan/roca'). From a contactless bank card you can typically get the PAN, the expiry, the application list, sometimes the cardholder name (increasingly suppressed) and on some issuers a transaction log. You CANNOT clone the card or make a payment. Every transaction requires an Application Cryptogram computed inside the chip with an issuer key that never leaves it, and the Proxmark's own notes list check-ARQC, ARPC generation, external-authenticate and issuer-script processing as 'not implemented' precisely because they need the issuer's keys. 'emv genac' asks the card to produce a cryptogram; it cannot produce one for you. The one legacy weak spot, MSD (magnetic-stripe-data) contactless mode, is being switched off across the industry. 'emv roca' checks for the ROCA RSA key-generation flaw."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "'hf 15' - read, write, dump, sim, findafi (AFI brute force), plus NXP SLIX password commands (slixwritepwd, slixprivacyenable). Covers iCODE SLI/SLIX, library and inventory tags, and the ISO15693 layer that iCLASS/PicoPass sits on."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "'hf felica' - reader, sniff, raw, dump, sim, plus auth1/auth2 and liteauth. FeliCa Lite/Lite-S authentication is implemented; FeliCa Standard's mutual authentication is not broken, so Suica-class transit cards are readable at the identity layer, not clonable."
+      },
+      "nfc_relay": {
+        "v": "partial",
+        "note": "Standalone relay modes exist in the firmware (HF 14a relay), and 'emv smart2nfc' completes a transaction across the contact and contactless interfaces. Practical relay attacks still need two devices and a link between them; the Proxmark provides one end, not a turnkey relay rig."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Roughly 40 standalone modes (LF_SAMYRUN, LF_ICEHID, HF_14ASNIFF, HF_MFCSIM, HF_ICLASS_*, DANKARMULTI and more) but only one is compiled into the firmware at a time, and you need the Blue Shark module for power. Standalone captures; you still return to a PC to crack."
+      },
+      "sd_logging": {
+        "v": "partial",
+        "note": "No SD card. 256KB of external SPI flash holds key dictionaries and standalone-mode dumps. That flash is RDV4-only."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Lua and Python scripting in the client, plus a documented client command set for shelling out to."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning a Proxmark3 is legal in most countries and it is standard equipment for physical-security consultants and biohackers. Using it is where the exposure is: reading, cloning or emulating a credential you are not authorised to use is an offence in essentially every jurisdiction, usually under computer-misuse, forgery or access-device statutes, and 'I was only testing' is not a defence without a written, signed scope. Some countries additionally regulate transmitting devices generally. Check your local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-04",
+      "app_store": "No - in-repo Lua and Python script collection plus community cheat sheets",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "PM3",
+      "Proxmark 3 RDV4",
+      "RDV4.01",
+      "Proxmark3 RDV4.01"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/RfidResearchGroup/proxmark3",
+        "what": "Iceman firmware repo - supported hardware list, 256KB flash advisory, Proxmark5 details"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/commands.md",
+        "what": "complete client command set - confirms no DESFire/MIFARE Plus key-recovery commands exist, and the hf seos / hf iclass sam command set"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/emv_notes.md",
+        "what": "EMV kernel scope - which parts are explicitly 'not implemented' and why (issuer keys)"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/hid_downgrade.md",
+        "what": "'There is no card-only attack vectors' for iCLASS SR/SE/SEOS; explains the downgrade concept"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md",
+        "what": "standalone mode list, PLATFORM targets, 512KB requirement"
+      },
+      {
+        "url": "https://lab401.com/products/proxmark-3-rdv4",
+        "what": "RDV4.01 spec table (SAM7S512, read ranges, dimensions), RDV4 vs RDV4.01 changes, EUR pricing"
+      },
+      {
+        "url": "https://www.redteamtools.com/Proxmark3-RDV4.01",
+        "what": "US price and kit contents"
+      },
+      {
+        "url": "https://github.com/Proxmark/proxmark3/wiki/Hardware-Description",
+        "what": "Spartan-II FPGA role and configuration"
+      },
+      {
+        "url": "https://api.github.com/repos/RfidResearchGroup/proxmark3/releases/latest",
+        "what": "latest release v4.21611, 2026-04-14"
+      }
+    ],
+    "research_gaps": [
+      "Exact release year of the RDV4.01 revision (as distinct from the original RDV4) not confirmed from a primary source; 2018 is the RDV4 platform date.",
+      "Blue Shark module battery capacity not published by the vendor.",
+      "RRG has since released a Proxmark5 (AT32F435 Cortex-M4 at 288 MHz, Gowin FPGA, USB-C, ESP32-C2 BLE/Wi-Fi/battery add-on, swappable LF/HF/UHF antennas) selling around EUR325. The Iceman README warns its firmware 'is not stable at the moment'. Not researched in this batch but it will displace the RDV4 as the reference platform."
+    ]
+  },
+  {
+    "id": "proxmark3-easy-iceman",
+    "hardware_id": "proxmark3-easy",
+    "name": "Proxmark3 Easy",
+    "firmware": "Iceman (RfidResearchGroup)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/RfidResearchGroup/proxmark3",
+    "firmware_note": "Flashing Iceman is what turns a clone into a real tool - but the repo now states it requires at least a 512KB ARM. On a 256KB board you must compile with SKIP_ flags that delete whole protocol families (dropping ISO14443a saves ~63KB, dropping all LF saves ~26KB), so you choose which half of RFID you want.",
+    "vendor": "No single vendor - numerous Chinese OEMs (kkmoon, PiSwords, Radiowar, Ryscorp and unbranded)",
+    "vendor_url": null,
+    "product_url": "https://labs.ksec.co.uk/product/proxmark3-easy/",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-research-platform",
+    "status": "available",
+    "released": "2016",
+    "price_usd": 92,
+    "price_note": "GBP67.99 (~US$92) at KSEC pre-flashed with Iceman, 512KB confirmed - the one reputable Western reseller still stocking it. Direct from China on eBay US$47-89 plus shipping; US-based eBay sellers US$110-158, which makes no sense next to KSEC. Lab401 and Hacker Warehouse have both dropped it from their catalogues. USD figure is a GBP conversion.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "advanced",
+    "skill_note": "Same command line as an RDV4 with none of the safety rails: you must verify your own flash size, tune your own expectations about read range, and keep firmware and client versions in lockstep or commands silently return wrong answers.",
+    "build_effort": "flash-only",
+    "build_note": "You flash it yourself, and the bootloader is the failure point - cross-major-version upgrades are how most of these get bricked. Have a JTAG/SWD recovery path ready before you start (J-Link, Black Magic Probe, or OpenOCD on a cheap ST-Link clone); the Proxmark repo ships JTAG notes for exactly this reason.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "The commodity Chinese Proxmark3, descended from the RDV3 design: same AT91SAM7S ARM and Spartan-II FPGA architecture as an RDV4, with the HF antenna etched into the mainboard and the LF antenna on brass standoffs. Running the Iceman firmware it does most of what an RDV4 does at a quarter of the price. What you give up is hardware, not software.",
+    "honest_take": "Hardware revision roulette is the real problem. Two boards sold as 'Proxmark3 Easy' can have different ARM parts, and the difference is not cosmetic: the Iceman repo now requires 512KB, so a 256KB board makes you compile away entire protocol families to fit. On top of that the antennas are untuned and stamped into the PCB, so read range is visibly shorter than a tuned RDV4; there is no external SPI flash, so on-device key dictionaries and several standalone modes simply do not exist; there is no SIM/SAM slot, so the HID-SAM-based 'hf seos pacs' and 'hf iclass sam' PACS extraction is off the table entirely; and there is no battery unless you buy a shield. If you are learning, or you want a beater you will not cry over, this is the right buy. If you are billing for the results, the RDV4's tuned antennas and SAM slot are what you are actually paying for.",
+    "best_for": [
+      "Learning the Proxmark toolchain without risking a US$355 device",
+      "MIFARE Classic and LF 125 kHz work, which is most of what anyone actually does",
+      "A spare you can lend, lose, or brick"
+    ],
+    "not_for": [
+      "Anything needing the SIM/SAM slot - no HID SAM means no SEOS/iCLASS SE PACS extraction",
+      "Marginal read range situations - untuned PCB antennas cost you centimetres that sometimes matter",
+      "Buyers who will not check which ARM part is on the board before ordering"
+    ],
+    "hardware": {
+      "mcu_primary": "AT91SAM7S512",
+      "mcu_primary_note": "ARM7TDMI at 48 MHz. CRITICAL: many units ship the AT91SAM7S256 (256KB) instead as a cost saving. Read the part marking on the chip, or the size reported in the client's start-up banner. The Iceman repo requires 512KB for a full build.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "XC2S30",
+          "role": "rfid-lf-hf",
+          "note": "Xilinx Spartan-II FPGA, same architecture as the RDV4 - the silicon is not where these boards are cheap."
+        },
+        {
+          "ic": null,
+          "role": "analog-front-end",
+          "note": "HF antenna etched directly into the mainboard PCB, LF antenna a bare coil on brass standoffs. Neither is tuned per unit, which is where the read-range deficit against an RDV4 comes from."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. An optional stacking battery shield (typically 600mAh Li-Po) is sold separately and is what makes standalone modes usable.",
+      "charging": "USB micro-B (bus powered)",
+      "pmic": null,
+      "storage": "None - no external SPI flash. On-device key dictionaries and flash-backed standalone dumps are RDV4-only features.",
+      "connectivity": [
+        "USB micro-B"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Usually sold bare-board or with a thin acrylic sandwich",
+      "notable_physical": [
+        "Detachable LF antenna on brass standoffs",
+        "HF antenna integrated into the mainboard",
+        "No SIM/SAM slot",
+        "Original Chinese units enumerate as USB VID 2D2D PID 504D; official builds use 9AC4/4B8F"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "partial",
+        "note": "Same firmware support as an RDV4 (EM410x, HID Prox, Indala, AWID, ioProx, Hitag, FDX-B and the rest), but the untuned coil gives noticeably shorter range. Fine on contact, less forgiving through a wallet."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "T5577 and EM4305 writing works identically - this is firmware, not antenna dependent, as long as you can hold the blank against the coil."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Full sim and brute-force command set, but standalone brute-force modes need the add-on battery shield to be useful at a door."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "ISO14443A/B, ISO15693, iCLASS/PicoPass, FeliCa, Legic all supported in firmware. The PCB-etched HF antenna is the limit, not the code. No SIM/SAM slot means the HID-SAM path to iCLASS SE / SEOS PACS extraction is unavailable on this hardware regardless of firmware."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Magic MIFARE Classic blanks, NTAG/Ultralight, iCLASS/PicoPass and ISO15693 writing all work."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "Bit-level FPGA emulation, same as RDV4."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "darkside, nested, staticnested, hardnested and autopwn all available. One practical loss: 'hf mf fchk' fast dictionary checking pulls keys from the RDV4's SPI flash, which this board does not have, so large dictionary runs go over USB from the client instead."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Identical to the RDV4: full command set, authenticate-with-known-key only, dictionary check only. No DESFire AES key recovery exists on any hardware."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Type 4 NDEF read/write on NTAG4xx and DESFire. A data-format capability, not a security bypass."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "The same EMV kernel as the RDV4. Gets PAN, expiry and sometimes a transaction log off a contactless bank card. Cannot clone the card or make a payment - the cryptogram is generated inside the chip with an issuer key. See the RDV4 entry for the full explanation."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "'hf 15' read/write/dump/sim plus SLIX password commands."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reader, sniff, dump, sim, Lite/Lite-S auth. FeliCa Standard crypto is not broken."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "The modes are in the firmware but need the add-on battery shield, and any mode that expects external SPI flash will not build for this board."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "Notable absence. No SD card and no external SPI flash, unlike the RDV4."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Lua and Python via the client, identical to the RDV4."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Same position as any Proxmark3: owning one is legal in most countries, using it against credentials you are not authorised to use is not. Ordering direct from China means a customs declaration that says something vague; that is a customs question, not evidence of anything, but it is worth knowing which country you are importing into. Check your local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-04",
+      "app_store": "No - shares the Iceman script collection",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Proxmark3 Easy V3",
+      "PM3 Easy",
+      "RDV3 Easy",
+      "Chinese Proxmark",
+      "Proxmark3 Easy V5"
+    ],
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/README.md",
+        "what": "supported generic platforms list, 256KB flash advisory"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md",
+        "what": "512KB requirement, SKIP_ flags and how much each saves"
+      },
+      {
+        "url": "https://www.proxmarkbuilds.org/",
+        "what": "hardware variant catalogue and the explicit 512KB warning for Easy users"
+      },
+      {
+        "url": "https://jg.sn.sg/pm3/",
+        "what": "independent write-up of the Chinese Easy: antenna layout, battery shield, USB VID/PID, version-mismatch and bricking problems"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/proxmark3-easy/",
+        "what": "current Western retail price and 512KB/pre-flashed confirmation"
+      }
+    ],
+    "research_gaps": [
+      "First-release year of the 'Easy' clone design is not documented by any single vendor; 2016 is approximate, derived from its descent from the RDV3 design.",
+      "No authoritative list exists of which OEMs ship 256KB vs 512KB parts - it varies by batch and seller, which is the point.",
+      "Could not source a measured read-range comparison between a stock Easy and a tuned RDV4; the range deficit is consistently reported but not quantified in any primary source found."
+    ]
+  },
+  {
+    "id": "proxmark3-easy-vendor",
+    "hardware_id": "proxmark3-easy",
+    "name": "Proxmark3 Easy",
+    "firmware": "Vendor stock (Chinese OEM build)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Whatever the seller flashed before shipping: usually an old fork of the upstream Proxmark client, sometimes wrapped in a Chinese-language GUI. Treat it as something to overwrite on day one, not as a product.",
+    "vendor": "No single vendor - numerous Chinese OEMs (kkmoon, PiSwords, Radiowar, Ryscorp and unbranded)",
+    "vendor_url": null,
+    "product_url": null,
+    "category": "rfid-nfc",
+    "subcategory": "rfid-research-platform",
+    "status": "available",
+    "released": "2016",
+    "price_usd": 92,
+    "price_note": "Same hardware and price as the Iceman-flashed entry - the difference is only which firmware is on it when it arrives. Sellers who pre-flash Iceman (KSEC does) are worth the premium over a bare eBay unit.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "expert",
+    "skill_note": "Not because the stock firmware is powerful, but because diagnosing it is: when firmware and client versions do not match, commands do not error, they return wrong readings. You need enough experience to recognise a plausible-looking wrong answer.",
+    "build_effort": "flash-only",
+    "build_note": "The only sensible first move is to reflash it with Iceman. Do that before you form any opinion about what the hardware can do.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "The same Proxmark3 Easy board as it arrives from the seller, running whatever firmware and client the OEM bundled. Listed separately because a meaningful number of buyers never reflash, and then judge the Proxmark platform on this.",
+    "honest_take": "This is the single most common reason people conclude 'my Proxmark is broken'. The bundled firmware and the bundled client are frequently from different versions, and a version mismatch on a Proxmark does not throw an error - it silently returns garbage that looks like data. Add a GUI wrapper that is often Chinese-only and undocumented, and you have a device that appears to work while giving you wrong answers. There is no upside to keeping it: the stock build has no attack the Iceman build lacks. Flash it, then evaluate it.",
+    "best_for": [
+      "Nothing - this configuration exists to be replaced"
+    ],
+    "not_for": [
+      "Any result you intend to rely on",
+      "Learning the platform - you will be learning a fork that does not match any current documentation"
+    ],
+    "hardware": {
+      "mcu_primary": "AT91SAM7S512",
+      "mcu_primary_note": "Or AT91SAM7S256 depending on batch - see the Iceman-firmware entry for why this matters. Identical hardware either way; only the firmware differs between these two entries.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "XC2S30",
+          "role": "rfid-lf-hf",
+          "note": "Xilinx Spartan-II FPGA."
+        },
+        {
+          "ic": null,
+          "role": "analog-front-end",
+          "note": "PCB-etched HF antenna, LF coil on standoffs, neither tuned per unit."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery; optional stacking shield sold separately.",
+      "charging": "USB micro-B (bus powered)",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": [
+        "USB micro-B"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board or thin acrylic sandwich",
+      "notable_physical": [
+        "Identical to the Iceman-firmware entry - this object differs only in firmware"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "unknown",
+        "note": "Depends entirely on which fork the seller flashed. Older builds handle EM410x and HID Prox; coverage of newer LF formats varies unpredictably by build."
+      },
+      "lf_125khz_write": {
+        "v": "unknown",
+        "note": "T5577 writing is usually present in some form. Which command syntax it uses is anyone's guess without knowing the fork."
+      },
+      "hf_1356_read": {
+        "v": "unknown",
+        "note": "ISO14443A is generally there. Anything past that varies by build."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Older forks typically ship darkside and nested. hardnested and autopwn usually postdate whatever the seller flashed, so hardened MIFARE Classic cards will appear immune when they are not."
+      },
+      "mifare_desfire": {
+        "v": "unknown",
+        "note": "Likely absent or stubbed in older forks. Irrelevant either way - no firmware on any hardware recovers DESFire AES keys."
+      },
+      "emv_read": {
+        "v": "unknown",
+        "note": "The EMV kernel is a relatively recent addition upstream and is unlikely to be present in a bundled OEM build."
+      },
+      "scriptable": {
+        "v": "unknown",
+        "note": "Lua scripting may or may not be wired up; the bundled GUI wrappers typically hide the client entirely."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Identical to any other Proxmark3: legal to own in most countries, the offence is in unauthorised use. Check your local law."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "none",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "Proxmark3 Easy stock firmware",
+      "PM3 Easy out of the box"
+    ],
+    "sources": [
+      {
+        "url": "https://jg.sn.sg/pm3/",
+        "what": "documents the Chinese-only GUI, the firmware/client version-mismatch failure mode and the false readings it produces"
+      },
+      {
+        "url": "https://www.proxmarkbuilds.org/",
+        "what": "context on clone hardware variation"
+      }
+    ],
+    "research_gaps": [
+      "There is no single 'vendor stock firmware' - it differs per seller and per batch, so every capability here is necessarily 'unknown'. That variability is itself the finding.",
+      "Could not determine which upstream commit any common OEM build is forked from."
+    ]
+  },
+  {
+    "id": "chameleon-ultra",
+    "hardware_id": "chameleon-ultra",
+    "name": "Chameleon Ultra",
+    "firmware": "ChameleonUltra (official)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/RfidResearchGroup/ChameleonUltra",
+    "firmware_note": "GPL-3.0, actively developed. v2.2.0 (July 2026) added ioProx, EM4x05/EM4x69, IDTECK and Jablotron LF support, raw field capture ('lf sniff', 'hf 14a sniff'), Flipper .nfc file import, and an 'hf mf autopwn' with integrated HardNested in the CLI.",
+    "vendor": "RFID Research Group (ProxGrind)",
+    "vendor_url": "https://github.com/RfidResearchGroup/ChameleonUltra",
+    "product_url": "https://lab401.com/products/chameleon-ultra",
+    "category": "rfid-nfc",
+    "subcategory": "card-emulator",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 130,
+    "price_note": "US$130 at Hacker Warehouse; EUR129 at Lab401; GBP109.99 (~US$149) at KSEC. A cut-down 'Chameleon Lite' sells for EUR59 - same emulation, but it omits the MFRC522 so it cannot read or write HF tags at all, only simulate them. Buy the Lite only if you already have a Proxmark to do the reading.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The mobile app makes basic clone-and-emulate genuinely easy, but interpreting what a failed emulation means still requires knowing which card technology you are up against.",
+    "build_effort": "assembled",
+    "build_note": "Works out of the box over BLE from the MTools app; firmware updates are DFU packages over USB-C or BLE.",
+    "stealth": "discreet",
+    "form_factor": "keychain",
+    "summary": "A keychain-sized dual-frequency card emulator: 8 LF slots and 8 HF slots, switched with two buttons, running about six months on a 90mAh cell. HF emulation runs on the nRF52840's on-die NFC-A tag peripheral, which draws around 5mA and does not need the CPU awake - this is why it behaves like a real card rather than like a microcontroller pretending to be one. A separate MFRC522 gives it reader capability so it can capture a card as well as replay it.",
+    "honest_take": "Two hard limits get papered over in the marketing. First, the reader front end is an MFRC522, which is ISO14443A-only silicon: no ISO15693, no ISO14443B, no FeliCa, ever, at any firmware version. That rules out iCODE, most library and ski-pass tags, and the HF layer iCLASS rides on. Second, seeing 'DESFire EV1 & EV2' and 'MIFARE Plus' in the supported-tag list means it can hold a conversation in those protocols at 106 kbit/s - not that it can clone one. Without the site's AES keys a real DESFire reader will reject the emulation instantly, and the firmware's own whitepaper flags DESFire as low-bit-rate only. Where it genuinely beats a Flipper Zero is emulation fidelity: full control of UID, SAK, ATQA and ATS, and a detection mode that logs reader nonces for MFKEY32 recovery while sitting in the field.",
+    "best_for": [
+      "Carrying a cloned MIFARE Classic or LF badge on your keyring for a week-long engagement",
+      "MFKEY32 key recovery by presenting a fake card to a real reader and logging its nonces",
+      "Emulating LF 125 kHz badges - EM410x and HID Prox are fully implemented at the application layer",
+      "Anyone who wants Proxmark-grade emulation without carrying a Proxmark"
+    ],
+    "not_for": [
+      "ISO15693 / NFC-V, ISO14443B or FeliCa - the RC522 physically cannot",
+      "iCLASS, iCLASS SE or SEOS",
+      "Cloning a DESFire or a bank card",
+      "Sniffing a full reader-card exchange - the raw capture added in v2.2.0 is field capture, not a decoded protocol trace like a Proxmark's"
+    ],
+    "hardware": {
+      "mcu_primary": "nRF52840",
+      "mcu_primary_note": "ARM Cortex-M4F at 64 MHz, 1MB flash, 256KB RAM, BLE 5.0 and USB 2.0. Its on-die NFC-A tag peripheral does HF card emulation autonomously at ~5mA/3.3V without waking the CPU, which is where the six-month battery figure comes from.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "nRF52840 NFC-A tag peripheral",
+          "role": "nfc",
+          "note": "13.56 MHz ISO14443A card emulation. Passive-field capable, so it presents like a real card."
+        },
+        {
+          "ic": "MFRC522",
+          "role": "nfc",
+          "note": "13.56 MHz reader/writer. ISO14443A-only silicon - this single chip choice is why ISO15693, ISO14443B and FeliCa are permanently out of scope. The Chameleon Lite omits this chip entirely."
+        },
+        {
+          "ic": null,
+          "role": "rfid-lf",
+          "note": "125 kHz LF read/write/emulate on a second antenna PCB, driven from the nRF52840 with discrete analog. The vendor does not publish a part number for the LF front end and none could be confirmed."
+        }
+      ],
+      "display": null,
+      "battery_mah": 90,
+      "battery_note": "Li-Po. The ~6 month figure is idle/standby with occasional use, and holds up in independent reviews because emulation runs on the NFC peripheral rather than the CPU.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "Internal flash organised as 8 HF card slots and 8 LF card slots",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE 5.0"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "40 x 24 x 8",
+      "weight_g": 8,
+      "case": "Plastic, two-PCB sandwich with a spacer",
+      "notable_physical": [
+        "Two buttons (A/B) for slot switching with no host needed",
+        "8 slot-indicator LEDs",
+        "HF antenna on the mainboard, LF antenna on a second board - the reason it is a sandwich"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM410x, T5577, HID Prox, Indala, FDX-B, Paradox, AWID, PAC/Stanley, Viking, Keri, Securakey, Gallagher, and (added in v2.2.0) ioProx, EM4x05/EM4x69, IDTECK PSK1 and Jablotron. All of these are unauthenticated by design - the card shouts its ID at anything that powers it."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "Writes captured IDs to T5577 blanks. The vendor's own docs note that for many of the exotic LF formats the hardware and codec are ready but the application layer is not implemented, so read-and-emulate works where write-to-blank may not."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "8 LF slots. EM410x (ASK) and HID Prox (FSK) are fully implemented at the application layer; 15+ further formats have codec support with partial or absent application-layer handling."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "ISO14443A only, via the MFRC522: MIFARE Classic 1K/2K/4K (4- and 7-byte UID), Ultralight/C/EV1, NTAG 210-218, and DESFire/EV1/EV2 at low bit rate. Not a limitation of firmware - the RC522 does not implement anything else."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Writes MIFARE Classic data to 'magic' Gen1a/Gen2 blanks and supports magic UID/SAK modes. It is not a general-purpose HF writer."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "8 HF slots with full control of UID, SAK, ATQA and ATS, plus a configurable PRNG for MF1 emulation (added v2.2.0). This is the device's genuine strength and it is measurably better than a Flipper Zero at convincing a real reader."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "MFKEY32 v2, Darkside, Nested, StaticNested and HardNested. Split of work: the device does the capture - detection mode logs reader nonces while it sits in the field emulating - and the key computation runs in the client, either the Python CLI on a PC or the MTools mobile app over BLE. v2.2.0 added an 'hf mf autopwn' that chains the whole sequence including HardNested."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Read this carefully. DESFire EV1/EV2 appear in every reseller's supported-tag list, and what that means is that the device can exchange ISO14443A frames with one at 106 kbit/s (the whitepaper states higher bit rates are hardware-limited). It cannot recover a DESFire AES key - nothing can - so it cannot clone a keyed DESFire credential. Emulating a DESFire shape without the keys gets rejected by any real reader."
+      },
+      "nfc_type4_ndef": {
+        "v": "partial",
+        "note": "Emulates NTAG21x and Ultralight (NFC Forum Type 2) well, and can present DESFire-shaped Type 4 structures at low bit rate. Dedicated NDEF record tooling in the firmware could not be confirmed. As always, NDEF is a data format for records a tag hands to any reader - reading or writing it is not a security bypass."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "Notable absence given how often this device is compared to a Flipper. There is no EMV kernel in the firmware. The RC522 could in principle carry ISO14443-4 APDUs, but nothing implements an EMV transaction, so it cannot read a PAN off a bank card at all - let alone clone one."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "Notable and permanent. The MFRC522 does not implement ISO15693/NFC-V, so iCODE SLI/SLIX, most library and ski-pass tags, and the ISO15693 layer that iCLASS/PicoPass uses are all out of reach. If you need ISO15693 you want a Proxmark3 or a ChameleonMini RevG."
+      },
+      "felica": {
+        "v": "no",
+        "note": "Same reason - not in the RC522's protocol set. No Japanese transit cards."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "The whitepaper states the hardware could support relay attacks but the software and application layer are not implemented."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "This is the whole point: 16 slots selectable with two buttons, no phone or laptop needed once loaded, six months of standby."
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Python CLI, a JavaScript library (chameleon-ultra.js), a documented BLE API and the MTools mobile apps. No on-device scripting."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning a card emulator is legal in most countries. Emulating a credential you are not authorised to use is not, and because this device is designed to be carried and used covertly at a real door, intent is easier for a prosecutor to argue than with a bench tool. Get a written scope before you take it to a client site. Check your local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "No - official CLI, MTools iOS/Android apps and a community JS library",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "ChameleonUltra",
+      "Chameleon Ultra ProxGrind",
+      "CU"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/RfidResearchGroup/ChameleonUltra/wiki/technical_whitepaper",
+        "what": "nRF52840 + MFRC522 architecture, which protocols are emulated vs read, explicit list of unsupported features (sniffing, high-rate DESFire, relay)"
+      },
+      {
+        "url": "https://github.com/RfidResearchGroup/ChameleonUltra/wiki/hardware",
+        "what": "PCB layout, antenna placement, Ultra vs Lite difference (the Lite has no MFRC522)"
+      },
+      {
+        "url": "https://api.github.com/repos/RfidResearchGroup/ChameleonUltra/releases/latest",
+        "what": "v2.2.0 release notes, 2026-07-04 - new LF types, sniff commands, autopwn with HardNested"
+      },
+      {
+        "url": "https://lab401.com/products/chameleon-ultra",
+        "what": "spec table (nRF52840, 90mAh, dimensions, weight), supported tag list, EUR price"
+      },
+      {
+        "url": "https://shop.mtoolstec.com/how-to-use-mfkey32-on-chameleonultra-devices.html",
+        "what": "how detection mode / MFKEY32 logging is actually used"
+      }
+    ],
+    "research_gaps": [
+      "The LF analog front-end part number is not published by the vendor and could not be determined.",
+      "Whether the firmware includes explicit NDEF record read/write tooling (as opposed to raw Type 2/Type 4 emulation) could not be confirmed from the wiki.",
+      "As of 2026-09-06 the ProxGrind-branded storefronts were not usable: sneaktechnology.com presented a TLS certificate for an unrelated hostname, and proxgrind.com's pages were serving injected SEO spam links. Buy through Lab401, KSEC or Hacker Warehouse instead."
+    ]
+  },
+  {
+    "id": "chameleon-mini-revg",
+    "hardware_id": "chameleon-mini-revg",
+    "name": "ChameleonMini RevG",
+    "firmware": "emsec ChameleonMini (official)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/emsec/ChameleonMini",
+    "firmware_note": "The official Kasper & Oswald / emsec firmware. Last commit August 2023. Flash space on the 128KB AVR is genuinely full - the maintainers note the experimental Gallagher support 'may be (re)moved at any time as space on the device is in short supply'.",
+    "vendor": "Kasper & Oswald GmbH",
+    "vendor_url": "https://shop.kasper.it/",
+    "product_url": "https://shop.kasper.it/chameleonmini/170/chameleonmini-revg-color",
+    "category": "rfid-nfc",
+    "subcategory": "card-emulator",
+    "status": "available",
+    "released": "2016",
+    "price_usd": 174,
+    "price_note": "EUR149.96 including VAT direct from Kasper & Oswald (~US$174; ~EUR126 ex-VAT). As of 2026-09-06 only the green case was orderable - yellow, black, white and blue all showed 'Not available'. Batteries are extra (LIR2032 EUR3, 150mAh EUR9, 350mAh EUR18).",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Driven by a serial AT-style command set. Straightforward to operate; understanding what the emulation is or is not fooling is the hard part.",
+    "build_effort": "assembled",
+    "build_note": "Firmware updates via a modified Atmel DFU bootloader. The official Python configuration tool is described in-repo as 'currently under construction'.",
+    "stealth": "discreet",
+    "form_factor": "keychain",
+    "summary": "The original credit-card-form-factor NFC emulator from the academic group at Ruhr University Bochum, productised by Kasper & Oswald after a 1,700-backer Kickstarter. An ATxmega128A4U clocked at 27.12 MHz - exactly twice 13.56 MHz - driving a single HF antenna, with 8 slots of card configurations. It emulates, it sniffs, and it barely reads.",
+    "honest_take": "It is 13.56 MHz only. The project's own support table lists 'any non-13.56 MHz tag' as NO at the hardware, software and application layers, so there is no LF 125 kHz path at all - no HID Prox, no EM4100. That single fact makes it the wrong tool for most physical access work, where LF is still enormously common. Reader mode is also far weaker than people expect: there is still no implemented command to read a MIFARE Classic or a DESFire, only 'dump_mfu' for Ultralight, even though the crypto primitives are sitting in the firmware. What it uniquely does, and the Chameleon Ultra cannot, is emulate and sniff ISO15693. Its DESFire emulation is also the most serious in this batch - real AES ciphers, app and key creation, encrypted file operations - but note that this is emulating a DESFire whose keys you supply, not breaking anyone's. EV2/EV3-specific functionality is explicitly absent. Development has been quiet since August 2023.",
+    "best_for": [
+      "ISO15693 / NFC-V emulation and sniffing - the one thing here the Chameleon Ultra cannot do",
+      "Emulating a DESFire with AES keys you control, for testing your own deployment",
+      "Sniffing the reader-to-card direction of an ISO14443A exchange",
+      "Academic and lab work where the open, documented firmware matters"
+    ],
+    "not_for": [
+      "Anything at 125 kHz - it has no LF hardware whatsoever",
+      "Reading a MIFARE Classic or DESFire card - the commands do not exist",
+      "MIFARE Classic key recovery, on the official firmware",
+      "Anyone expecting active development"
+    ],
+    "hardware": {
+      "mcu_primary": "ATxmega128A4U",
+      "mcu_primary_note": "8-bit AVR clocked at 27.12 MHz - deliberately 2x the 13.56 MHz carrier. 128KB flash, and it is full: the maintainers warn that features may be removed to make room.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "nfc",
+          "note": "13.56 MHz only, via a discrete analog front end and a single PCB antenna - there is no separate NFC controller IC, the xmega does the codec work in software. No 125 kHz hardware exists on the board."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Sold without a cell. Options from the vendor are an LIR2032 coin cell or 150mAh / 350mAh Li-Ion packs.",
+      "charging": "USB micro-B",
+      "pmic": null,
+      "storage": "8 card configuration slots in internal flash/EEPROM",
+      "connectivity": [
+        "USB micro-B"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Coloured plastic, credit-card footprint",
+      "notable_physical": [
+        "Two buttons for slot selection",
+        "Single 13.56 MHz PCB antenna",
+        "27.12 MHz crystal - the giveaway that codec work happens in software"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable and absolute. The official support table states 'any non-13.56 MHz tag: NO' at hardware, software and application layers. No HID Prox, no EM4100, no Indala, ever."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "Same - there is no LF hardware on the board."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "The weakest part of the device. 'dump_mfu' reads MIFARE Ultralight. For MIFARE Classic the support table says 'no command for reading a MF classic card implemented yet, cryptographic functions already implemented'; for DESFire, 'no command for reading implemented yet'. The silicon can do it; nobody has wired up the command."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Magic-card writing and UID/SAK manipulation. Not a general HF writer."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "The core function and it is good: MIFARE Ultralight and Ultralight EV1, MIFARE Classic 1K/4K with 4- or 7-byte UID, any NTAG, ISO15693, and DESFire/EV1/EV2 at low bit rate. LEGIC prime and ePass have partial codec support. 8 slots, button-selectable."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "The official emsec firmware is an emulator, not a key-recovery platform - CRYPTO1 primitives are present but there are no darkside/nested/hardnested commands. The separate RFID Research Group fork (github.com/RfidResearchGroup/ChameleonMini, proxgrind branch) adds MFKEY32 cracking, but that fork's last commit was June 2023 and it targets the Tiny and RevG."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "The most serious DESFire emulation in this batch, and still not an attack. As tested by the maintainers (May 2023): UID emulation and change, authentication with all available ciphers, app and key creation when the app uses AES, AES-encrypted file operations up to 32-byte files, and CMAC/IV handling for most AES operations. You supply the keys. Any EV2/EV3-specific functionality is explicitly NOT available, and it runs at low bit rate only. There is no DESFire key recovery here or anywhere."
+      },
+      "nfc_type4_ndef": {
+        "v": "partial",
+        "note": "NTAG emulation has codec and software support but the support table marks application-layer support as 'no'. Type 4 NDEF handling is not a first-class feature."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Full emulation support at hardware, software and application layers, plus sniffing (VCD-to-VICC fully, VICC-to-VCD single subcarrier only). This is the capability that still distinguishes it from a Chameleon Ultra in 2026."
+      },
+      "felica": {
+        "v": "no",
+        "note": "Not in the supported codec list."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel. It is an emulator, not a payment terminal."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "8 slots on two buttons, runs from a coin cell or a small Li-Ion pack."
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Serial AT-style command set that is easy to drive from any host language. The official Python tool is described in-repo as under construction."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "A card emulator in a credit-card form factor. Owning one is legal in most countries; presenting an emulated credential you are not authorised to use is not. The form factor is the risk multiplier - it is designed to be indistinguishable from a badge in your wallet. Check your local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2023-08",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Chameleon Mini",
+      "ChameleonMini RevG",
+      "Chameleon RevG"
+    ],
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/wiki/emsec/ChameleonMini/Supported-Cards-and--Codecs.md",
+        "what": "the authoritative capability matrix - emulation, sniffing and reader tables, the 'non-13.56MHz: NO' row, the unimplemented Classic/DESFire read commands, and the DESFire AES testing notes"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/emsec/ChameleonMini/master/README.md",
+        "what": "project status, Kickstarter origin, clone warning, repository structure"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/emsec/ChameleonMini/master/Firmware/Chameleon-Mini/Makefile",
+        "what": "MCU confirmed as atxmega128a4u, F_CPU 27120000"
+      },
+      {
+        "url": "https://api.github.com/repos/emsec/ChameleonMini/commits",
+        "what": "last commit 2023-08-29"
+      },
+      {
+        "url": "https://shop.kasper.it/chameleonmini/170/chameleonmini-revg-color",
+        "what": "current price EUR149.96 incl VAT, per-colour stock, battery accessory prices"
+      }
+    ],
+    "research_gaps": [
+      "Kickstarter shipped around 2016 but an exact RevG release date could not be sourced.",
+      "Physical dimensions and weight are not published on the vendor page.",
+      "The official repo warns that some third-party ChameleonMini clones 'are defective or suffer from reading problems' and violate the licence; there is no published list of which sellers those are."
+    ]
+  },
+  {
+    "id": "chameleon-tiny",
+    "hardware_id": "chameleon-tiny",
+    "name": "Chameleon Tiny / Tiny Pro",
+    "firmware": "RfidResearchGroup ChameleonMini fork (proxgrind branch)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/RfidResearchGroup/ChameleonMini",
+    "firmware_note": "A fork of the official emsec ChameleonMini RevG firmware, adding Android and iOS apps, on-device MFKEY32 cracking, better power management and battery indication, improved RF field performance, and magic-card UID/SAK modes. Last commit on the proxgrind branch was June 2023.",
+    "vendor": "RFID Research Group (ProxGrind)",
+    "vendor_url": null,
+    "product_url": null,
+    "category": "rfid-nfc",
+    "subcategory": "card-emulator",
+    "status": "discontinued",
+    "released": "2020",
+    "price_usd": null,
+    "price_note": "No live listing found anywhere on 2026-09-06. Not at Lab401, KSEC, Hacker Warehouse, eBay or Amazon. The only surviving Tiny SKU at any reseller is a 'ChameleonTiny 5577 Leather Cover' accessory at KSEC for GBP4.99 - the case outlived the device. Anyone quoting you a price is selling old stock or a clone.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Was the easiest Chameleon to operate thanks to the mobile apps. Moot now.",
+    "build_effort": "assembled",
+    "build_note": "N/A - not currently purchasable through any channel we could verify.",
+    "stealth": "discreet",
+    "form_factor": "keychain",
+    "summary": "ProxGrind's shrunk, keychain-sized reworking of the ChameleonMini RevG: same 8-bit AVR firmware lineage, smaller board, USB-C, mobile apps, and on the Tiny Pro a Bluetooth link. It was the direct predecessor to the Chameleon Ultra and has been comprehensively superseded by it.",
+    "honest_take": "Do not buy this in 2026. The Chameleon Ultra replaced it on every axis that matters - a Cortex-M4F instead of an 8-bit AVR, a real reader front end (MFRC522) so it can capture cards as well as replay them, LF 125 kHz support the Tiny never had, and firmware that is still shipping releases while the Tiny's fork went quiet in June 2023. The Ultra costs about US$130, which is roughly what a Tiny cost. The only reason to own one now is that you already do. Separately, be careful where you shop for ProxGrind hardware: on 2026-09-06 sneaktechnology.com presented a TLS certificate for an unrelated hostname and proxgrind.com was serving injected SEO spam links, so go through Lab401, KSEC or Hacker Warehouse.",
+    "best_for": [
+      "Nothing that a Chameleon Ultra does not do better for the same money"
+    ],
+    "not_for": [
+      "New purchases",
+      "LF 125 kHz work - it is 13.56 MHz only, like the RevG it derives from",
+      "Anyone who needs current firmware support"
+    ],
+    "hardware": {
+      "mcu_primary": "ATxmega128A4U",
+      "mcu_primary_note": "Inferred, not confirmed on the Tiny's own PCB: the RRG fork builds the Tiny from the same firmware tree as the RevG, whose Makefile targets atxmega128a4u at 27.12 MHz. Treat as high-confidence but not verified from a schematic or teardown.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "nfc",
+          "note": "13.56 MHz only, same software-codec approach as the RevG. No 125 kHz hardware."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Integrated Li-Po; capacity not published. The RRG fork's changelog highlights improved power management and battery indication over the official RevG firmware.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "8 card configuration slots",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth (Tiny Pro variant)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic, keyfob sized",
+      "notable_physical": [
+        "Keyfob form factor with a keyring hole",
+        "Button-selectable slots",
+        "Tiny Pro adds a Bluetooth module for the mobile apps"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable. Inherits the RevG's hardware limitation - 13.56 MHz only, no LF path. The Chameleon Ultra added LF; the Tiny never had it."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "Same as the RevG: weak reader support, with no implemented command to read a MIFARE Classic or DESFire. The fork's magic-card modes help with writing, not reading."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "The core function: MIFARE Classic, Ultralight/EV1, NTAG, ISO15693, low-bit-rate DESFire, 8 slots."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "The fork adds magic-card UID and SAK modes for writing to Gen1a/Gen2 blanks."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "The fork's headline addition over official firmware: on-device MFKEY32. Capture reader nonces while emulating, recover the sector key. Darkside, nested and hardnested are not present - for those you need a Proxmark or a Chameleon Ultra."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Inherits the RevG's low-bit-rate DESFire emulation with keys you supply. No DESFire key recovery exists anywhere."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Inherited from the RevG firmware base."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Button-selectable slots on internal battery, controllable from the mobile apps over Bluetooth on the Pro."
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Serial command set inherited from the RevG, plus the RRG mobile apps."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Same as any card emulator: legal to own in most countries, illegal to use against credentials you are not authorised to use. Check your local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "sparse",
+      "last_release": "2023-06",
+      "app_store": "No - RRG mobile apps only",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "ChameleonTiny",
+      "Chameleon Tiny Pro",
+      "ProxGrind Chameleon Tiny"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/RfidResearchGroup/ChameleonMini",
+        "what": "the fork's own description: which hardware it targets (RevG, Tiny, RevE-light), and what it adds over official firmware"
+      },
+      {
+        "url": "https://api.github.com/repos/RfidResearchGroup/ChameleonMini/commits?sha=proxgrind",
+        "what": "last commit on the proxgrind branch, 2023-06-04"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/emsec/ChameleonMini/master/Firmware/Chameleon-Mini/Makefile",
+        "what": "shared firmware base targets atxmega128a4u - the basis for the MCU inference"
+      },
+      {
+        "url": "https://lab401.com/search?q=chameleon+tiny",
+        "what": "no Tiny listing; only Ultra, Ultra DevKit and Lite"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/?s=chameleon&post_type=product",
+        "what": "only a Tiny leather cover accessory remains in stock"
+      }
+    ],
+    "research_gaps": [
+      "Release year 2020 is approximate - no primary vendor announcement could be found, because ProxGrind's own storefronts are not currently serving usable content.",
+      "MCU part is inferred from the shared firmware tree rather than confirmed by teardown or schematic.",
+      "Battery capacity, dimensions and weight are not published anywhere we could find.",
+      "No live retail listing exists at any price, so no current price could be recorded."
+    ]
+  },
+  {
+    "id": "icopy-x-factory",
+    "hardware_id": "icopy-x",
+    "name": "iCopy-XS",
+    "firmware": "Factory (stock, closed source)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Closed source, and it enforces tag DRM. The Proxmark firmware project states plainly that the factory firmware is incompatible with their tree because 'Factory UI closed source / Factory Firmware enforces tag DRM'. The vendor's Basic / Intermediate / Advanced price tiers unlock tag types in software - the hardware is identical across all three.",
+    "vendor": "iCopy-X",
+    "vendor_url": "https://icopyx.com/",
+    "product_url": "https://lab401.com/products/icopy-x",
+    "category": "rfid-nfc",
+    "subcategory": "automated-cloner",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 435,
+    "price_note": "Lab401 tiers: Basic EUR375 (~US$435), Intermediate EUR465 (~US$540), Advanced EUR529 (~US$614). The tiers are firmware licence levels on identical hardware. The iCS Decoder accessory needed for iCLASS SE/SEOS work is a further EUR425 (~US$493), taking a full kit past US$1,100 - more than three Proxmark3 RDV4s.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "That is the entire product thesis: a screen, four buttons and a wizard, so an installer or a locksmith can clone a badge without learning a command line.",
+    "build_effort": "assembled",
+    "build_note": "Turn it on and follow the menu. No host computer needed for normal use.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A Proxmark3-derived RF platform bolted to a Linux single-board computer with a 1.3-inch screen, buttons and a 2000mAh battery, wrapped in a clone-this-badge wizard. The genuinely useful part is that the Linux side runs the Proxmark client on the device itself, so MIFARE Classic key recovery finishes in your hand instead of on a laptop.",
+    "honest_take": "You are paying roughly three Proxmark3s for a screen and a wizard, and the wizard automates the half of the problem that was already easy. LF 125 kHz cloning is unauthenticated by design and MIFARE Classic has been broken since 2008; those are what the one-button flow handles. Lab401's own spec sheet lists MIFARE DESFire, iCLASS Elite with custom keys, and EMV as NOT supported. The 'iCLASS SE / SEOS cloning' headline is the one to read carefully: it needs the separate EUR425 iCS Decoder, and what it performs is a downgrade attack, not a clone. The decoder extracts the PACS payload from the secure credential, and the iCopy-X writes those Wiegand bits onto a legacy iCLASS/PicoPass or T5577 blank. That blank only opens the door if the reader still has legacy iCLASS or ProxII formats enabled - if the site turned legacy off, you have an expensive coaster. The Proxmark project's own downgrade notes state there are no card-only attack vectors against SE/SEOS. Finally, the price tiers are a software paywall on identical hardware, and there is a free open-source firmware that removes them entirely.",
+    "best_for": [
+      "Locksmiths, installers and facilities teams who need repeatable badge duplication without training",
+      "Fast on-site LF and MIFARE Classic cloning with no laptop",
+      "Demonstrating badge-cloning risk to non-technical stakeholders in under a minute"
+    ],
+    "not_for": [
+      "MIFARE DESFire - vendor-stated as unsupported",
+      "Contactless bank cards - vendor-stated as unsupported",
+      "Anyone who would rather have three Proxmarks and learn the command line",
+      "Believing you have 'cloned' a SEOS card - you have downgraded a credential onto a legacy blank"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "An application processor running Linux with 256MB RAM and 16GB of storage drives the UI and runs the Proxmark client. The exact SoC part number is not published by the vendor and could not be determined.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "XC3S100E",
+          "role": "rfid-lf-hf",
+          "note": "Xilinx Spartan-3E FPGA - confirmed via the Proxmark firmware's PLATFORM=PM3ICOPYX target. A different, later FPGA than the RDV4's Spartan-II XC2S30, so this is a Proxmark3-derived design rather than a rehoused RDV4."
+        },
+        {
+          "ic": null,
+          "role": "analog-front-end",
+          "note": "125/134 kHz LF and 13.56 MHz HF front ends with an internal coil. Vendor does not publish antenna specifications or read ranges."
+        }
+      ],
+      "display": {
+        "type": "IPS LCD",
+        "size_in": 1.3,
+        "resolution": "240x240",
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": 2000,
+      "battery_note": "Li-ion. Genuinely all-day for field use, which is the point of the product.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "16GB internal, 256MB RAM",
+      "connectivity": [
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "120 x 55 x 24",
+      "weight_g": 113,
+      "case": "Plastic",
+      "notable_physical": [
+        "Arrow keys and select buttons - no touchscreen",
+        "Internal LF and HF coils, no swappable antennas",
+        "USB port doubles as a PC-mode passthrough to the Proxmark core"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4XX, HID Prox, Indala, ioProx, Viking, Hitag and others. All unauthenticated by design - the card broadcasts its ID to anything that energises it, which is why this is the part that automates cleanly."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "T5577 is the universal blank. Read badge, press clone, done."
+      },
+      "lf_125khz_emulate": {
+        "v": "partial",
+        "note": "The Proxmark core underneath can simulate LF, but the factory UI is built around read-and-write-to-blank rather than emulation."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "MIFARE Classic 1K/4K, Ultralight, Ultralight C/EV1, NTAG, iCLASS Legacy/Elite/SE/SEOS (identity layer), iCODE SLI/SLIX."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Writes to magic MIFARE blanks, iCLASS/PicoPass blanks and ISO15693 tags."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Underlying Proxmark capability exists; the factory UI is cloner-oriented, not emulator-oriented."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "The device's genuine justification. The Linux SoC runs the Proxmark client on-board, so darkside / nested / hardnested key recovery completes on the device with no laptop attached. On a Proxmark you would be tethered for the hardnested search; here you are not."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "Explicitly listed as NOT supported on the vendor's own spec table. Correct and honest of them - nothing recovers DESFire AES keys."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "Explicitly listed as NOT supported on the vendor's own spec table. Note this next to any comparison chart with an 'NFC EMV' column: the market leader in automated cloners does not claim it, because reading a bank card would not let you clone or spend from it anyway."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "iCODE SLI/SLIX listed as supported."
+      },
+      "nfc_type4_ndef": {
+        "v": "unknown",
+        "note": "Not mentioned in vendor documentation. The Proxmark core supports Type 4 NDEF but whether the factory UI exposes it could not be determined."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Screen, buttons, 2000mAh battery, on-device key recovery. Fully standalone is the product."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Closed firmware, no scripting, and tag types are DRM-gated by licence tier."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Unlike a Proxmark, this device has no plausible research framing - it is a one-button badge duplicator with a wizard, and that shapes how its presence gets interpreted. Owning one is legal in most countries; cloning a credential you are not authorised to use is an offence essentially everywhere, typically under computer-misuse, forgery or access-device law. Several jurisdictions also treat possession of credential-duplication equipment with intent as a separate offence. Get a written, signed scope before it leaves your desk. Check your local law."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "iCopy-X",
+      "iCopyX",
+      "iCopy XS"
+    ],
+    "sources": [
+      {
+        "url": "https://lab401.com/products/icopy-x",
+        "what": "price tiers, hardware spec (256MB RAM, 16GB, 240x240 screen, 2000mAh, dimensions, weight), supported tag list, and the explicit 'not supported: DESFire, iCLASS Elite custom keys, EMV' line; iCS Decoder at EUR425"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/README.md",
+        "what": "'Factory UI closed source / Factory Firmware enforces tag DRM'; iCopy-X listed as supported only after installing open-source firmware"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md",
+        "what": "PLATFORM=PM3ICOPYX uses the XC3S100E FPGA"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/hid_downgrade.md",
+        "what": "what a SEOS/SE 'clone' actually is - a downgrade onto a legacy blank that only works if the reader still accepts legacy formats"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/lab-401/icopy-x/main/README.md",
+        "what": "ICS Decoder attack flow: decoder does the SEOS crypto, iCopy-X parses the PACS payload and writes it to an iCLASS Legacy/PicoPass or T5577 blank"
+      }
+    ],
+    "research_gaps": [
+      "Launch year 2020 is approximate; no primary vendor announcement could be sourced.",
+      "The Linux application SoC part number is not published and could not be determined.",
+      "Antenna specification and read ranges are not published by the vendor.",
+      "Exactly which tag types each licence tier unlocks is not documented publicly - the tier list is marketing copy, not a specification."
+    ]
+  },
+  {
+    "id": "icopy-x-open",
+    "hardware_id": "icopy-x",
+    "name": "iCopy-XS",
+    "firmware": "iCopy-X Open (lab-401)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/lab-401/icopy-x",
+    "firmware_note": "A clean-room rebuild - 'not built on the original author's IP, all code written from scratch' - that removes the factory tag DRM, runs the current Iceman Proxmark firmware, and adds a JSON-driven plugin system, USB screen mirroring and an ICS Decoder bridge for SEOS PACS extraction. Licence forbids commercial use.",
+    "vendor": "iCopy-X (hardware) / lab-401 (firmware)",
+    "vendor_url": "https://github.com/lab-401/icopy-x",
+    "product_url": "https://lab401.com/products/icopy-x",
+    "category": "rfid-nfc",
+    "subcategory": "automated-cloner",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 435,
+    "price_note": "Firmware is free. The relevant number is that it makes the EUR375 Basic and the EUR529 Advanced the same device, so there is no reason to buy anything above the base tier. Hardware price as per the factory-firmware entry.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The wizard survives, but you now have the full Iceman command set behind it - which means you can also reach every way of getting a wrong answer that a Proxmark offers.",
+    "build_effort": "flash-only",
+    "build_note": "Installable without building individual IPKs, per the project's own README. Reflashing a EUR375+ device always carries recovery risk; the project notes it is 'probably not bug-free' despite extensive testing.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "The same iCopy-XS hardware running a from-scratch open firmware. It keeps the screen-and-buttons cloner workflow but strips the licence tiers, tracks current Iceman Proxmark releases, and adds a plugin architecture that lets you drive the Proxmark or the Linux subsystem from JSON-described UI apps.",
+    "honest_take": "This firmware is the strongest argument for owning the hardware and simultaneously the strongest argument against the vendor's pricing: it deletes the tag DRM, so the EUR375 tier and the EUR529 tier become identical devices. Know that before you order. What it does not do is change physics - you still cannot recover a DESFire AES key or clone an iCLASS SE / SEOS credential, and the ICS Decoder path it integrates is still a downgrade attack that writes PACS bits to a legacy blank and only works where the reader still accepts legacy formats. The ICS bridge has been tested only against a DIY decoder build; the commercial Nikola decoder is listed as testing pending. And the licence bars commercial use, which for a device most often bought by consultants is a real constraint.",
+    "best_for": [
+      "Getting the full Iceman command set with an on-device screen and battery",
+      "Owners of a Basic-tier unit who want the tag types they paid a lower tier to not have",
+      "Anyone who wants a Proxmark that finishes a hardnested run in their hand"
+    ],
+    "not_for": [
+      "Commercial use - the licence forbids it",
+      "DESFire or bank-card cloning, same as any other device",
+      "Anyone unwilling to risk reflashing an expensive device"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Identical hardware to the factory-firmware entry: a Linux application processor with 256MB RAM and 16GB storage. Exact SoC not published.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "XC3S100E",
+          "role": "rfid-lf-hf",
+          "note": "Xilinx Spartan-3E FPGA, per the Proxmark PLATFORM=PM3ICOPYX target."
+        },
+        {
+          "ic": null,
+          "role": "analog-front-end",
+          "note": "Internal LF and HF coils; no published specification."
+        }
+      ],
+      "display": {
+        "type": "IPS LCD",
+        "size_in": 1.3,
+        "resolution": "240x240",
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": 2000,
+      "battery_note": "Li-ion.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "16GB internal, 256MB RAM",
+      "connectivity": [
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "120 x 55 x 24",
+      "weight_g": 113,
+      "case": "Plastic",
+      "notable_physical": [
+        "Screen mirroring over USB (cannot run at the same time as PC-Mode)",
+        "External USB port used for the ICS Decoder dongle"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "Full Iceman LF command set rather than the factory's curated list - EM4x05/4x50/4x70, Hitag, Nedap, Paradox, Keri and the rest become reachable."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "T5577, EM4305 and the full Iceman clone command set."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Iceman's sim and brute-force commands become available, including the LF standalone modes."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "Everything the Iceman firmware reads: ISO14443A/B, ISO15693, iCLASS/PicoPass, FeliCa, Legic, Topaz."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Full Iceman writing support including magic card generations."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "Iceman's full sim command set, no longer gated by the factory UI."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "darkside, nested, staticnested, hardnested and autopwn, all running on the device's own Linux CPU. This is the single best ergonomic argument in the whole batch: Proxmark-grade key recovery with no laptop."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Gains Iceman's full 'hf mfdes' command set - which is still authenticate-with-a-key-you-have and dictionary checking. Better than the factory firmware's flat 'not supported', but it recovers no keys, because no attack exists."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "Gains Iceman's EMV kernel, so PAN, expiry and card structure become readable where the factory firmware refused outright. Still cannot clone a card or make a payment: the cryptogram is produced inside the chip with an issuer key, and check-ARQC / issuer scripts are unimplemented for exactly that reason."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Full 'hf 15' command set including SLIX password commands and AFI brute forcing."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Iceman's FeliCa reader, sniff, dump and Lite auth commands become available."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Iceman's 'hf ndef' Type 4 read/write. A data-format capability, not a security bypass."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Screen, buttons, battery, and now the full client on-device."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Screen mirroring is over USB, not a web interface."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JSON-described plugin apps that can drive the Proxmark or the Linux subsystem, plus a full-screen mode for running arbitrary binaries. Iceman's Lua and Python scripting comes along with the client."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same exposure as the factory firmware, plus one extra consideration: the firmware licence explicitly forbids commercial use, so a consultant running it on a paid engagement has a licensing problem separate from any criminal-law question. Cloning credentials you are not authorised to use is an offence essentially everywhere. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No - JSON plugin system, community-contributed",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "iCopy-X Open",
+      "iCopy-X jailbreak",
+      "icopy-x open source firmware"
+    ],
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/lab-401/icopy-x/main/README.md",
+        "what": "clean-room claim, removal of factory DRM, plugin system, screen mirroring, ICS Decoder bridge and its attack flow, non-commercial licence, tested-decoder table"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/README.md",
+        "what": "iCopy-X supported by Iceman ONLY after installing this open firmware; factory firmware enforces tag DRM"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/RfidResearchGroup/proxmark3/master/doc/commands.md",
+        "what": "the command set that becomes available - including the absence of any DESFire or MIFARE Plus key-recovery command"
+      },
+      {
+        "url": "https://lab401.com/products/icopy-x",
+        "what": "hardware specification and the tiered pricing this firmware makes irrelevant"
+      }
+    ],
+    "research_gaps": [
+      "No tagged releases or dated changelog found, so a last_release date could not be recorded.",
+      "The ICS Decoder bridge is documented as tested only with the DIY decoder build; the Nikola decoder is 'testing pending'.",
+      "Whether reflashing is reversible back to factory firmware - and whether that voids vendor support - could not be determined."
+    ]
+  },
+  {
+    "id": "hunter-cat-nfc",
+    "hardware_id": "hunter-cat-nfc",
+    "name": "Hunter Cat NFC",
+    "firmware": "Electronic Cats stock (DetectReaders)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/ElectronicCats/HunterCatNFC",
+    "firmware_note": "Preloaded reader-detection firmware: a red LED blinks once a second while armed and lights when an active NFC reader field is detected. Firmware AGPL-3.0, hardware CERN-OHL v1.2, Arduino and CircuitPython compatible with a UF2 bootloader.",
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://www.tindie.com/products/electroniccats/hunter-cat-nfc/",
+    "category": "detection-defense",
+    "subcategory": "nfc-reader-detector",
+    "status": "discontinued",
+    "released": "2021",
+    "price_usd": 99.99,
+    "price_note": "Last known price, on Tindie, where it has been sold out since 2023-01-04. KSEC listed it at GBP144.99, also out of stock. Electronic Cats have removed it from their store entirely - a store search returns no results, and the old product URL now serves the BomberCat page. The vendor states plainly: 'The Hunter Cat NFC is retired, and BomberCat is its successor.' BomberCat is US$119 and in stock.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "As shipped it is a one-button device with an LED. Doing anything past that means writing Arduino or CircuitPython against the PN7150 yourself.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled with a battery. UF2 bootloader means reflashing is drag-and-drop.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A card-sized board pairing a SAMD21 Cortex-M0+ with an NXP PN7150 NFC controller, sold as a contactless skimmer detector. Its shipped firmware watches for an active 13.56 MHz reader field and flashes an LED. Because the PN7150 is a full NFC front end, the board can also be reprogrammed as a reader, a card emulator, or a peer-to-peer endpoint.",
+    "honest_take": "The headline feature is an LED that lights when something nearby is energising a 13.56 MHz field. That is a real and occasionally useful primitive, but it is not skimmer detection in any meaningful sense: a legitimate payment terminal, a door reader and a hostile skimmer all produce an identical RF field, and the shipped firmware does no signature matching, no protocol fingerprinting and no reader identification. It tells you a reader is on, nothing about whose it is. The interesting hardware is the PN7150, and to use it you have to write your own firmware, which is a different product from the one being sold. Electronic Cats have retired it - it is gone from their store, sold out on Tindie since January 2023, and they now point buyers at the BomberCat (US$119), which folds the same reader-detection into a device that also does NFC relay and magstripe work. Do not confuse this with the plain 'Hunter Cat', a separate and still-current US$41-46 magnetic-stripe skimmer detector.",
+    "best_for": [
+      "Knowing whether a surface you are about to tap has an active reader under it",
+      "A cheap PN7150 development board with a UF2 bootloader, if you intend to write the firmware"
+    ],
+    "not_for": [
+      "Distinguishing a hostile skimmer from a legitimate terminal - it cannot",
+      "Reading bank cards out of the box - there is no EMV kernel in the shipped firmware",
+      "New purchases - it is retired and out of stock everywhere"
+    ],
+    "hardware": {
+      "mcu_primary": "ATSAMD21",
+      "mcu_primary_note": "ARM Cortex-M0+. Provides the USB interface and drives the NFC controller. Exact SAMD21 variant not specified by the vendor.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "PN7150",
+          "role": "nfc",
+          "note": "NXP full-NFC controller with an integrated firmware stack: ISO14443A, ISO14443B, NFCIP-1/2, FeliCa PCD mode, NFC Forum tag types 1-5, and MIFARE Classic crypto. Supports reader/writer, card emulation and peer-to-peer modes. All the capability in this device comes from this chip."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Ships with a battery; capacity not published.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": [
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, card footprint",
+      "notable_physical": [
+        "3 status LEDs",
+        "Open Hardware certified (OSHW MX000029)",
+        "UF2 bootloader - reflash by dragging a file onto a USB drive"
+      ]
+    },
+    "capabilities": {
+      "detect_skimmer": {
+        "v": "partial",
+        "note": "SAY WHAT IT MATCHES ON: nothing. It detects the presence of an active 13.56 MHz reader field and flashes a red LED. There is no signature list, no MAC or UID matching, no protocol fingerprinting and no way to tell a hostile reader from a shop's payment terminal or a building's door reader. Treat it as an RF-field presence indicator, which is what it is."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "The PN7150 is a capable reader (ISO14443A/B, FeliCa, NFC Forum T1-T5) but the shipped firmware is a detector. Reader functionality means writing your own Arduino or CircuitPython code."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "PN7150 card-emulation mode is available in hardware; shipped firmware does not expose it."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable absence. 13.56 MHz only. It cannot see an HID Prox or EM4100 badge at all."
+      },
+      "nfc_type4_ndef": {
+        "v": "partial",
+        "note": "PN7150 handles NFC Forum tag types 1 through 5 including Type 4 NDEF. Reachable through your own firmware, not through the shipped detector build."
+      },
+      "iso15693": {
+        "v": "partial",
+        "note": "PN7150 supports NFC Forum Type 5 (ISO15693). Resellers list it. No shipped-firmware application uses it."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "PN7150 has FeliCa PCD mode. Again, hardware capability with no shipped application."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel. The PN7150 will happily carry ISO14443-4 APDUs, so someone could write EMV support, but nothing ships. And even a complete EMV read would only give PAN and expiry - never the ability to clone the card or make a payment, because the transaction cryptogram is generated inside the chip with an issuer key."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Arduino and CircuitPython compatible with a UF2 bootloader. This is genuinely the device's best feature and the reason to want one."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with LED output - it works in a pocket with nothing attached."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A passive field detector with no transmit function in its shipped configuration - unremarkable to own or carry anywhere. If you reflash it as a reader or an emulator, the legal position becomes that of any NFC reader: reading or emulating credentials you are not authorised to use is an offence in most jurisdictions. Check your local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "HunterCat NFC",
+      "Hunter Cat NFC by Electronic Cats"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ElectronicCats/HunterCatNFC",
+        "what": "SAMD21 + PN7150 architecture, three operating modes, what the detection firmware actually does (red LED on active reader), supported protocol list, licences"
+      },
+      {
+        "url": "https://www.tindie.com/products/electroniccats/hunter-cat-nfc/",
+        "what": "US$99.99 price, sold out since 2023-01-04, hardware spec"
+      },
+      {
+        "url": "https://electroniccats.com/store/bombercat/",
+        "what": "vendor statement: 'The Hunter Cat NFC is retired, and BomberCat is its successor'; BomberCat US$119 in stock with DetectReaders firmware"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/hunter-cat-nfc/",
+        "what": "GBP144.99, out of stock"
+      },
+      {
+        "url": "https://electroniccats.com/store/hunter-cat/",
+        "what": "the separate, still-current magstripe Hunter Cat at US$41-46 - a different product that gets confused with this one"
+      }
+    ],
+    "research_gaps": [
+      "Release year 2021 is approximate; no primary announcement could be sourced now that the product page is gone.",
+      "Battery capacity, dimensions and the exact SAMD21 variant are not published.",
+      "Could not verify the Electronic Cats direct selling price (as opposed to the Tindie price) before the product was pulled - web.archive.org was not reachable from this environment."
+    ]
+  },
+  {
+    "id": "acr122u",
+    "hardware_id": "acr122u",
+    "name": "ACR122U",
+    "firmware": "ACS stock (CCID / PC/SC)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Closed vendor firmware on an ST7 MCU that presents the PN532 to the host as a USB CCID smartcard reader. That wrapper is why the device works everywhere through PC/SC and why libnfc has to reach the PN532 through a CCID escape command.",
+    "vendor": "Advanced Card Systems (ACS)",
+    "vendor_url": "https://www.acs.com.hk",
+    "product_url": "https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/",
+    "category": "rfid-nfc",
+    "subcategory": "usb-nfc-reader",
+    "status": "discontinued",
+    "released": null,
+    "price_usd": 35,
+    "price_note": "US$28.88-49.99 on Amazon, clustering around US$32-38. But read the status field: ACS has end-of-lifed the genuine article and states on its own product page that there have been 'widespread reports of counterfeit or non-genuine ACR122U units on the market'. Whatever arrives at this price is almost certainly a clone. ACS's named replacement is the ACR1552U at US$65.95. Neither Lab401 nor KSEC stocks an ACR122U at all.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The reader is trivial; the toolchain is not. Getting libnfc, pcscd and the CCID driver to cooperate on Linux - and stop fighting each other over the device - is the actual difficulty, and it is where most people give up.",
+    "build_effort": "assembled",
+    "build_note": "Plug in and install drivers. On Linux you will likely need to blacklist a kernel module and configure PCSC before libnfc sees it.",
+    "stealth": "discreet",
+    "form_factor": "desktop",
+    "summary": "The ubiquitous cheap USB NFC reader: an NXP PN532 controller behind an ST7 USB microcontroller that presents it as a standard CCID smartcard reader. It is the default hardware assumption in a decade of NFC tutorials, libnfc documentation and MIFARE Classic write-ups, which is most of why it is still everywhere.",
+    "honest_take": "Two things catch people out. First, it is 13.56 MHz only - it cannot see a 125 kHz HID Prox or EM4100 badge at all, and 'NFC reader' and 'RFID reader' get used interchangeably enough that people buy one expecting to clone a building badge. Second, ACS has formally end-of-lifed it while publicly warning about widespread counterfeits, so at US$35 you are buying an unknown clone whose firmware version and silicon you cannot verify, and clone-to-clone behaviour under libnfc genuinely varies - some only work through PC/SC, meaning they run on Windows and fail on Linux. What it is honestly good at is NFC Forum Type 1-4 NDEF read/write, and as the cheapest way to run the classic mfoc/mfcuk/libnfc MIFARE Classic workflow, with your PC doing all the computation. Past MIFARE Classic it runs out of road quickly: card emulation support through libnfc is poor, and the PN532 does not do ISO15693.",
+    "best_for": [
+      "NDEF tag reading and writing - its genuine strength and why it is in every tutorial",
+      "The cheapest legitimate route into MIFARE Classic key recovery via mfoc / mfcuk",
+      "PC/SC and smartcard development where a standard CCID reader is what you want"
+    ],
+    "not_for": [
+      "125 kHz badges of any kind - wrong frequency entirely",
+      "Card emulation - the PN532 has the mode, libnfc support is poor and the CCID wrapper gets in the way",
+      "ISO15693 / NFC Forum Type 5 tags",
+      "Anyone who needs to know what silicon they are actually running"
+    ],
+    "hardware": {
+      "mcu_primary": "ST7SCR1E4M1",
+      "mcu_primary_note": "8-bit low-power USB microcontroller with a smartcard interface, 16KB flash, 768 bytes RAM. Its only job is to bridge USB CCID to the PN532.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "PN532",
+          "role": "nfc",
+          "note": "NXP NFC controller: ISO14443A/MIFARE, ISO14443B, FeliCa and NFCIP-1. Reader/writer, card emulation and peer-to-peer modes in silicon. Does NOT implement ISO15693/NFC-V - that is a hardware limit, not a firmware one."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB bus powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": [
+        "USB-A (CCID class)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic desktop puck",
+      "notable_physical": [
+        "Multicolour status LED and a beeper - both of which are unavailable when driving the device through libnfc on Linux",
+        "Optional SAM slot on some variants"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443A and B, MIFARE Classic / Ultralight / DESFire (identity and APDU layer), FeliCa, NFC Forum tag types 1-4. This is what the device is for."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "NTAG and Ultralight writing is reliable. MIFARE Classic write support through libnfc is limited - some cards need manual formatting and some simply do not work. Widely reported, and it varies by clone."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "The PN532 has a card-emulation mode, but libnfc's support for emulation and peer-to-peer on this device is documented as poor, and the CCID wrapper is in the way. Do not buy this to emulate a card - buy a Chameleon."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable absence and the single most common purchasing mistake around this device. 13.56 MHz only. No HID Prox, no EM4100, no Indala, no Hitag."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "The whole mfoc / mfcuk / mfoc-hardnested workflow runs on this reader: nested (mfoc), darkside (mfcuk) and hardnested key recovery all work. Every part of the attack computation happens on your PC - the reader is a dumb RF front end passing frames. Slower and clumsier than a Proxmark, but it is the US$35 way in, and it is why this device appears in every MIFARE Classic tutorial written since about 2010."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Reads the UID and can carry ISO14443-4 APDUs to a DESFire, so you can enumerate applications and files. It cannot recover a DESFire AES key - no hardware can. Vendor spec sheets listing 'DESFire' mean 'can talk to one', not 'can clone one'."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Full NFC Forum Type 1-4 NDEF read and write. This is the reader's real strength and the reason it is embedded in so much NDEF tooling. Worth restating what the column means: NDEF is a data format for records the tag hands to any reader that asks, so this is a formatting capability, not a security capability."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "As a PC/SC reader it carries EMV APDUs fine, and scripts in the RFIDIOt / nfcpy / pyResMan lineage will pull the PAN and expiry off many contactless bank cards, plus a transaction log on some issuers. IT CANNOT CLONE THE CARD OR MAKE A PAYMENT. Every transaction needs an Application Cryptogram computed inside the chip with an issuer key that never leaves it, and you cannot produce one. A dump of a card's static data is not a card. This is the single most misunderstood row in any NFC comparison table."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "The PN532 implements ISO14443A/B, FeliCa and NFCIP-1; ISO15693/NFC-V is not in its protocol set and the ACS firmware does not expose it. Some third-party spec tables list ISO15693 for this reader - we believe those are in error. If you need ISO15693, buy an ACR1252U/ACR1552U or a Proxmark. See research_gaps."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "PN532 supports FeliCa polling and libnfc exposes it - useful for reading IDm/PMm. FeliCa Standard's mutual authentication is not broken by this or anything else."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "libnfc, nfcpy, PC/SC bindings in every language, and a large body of existing example code. Ubiquity is the feature."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A commodity USB card reader sold openly on Amazon and used in payment, ticketing and access-control integration everywhere. Nothing about owning one is remarkable. The legal question attaches to what you read: pulling data off cards you do not own or are not authorised to read can engage computer-misuse or data-protection law, and reading strangers' bank cards in public is unlawful in most jurisdictions regardless of how little use the data is to you. Check your local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No - but an enormous body of libnfc/nfcpy/PC-SC example code targets it specifically",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "ACR122",
+      "ACR122U-A9",
+      "ACS NFC reader",
+      "PN532 USB reader"
+    ],
+    "sources": [
+      {
+        "url": "https://nfc-tools.github.io/resources/devices/acr122/",
+        "what": "PN532 + ST7SCR1E4M1 architecture, CCID/PCSC requirement, firmware version restrictions, 'poor support for emulation and P2P under libnfc'"
+      },
+      {
+        "url": "https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/",
+        "what": "ACS's own end-of-life notice and counterfeit warning; ACR1552U named as the replacement"
+      },
+      {
+        "url": "https://zaparoo.org/docs/readers/nfc/acr122u/",
+        "what": "clone variability, limited MIFARE Classic write support on Linux, LED/beeper unavailable under libnfc, PC/SC-only clones failing on Linux"
+      },
+      {
+        "url": "https://github.com/nfc-tools/libnfc/issues/352",
+        "what": "PN532 UID-length handling issues in practice"
+      }
+    ],
+    "research_gaps": [
+      "ISO15693 support is genuinely disputed in the sources. The nfc-tools device page lists ISO15693 among supported protocols; ACS's own datasheet historically lists NFC Forum Type 1-4 only (Type 5 = ISO15693 absent), and the PN532's documented protocol set does not include it. We could not read the PN532 datasheet directly in this session to settle it, so the 'no' above is a reasoned judgement, not a confirmed fact. Verify before relying on it.",
+      "Original release year could not be sourced; the product predates most of its own documentation.",
+      "Because ACS has EOL'd the product and warns of widespread counterfeits, no capability here can be guaranteed for a specific unit bought today - the silicon and firmware in a US$35 Amazon clone are unverifiable."
+    ]
+  }
+]

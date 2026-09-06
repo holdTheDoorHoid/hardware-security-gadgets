@@ -136,6 +136,40 @@ def main():
         if not d.get("sources"):
             warns.append(f"{tag}: no sources listed")
 
+    # --- apply gapfill patches (research/gapfill.json) ---
+    gp = os.path.join(RES, "gapfill.json")
+    if os.path.exists(gp):
+        try:
+            patches = json.load(open(gp))
+        except Exception as e:
+            problems.append(f"gapfill.json: parse failed - {e}")
+            patches = []
+        applied = skipped = 0
+        for pt in patches:
+            key = pt.get("capability")
+            if key not in caps_ok:
+                warns.append(f"gapfill: unknown capability '{key}' (skipped)"); continue
+            val = pt.get("v", "unknown")
+            if val not in CAPVALS:
+                warns.append(f"gapfill: bad value '{val}' for '{key}' (skipped)"); continue
+            nc = (pt.get("name_contains") or "").lower()
+            fc = (pt.get("firmware_contains") or "")
+            hit = 0
+            for d in devices:
+                if nc and nc not in d.get("name", "").lower():
+                    continue
+                if fc and fc.lower() not in str(d.get("firmware") or "").lower():
+                    continue
+                d.setdefault("capabilities", {})[key] = {"v": val, "note": pt.get("note", "") or ""}
+                for src in (pt.get("sources") or []):
+                    d.setdefault("sources", []).append(src)
+                hit += 1
+            if hit: applied += 1
+            else:
+                skipped += 1
+                warns.append(f"gapfill: '{nc}'{' / '+fc if fc else ''} matched no build for '{key}'")
+        print(f"gapfill: {applied} patches applied, {skipped} matched nothing")
+
     for d in devices:
         d.pop("_src", None)
 

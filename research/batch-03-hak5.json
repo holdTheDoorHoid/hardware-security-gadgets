@@ -1,0 +1,3652 @@
+[
+  {
+    "id": "wifi-pineapple-mk7-basic",
+    "hardware_id": "wifi-pineapple-mk7",
+    "name": "WiFi Pineapple Mark VII Basic",
+    "firmware": "WiFi Pineapple 7 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/pineapple-modules",
+    "firmware_note": "OpenWrt-derived Hak5 firmware with the PineAP rogue-AP suite and a web module store; updated in-place from the web UI.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/wifi-pineapple",
+    "category": "wifi",
+    "subcategory": "rogue-ap-platform",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 250,
+    "price_note": "Shop lists Mark VII Basic at $250. B2B/education SKU is $240. The +AC bundle and the MK7AC adapter needed for 5 GHz are both out of stock as of this check.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The web UI makes launching attacks trivial, but interpreting results and staying in scope requires real 802.11 knowledge.",
+    "build_effort": "assembled",
+    "build_note": "Screw on three antennas, power over USB-C, run the web setup wizard.",
+    "stealth": "overt",
+    "form_factor": "box",
+    "summary": "A pocket-sized OpenWrt box with three dedicated 2.4 GHz radios and a web interface built around PineAP, Hak5's rogue access point suite. It exists to impersonate access points that client devices are already looking for, capture handshakes, and run captive-portal attacks. The Basic model is 2.4 GHz only.",
+    "honest_take": "The classic Pineapple attack chain has been substantially blunted since this hardware launched. WPA3 and 802.11w Protected Management Frames make forged deauthentication frames ineffective, iOS/Android/Windows all randomise MAC addresses and have largely stopped broadcasting directed probe requests for saved networks (which is what PineAP's karma attack feeds on), and HSTS plus universal HTTPS means a captive portal mostly gets you a browser warning rather than credentials. Hak5's own Enterprise documentation admits MFP 'prevents forged deauthentication packets from being respected by the client'. It is still a genuinely good and fast platform for auditing legacy WPA2 estates and open guest networks, but you are paying $250 for a single-core MIPS SoC and three cheap 2.4 GHz radios; the value is the software and the workflow, not the silicon.",
+    "best_for": [
+      "Auditing legacy WPA2 and open guest networks",
+      "Capturing WPA handshakes and PMKID for offline cracking",
+      "Learning 802.11 attack theory with a guided UI",
+      "Demonstrating rogue-AP risk to non-technical stakeholders"
+    ],
+    "not_for": [
+      "Attacking WPA3 or PMF-enabled networks",
+      "5 GHz or 6 GHz work without buying an add-on adapter",
+      "Credential harvesting against modern browsers with HSTS",
+      "Battery-powered drop deployments (no internal battery)"
+    ],
+    "hardware": {
+      "mcu_primary": "MediaTek MT7628AN",
+      "mcu_primary_note": "Single-core MIPS 24KEc network SoC with an integrated 2.4 GHz 802.11b/g/n radio",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "MT7628AN (integrated)",
+          "role": "wifi-24",
+          "note": "SoC's own 2.4 GHz b/g/n radio; used for the management AP"
+        },
+        {
+          "ic": "MT7601U",
+          "role": "wifi-24",
+          "note": "Hak5 docs name MT7601U as an internal chipset. Three internal 2.4 GHz radios total, assigned as management AP, recon/PineAP (wlan1) and dedicated client mode (wlan2). Hak5 does not publish which part sits on which interface."
+        },
+        {
+          "ic": "MT7612U",
+          "role": "wifi-dualband",
+          "note": "NOT internal. Appears as wlan3 only when the separately-sold MK7AC USB adapter ($100, currently out of stock) is attached. This is the only supported route to 5 GHz, monitor mode and injection on 802.11ac."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No internal battery. Powered from USB-C (5 V); Hak5 warns that many USB-C PD adapters will not negotiate plain 5 V.",
+      "charging": "USB-C (power only)",
+      "pmic": null,
+      "storage": "2 GB eMMC",
+      "connectivity": [
+        "USB-C (power + ASIX AX88772 USB Ethernet to host)",
+        "USB 2.0 host port",
+        "3x RP-SMA antenna connectors"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "3 detachable RP-SMA antennas",
+        "Single RGB LED",
+        "USB 2.0 host port for adapters"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Recon engine channel-hops across 2.4 GHz on wlan1"
+      },
+      "wifi_scan_5": {
+        "v": "addon",
+        "note": "Requires the MK7AC (MT7612U) USB adapter, sold separately at $100 and currently out of stock"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "2.4 GHz internally; 802.11ac monitor mode only with an MT7612U adapter"
+      },
+      "wifi_injection": {
+        "v": "yes",
+        "note": "2.4 GHz internally; 802.11ac injection only with an MT7612U adapter"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Works against WPA2 without PMF. Ineffective against WPA3 and any network with 802.11w Management Frame Protection, per Hak5's own docs."
+      },
+      "wifi_deauth_5": {
+        "v": "addon",
+        "note": "Needs the MK7AC adapter; also blocked by PMF and unavailable on DFS channels"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "PineAP Open AP and EvilWPA AP, with configurable SSID and spoofable BSSID"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Via the Evil Portal community module; effectiveness against modern browsers is limited by HSTS"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "WPA/WPA2 4-way handshake capture is a core workflow"
+      },
+      "wifi_pmkid": {
+        "v": "partial",
+        "note": "Achievable from the shell with hcxdumptool-style tooling; not a first-class button in the stock UI"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "PineAP SSID pool broadcasts an operator-supplied list of network names"
+      },
+      "wifi_karma": {
+        "v": "partial",
+        "note": "PineAP responds to directed probe requests. Modern iOS, Android and Windows clients rarely emit directed probes for saved networks any more, which sharply reduces the hit rate."
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Logs probe requests and builds AP/client association views"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Management AP plus attack APs"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Recon logs APs and clients but there is no GPS input in stock firmware"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "tcpdump available from the root shell; pcap export via modules"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Full support including a one-click web-interface proxy on the Professional and Teams tiers of Cloud C2"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "http://172.16.42.1:1471 over USB-C Ethernet or the management SSID"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Root SSH, OpenWrt package manager, bash"
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Module manager plus a community package repo; the hak5/pineapple-modules repo has not been pushed to since May 2024"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Runs headless from any 5 V USB source but has no battery of its own"
+      },
+      "usb_payload_lang": {
+        "v": "no",
+        "note": "Not a DuckyScript device. Modules and bash, not payload.txt."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning wireless test equipment is legal in most countries. Actually using it is where the risk sits: transmitting deauthentication frames against networks you do not own, standing up an access point that impersonates someone else's SSID, and intercepting traffic can each be separate offences under computer-misuse, wiretap and radio-interference law. Hak5 classifies the software as ECCN 5D992.c for export. Check your local law and get written authorisation before every engagement."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025-06",
+      "app_store": "Yes - built-in module manager plus a community package repository",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Pineapple MK7",
+      "Mark 7",
+      "MK7 Basic",
+      "WiFi Pineapple 7"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/wifi-pineapple",
+        "what": "SKU list and price; Mark VII Basic $250, +AC $300 sold out"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple/wifi-basics/radios-and-chipsets",
+        "what": "MediaTek chipsets, radio roles and MT7612U adapter requirement"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple/",
+        "what": "wlan1 recon / wlan2 client mode / wlan3 AC adapter interface assignment; ASIX AX88772 USB Ethernet"
+      },
+      {
+        "url": "https://fccid.io/2AA52MK7",
+        "what": "FCC ID for the WiFi Pineapple Mark VII"
+      },
+      {
+        "url": "https://github.com/hak5/pineapple-modules",
+        "what": "Module repository; last pushed 2024-05-28"
+      }
+    ],
+    "research_gaps": [
+      "Hak5 does not publish which internal radio chipset is bound to which wlan interface; the docs name MT7601U and MT7610U without mapping them",
+      "No published dimensions, weight or TX power in dBm for the Mark VII",
+      "Could not confirm the exact 2.4 GHz PA/amplifier arrangement"
+    ]
+  },
+  {
+    "id": "wifi-pineapple-mk7-ac",
+    "hardware_id": "wifi-pineapple-mk7",
+    "name": "WiFi Pineapple Mark VII + AC",
+    "firmware": "WiFi Pineapple 7 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/pineapple-modules",
+    "firmware_note": "Identical firmware to the Basic; the AC adapter simply presents an extra wlan3 interface that the UI then offers for 5 GHz work.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/wifi-pineapple",
+    "category": "wifi",
+    "subcategory": "rogue-ap-platform",
+    "status": "out-of-stock",
+    "released": "2020",
+    "price_usd": 300,
+    "price_note": "$300 for the bundle, versus $250 Basic + $100 for the MK7AC adapter bought separately, so the bundle saves $50. Both the bundle and the standalone MK7AC adapter are sold out as of this check. A 'Mark VII+AC Tactical' variant with a hard case lists at $320, also sold out.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same as the Basic, but you now have to reason about band steering, DFS channels and which interface is doing what.",
+    "build_effort": "assembled",
+    "build_note": "Plug the MK7AC adapter into the USB host port; the firmware picks it up as wlan3 automatically.",
+    "stealth": "overt",
+    "form_factor": "box",
+    "summary": "The Mark VII Basic bundled with Hak5's MK7AC USB adapter, an MT7612U dual-band radio that adds 5 GHz scanning, monitor mode and injection. This is the configuration most people actually want, because a 2.4 GHz-only tool misses most modern corporate and home traffic.",
+    "honest_take": "This is not a different device, it is the same box with a $100 USB dongle in the port, and the dongle is an ordinary MT7612U adapter. An ALFA AWUS036ACM is the same chipset, is explicitly listed as compatible in Hak5's own docs, and is usually cheaper and easier to buy. Everything said about WPA3, PMF, MAC randomisation and HSTS blunting the Basic applies here too, and 5 GHz adds its own problem: injection is not possible on DFS channels, which is where a lot of enterprise 5 GHz traffic lives. Buying the Basic and sourcing an AWUS036ACM yourself is the pragmatic move, especially while the bundle is out of stock.",
+    "best_for": [
+      "Dual-band recon where 2.4 GHz alone would miss the target",
+      "802.11ac handshake capture and injection",
+      "Engagements against mixed legacy estates"
+    ],
+    "not_for": [
+      "6 GHz / Wi-Fi 6E networks (no radio for it)",
+      "Injection on DFS channels",
+      "WPA3 or PMF-protected networks"
+    ],
+    "hardware": {
+      "mcu_primary": "MediaTek MT7628AN",
+      "mcu_primary_note": "Single-core MIPS 24KEc network SoC with integrated 2.4 GHz b/g/n radio",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "MT7628AN (integrated)",
+          "role": "wifi-24",
+          "note": "SoC radio, management AP"
+        },
+        {
+          "ic": "MT7601U",
+          "role": "wifi-24",
+          "note": "Internal 2.4 GHz radios for recon/PineAP and client mode; exact per-interface mapping not published"
+        },
+        {
+          "ic": "MT7612U",
+          "role": "wifi-dualband",
+          "note": "The MK7AC adapter. 2.4/5 GHz 802.11ac 2x2, 866 Mbps peak. Appears as wlan3. Hak5 states only MT7612U-based adapters are confirmed to work correctly in all circumstances."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No internal battery; 5 V USB-C power",
+      "charging": "USB-C (power only)",
+      "pmic": null,
+      "storage": "2 GB eMMC",
+      "connectivity": [
+        "USB-C (power + ASIX AX88772 USB Ethernet)",
+        "USB 2.0 host port (occupied by the MK7AC adapter)",
+        "3x RP-SMA + adapter antennas"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "MK7AC dongle occupies the only USB host port",
+        "RGB LED"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Internal radios"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "Via the MT7612U MK7AC adapter on wlan3"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "2.4 and 5 GHz, including 802.11ac"
+      },
+      "wifi_injection": {
+        "v": "yes",
+        "note": "802.11ac injection supported with the MT7612U adapter; not possible on DFS channels"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Blocked by 802.11w PMF and WPA3"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Works on non-DFS 5 GHz channels against non-PMF networks only"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "PineAP on either band"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal module; HSTS limits real-world credential capture"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Dual-band handshake capture"
+      },
+      "wifi_pmkid": {
+        "v": "partial",
+        "note": "Shell tooling rather than a stock UI feature"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "PineAP SSID pool"
+      },
+      "wifi_karma": {
+        "v": "partial",
+        "note": "Hit rate is low against current mobile OS probe behaviour"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Both bands"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Management and attack APs"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "No GPS input in stock firmware"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "tcpdump from the root shell"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Full support including web-interface proxy"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "http://172.16.42.1:1471"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Root SSH plus OpenWrt packages"
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Module manager"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "No battery"
+      },
+      "usb_payload_lang": {
+        "v": "no",
+        "note": "Not a DuckyScript device"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as the Basic. Note additionally that 5 GHz DFS channels are radar-protected bands in most jurisdictions and deliberately transmitting on them can be a regulatory offence entirely separate from any computer-misuse question. Get written authorisation."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025-06",
+      "app_store": "Yes - shared with the Basic",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "MK7 AC",
+      "Pineapple Mark VII AC",
+      "MK7+AC"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/wifi-pineapple",
+        "what": "Mark VII+AC $300, sold out; MK7AC adapter $100 sold out"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple/faq/compatible-802.11ac-adapters",
+        "what": "MT7612U requirement; AWUS036ACM and EP-AC1605 V1 listed as equivalents"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple/",
+        "what": "wlan3 appears when a compatible AC adapter is connected"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm whether the Tactical variant differs from the +AC bundle in anything but the carry case",
+      "No measured TX power figures published for the MK7AC adapter"
+    ]
+  },
+  {
+    "id": "wifi-pineapple-enterprise",
+    "hardware_id": "wifi-pineapple-enterprise",
+    "name": "WiFi Pineapple Enterprise",
+    "firmware": "WiFi Pineapple Enterprise (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Same PineAP-centred web platform as the Mark VII, scaled for far more clients and radios; separate firmware image and documentation space.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/wifi-pineapple-enterprise",
+    "category": "wifi",
+    "subcategory": "rogue-ap-platform",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 850,
+    "price_note": "Four tiers, and the spread is almost entirely licensing and services, not hardware. BASIC $850 = hardware, standard warranty, software update subscription, community support. STANDARD $1200 = same hardware plus a Cloud C2 Professional licence, extended warranty and standard support. ADVANCED (TAA) $2699.99 = TAA-compliant hardware with final assembly in the USA for MIL/GOV buyers, plus a Cloud C2 Teams Silver licence. PENTEST $6600 = the same $850 box plus a four-business-day wireless penetration test delivered by one Cobalt.io consultant over two weeks. A 1U rack mount is $160 extra. B2B SKU lists at $900.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "advanced",
+    "skill_note": "Rack-mount, mains-powered, five radios and 100+ client handling; this is scoped for consultants running multi-day engagements, not for learning.",
+    "build_effort": "assembled",
+    "build_note": "Attach eight RP-SMA antennas, plug into mains, provision for Cloud C2 from a USB stick.",
+    "stealth": "overt",
+    "form_factor": "desktop",
+    "summary": "A 1U mains-powered rack unit with five dual-band radios and eight antennas, running the same PineAP software as the Mark VII but sized for permanent or long-running installation at a client site. The selling point is Plug-and-Provision: you ship it to the client, they plug it in, and you drive the whole thing remotely through a self-hosted Cloud C2 server.",
+    "honest_take": "The hardware is real and considerably better than the Mark VII (Qualcomm IPQ4019 quad-core with two integrated radios, plus three MT7612U, 1 GB RAM, dual gigabit), but understand what the price ladder is selling. The $6600 'Pentest' tier is $850 of hardware plus a Cobalt.io consulting engagement; you are buying four consultant-days, not a better Pineapple. The $2699.99 Advanced tier's premium is TAA compliance for government procurement plus a Cloud C2 Teams licence. And the same 2026 reality check applies to all of them: Hak5's own Enterprise docs concede that Management Frame Protection 'prevents forged deauthentication packets from being respected by the client', so against a modern WPA3 or PMF-enabled estate the headline PineAP attacks largely do not land. What you are really getting is a very capable, remotely-managed, multi-radio 802.11 sensing and reporting platform.",
+    "best_for": [
+      "Long-running client-site engagements managed remotely via Cloud C2",
+      "Dense airspace with thousands of stations where a Mark VII runs out of headroom",
+      "Rogue-AP and WPA-Enterprise credential testing at scale",
+      "Government/defence buyers who need TAA-compliant hardware"
+    ],
+    "not_for": [
+      "Anyone who does not already have a Cloud C2 workflow",
+      "Covert deployment - it is a rack unit that needs mains power",
+      "Beating WPA3 / 802.11w PMF",
+      "Budget-conscious learning"
+    ],
+    "hardware": {
+      "mcu_primary": "Qualcomm IPQ4019",
+      "mcu_primary_note": "Quad-core ARM Cortex-A7 at 717 MHz with two integrated 2x2 MIMO radios (2.4 GHz and 5 GHz), 1.733 Gbps peak, MU-MIMO and TxBF",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "Qualcomm IPQ4019 (integrated)",
+          "role": "wifi-dualband",
+          "note": "Radio0/1 - one 2.4 GHz and one 5 GHz, 2x2, 802.11ac Wave 2, 1.733 Gbps peak combined"
+        },
+        {
+          "ic": "MT7612U",
+          "role": "wifi-dualband",
+          "note": "Radio2/3/4 - three MediaTek MT7612U dual-band 802.11ac radios, 866 Mbps each. wlan2 is the default recon interface."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Mains powered, 100-240 V 50/60 Hz integrated PSU",
+      "charging": "IEC C13 mains",
+      "pmic": null,
+      "storage": "4 GB eMMC",
+      "connectivity": [
+        "2x 1000BASE-T RJ45 (IEEE 802.3ab)",
+        "USB-C 3.0 ASIX USB 3.0 Ethernet interface",
+        "USB 3.0 host port",
+        "8x RP-SMA (5 dBi dual-band antennas supplied)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "160 x 244 x 41 (1U)",
+      "weight_g": null,
+      "case": "Metal, 1U rack-mountable (rack ears sold separately for $160)",
+      "notable_physical": [
+        "8 detachable dual-band antennas",
+        "Integrated AC power supply",
+        "Working range -25 to +50 C"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Five dual-band radios can scan and attack concurrently"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "Native 5 GHz; no add-on adapter required"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "802.11ac Wave 2 monitor mode"
+      },
+      "wifi_injection": {
+        "v": "yes",
+        "note": "802.11ac injection on the MT7612U radios; DFS channels still excluded"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Blocked by 802.11w MFP and WPA3, as stated in Hak5's own Enterprise documentation"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Same PMF limitation, plus DFS restrictions"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "PineAP for Open, WPA-PSK and WPA-Enterprise rogue APs"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Portal modules; HSTS limits credential capture"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Core workflow, dual-band"
+      },
+      "wifi_pmkid": {
+        "v": "partial",
+        "note": "Available from the Linux shell rather than as a headline UI button"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "PineAP SSID pool"
+      },
+      "wifi_karma": {
+        "v": "partial",
+        "note": "Same modern-client probe-behaviour limitation as the Mark VII"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Handles thousands of stations and base stations versus hundreds on a Mark VII"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Handles roughly 100 DHCP clients versus 5-10 on the Mark VII"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Full Linux userland via SSH or web shell"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Central to the product. Plug-and-Provision from a USB stick, plus a one-click proxy that renders the native web UI through Cloud C2. A licence is bundled from the Standard tier upward."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Native web interface, also reachable through the Cloud C2 proxy"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Root shell, campaigns system for scheduled automated assessments"
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Module system shared with the Pineapple line"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires mains power; there is no battery option"
+      },
+      "usb_payload_lang": {
+        "v": "no",
+        "note": "Not a DuckyScript device"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning it is legal in most places; operating a rogue access point that impersonates a third party's SSID, deauthenticating clients, or capturing WPA-Enterprise credentials are each potentially separate offences. Because this unit is designed to be left running at a client site for days, scope creep is a real risk - Hak5 ships MAC and SSID allow/deny filtering specifically to keep you in scope, and you should use it. Get signed authorisation and check local law."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "excellent",
+      "last_release": "2025-06",
+      "app_store": "Yes - shared Pineapple module system",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Pineapple Enterprise",
+      "WPE",
+      "Enterprise Pineapple"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/pages/wifi-pineapple-enterprise-faq",
+        "what": "Full published specification: IPQ4019 Radio0/1, MT7612U Radio2/3/4, 717 MHz quad Cortex-A7, 1 GB DDR3L, 4 GB eMMC, 160x244x41 mm; and the contents of each tier"
+      },
+      {
+        "url": "https://shop.hak5.org/products/wifi-pineapple-enterprise",
+        "what": "Tier prices $850 / $1200, tier inclusions, 5 dual-band radios"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple-enterprise/",
+        "what": "Three MT7612U radios, wlan2 default recon interface, MFP defeats forged deauth"
+      },
+      {
+        "url": "https://fccid.io/2A52YMK7E",
+        "what": "FCC filing for the Enterprise"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm the exact SKU-level differences in the Cobalt.io Pentest tier beyond the published four-day scope statement",
+      "No independent teardown found to verify the published chipset list"
+    ]
+  },
+  {
+    "id": "wifi-pineapple-pager",
+    "hardware_id": "wifi-pineapple-pager",
+    "name": "WiFi Pineapple Pager",
+    "firmware": "Pineapple Pager (stock, OpenWrt-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/wifipineapplepager",
+    "firmware_note": "OpenWrt with a touch-free on-device UI, bash payloads extended with DuckyScript commands; Hak5 publishes the kernel patches and device tree.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/pager",
+    "category": "wifi",
+    "subcategory": "handheld-wifi-recon",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 300,
+    "price_note": "$300 in black or yellow, in stock. Replacement battery $60, replacement clip $100. Glytch add-on mods sold separately: GPS $60, Mesh $60, Ethernet $40.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The on-device menu makes recon approachable, but writing useful alert payloads means writing bash.",
+    "build_effort": "assembled",
+    "build_note": "Charge, connect over USB-C, flash the current firmware through the browser; first flash takes 10-15 minutes.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A belt-clip, battery-powered Pineapple with a colour screen, a d-pad, a buzzer and a vibration motor. It monitors 2.4, 5 and 6 GHz, runs PineAP, fires 'alert' payloads when it sees things like a deauth flood, and logs Wigle-compatible wardrives if you add a USB GPS. It is the first Pineapple you can genuinely walk around with.",
+    "honest_take": "Hak5's marketing line that it is 'hundreds of times faster than other Pineapples' is about the radio, not the computer. The host SoC is the same MediaTek MT7628AN MIPS chip as the seven-year-old Mark VII - that is confirmed by Hak5's own published device tree file. The speed comes from a MediaTek MT7921U USB radio bolted alongside it, which is what supplies Wi-Fi 6/6E and Bluetooth. Battery life is about four hours, GPS is not included (it is a USB dongle you supply), and less than 32 MB of the internal flash overlay is free after firmware, so heavy package installs have to go to the 4 GB storage partition. Credit where due: the docs are unusually honest, stating outright that WPA3 and 802.11w PMF prevent injected disconnection packets and that injection is impossible on DFS and 6 GHz channels - 6 GHz mandates WPA3 even for 'open' networks. Buy it for tri-band recon and wardriving, not because you expect deauth to work.",
+    "best_for": [
+      "Walking a site and mapping 2.4/5/6 GHz airspace",
+      "Wigle wardriving with a USB GPS attached",
+      "Alert payloads that buzz when a specific SSID, client or deauth flood appears",
+      "Carrying a Pineapple somewhere a rack unit or USB-tethered box will not go"
+    ],
+    "not_for": [
+      "Deauthenticating WPA3 or PMF-protected clients",
+      "Any injection on DFS or 6 GHz channels",
+      "All-day engagements on one charge",
+      "Anyone expecting built-in GPS"
+    ],
+    "hardware": {
+      "mcu_primary": "MediaTek MT7628AN",
+      "mcu_primary_note": "Single-core MIPS 24KEc SoC with an integrated 2.4 GHz b/g/n radio; confirmed by Hak5's published device tree (mt7628an_hak5_wifi-pineapple-pager.dts)",
+      "mcu_secondary": "WCH CH347F",
+      "mcu_secondary_note": "USB bridge (USB ID 1a86:55de) providing extra GPIO and the SPI bus that drives the display and the d-pad LEDs",
+      "radios": [
+        {
+          "ic": "MT7628AN (integrated)",
+          "role": "wifi-24",
+          "note": "The SoC's own 2.4 GHz radio. Client mode is restricted to this radio, so the network you join must be on 2.4 GHz."
+        },
+        {
+          "ic": "MediaTek MT7921U",
+          "role": "wifi-triband",
+          "note": "USB-attached tri-band radio, driver mt7921u. This is what provides 5 GHz and 6 GHz (Wi-Fi 6/6E) monitoring."
+        },
+        {
+          "ic": "MT7921 (Bluetooth function)",
+          "role": "bluetooth",
+          "note": "The same MT7921 package exposes two btusb interfaces, which is where the Pager's Bluetooth and BLE come from"
+        }
+      ],
+      "display": {
+        "type": "SPI TFT LCD (ST7796U controller)",
+        "size_in": null,
+        "resolution": null,
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": 2000,
+      "battery_note": "Hak5 documents roughly 4 hours per charge. Fuel gauge is a TI BQ27546 on I2C. User-replaceable, sold separately at $60.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "4 GB internal storage (mounted at /mmc) plus SPI-NOR boot flash; less than 32 MB of writable root overlay remains after firmware",
+      "connectivity": [
+        "USB-C (charge + Realtek RTL8153 USB Ethernet to the host)",
+        "USB-A host port",
+        "Wi-Fi 2.4/5/6 GHz",
+        "Bluetooth + BLE"
+      ],
+      "gpio": null,
+      "sensors": [
+        "NXP PCF8563 real-time clock",
+        "TI BQ27546 battery fuel gauge"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic, belt-clip",
+      "notable_physical": [
+        "Colour LCD with d-pad and A/B buttons",
+        "Per-button RGB LEDs",
+        "PWM buzzer with RTTTL ringtones",
+        "Vibration motor",
+        "Power button with a software power menu"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Enabled by default"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "Enabled by default, via the MT7921U"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "Channel-hopping recon engine across all enabled bands"
+      },
+      "wifi_injection": {
+        "v": "partial",
+        "note": "Hak5 states injection is not possible on DFS or 6 GHz channels because of regulatory restrictions"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Documented as subject to WPA3 and 802.11w PMF, which prevent injected disconnection packets"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Same PMF limitation, and unavailable on DFS channels"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "PineAP Open AP and EvilWPA AP with configurable SSID and BSSID"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "PineAP SSID pool with an Advertise Networks option"
+      },
+      "wifi_karma": {
+        "v": "partial",
+        "note": "PineAP is present, but modern clients rarely emit the directed probes it feeds on"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Recon associates clients with APs only after observing the client generate traffic"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Handshake capture is a documented workflow"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Management AP protected with WPA2-PSK or WPA3-SAE"
+      },
+      "wifi_wardriving": {
+        "v": "yes",
+        "note": "Wigle-format logging to /root/loot/wigle/, with WIGLE_LOGIN and WIGLE_UPLOAD commands. Requires a USB GPS."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "No internal GPS. Supports almost any USB serial GNSS receiver; Hak5 recommends multi-constellation units and warns a lock can take 15-30 minutes. A Glytch GPS mod is sold at $60."
+      },
+      "gps_wardrive_log": {
+        "v": "addon",
+        "note": "Wigle CSV logging, gated on an attached USB GPS"
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "MT7921 exposes Bluetooth and BLE to the OS; Hak5's shipping UI centres on Wi-Fi, and the extent of first-class BLE tooling is not documented"
+      },
+      "bt_classic": {
+        "v": "partial",
+        "note": "MT7921 supports Bluetooth Classic at the silicon level; feature exposure in firmware is not documented"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "PCAP logging, disabled by default because files grow quickly"
+      },
+      "cloud_c2": {
+        "v": "unknown",
+        "note": "Not documented in the Pager documentation space. Could not confirm either way."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Virtual Pager web interface, plus the on-device screen"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Bash payloads extended with DuckyScript commands; opkg available, with the caveat that packages should be installed to /mmc to survive firmware upgrades"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Bash plus DuckyScript commands (WIFI_CONNECT, GPS_CONFIGURE, WIGLE_START and similar). This is the Bash Bunny style of DuckyScript, not the compiled DuckyScript 3 of the USB Rubber Ducky."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Internal 2000 mAh battery, roughly 4 hours; can be extended with a USB power bank"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No microSD slot; loot goes to the 4 GB internal storage"
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Community payload, theme and ringtone repositories on GitHub, all actively updated"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Portability makes this easier to misuse than a rack unit, and that cuts both ways legally. Passive scanning is generally lawful; running PineAP, deauthenticating clients, or uploading wardrive data collected without authorisation may not be. Hak5 explicitly notes it is not affiliated with Wigle and that uploads are governed by Wigle's own agreement. Check local law and get written authorisation."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "Yes - official payload, theme and ringtone repos on GitHub, all pushed within the last month",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Pineapple Pager",
+      "Pager",
+      "WiFi Pineapple Pager"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/hak5/wifipineapplepager-kernel/blob/main/mt7628an_hak5_wifi-pineapple-pager.dts",
+        "what": "Device tree source confirming MT7628AN SoC, MT7921 radio, CH347F USB bridge, ST7796U display, PCF8563 RTC, BQ27546 fuel gauge, buzzer and vibrator"
+      },
+      {
+        "url": "https://documentation.hak5.org/wifi-pineapple-pager",
+        "what": "4-hour battery life, RTL8153 USB Ethernet, 4 GB /mmc, tri-band monitoring, WPA3/PMF and DFS/6 GHz injection limits, Wigle and GPS workflow"
+      },
+      {
+        "url": "https://shop.hak5.org/products/pager",
+        "what": "$300 price, black and yellow variants, in stock"
+      },
+      {
+        "url": "https://github.com/hak5/wifipineapplepager-payloads",
+        "what": "Official payload repository, 500 stars, last pushed 2026-09-01"
+      }
+    ],
+    "research_gaps": [
+      "Cloud C2 support is not mentioned anywhere in the Pager documentation; could not confirm",
+      "Exact display resolution and physical size are not published (ST7796U controllers are typically 320x480)",
+      "Battery capacity of 2000 mAh comes from press coverage rather than Hak5 documentation",
+      "No published dimensions or weight",
+      "How much Bluetooth/BLE tooling is actually exposed in the shipping UI is undocumented"
+    ]
+  },
+  {
+    "id": "wifi-coconut",
+    "hardware_id": "wifi-coconut",
+    "name": "WiFi Coconut",
+    "firmware": "WiFi Coconut userspace tools (open source)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/hak5-wifi-coconut",
+    "firmware_note": "GPL userspace port of the Linux rt2800 kernel driver, so all 14 radios can be driven as one capture device on Linux, macOS and Windows.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/wifi-coconut",
+    "category": "wifi",
+    "subcategory": "full-spectrum-sniffer",
+    "status": "discontinued",
+    "released": "2021",
+    "price_usd": 200,
+    "price_note": "Last listed at $200. Sold out, Hak5 says production is 'temporarily suspended' due to manufacturing shortages, and the product no longer appears in the shop's product navigation. Treat it as end-of-life; existing units are still supported.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "You need to already know why simultaneous multi-channel capture matters and be comfortable in Wireshark or Kismet.",
+    "build_effort": "assembled",
+    "build_note": "Plug in over USB-C, install the open-source capture tools (Zadig driver replacement required on Windows).",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A USB-C device containing fourteen separate 2.4 GHz Wi-Fi radios, one per channel, so it can record the entire 2.4 GHz band simultaneously instead of channel-hopping and missing traffic. Output is standard pcap with radiotap headers, and it plugs straight into Kismet and Wireshark.",
+    "honest_take": "It does exactly what it says and the engineering is genuinely clever - but be clear about what is inside. The radios enumerate as USB ID 148F:5370, which is the Ralink/MediaTek RT5370: a single-stream 802.11n 2.4 GHz chip that Hak5 themselves used to sell individually for $14.99. The Coconut is fourteen of those on a hub board. It is receive-only by design and Hak5 warns that transmitting may damage it and voids the warranty, so there is no injection, no deauth, no evil twin. It is 2.4 GHz only - no 5 GHz, no 6 GHz - which in 2026 means it misses most of the interesting traffic. It draws enough power that a Raspberry Pi 3 cannot run it. And the software repo has not been touched since February 2024 while the product itself has quietly left the shop navigation. Buy one secondhand only if wide-band 2.4 GHz capture is specifically your problem.",
+    "best_for": [
+      "Capturing every 2.4 GHz channel at once with no hopping gaps",
+      "IoT and BLE-adjacent 2.4 GHz research where events are short and easy to miss",
+      "Feeding a complete 2.4 GHz picture into Kismet"
+    ],
+    "not_for": [
+      "Any 5 GHz or 6 GHz work",
+      "Transmitting anything at all - Hak5 says doing so may damage it",
+      "Use on a Raspberry Pi 3 (insufficient USB power/bandwidth)",
+      "Buying new - it is no longer produced"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No host CPU. The Coconut is a USB hub board; all processing happens on the attached computer.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "Ralink/MediaTek RT5370",
+          "role": "wifi-24",
+          "note": "14 of them, one per 2.4 GHz channel. Confirmed by the USB ID 148F:5370 that Hak5's own Windows driver instructions tell you to select. Single-stream 802.11n, 2.4 GHz only. Receive-only in this product by design."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered over USB-C; Hak5 warns cheap cables cause radios to drop out",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None - streams to the host",
+      "connectivity": [
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "14 internal antennas",
+        "Single USB-C connection"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "All 14 channels at once, no hopping"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "2.4 GHz only. There is no 5 GHz radio in the device."
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "This is the entire purpose; radiotap headers are inserted by the userspace driver"
+      },
+      "wifi_injection": {
+        "v": "no",
+        "note": "Hak5 explicitly warns not to transmit - doing so may damage the device and voids the warranty. Do not point Aircrack-ng at it."
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Passively, with no ability to force a re-handshake"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Captures probe requests across all channels simultaneously"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Works with Kismet, which can supply GPS from a separate source; the Coconut has none"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Standard pcap with radiotap, direct to Wireshark or Kismet"
+      },
+      "wifi_deauth_24": {
+        "v": "no",
+        "note": "Receive-only device"
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "Not a Cloud C2 device; it is a host-attached capture peripheral"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a host computer at all times"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open-source CLI tools, GPL"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "This is a receive-only device, which puts it in a materially better legal position than transmitting gear - there is no interference or impersonation question. However, passively intercepting the contents of communications you are not party to can still fall under wiretap and interception statutes in many jurisdictions, even where mere presence-detection would not. Check local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2024-02",
+      "app_store": "No - it works through Kismet and Wireshark",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "Coconut",
+      "Hak5 Coconut"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/wifi-coconut",
+        "what": "14 radios, USB ID 148F:5370 identifying the RT5370, receive-only warning, Raspberry Pi 3 power limitation, Kismet integration"
+      },
+      {
+        "url": "https://github.com/hak5/hak5-wifi-coconut",
+        "what": "GPL userspace driver port; 151 stars, last pushed 2024-02-25"
+      },
+      {
+        "url": "https://shop.hak5.org/products/wifi-coconut",
+        "what": "$200 price, sold out, production suspended notice"
+      },
+      {
+        "url": "https://www.kismetwireless.net/docs/readme/datasources/wifi-hak5-coconut/",
+        "what": "Kismet data source documentation"
+      }
+    ],
+    "research_gaps": [
+      "No published dimensions, weight or total current draw",
+      "Hak5 has never formally announced discontinuation; the 'temporarily suspended' language has stood for years and the product has left the shop navigation"
+    ]
+  },
+  {
+    "id": "packet-squirrel-mark-ii",
+    "hardware_id": "packet-squirrel-mark-ii",
+    "name": "Packet Squirrel Mark II",
+    "firmware": "Packet Squirrel 4.x (stock, OpenWrt-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/packetsquirrel-payloads",
+    "firmware_note": "Adds a full web UI, three payload slots, a JAIL network mode and a DYNAMICPROXY stream interceptor over the original's switch-and-SSH workflow.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/packet-squirrel-mark-ii",
+    "category": "network-implant",
+    "subcategory": "inline-ethernet-implant",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 150,
+    "price_note": "$150 standalone; Pro Bundle $160 (adds Payload Studio Pro), Elite Bundle $180. A TAA-compliant 'Packet Squirrel Advanced' SKU lists at $849.99 for government procurement. B2B/education SKU $120.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The web UI is friendly, but the thing that makes it useful - understanding bridging, NAT, ARP and where to physically place it - is not.",
+    "build_effort": "assembled",
+    "build_note": "Plug it inline, power over USB-C, browse to 172.16.32.1:1471 and run the setup wizard.",
+    "stealth": "implant",
+    "form_factor": "box",
+    "summary": "A matchbox-sized OpenWrt computer with two Ethernet ports that you install between a target device and the wall jack. Traffic passes through it while it captures pcaps, spoofs DNS, tunnels out over VPN, or holds the target in a jail. It is powered over USB-C and managed from a web interface or remotely through Cloud C2.",
+    "honest_take": "Understand the difference between this and a Plunder Bug before you buy either: the Packet Squirrel is INLINE and ACTIVE. It is a router in the path. It can modify, block, spoof and inject traffic, and it can route the target's traffic through your VPN. That power is also the risk - if it dies or you fumble a payload, you drop the target's network connection and you get noticed. Two honest caveats: Hak5 publishes no SoC, RAM or flash figure for the Mark II anywhere, which is unusual and means nobody outside Hak5 can tell you what it is running on. And the shipping firmware, 4.0.0-stable, is dated the day before the product launched in July 2023 and has not been updated since - for a device whose whole job is sitting on someone else's network, that is a security-maintenance question worth asking.",
+    "best_for": [
+      "Inline packet capture behind a printer, workstation or IP camera",
+      "Persistent remote access into a client LAN over OpenVPN or WireGuard",
+      "DNS spoofing and TCP stream interception during an engagement",
+      "Blue-team exercises using JAIL mode to isolate a suspect device"
+    ],
+    "not_for": [
+      "Truly passive tapping where you must not transmit (use a Throwing Star or a mirrored port)",
+      "Gigabit-sensitive links - Ethernet speed is undocumented and the original was 10/100 only",
+      "Anyone who needs current firmware and a maintained security posture",
+      "Wireless work - it has no radio"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Hak5 publishes no SoC, RAM or flash specification for the Mark II - not on the shop page, not in the documentation, not in the docs index. A secondary claim of 'MT7628NN' circulates but could not be traced to a primary source. The sibling Shark Jack uses an MT7628DAN, so an MT7628 variant is plausible but must not be stated as fact. For contrast, the original 2017 Packet Squirrel is confirmed from Hak5's own GPL OpenWrt drop as an Atheros AR9331 at 400 MHz MIPS with 16 MB flash and 64 MB DDR2.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. USB-C power only, roughly 0.2 A. The USB-C port carries power only and cannot host USB devices.",
+      "charging": "USB-C (power only)",
+      "pmic": null,
+      "storage": "Internal flash of undocumented size, described by Hak5 as 'limited'; expandable via the USB-A host port with ext4 or NTFS drives",
+      "connectivity": [
+        "2x RJ45 Ethernet (Target and Network)",
+        "USB 2.0 Type-A host port for storage",
+        "USB-C power"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "50 x 40 x 15",
+      "weight_g": 24,
+      "case": "Plastic",
+      "notable_physical": [
+        "4-position sliding mode switch on the underside",
+        "Single RGB status LED",
+        "Scriptable push button"
+      ]
+    },
+    "capabilities": {
+      "ethernet_mitm": {
+        "v": "yes",
+        "note": "This is the core function. NETMODE offers bridged, transparent, NAT, CLONE (clones the target's MAC onto the LAN side) and JAIL."
+      },
+      "ethernet_tap_passive": {
+        "v": "partial",
+        "note": "A transparent bridging mode exists in which the Squirrel takes no IP address and only sniffs - but it is still an active powered device in the path, not a passive tap. If it loses power the link behaviour is not guaranteed."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "tcpdump to pcap on an attached USB drive; drive must be ext4 or NTFS, not FAT32"
+      },
+      "vpn_exfil": {
+        "v": "yes",
+        "note": "OpenVPN and WireGuard. In the Mark II, VPN is available in any network mode where the device has an address."
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Supported in NAT, BRIDGE and JAIL modes, giving a web-based SSH terminal to the implant"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "http://172.16.32.1:1471 in Arming mode; payloads can also start it on demand with UI_START"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "DuckyScript, Bash and Python 3. Three payload slots selected by the hardware switch."
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "DuckyScript for Packet Squirrel - a set of ALL-CAPS helper commands (NETMODE, LED, SPOOFDNS, DYNAMICPROXY, SELFDESTRUCT, SSH_START) layered over bash. This is not the compiled DuckyScript 3 of the USB Rubber Ducky."
+      },
+      "usb_mass_storage": {
+        "v": "partial",
+        "note": "The USB-A port hosts storage for loot. The device does not present itself as storage to a target."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Needs a constant 5 V USB-C supply; there is no battery"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No microSD slot - loot goes to a USB flash drive"
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "No radio of any kind. Out-of-band access is via the target network or a VPN, not Wi-Fi."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Physically installing a device that intercepts and can modify someone else's network traffic engages computer-misuse and wiretap law in most jurisdictions, and unlike a passive tap it also actively transmits onto the network. Because it is designed to be left in place and to phone home, unauthorised use is hard to characterise as anything other than deliberate. Get written authorisation naming the specific site and get it before you plug anything in."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2023-07",
+      "app_store": "Yes - official payload repository plus the Hak5 Payload Hub",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Packet Squirrel MK2",
+      "PS MkII",
+      "Squirrel"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/packet-squirrel-mark-ii",
+        "what": "$150 / $160 / $180 SKUs, in stock, published 2023-07-25"
+      },
+      {
+        "url": "https://documentation.hak5.org/packet-squirrel-mark-ii/",
+        "what": "Two Ethernet ports, USB-C power only, USB-A storage, NETMODE list, DYNAMICPROXY, SELFDESTRUCT, Cloud C2 in NAT/BRIDGE/JAIL, web UI at 172.16.32.1:1471"
+      },
+      {
+        "url": "https://documentation.hak5.org/packet-squirrel/",
+        "what": "Original Mark I specification for contrast: AR9331 400 MHz MIPS, 16 MB flash, 64 MB DDR2, 10/100 only, 50x39x16 mm, 24 g"
+      },
+      {
+        "url": "https://github.com/hak5/openwrt-owl",
+        "what": "Hak5's GPL OpenWrt source drop containing the original LAN Turtle and Packet Squirrel board files"
+      },
+      {
+        "url": "https://downloads.hak5.org/api/devices",
+        "what": "Firmware version 4.0.0-stable dated 2023-07-24, unchanged since launch"
+      }
+    ],
+    "research_gaps": [
+      "SoC, RAM and flash size for the Mark II are not published by Hak5 anywhere; extracting the device tree from the firmware image would settle it",
+      "Ethernet link speed of the Mark II is undocumented - the Mark I was explicitly 10/100 only",
+      "No FCC filing exists (no intentional radiator), so no internal photos are available"
+    ]
+  },
+  {
+    "id": "screen-crab",
+    "hardware_id": "screen-crab",
+    "name": "Screen Crab",
+    "firmware": "Screen Crab (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Configured entirely by editing config.txt on the microSD card; there is no shell and no web UI on the device itself.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/screen-crab",
+    "category": "network-implant",
+    "subcategory": "video-implant",
+    "status": "available",
+    "released": "2019",
+    "price_usd": 330,
+    "price_note": "$330 and in stock. That is a large increase over its roughly $200 launch price, and it now costs more than a WiFi Pineapple Mark VII. Neither HDMI cables, a microSD card nor a USB-C power supply are included.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Genuinely simple: plug it inline, insert a card, apply power. The hard part is the physical access, not the device.",
+    "build_effort": "assembled",
+    "build_note": "Two HDMI cables and a 5 V 1 A USB-C supply, none of which are in the box.",
+    "stealth": "implant",
+    "form_factor": "box",
+    "summary": "An inline HDMI implant that sits between a computer and its monitor, or a console and its television, and silently writes screenshots or video to a microSD card. Optionally it joins a 2.4 GHz Wi-Fi network and streams the captures to a self-hosted Cloud C2 server so you can watch a screen remotely.",
+    "honest_take": "Two things will decide whether this works for you, and Hak5 documents neither well. First, resolution: the official statement is the entire sentence 'Most resolutions below 1920x1080 in 16:9 format', the interfaces are HDMI 1.4 / DVI 1.0, and the troubleshooting page warns that non-16:9 aspect ratios may not work. A 1440p, 4K, ultrawide or vertically-rotated monitor is a real risk of no capture at all. Second, HDCP: Hak5's documentation does not mention HDCP anywhere. The widely-repeated claim that HDCP-protected content is not captured comes from a reseller's product page, not from Hak5, and we could not verify it - the one relevant forum thread sits behind a bot challenge. Treat HDCP behaviour as unverified and test before you rely on it. Also note it only joins dedicated 2.4 GHz access points (band-steering APs break it), and it has no entry at all in Hak5's firmware download API while every other product does, which suggests it is receiving no active firmware support at a $330 price point.",
+    "best_for": [
+      "Recording what is actually on a screen during a physical-access engagement",
+      "Capturing kiosk, POS, control-room or signage displays",
+      "Demonstrating physical-access risk vividly to management",
+      "Remote screen monitoring over Cloud C2 where you cannot install software"
+    ],
+    "not_for": [
+      "4K, 1440p, ultrawide or portrait-rotated displays",
+      "Anything you need certainty about with HDCP-protected sources",
+      "Networks that use band steering on a single SSID",
+      "Capturing audio or input - it is video only"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Hak5 publishes no SoC, CPU or RAM figure. There is no FCC filing for the Screen Crab and we found no teardown, so the capture chip is genuinely unidentified in public.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wifi-24",
+          "note": "802.11b/g/n, 2.412-2.4835 GHz. 2.4 GHz only. The exact Wi-Fi part is not published. Hak5 warns it will only associate with dedicated 2.4 GHz APs - access points with band steering enabled will not work."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. Requires a continuous 5 W (5 V 1 A) USB-C supply, which is the practical constraint on where you can hide it.",
+      "charging": "USB-C (power only)",
+      "pmic": null,
+      "storage": "microSD, FAT32 or exFAT, SDXC supported. STORAGE FILL or ROTATE (loop-record over oldest).",
+      "connectivity": [
+        "2x full-size HDMI (input and passthrough)",
+        "USB-C power",
+        "microSD",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "105 x 51 x 21",
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "Single multi-colour status LED",
+        "One button for safe card eject and capture-mode override at boot"
+      ]
+    },
+    "capabilities": {
+      "hdmi_capture": {
+        "v": "yes",
+        "note": "HDMI 1.4 / DVI 1.0 inline. IMAGE mode saves screenshots at a configurable interval with optional de-duplication; VIDEO mode records MPEG4 at 2, 4 or 16 Mbps. Hak5's only published resolution statement is 'most resolutions below 1920x1080 in 16:9 format'; frame rates are undocumented."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD, FAT32/exFAT, with fill-or-rotate policy"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Streams screenshots to a self-hosted Cloud C2 server over 2.4 GHz Wi-Fi. Requires a one-time 2024 SSL update if your C2 uses HTTPS."
+      },
+      "wifi_ap_mode": {
+        "v": "no",
+        "note": "Client only - it joins a network you specify in config.txt, it does not host one"
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Not a Wi-Fi analysis tool; the radio exists solely for exfiltration"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Needs constant USB-C power; it will not run from the HDMI link"
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "No shell or web UI. Configuration is a plain-text config.txt on the card. An autoexec.txt on the card root will execute shell commands at boot, which Hak5 uses for its own updates and diagnostics."
+      },
+      "usb_payload_lang": {
+        "v": "no",
+        "note": "Not a DuckyScript device"
+      },
+      "packet_capture": {
+        "v": "no",
+        "note": "It captures video, not network traffic"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Covertly recording what appears on someone else's screen is squarely the kind of surveillance that interception, wiretap and privacy statutes are written about, and in many jurisdictions it is treated more seriously than network sniffing because of what screens display - medical records, messages, banking. Several US states and many other countries also have specific laws about recording in private spaces. This is a device you should only deploy with explicit written authorisation naming the specific machines involved."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2024-04",
+      "app_store": "No - configuration is a text file, there is no payload ecosystem",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "ScreenCrab",
+      "Crab"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/screen-crab/",
+        "what": "Full specifications: HDMI 1.4/DVI 1.0, 802.11b/g/n, 2.412-2.4835 GHz, 105x51x21 mm, 5 W, 'most resolutions below 1920x1080 in 16:9'; config.txt options; video bitrates; band-steering warning"
+      },
+      {
+        "url": "https://shop.hak5.org/products/screen-crab",
+        "what": "$330 price, in stock, Cloud C2 streaming claim"
+      },
+      {
+        "url": "https://downloads.hak5.org/api/devices",
+        "what": "Screen Crab has no entry in Hak5's firmware download API, unlike every other current product"
+      }
+    ],
+    "research_gaps": [
+      "HDCP behaviour is completely undocumented by Hak5. The circulating 'HDCP content is not captured' claim originates from a reseller page, not the vendor, and could not be verified. Needs physical testing against an HDCP source.",
+      "Capture chip, SoC, CPU, RAM and Wi-Fi part number all unidentified - no FCC filing and no published teardown",
+      "Supported frame rates are not documented anywhere",
+      "Behaviour at exactly 1920x1080 is ambiguous - the spec says 'below 1920x1080'",
+      "Weight not published"
+    ]
+  },
+  {
+    "id": "key-croc",
+    "hardware_id": "key-croc",
+    "name": "Key Croc",
+    "firmware": "Key Croc 1.4 (stock, Debian-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/keycroc-payloads",
+    "firmware_note": "Debian userland with a keyword-matching payload engine; ships with a basic keylogging firmware that must be upgraded to unlock payloads, injection and Cloud C2.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/key-croc",
+    "category": "usb-hid",
+    "subcategory": "keylogger-implant",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 200,
+    "price_note": "$200 and in stock. Launched at $119.99 in May 2020, so the price has risen roughly 67% over its life.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Basic keylogging is plug-and-forget; the match-triggered payloads that justify the price need real scripting and an understanding of USB attack modes.",
+    "build_effort": "assembled",
+    "build_note": "Plug the keyboard into the Croc, the Croc into the computer. Press the hidden button with a paperclip to enter arming mode and edit config.txt.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "A hardware keylogger that is also a small Linux computer. It sits between a USB keyboard and the host, logs every keystroke, and - crucially - can watch that stream for keywords or regular expressions and fire a payload when one appears. It can then switch USB personalities to a keyboard, flash drive, serial device or Ethernet adapter to act on what it saw.",
+    "honest_take": "The keyword-matching trigger is the genuinely novel bit and nothing cheap does it: a $10 hardware keylogger records to a chip you have to come back and retrieve, whereas this can notice someone typing a password and immediately react over Wi-Fi. Two things to be clear about. First, despite the price and the marketing, this is DuckyScript 2.0, not 3 - commands are QUACK-prefixed and you do not get the compiled language's variables, conditionals, loops or Keystroke Reflection exfiltration. Second, Hak5's own specification block lists no CPU, no RAM and no SoC; the 'quad-core 1.2 GHz ARM, 512 MB RAM' figures you will see quoted come from marketing copy and third-party wikis, not a published spec or a teardown. There is also a well-reported operational footgun: logs are flushed to storage when you enter arming mode, so pulling it out of the port without arming it first can cost you the capture.",
+    "best_for": [
+      "Physical-access engagements where you can reach a keyboard cable",
+      "Triggering an attack the moment a specific credential or keyword is typed",
+      "Live remote keystroke monitoring via Cloud C2",
+      "Demonstrating why USB port access is a security boundary"
+    ],
+    "not_for": [
+      "Bluetooth or laptop built-in keyboards - it needs a wired USB keyboard in the path",
+      "DuckyScript 3 payloads",
+      "Anyone who cannot physically reach and later retrieve the device",
+      "Situations where an unfamiliar dongle on the keyboard cable would be noticed"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Hak5 describes it as a 'quad-core 1.2 GHz ARM' in marketing copy but publishes no part number, and the official specification block lists only interface, standards, frequency, size and power. No FCC filing and no teardown found, so the SoC is unidentified in public.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wifi-24",
+          "note": "Integrated 2.4 GHz radio, 2.412-2.4835 GHz. Part number not published. Used for SSH and Cloud C2, configured by editing config.txt."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered from the host USB port, 5 W (5 V 1 A)",
+      "charging": "USB (bus powered)",
+      "pmic": null,
+      "storage": "8 GB internal SSD, multiple partitions, including a 2 GB FAT32 'udisk' partition at /root/udisk that is exposed to the host in arming mode",
+      "connectivity": [
+        "USB 2.0 male plug to host",
+        "USB-A female socket for the keyboard",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "74 x 27 x 14",
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "Recessed arming button requiring a paperclip",
+        "Multi-colour status LED",
+        "Pass-through USB socket for the victim keyboard"
+      ]
+    },
+    "capabilities": {
+      "usb_keylogger": {
+        "v": "yes",
+        "note": "Logs the wired USB keyboard passing through it. Keystrokes are written to /root/loot and synchronised to the udisk partition when you enter arming mode - which is why yanking it without arming can lose recent capture."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "ATTACKMODE HID with QUACK-prefixed DuckyScript 2.0 commands"
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "The 2 GB FAT32 udisk partition presents to the host as a flash drive labelled 'KeyCroc' in arming mode"
+      },
+      "usb_ethernet_attack": {
+        "v": "yes",
+        "note": "ATTACKMODE RNDIS_ETHERNET lets it emulate a USB network adapter for responder-style attacks"
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Loot to the udisk partition, over Wi-Fi via SSH/SCP, or straight to Cloud C2 with C2EXFIL"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "DuckyScript 2.0, not 3.0. Commands are QUACK-prefixed (QUACK STRING, QUACK DELAY, QUACK KEYCODE) over bash. No variables, conditionals, loops or Keystroke Reflection."
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "The MATCH command accepts a literal string or a full regular expression against the live keystroke stream; a hit executes the payload and writes a timestamped entry to matches.log"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "C2NOTIFY and C2EXFIL commands; registered by dropping device.config on the udisk. Live keystroke streaming in a browser is the headline C2 feature."
+      },
+      "wifi_ap_mode": {
+        "v": "no",
+        "note": "Client only - it joins a network named in config.txt"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Root shell over a dedicated serial console or SSH; Debian base ships with nmap, responder, impacket and metasploit"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Powered by the host it is attacking, so it runs as long as the machine does"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No microSD slot - it uses the internal 8 GB SSD"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Keylogging is specifically named in interception and computer-misuse statutes in many countries and in most US states, and unlike passive network sniffing it captures passwords and private messages directly. Deploying one on a machine you do not own, or on a shared or employer machine without documented authority, is one of the most clearly illegal things in this whole product category. Only use with explicit written authorisation naming the specific machines, and check local law - some jurisdictions require notice to the person being monitored even on employer-owned equipment."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2023-07",
+      "app_store": "Yes - official payload repository, 232 stars, last pushed 2026-01",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "KeyCroc",
+      "Croc"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/key-croc/",
+        "what": "Specifications (USB 2.0, 2.412-2.4835 GHz, 74x27x14 mm, 5 W), 8 GB SSD with 2 GB FAT32 udisk, config.txt options, MATCH regex examples, arming-mode loot synchronisation, Cloud C2 setup"
+      },
+      {
+        "url": "https://shop.hak5.org/products/key-croc",
+        "what": "$200 price, in stock, published 2020-05-11"
+      },
+      {
+        "url": "https://wiki.elvis.science/index.php?title=Hak5_Key_Croc",
+        "what": "Third-party record of quad-core ARM / 512 MB RAM / 8 GB SSD and the $119.99 launch price. Secondary source - not vendor-confirmed."
+      }
+    ],
+    "research_gaps": [
+      "Exact SoC part number and RAM are not published by Hak5; the 512 MB figure is third-party only",
+      "No FCC filing and no published teardown, so the internals cannot be independently verified",
+      "Weight not published",
+      "Whether the Wi-Fi radio is a discrete module or integrated in the SoC is unknown"
+    ]
+  },
+  {
+    "id": "plunder-bug",
+    "hardware_id": "plunder-bug",
+    "name": "Plunder Bug LAN Tap",
+    "firmware": "n/a (host-side scripts only)",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/hak5/plunderbug-scripts",
+    "firmware_note": "There is no firmware to speak of - behaviour is set by small PowerShell and shell scripts running on your laptop that mute or unmute the tap port.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/bug",
+    "category": "network-implant",
+    "subcategory": "lan-tap",
+    "status": "available",
+    "released": "2019",
+    "price_usd": 130,
+    "price_note": "$130 and in stock. For comparison, the open-source Throwing Star LAN Tap Pro that Hak5 used to sell was $39.99 and is a genuinely passive device.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Plug it in, open Wireshark. The subtlety is knowing that you must actively mute it to stop it transmitting.",
+    "build_effort": "assembled",
+    "build_note": "Two Ethernet cables and a USB-C cable to your laptop; run the mute script if you want it quiet.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A small three-port device: two RJ45 sockets that you insert into an existing Ethernet run, and a USB-C port that presents packets from that link to your laptop as an ordinary network interface. It uses an ASIX AX88772C USB Ethernet chip, so no drivers are needed on most systems.",
+    "honest_take": "The single most important thing about this device is the thing beginners get wrong: out of the box it is NOT a passive tap. Hak5's own documentation says the USB-C tap port 'will also act as an additional Ethernet port on the target LAN' - it transmits by default, which means it can be seen, can respond to ARP, and puts you on the network. Passive 'mute' mode is a deliberate opt-in you enable by running plunderbug.ps1 or plunderbug.sh --mute on your laptop, and that setting lives on your host, not on the device. If you genuinely must not transmit - forensics, air-gapped environments, or anywhere that would notice a new MAC - use a real passive tap: Great Scott Gadgets' Throwing Star LAN Tap is an open-source PCB with no active components that costs about $15 to $40 and physically cannot transmit. Also note the Plunder Bug is 10/100 only, so a gigabit link will auto-negotiate down to 100 Mbps, which is both a bottleneck and a visible anomaly on a well-monitored network.",
+    "best_for": [
+      "Quick Wireshark capture of a device's traffic during an assessment",
+      "Watching what an IP camera, printer or IoT device actually talks to",
+      "Teaching - it makes packet capture tangible",
+      "Situations where being on the LAN as well as watching it is useful"
+    ],
+    "not_for": [
+      "True passive tapping unless you have deliberately muted it",
+      "Gigabit links where dropping to 100 Mbps would be noticed or would matter",
+      "Standalone operation - it has no storage, no CPU and no battery",
+      "Anyone who needs the tap to be undetectable by default"
+    ],
+    "hardware": {
+      "mcu_primary": "ASIX AX88772C",
+      "mcu_primary_note": "USB 2.0 to 10/100 Ethernet controller. It is the whole device - there is no general-purpose CPU, no OS and no storage.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered over USB-C, 5 V at 20-300 mA",
+      "charging": "USB-C (power + data)",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": [
+        "2x RJ45 10/100 Base-T (auto-negotiating)",
+        "USB-C tap and power port"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "Green power LED",
+        "Three ports in a matchbox footprint"
+      ]
+    },
+    "capabilities": {
+      "ethernet_tap_passive": {
+        "v": "partial",
+        "note": "Passive capture is possible but is NOT the default. You must run Hak5's mute script on the host (plunderbug.ps1 mute on Windows, plunderbug.sh --mute on Mac/Linux) to stop the tap port transmitting. The setting lives on your computer, not on the device, so it does not persist to a different host."
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "It mirrors traffic to the USB port; it is not in a position to modify or block the packets flowing between the two RJ45 ports"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Appears to the host as an ordinary ASIX AX88772C network interface; use Wireshark or tcpdump directly"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "It is a peripheral. No CPU, no storage, no battery - a computer must be attached at all times."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "Not a Cloud C2 device"
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Only in the sense that the host-side mute/unmute scripts are shell scripts. There is nothing running on the device to script."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No storage of any kind"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Intercepting network traffic you are not a party to engages wiretap and interception law in most jurisdictions, and because this device transmits by default it may additionally constitute unauthorised access to the network rather than mere passive listening - a materially worse position legally. Get written authorisation, and if your authorisation is specifically for passive observation only, confirm that mute mode is actually enabled before you plug in."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "sparse",
+      "last_release": "2019-02",
+      "app_store": "No",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "Plunder Bug",
+      "Bug",
+      "LAN Tap"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/plunder-bug/",
+        "what": "ASIX AX88772C chipset, the default-active behaviour of the tap port, and the mute/unmute scripts"
+      },
+      {
+        "url": "https://shop.hak5.org/products/bug",
+        "what": "$130 price, in stock, 10/100 auto-negotiating, USB-C 5 V 20-300 mA draw, ASIX AX88772C confirmed in the product copy"
+      },
+      {
+        "url": "https://github.com/hak5/plunderbug-scripts",
+        "what": "Host-side mute scripts; 42 stars, last pushed 2019-02-28"
+      },
+      {
+        "url": "https://www.asix.com.tw/download.php?sub=driverdetail&PItemID=136",
+        "what": "ASIX AX88772C driver page linked by Hak5 for systems that need manual drivers"
+      }
+    ],
+    "research_gaps": [
+      "No published dimensions or weight",
+      "A 'Plunder Bug Pro' does not appear in Hak5's catalogue, docs or discontinued list - it does not appear to exist",
+      "Exact behaviour of the link if USB power is removed mid-capture is undocumented"
+    ]
+  },
+  {
+    "id": "lan-turtle",
+    "hardware_id": "lan-turtle",
+    "name": "LAN Turtle",
+    "firmware": "LAN Turtle 6.2 (stock, OpenWrt-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/lanturtle-modules",
+    "firmware_note": "OpenWrt with a text-mode ncurses menu over SSH and a module system for reverse shells, VPN and meterpreter.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/lan-turtle",
+    "category": "network-implant",
+    "subcategory": "usb-ethernet-implant",
+    "status": "out-of-stock",
+    "released": "2015",
+    "price_usd": 80,
+    "price_note": "$80 for the LAN Turtle SD, out of stock. Not on Hak5's formal discontinued list, but the successor LAN Turtle Hub ($120/$160/$200) is shipping and has taken its place in the shop navigation, so treat this as a quiet end-of-life. The LAN Turtle 3G variant IS formally discontinued.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The ncurses menu makes reverse shells easy, but you need to understand outbound filtering and where a rogue Ethernet adapter would actually go unnoticed.",
+    "build_effort": "assembled",
+    "build_note": "Plug into a USB port and an Ethernet cable; configure over SSH.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "A small OpenWrt computer hidden inside a case that looks like a generic USB Ethernet adapter. Plugged into a workstation's USB port and the network, it gets its power from the host, gives the host normal network access, and quietly opens an outbound shell back to you. The disguise is the product.",
+    "honest_take": "This is 2015 hardware - a 400 MHz single-core MIPS AR9331 with 64 MB of RAM and 16 MB of flash - and the firmware has not been updated since October 2019. Seven years without a security update on a device whose entire purpose is to sit persistently on someone else's network is a real problem, not a nitpick. The disguise still works well, and that remains its genuine advantage over a Raspberry Pi Zero doing the same job. But it is out of stock, the 3G variant is formally discontinued, and Hak5 has shipped the LAN Turtle Hub as a replacement with USB-C, a web interface, Wi-Fi and current firmware. If you want this capability today, buy the Hub; if you want it cheap, a Pi Zero W with a USB Ethernet gadget does the same thing for about $20 and you control the software.",
+    "best_for": [
+      "Persistent covert remote access from inside a target LAN",
+      "Blending in visually on a desk full of USB dongles",
+      "Reverse SSH, OpenVPN and meterpreter callbacks",
+      "Cheap secondhand lab hardware for learning implant tradecraft"
+    ],
+    "not_for": [
+      "Anything needing current firmware or a supported security posture",
+      "Buying new - it is out of stock and superseded",
+      "Gigabit links (10/100 only)",
+      "Environments where USB devices are locked down or whitelisted"
+    ],
+    "hardware": {
+      "mcu_primary": "Atheros AR9331",
+      "mcu_primary_note": "400 MHz single-core MIPS SoC. The AR9331's own Wi-Fi is not used - Hak5's OpenWrt build explicitly excludes the ath9k module.",
+      "mcu_secondary": "Realtek RTL8152",
+      "mcu_secondary_note": "USB 2.0 Ethernet controller, the interface the host computer actually sees",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered from the host USB port",
+      "charging": "USB-A (bus powered)",
+      "pmic": null,
+      "storage": "16 MB onboard flash; the 'SD' variant adds a microSD slot",
+      "connectivity": [
+        "USB-A male plug (power + RTL8152 USB Ethernet to host)",
+        "RJ45 10/100 Ethernet"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "95 x 23 x 31",
+      "weight_g": null,
+      "case": "Plastic, styled as a generic USB Ethernet adapter",
+      "notable_physical": [
+        "Green power LED and amber status LED",
+        "Recovery button hidden inside the case"
+      ]
+    },
+    "capabilities": {
+      "ethernet_mitm": {
+        "v": "partial",
+        "note": "It sits between the host and the LAN and can route and log, but the module set is oriented toward remote access rather than active traffic manipulation"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "tcpdump and urlsnarf modules; storage is the constraint on the base model"
+      },
+      "vpn_exfil": {
+        "v": "yes",
+        "note": "OpenVPN module for a persistent encrypted tunnel out"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "One of the two original Cloud C2 devices alongside the WiFi Pineapple"
+      },
+      "usb_ethernet_attack": {
+        "v": "yes",
+        "note": "Presents as a USB Ethernet adapter to the host, which is what gives it both its disguise and its power draw"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Root shell over SSH, OpenWrt opkg, and a module system with community modules"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Text-mode ncurses menu over SSH only. The successor LAN Turtle Hub adds a web UI."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Powered by the host machine, so it runs whenever that machine is on"
+      },
+      "sd_logging": {
+        "v": "partial",
+        "note": "Only on the LAN Turtle SD variant, which is the one Hak5 last sold"
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "The AR9331 has a radio but Hak5's firmware build removes the driver; there is no Wi-Fi capability"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "A device deliberately disguised as an innocuous accessory, installed on someone else's machine to open a covert channel out of their network, is close to the paradigm case that computer-misuse law was written for. The disguise itself can be treated as evidence of intent. Only deploy under explicit written authorisation that names the systems, and check local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2019-10",
+      "app_store": "Yes - module repository, 353 stars, last pushed 2025-02",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "LANTurtle",
+      "Turtle"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/lan-turtle/",
+        "what": "Verbatim specifications: AR9331 400 MHz MIPS, 16 MB flash, 64 MB DDR2, RTL8152 USB Ethernet, 95x23x31 mm"
+      },
+      {
+        "url": "https://shop.hak5.org/products/lan-turtle",
+        "what": "$80 LAN Turtle SD, out of stock, published 2015-07-27"
+      },
+      {
+        "url": "https://shop.hak5.org/pages/product-availability",
+        "what": "Hak5's official discontinued list, which includes the LAN Turtle 3G"
+      },
+      {
+        "url": "https://github.com/hak5/openwrt-owl",
+        "what": "Hak5 GPL OpenWrt drop containing the LAN Turtle board file and the ath9k exclusion"
+      },
+      {
+        "url": "https://shop.hak5.org/products/lan-turtle-hub",
+        "what": "The successor LAN Turtle Hub, $120/$160/$200, in stock, published 2026-07-26"
+      }
+    ],
+    "research_gaps": [
+      "Hak5 has not formally announced the base LAN Turtle as discontinued despite it being out of stock and superseded",
+      "Weight not published",
+      "Whether any further firmware releases are planned - the last was 6.2-stable in October 2019"
+    ]
+  },
+  {
+    "id": "signal-owl",
+    "hardware_id": "signal-owl",
+    "name": "Signal Owl",
+    "firmware": "Signal Owl 1.0.1 (stock, OpenWrt-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/signalowl-payloads",
+    "firmware_note": "OpenWrt with Aircrack-ng, MDK4, Kismet, nmap, bash and Python 3 preinstalled; payloads are loaded from an ordinary USB flash drive.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/signal-owl",
+    "category": "wifi",
+    "subcategory": "signals-intelligence-implant",
+    "status": "discontinued",
+    "released": "2019",
+    "price_usd": 199,
+    "price_note": "Approximately $199 at last listing, but this figure is from secondary sources only - the product has been fully delisted, its shop page returns 404, and it appears on Hak5's official discontinued list. Only available secondhand.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "advanced",
+    "skill_note": "There is no UI at all. Everything is a bash payload written blind and dropped on a USB stick, with a single LED for feedback.",
+    "build_effort": "assembled",
+    "build_note": "Flash the current firmware from a USB stick on first boot, then drop payloads on the stick.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "A headless Wi-Fi attack platform on a USB-A pigtail with a pass-through USB port, designed to be plugged in behind a monitor or into a USB charger and left running. It has no screen and no web interface: you write a bash payload, put it on a flash drive, and read a single LED. Discontinued.",
+    "honest_take": "Two hard facts settle this one. It was discontinued and delisted by Hak5, and its payload repository has not been touched since September 2020 - the openwrt-owl repo is archived. The hardware is a 2019-era Atheros AR9331 at 400 MHz with 64 MB of RAM and a single 2.4 GHz radio at 0.1 W, which we confirmed by reading the die markings in the FCC internal photos: ATHEROS AR9331-AL1A alongside an ESMT M13S512168A. So it is 2.4 GHz only, single-core MIPS, dead software, no vendor support, and secondhand only. Everything it did, a $15 Raspberry Pi Zero W or an ESP32 board with a USB power passthrough will do better today with maintained software. Its one genuinely clever design touch was the pass-through USB port: with a keyboard or mouse plugged through it, the Owl itself never enumerates on the target OS.",
+    "best_for": [
+      "Historical interest and secondhand lab use",
+      "Long unattended 2.4 GHz collection from a USB power bank (roughly four days on a 20,000 mAh bank)",
+      "Understanding the design lineage of the Pineapple Pager"
+    ],
+    "not_for": [
+      "Any new purchase - it is discontinued and delisted",
+      "5 GHz or 6 GHz work",
+      "Anyone who wants maintained firmware",
+      "Anyone who wants a UI of any kind"
+    ],
+    "hardware": {
+      "mcu_primary": "Atheros AR9331-AL1A",
+      "mcu_primary_note": "400 MHz single-core MIPS SoC with integrated 2.4 GHz radio. Confirmed by reading the die markings in the FCC internal photos filing (ATHEROS / AR9331-AL1A / FK813Z2V / 1813 / TAIWAN) - Hak5 never published a specification page for this device.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "AR9331 (integrated)",
+          "role": "wifi-24",
+          "note": "802.11b/g/n, 2.4 GHz only, 2412-2462 MHz, 20/40 MHz channels, 0.1 W conducted power per the FCC filing"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. Draws roughly 100-200 mA, so about four days from a 20,000 mAh USB power bank.",
+      "charging": "USB-A male pigtail",
+      "pmic": null,
+      "storage": "Internal flash of unpublished size, plus FAT32 or ext4 USB flash drives for payloads and loot",
+      "connectivity": [
+        "USB-A male pigtail (power)",
+        "USB 2.0 pass-through port",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "USB pass-through: a keyboard or mouse plugged through it enumerates on the host while the Owl itself does not",
+        "Single red LED, with a documented blink-pattern vocabulary",
+        "Recessed button needing a paperclip"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Kismet and the Aircrack-ng suite are preinstalled"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "Single 2.4 GHz radio; no 5 GHz hardware"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "AR9331 with ath9k, a well-supported monitor-mode chipset"
+      },
+      "wifi_injection": {
+        "v": "yes",
+        "note": "ath9k supports injection; MDK4 and Aircrack-ng are included"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Works against non-PMF WPA2. Blocked by WPA3 and 802.11w, which were far less common when this shipped in 2019 than they are now."
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Aircrack-ng suite preinstalled"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Arming mode raises an open AP named Owl_xxxx at 172.16.56.1; can be secured with WPA by editing /etc/config/wireless"
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Supports external USB GPS receivers"
+      },
+      "sdr_rx": {
+        "v": "addon",
+        "note": "Hak5 documented support for attaching external SDR transceivers over the USB port; the Owl itself has no SDR hardware"
+      },
+      "ble_scan": {
+        "v": "addon",
+        "note": "Requires an external USB Bluetooth transceiver; there is no Bluetooth radio on board"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "C2CONNECT, C2DISCONNECT and C2EXFIL payload commands"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Bash and Python 3 payloads with DuckyScript-style helper commands, loaded from a USB flash drive"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Bash plus a small set of DuckyScript helper commands (LED and similar). Not DuckyScript 3."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs headless from any USB power source, including a battery bank"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No web interface. SSH in arming mode and a single LED are the entire interface."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same considerations as the WiFi Pineapple - transmitting deauthentication frames and impersonating access points are potential offences distinct from mere possession - compounded by the fact that this device is designed to be hidden and left unattended. Get written authorisation. Note also that buying secondhand security hardware means you cannot be certain what firmware is on it."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "sparse",
+      "last_release": "2019-09",
+      "app_store": "Payload repository exists but has not been updated since September 2020",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "SignalOwl",
+      "Owl"
+    ],
+    "sources": [
+      {
+        "url": "https://fccid.io/2AB87-OWL/Internal-Photos/Int-Photos-4547904",
+        "what": "FCC internal photos showing the die markings ATHEROS AR9331-AL1A and the ESMT M13S512168A 512 Mbit DDR2 - the only public identification of this hardware"
+      },
+      {
+        "url": "https://fccid.io/2AB87-OWL",
+        "what": "FCC grant 2019-12-11, 2412-2462 MHz, 0.1 W conducted, applicant Iconnect, model HAK5OWL"
+      },
+      {
+        "url": "https://documentation.hak5.org/signal-owl/",
+        "what": "USB pass-through behaviour, arming mode AP at 172.16.56.1, preinstalled toolset, 100-200 mA draw, LED vocabulary"
+      },
+      {
+        "url": "https://shop.hak5.org/pages/product-availability",
+        "what": "Official discontinued list"
+      },
+      {
+        "url": "https://github.com/hak5/signalowl-payloads",
+        "what": "Payload repository, 122 stars, last pushed 2020-09-04"
+      }
+    ],
+    "research_gaps": [
+      "Last retail price of $199 is from secondary sources only - the product page is a 404",
+      "Internal flash size, dimensions and weight were never published and are not visible in the FCC filing",
+      "Exact discontinuation date not published"
+    ]
+  },
+  {
+    "id": "shark-jack",
+    "hardware_id": "shark-jack",
+    "name": "Shark Jack",
+    "firmware": "Shark Jack (stock, OpenWrt 19.07-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/sharkjack-payloads",
+    "firmware_note": "Two-position switch: attack mode runs the payload on boot, arming mode raises SSH. Payloads are bash with DuckyScript helper commands.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/shark-jack",
+    "category": "network-implant",
+    "subcategory": "drop-box-scanner",
+    "status": "out-of-stock",
+    "released": "2019",
+    "price_usd": 100,
+    "price_note": "Base Shark Jack $100, currently out of stock. The Shark Jack Cable edition is $120 and in stock. A newer Shark Jack Display with a screen is $120 ($220 Pro Bundle) and in stock.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Flick the switch and it runs an nmap sweep. Writing your own payloads needs bash.",
+    "build_effort": "assembled",
+    "build_note": "Charge over USB-C, flick the switch, plug into an Ethernet jack.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A tiny battery-powered Linux computer on the end of an Ethernet plug. You walk up to a live wall jack, flick a switch, plug it in, and it runs a payload - by default a fast nmap sweep - then you pull it out and read the loot later. It is built for the fifteen seconds you have unsupervised in a corridor.",
+    "honest_take": "The battery is 50 mAh. That is not a typo: it gives roughly ten to fifteen minutes of runtime on a full charge and takes about seven minutes to recharge, so this is strictly a smash-and-grab tool, not a drop box. If you want it to sit somewhere, you have to feed it USB power, at which point the Cable edition ($120, in stock, adds a CP2102 serial console) is the version you actually want. The SoC is a MediaTek MT7628DAN at 580 MHz with 64 MB of RAM and 64 MB of flash, which is fine for nmap and not much more. The base model is out of stock and Hak5 has since shipped a Display edition with a screen, so the line is clearly moving on. For the money it is a well-executed one-trick device and it does that trick well.",
+    "best_for": [
+      "Fast network recon through an unattended wall jack",
+      "Physical-access assessments where you have seconds, not minutes",
+      "Automated nmap sweeps with the results waiting for you afterwards",
+      "Teaching drop-box tradecraft cheaply"
+    ],
+    "not_for": [
+      "Leaving in place - the battery lasts about 15 minutes",
+      "Wireless work of any kind",
+      "Gigabit-sensitive links",
+      "Anyone who needs interactive control while it is deployed (buy the Cable or Display edition)"
+    ],
+    "hardware": {
+      "mcu_primary": "MediaTek MT7628DAN",
+      "mcu_primary_note": "580 MHz single-core MIPS SoC. Its integrated Wi-Fi is not exposed by the firmware.",
+      "mcu_secondary": "Silicon Labs CP2102 (Cable edition only)",
+      "mcu_secondary_note": "USB-to-UART bridge giving an interactive serial console; present only on the Shark Jack Cable",
+      "radios": [],
+      "display": null,
+      "battery_mah": 50,
+      "battery_note": "1S 401020 3.7 V 50 mAh 0.2 Wh LiPo. Roughly 10-15 minutes of runtime, roughly 7 minutes to charge. The Cable edition has no battery at all and takes continuous USB-C power.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "64 MB SPI flash",
+      "connectivity": [
+        "RJ45 Ethernet plug",
+        "USB-C (power; also serial console on the Cable edition)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "62 x 21 x 12",
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": [
+        "Two-position slide switch (attack / arming)",
+        "RGB status LED",
+        "Integrated Ethernet plug - no cable needed"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "tcpdump available, but 64 MB of flash and a 15-minute battery limit what you can realistically capture"
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "Single Ethernet port - it joins the network, it does not sit inline"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Supported when it has network access"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Bash payloads with DuckyScript helper commands; root shell over SSH in arming mode"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Bash plus DuckyScript helper commands (LED, NETMODE and similar). Not the compiled DuckyScript 3."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Battery powered but only for about 15 minutes; the Cable edition has no battery and needs constant USB power"
+      },
+      "uart": {
+        "v": "addon",
+        "note": "Interactive serial console over USB-C, but only on the Shark Jack Cable edition, which uses a CP2102"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "SSH and an LED. The newer Shark Jack Display adds an on-device screen and menu."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No card slot - loot goes to the 64 MB internal flash"
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "The MT7628DAN has a radio but the firmware does not expose Wi-Fi"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Plugging an unauthorised device into an organisation's network and scanning it is unauthorised access under computer-misuse law in most countries, and port scanning specifically has been prosecuted. The fact that the device is designed for speed and concealment does not help you legally. Get written authorisation naming the site before you touch a jack."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2022-02",
+      "app_store": "Yes - official payload repository, 764 stars, last pushed 2025-10",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "SharkJack",
+      "Shark"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/shark-jack/",
+        "what": "Verbatim specifications: MT7628DAN, 62x21x12 mm, 2.5 W, 1S 401020 3.7 V 50 mAh LiPo, Cable edition CP2102 UART"
+      },
+      {
+        "url": "https://shop.hak5.org/products/shark-jack",
+        "what": "$100 base (out of stock), $120 Cable edition (in stock)"
+      },
+      {
+        "url": "https://github.com/hak5/sharkjack-payloads",
+        "what": "Official payload repository, 764 stars, last pushed 2025-10-26"
+      }
+    ],
+    "research_gaps": [
+      "Weight not published",
+      "Ethernet link speed is not stated in the specification block",
+      "Whether the base Shark Jack is being retired in favour of the Cable and Display editions is not officially stated"
+    ]
+  },
+  {
+    "id": "shark-jack-display",
+    "hardware_id": "shark-jack-display",
+    "name": "Shark Jack Display",
+    "firmware": "Shark Jack Display 1.0.2 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/sharkjackdisplay-payloads",
+    "firmware_note": "Adds an on-device screen and an interactive payload UI with pickers (IP_PICKER, SINGLE_NUMBER_PICKER) so payloads can prompt the operator in the field.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/shark-jack-display",
+    "category": "network-implant",
+    "subcategory": "drop-box-scanner",
+    "status": "available",
+    "released": "2026",
+    "price_usd": 120,
+    "price_note": "$120 single (Incognito Black in stock; Cyb3rpunk Clear out of stock), $220 Pro Bundle. A B2B SKU also lists at $120.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "The screen removes the biggest weakness of the original - you can now see what happened without going back to a laptop.",
+    "build_effort": "assembled",
+    "build_note": "Charge, pick a payload on the screen, plug into a jack.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "The 2026 refresh of the Shark Jack with a screen and a user-serviceable battery. Payloads can now prompt you interactively - entering an IP address, picking an option - and you read results on the device instead of retrieving loot later. Battery life is 25-35 minutes.",
+    "honest_take": "This is the Shark Jack that should have shipped first: the screen fixes the original's core frustration, and 25-35 minutes of battery is roughly double the base model's. It is also, notably, the same $120 as the Cable edition. Caveats: it is very new (firmware 1.0.2, August 2026) and its payload repository has only 19 stars, so the community library is thin compared to the original's 764-star repo - expect to write your own or port existing Shark Jack payloads. Hak5 does not publish an SoC for it, so assume the MT7628-class hardware of its siblings but do not take that as confirmed.",
+    "best_for": [
+      "Field recon where you need to see the result immediately",
+      "Interactive payloads that ask the operator for a target",
+      "Anyone who found the original's blink-code LED feedback frustrating"
+    ],
+    "not_for": [
+      "Long unattended deployment - 25-35 minutes on a charge",
+      "Wireless work",
+      "Anyone who needs a large, proven payload library today"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not published by Hak5. The sibling Shark Jack uses an MT7628DAN; assume similar but treat as unconfirmed.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {
+        "type": "Colour display (type not published)",
+        "size_in": null,
+        "resolution": null,
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "User-serviceable lithium battery, roughly 25-35 minutes on a full charge. Can run while charging from a USB power bank.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "Not published",
+      "connectivity": [
+        "RJ45 Ethernet plug",
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic - Incognito Black or Cyb3rpunk Clear",
+      "notable_physical": [
+        "On-device colour screen with menu navigation",
+        "User-replaceable battery",
+        "Device-to-device discovery and link test mode"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "Bash payloads with the usual toolset"
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "Single Ethernet port"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Cloud C2 status is surfaced in the device's About menu"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Bash plus an extended DuckyScript command set including interactive prompts (IP_PICKER, SINGLE_NUMBER_PICKER), BATTERY, RANDOMIZE_MAC and connection checks"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Bash with DuckyScript helper commands, extended with UI prompts. Not the compiled DuckyScript 3."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "25-35 minutes on the internal battery; extendable with a USB power bank"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "On-device screen menu plus SSH in arming mode"
+      },
+      "sd_logging": {
+        "v": "unknown",
+        "note": "Storage arrangement is not published"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as the Shark Jack - plugging an unauthorised device into a network and scanning it is unauthorised access in most jurisdictions. Note the firmware includes a RANDOMIZE_MAC command, and deliberately obscuring your device identity on someone else's network can be treated as an aggravating factor. Get written authorisation."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "Yes, but new - the dedicated payload repository has only 19 stars as of this check",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Shark Jack Display",
+      "SJD"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/shark-jack-display/",
+        "what": "25-35 minute battery life, arming mode at 172.16.24.1, interactive DuckyScript pickers, RANDOMIZE_MAC, NETMODE options, Cloud C2 in the About menu"
+      },
+      {
+        "url": "https://shop.hak5.org/products/shark-jack-display",
+        "what": "$120 / $220 Pro Bundle, colour variants and stock status, published 2026-06-08"
+      },
+      {
+        "url": "https://github.com/hak5/sharkjackdisplay-payloads",
+        "what": "Payload repository, 19 stars, last pushed 2026-06-26"
+      }
+    ],
+    "research_gaps": [
+      "SoC, RAM, flash, display resolution, dimensions, weight and battery capacity are all unpublished",
+      "Too new for any independent teardown to exist"
+    ]
+  },
+  {
+    "id": "lan-turtle-hub",
+    "hardware_id": "lan-turtle-hub",
+    "name": "LAN Turtle Hub",
+    "firmware": "LAN Turtle Hub 1.0.1 (stock, OpenWrt-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Full web UI replacing the original LAN Turtle's ncurses menu, with WireGuard and OpenVPN, DNS manipulation, Wake-on-LAN and Cloud C2 payload commands.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/lan-turtle-hub",
+    "category": "network-implant",
+    "subcategory": "usb-ethernet-implant",
+    "status": "available",
+    "released": "2026",
+    "price_usd": 120,
+    "price_note": "$120 Basic, $160 Pro Bundle, $200 Elite Bundle. A separate guidebook is $25. This is the successor to the $80 LAN Turtle, which is out of stock.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The web UI lowers the barrier considerably compared with the original, but VPN and DNS work still needs networking knowledge.",
+    "build_effort": "assembled",
+    "build_note": "Connect over USB-C, browse to 172.16.84.1:1471, run the setup wizard.",
+    "stealth": "covert",
+    "form_factor": "box",
+    "summary": "A USB-C Ethernet hub that is also an implant. It genuinely works as a USB 3 hub and Ethernet adapter for the person using it, while providing you with remote shell access, Wi-Fi out-of-band management, VPN tunnelling, DNS manipulation and USB device interception. This is the replacement for the original LAN Turtle.",
+    "honest_take": "The disguise here is smarter than the original's: a USB-C dock with Ethernet is a thing people actively want on their desk and will plug in themselves, and it does its cover job properly. The Wi-Fi management AP is the risk to manage - Hak5 says so plainly in its own docs, warning that the management AP is detectable and that hiding the SSID 'will not fully hide it' from tools like Kismet. Leave it off unless you need it. Hak5 publishes no SoC, RAM or flash figure, but unlike its older siblings there is an FCC filing (2A52Y-TURTLEHUB, granted May 2025) with internal photos, a block diagram and schematics listed, so this one is actually verifiable if you want to dig. Firmware is 1.0.1 from December 2024 - current, but only just.",
+    "best_for": [
+      "Persistent remote access disguised as a desk dock",
+      "WireGuard or OpenVPN tunnels out of a client network",
+      "USB device interception in addition to network access",
+      "Replacing an ageing LAN Turtle deployment"
+    ],
+    "not_for": [
+      "Situations where the Wi-Fi management AP would be detected - turn it off",
+      "Anyone wanting fully open firmware",
+      "Environments with USB device whitelisting"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not published by Hak5. FCC ID 2A52Y-TURTLEHUB has internal photos, a block diagram and schematics on file, which would settle it.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wifi",
+          "note": "Wi-Fi interface supporting both a management AP and client mode. Client mode supports open, WPA1, WPA2, WPA3-PSK and WPA3-OWE. Chipset and bands not published."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered over USB-C from the host",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "Internal flash, size not published",
+      "connectivity": [
+        "USB-C to host (power + Ethernet gadget)",
+        "RJ45 Ethernet",
+        "USB 3 hub ports",
+        "Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic, styled as an ordinary USB-C hub",
+      "notable_physical": [
+        "Functions as a genuine USB 3 hub in normal mode",
+        "Status LED",
+        "RJ45 plus multiple USB ports"
+      ]
+    },
+    "capabilities": {
+      "ethernet_mitm": {
+        "v": "yes",
+        "note": "Device-in-the-middle on both the Ethernet path and the USB path"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Logging and capture as part of the device-in-the-middle role"
+      },
+      "vpn_exfil": {
+        "v": "yes",
+        "note": "WireGuard (server address, public key, PSK, endpoint) and OpenVPN via a single config file; supports routing all traffic with 0.0.0.0/0 and ::0/0"
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "Requires Cloud C2 server 3.5 or higher. Adds C2EXFIL, C2NOTIFY and C2WATCHDIR payload commands."
+      },
+      "usb_ethernet_attack": {
+        "v": "yes",
+        "note": "Presents as a USB-C Ethernet device with built-in drivers on Linux, Windows and macOS"
+      },
+      "usb_keylogger": {
+        "v": "partial",
+        "note": "Hak5 describes USB interception and logging as a feature; the detail of what is captured from USB devices is not fully documented"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Optional management AP for out-of-band access. Hak5 warns it is detectable and that hiding the SSID does not truly hide it."
+      },
+      "wifi_scan_24": {
+        "v": "partial",
+        "note": "It can scan for networks to join as a client; it is not a Wi-Fi analysis platform"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "http://172.16.84.1:1471. Hak5 notes Brave's aggressive JavaScript blocking can break it."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "DuckyScript payloads plus SSH root access; automatic provisioning from a config script on a USB drive"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "DuckyScript helper commands over bash, in the Hak5 network-device style"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Powered by the host it is plugged into"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "This is deliberately disguised as a useful accessory that a target will plug in themselves, and it intercepts both network and USB traffic. That combination of deception and interception is the clearest possible computer-misuse and wiretap exposure. Only deploy under written authorisation naming the specific systems, and be aware that enabling the Wi-Fi management AP may also raise radio-regulatory questions in some sites."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2024-12",
+      "app_store": "Yes - Hak5 Payload Hub",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Turtle Hub",
+      "LAN Turtle 2"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/lan-turtle-hub/",
+        "what": "Web UI at 172.16.84.1:1471, USB 3 hub passthrough in normal mode, WireGuard/OpenVPN configuration, DNS proxying, Wake-on-LAN, Cloud C2 3.5+ requirement and C2 payload commands, the management-AP detectability warning"
+      },
+      {
+        "url": "https://shop.hak5.org/products/lan-turtle-hub",
+        "what": "$120/$160/$200 pricing, in stock, published 2026-07-26"
+      },
+      {
+        "url": "https://fccid.io/2A52YTURTLEHUB",
+        "what": "FCC grant 2025-05-07 with internal photos, block diagram and schematics on file"
+      }
+    ],
+    "research_gaps": [
+      "SoC, RAM, flash, Wi-Fi chipset, bands, dimensions and weight are all unpublished; the FCC internal photos would resolve most of this",
+      "Exact scope of the USB interception feature is not documented",
+      "Whether the original LAN Turtle will be formally discontinued alongside this launch"
+    ]
+  },
+  {
+    "id": "usb-rubber-ducky",
+    "hardware_id": "usb-rubber-ducky-mk2",
+    "name": "USB Rubber Ducky",
+    "firmware": "DuckyScript 3.0 firmware (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/usbrubberducky-payloads",
+    "firmware_note": "The 2022 hardware runs a compiled DuckyScript 3.0 payload (inject.bin) built in Hak5's browser-based PayloadStudio; DuckyScript 1.0 payloads still run unmodified.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/usb-rubber-ducky",
+    "category": "usb-hid",
+    "subcategory": "keystroke-injection",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 100,
+    "price_note": "$100 for the device, $110 Pro Bundle, $130 Elite Bundle - the bundles add PayloadStudio Pro and course access, not different hardware. B2B SKU $100. Replacement microSD card $20; spare coloured cases $20.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Writing a first payload takes ten minutes. Writing one that survives a real target's timing, locale and EDR takes much longer.",
+    "build_effort": "assembled",
+    "build_note": "Compile DuckyScript to inject.bin in the browser, drop it on the card, plug in.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "The device that invented keystroke injection as an attack class. It looks like a flash drive but enumerates as a keyboard, then types a pre-written payload at machine speed. The 2022 hardware added DuckyScript 3.0, a real structured language with variables, conditionals, loops and functions, plus out-of-band exfiltration.",
+    "honest_take": "DuckyScript 3 is a genuine advance and not just marketing - you get IF/ELSE, WHILE, functions, integer variables, arithmetic and bitwise operators, VID/PID/manufacturer/serial spoofing, and Keystroke Reflection, which exfiltrates binary data back out through the keyboard's lock-key LED channel to loot.bin on the card. Nothing cheap does that last one. But be honest about the price: for pure 'type this script when plugged in', a $5 Digispark ATtiny85 or a $10-15 CH552 board does the job, and there are open-source projects that will run Ducky payloads on them. What you lose going cheap is real: no conditionals or host feedback, no reliable OS detection via lock-key state, no exfiltration channel, no VID/PID spoofing, ATtiny85 boards famously have flaky USB timing and enumerate slowly, and payload space is tiny, and Digispark boards use a fixed, well-known VID/PID that is trivial to blocklist. Two footnotes: Hak5 never publishes the microcontroller, though its own DFU recovery instructions give it away as an AT32UC3B1512; and the shop has carried backorder notices with multi-month batch queues.",
+    "best_for": [
+      "Fast, reliable keystroke injection with proper timing control",
+      "Payloads that need to branch on host feedback or detect the OS",
+      "Out-of-band exfiltration via Keystroke Reflection where no network path exists",
+      "Awareness demos - it is the single most legible way to show why an unattended unlocked machine matters"
+    ],
+    "not_for": [
+      "Anything requiring network access - it is a keyboard, not an Ethernet adapter (that is the Bash Bunny)",
+      "Locked or logged-out machines",
+      "Targets with USB device whitelisting or keystroke-rate anomaly detection",
+      "Anyone whose need is genuinely just 'type a fixed string' - a $5 board does that"
+    ],
+    "hardware": {
+      "mcu_primary": "Atmel/Microchip AT32UC3B1512",
+      "mcu_primary_note": "32-bit AVR32 with 512 KB flash. Hak5 never states this in a spec sheet, but its own DFU recovery page instructs 'dfu-programmer at32uc3b1512 reset' and its WebUSB recovery applet filters on Atmel's vendor ID 0x03EB, which pins the part. That makes the 2022 model the same AVR32 family as the 2011 original (AT32UC3B1256) with double the flash - not the RP2040, SAMD or STM32 that is often assumed. No teardown photo of the 2022 board's chip marking exists, and one reseller still lists the older 256 KB part, so treat this as high-confidence inference from a vendor source rather than a confirmed marking.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered from the host USB port",
+      "charging": "USB-A (bus powered)",
+      "pmic": null,
+      "storage": "microSD card, supplied. Hak5 recommends keeping the small supplied card because larger cards and more files slow the boot-to-injection time.",
+      "connectivity": [
+        "USB-A male plug with a USB-C option"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic flash-drive shell, compatible with the original's cases",
+      "notable_physical": [
+        "Button for entering arming mode - must be pressed after insertion, not while inserting",
+        "microSD slot accessible without a card reader on the 2022 model",
+        "Indistinguishable from a generic USB stick",
+        "Hak5 warns that flashing third-party or legacy firmware bricks the device irrecoverably and voids the warranty"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "The core function. ATTACKMODE HID, with STRING, STRINGLN, key names, modifiers, DELAY and jitter/randomisation to defeat naive timing detection."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "ATTACKMODE STORAGE or HID STORAGE presents the microSD to the target as a flash drive, enabling physical-medium exfiltration"
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Three routes: physical medium via ATTACKMODE STORAGE, network medium by typing commands that copy to SMB/FTP/HTTP, and the EXFIL command which writes variable data to loot.bin"
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckyScript 3.0 - a structured language with IF/ELSE, WHILE, functions, DEFINE constants, VAR integer variables (0-65535), math, comparison, logical, bitwise and augmented-assignment operators. Fully backwards compatible: DuckyScript 1.0 payloads run unmodified because ATTACKMODE HID is assumed when absent. Compiled to inject.bin, normally in Hak5's PayloadStudio."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "It is a keyboard, not a pass-through logger. That is the Key Croc."
+      },
+      "hid_remote_trigger": {
+        "v": "partial",
+        "note": "WAIT_FOR_BUTTON_PRESS and BUTTON_DEF let the on-device button trigger or branch a payload. There is no radio, so no wireless trigger."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet emulation. That is the Bash Bunny."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No radio and no network stack - it cannot talk to a C2 server"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "loot.bin on the microSD receives both Keystroke Reflection output and EXFIL variable data"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "DuckyScript 3 compiled in PayloadStudio; Hak5 states it does not guarantee payloads compiled by other means or run on unlicensed devices"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Powered entirely by the host"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning one is legal essentially everywhere - it is a keyboard. Using one to enter commands on a computer you are not authorised to use is unauthorised access under computer-misuse law almost universally, and because a payload is written in advance it is very hard to argue anything was accidental. Note also that Hak5 licenses DuckyScript rather than selling it outright, so there are contractual as well as legal constraints. Get written authorisation and check local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "Yes - the official payload repository is the largest in the category at nearly 6,000 stars, plus the Hak5 Payload Hub",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Rubber Ducky",
+      "Ducky",
+      "USB Rubber Ducky Mark II",
+      "Ducky 2022"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/usb-rubber-ducky/",
+        "what": "Complete DuckyScript 3.0 language reference: control flow, functions, variables, operators, ATTACKMODE and VID/PID spoofing, lock-key host feedback, Keystroke Reflection and loot.bin, backwards compatibility with 1.0"
+      },
+      {
+        "url": "https://shop.hak5.org/products/usb-rubber-ducky",
+        "what": "$100 / $110 Pro Bundle / $130 Elite Bundle; backorder batch scheduling notice"
+      },
+      {
+        "url": "https://github.com/hak5/usbrubberducky-payloads",
+        "what": "Official payload repository, 5,984 stars, last pushed 2026-09-01"
+      },
+      {
+        "url": "https://shop.hak5.org/pages/dfu-reset",
+        "what": "Hak5's own DFU recovery instructions invoking 'dfu-programmer at32uc3b1512', and a WebUSB applet filtering on Atmel VID 0x03EB - the only vendor evidence of the microcontroller"
+      }
+    ],
+    "research_gaps": [
+      "The AT32UC3B1512 identification is inferred from Hak5's DFU recovery command rather than a chip marking; no teardown photograph of the 2022 board exists and the DFU VID/PID is shared across the whole UC3B family",
+      "No published dimensions, weight, injection rate in characters per second, or maximum payload size for the current model",
+      "Supplied microSD capacity is not stated",
+      "The exact USB-C arrangement (removable cap over the USB-A plug versus a separate connector) is not documented",
+      "A 'USB Rubber Ducky R' SKU at $1,000 exists in the catalogue with no description; purpose unknown, most likely an internal or B2B replacement placeholder"
+    ]
+  },
+  {
+    "id": "usb-rubber-ducky-pro",
+    "hardware_id": "usb-rubber-ducky-mk2",
+    "name": "USB Rubber Ducky Pro Bundle",
+    "firmware": "DuckyScript 3.0 firmware (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/usbrubberducky-payloads",
+    "firmware_note": "Identical firmware to the standard USB Rubber Ducky. The Pro tier is a purchasing bundle, not a hardware revision.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/usb-rubber-ducky",
+    "category": "usb-hid",
+    "subcategory": "keystroke-injection",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 110,
+    "price_note": "$110. VERIFIED: there is no separate 'USB Rubber Ducky Pro' hardware product. 'Pro Bundle' is a purchase variant of the single usb-rubber-ducky SKU, alongside the $100 base and the $130 Elite Bundle. The uplift buys software and training - PayloadStudio Pro ($60 standalone) and course material - not different silicon.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Same device as the base model.",
+    "build_effort": "assembled",
+    "build_note": "Same as the base model.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "Not a distinct device. This is the mid-tier purchase option for the USB Rubber Ducky, bundling the same 2022 hardware with Hak5's PayloadStudio Pro subscription and learning material. It is listed here because it appears on spreadsheets and price lists as though it were a separate product.",
+    "honest_take": "There is no Pro hardware. If a comparison table shows 'USB Rubber Ducky Pro' as a device with unknown specs, that is a data-entry artefact from Hak5's Shopify variant names. The only decision is whether $10 for PayloadStudio Pro bundled at purchase is worth it to you - PayloadStudio Pro is $60 bought separately, so as a bundle it is cheap, but the free tier of PayloadStudio compiles DuckyScript 3 perfectly well for most people. Merge this row into the base USB Rubber Ducky on any comparison you publish.",
+    "best_for": [
+      "Buyers who already know they want PayloadStudio Pro"
+    ],
+    "not_for": [
+      "Anyone expecting different or better hardware than the standard USB Rubber Ducky"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Identical to the standard USB Rubber Ducky; Hak5 does not publish the 2022 microcontroller part",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered",
+      "charging": "USB-A (bus powered)",
+      "pmic": null,
+      "storage": "microSD, supplied",
+      "connectivity": [
+        "USB-A male plug"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic flash-drive shell",
+      "notable_physical": [
+        "Identical to the standard USB Rubber Ducky"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Identical to the standard model"
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Identical to the standard model"
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Identical to the standard model"
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckyScript 3.0, identical to the standard model. The bundle adds PayloadStudio Pro, a better authoring environment, not new language features."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Identical to the standard model"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Identical to the standard model"
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No radio, no network stack"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Identical to the standard USB Rubber Ducky. Using it to enter commands on a machine you are not authorised to use is unauthorised access in most jurisdictions."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "Yes - shared with the standard model",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Rubber Ducky Pro",
+      "USB Rubber Ducky Pro Bundle"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/usb-rubber-ducky",
+        "what": "Live Shopify variant list showing 'USB Rubber Ducky' $100, 'Pro Bundle' $110 and 'Elite Bundle' $130 as options on a single product, confirming there is no separate Pro hardware SKU"
+      },
+      {
+        "url": "https://shop.hak5.org/products/payload-studio-pro",
+        "what": "PayloadStudio Pro standalone price of $60, which is what the bundle tiers are discounting"
+      }
+    ],
+    "research_gaps": [
+      "Confirmed there is no distinct 'USB Rubber Ducky Pro' device. Recommend merging this entry into the base USB Rubber Ducky row."
+    ]
+  },
+  {
+    "id": "bash-bunny-mk2",
+    "hardware_id": "bash-bunny-mk2",
+    "name": "Bash Bunny Mark II",
+    "firmware": "Bash Bunny (stock, Debian-based)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/hak5/bashbunny-payloads",
+    "firmware_note": "Debian userland with an ATTACKMODE system that reconfigures the USB gadget personality on the fly; payloads are bash extended with QUACK-prefixed DuckyScript.",
+    "vendor": "Hak5",
+    "vendor_url": "https://hak5.org",
+    "product_url": "https://shop.hak5.org/products/bash-bunny",
+    "category": "usb-hid",
+    "subcategory": "multi-vector-usb-attack",
+    "status": "available",
+    "released": "2021",
+    "price_usd": 200,
+    "price_note": "$200 for the Bash Bunny Mark II. A 'HotPlug Attack Combo Kit' bundling it with the USB Rubber Ducky and Shark Jack lists at $500.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Bash plus an understanding of USB device classes, target OS behaviour, and what a machine will trust from a freshly-enumerated Ethernet adapter.",
+    "build_effort": "assembled",
+    "build_note": "Flick the switch to arming mode, drop payloads on the mass-storage partition, flick to a payload slot.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "A small Linux computer in an oversized USB stick that impersonates several trusted USB devices at once - keyboard, gigabit Ethernet adapter, serial port and flash drive - to attack a machine from multiple angles simultaneously. The Mark II adds Bluetooth LE for geofencing and remote triggering, plus a microSD slot for mass exfiltration.",
+    "honest_take": "The Bash Bunny's real weapon is not keystroke injection, it is USB Ethernet: when it enumerates as a network adapter, many operating systems will happily make it the default gateway and start sending traffic and credential material at it, which is what makes responder-style attacks so effective from a USB port. That is a genuinely different and more powerful class of attack than a Rubber Ducky. Two clarifications people get wrong. First, it does NOT run DuckyScript 3 - payloads are bash with QUACK-prefixed DuckyScript 1.0-derived commands, and Hak5's own docs tell you to append QUACK to most lines when porting a Ducky payload. Second, it has no Wi-Fi at all - a lot of secondary coverage gets this wrong. The only radio is Bluetooth LE, used for geofencing and remote triggers rather than as an attack radio, and the Bunny reaches a network only by tethering off the host it is plugged into. It is also not a Cloud C2 device. Worth noting that Hak5's own comparison table shows identical CPU and storage for the Mark I and Mark II while the prose alongside it claims faster performance and doubled RAM; the real, verifiable deltas are the microSD slot and BLE. At $200 for five-year-old silicon whose part number Hak5 has never published, this is priced on capability, not components.",
+    "best_for": [
+      "Credential capture via USB Ethernet impersonation (responder-style attacks)",
+      "Multi-vector attacks that need keyboard, network and storage at once",
+      "Payloads that must run to completion in seconds at a locked-down desk",
+      "Geofenced payloads that only fire in a specific place"
+    ],
+    "not_for": [
+      "Anyone expecting DuckyScript 3 features like variables and conditionals",
+      "Bluetooth attacks - the BLE radio is for triggering, not offence",
+      "Environments enforcing USB device whitelisting",
+      "Fully locked machines with no logged-in session"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Quad-core ARM Cortex-A7 running up to 1.3 GHz with 32 KB L1 and 512 KB L2 cache, per Hak5's own comparison page. The specific SoC part number has never been published.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "bluetooth",
+          "note": "Bluetooth Low Energy, added in the Mark II. Used for wireless geofencing and remote triggers via the WAIT_FOR_PRESENT and WAIT_FOR_NOT_PRESENT extensions, which read the surrounding BLE landscape to /tmp/bt_observation. Chipset not published."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered from the host USB port",
+      "charging": "USB-A (bus powered)",
+      "pmic": null,
+      "storage": "8 GB NAND SSD internal, plus a microSD XC slot on the Mark II supporting cards up to 2 TB. If a card is present at boot in a payload slot, /root/udisk points at the card instead of the internal partition.",
+      "connectivity": [
+        "USB-A male plug",
+        "Bluetooth LE",
+        "microSD XC slot"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic, oversized flash-drive form",
+      "notable_physical": [
+        "3-position mode switch (two payload slots plus arming)",
+        "RGB status LED",
+        "microSD slot (Mark II only)"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "ATTACKMODE HID with QUACK-prefixed DuckyScript. QUACK ALTCODE (firmware 1.5+) types Windows alt-codes. DUCKY_LANG sets the HID keyboard layout by country code."
+      },
+      "usb_ethernet_attack": {
+        "v": "yes",
+        "note": "The headline capability. ATTACKMODE ECM_ETHERNET, RNDIS_ETHERNET and AUTO_ETHERNET impersonate a gigabit network adapter so the host routes traffic through the Bunny."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "ATTACKMODE STORAGE presents the internal udisk partition or an inserted microSD card to the target. It can only be mounted on one side at a time."
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Mass exfiltration to microSD XC up to 2 TB is the Mark II's headline addition; loot can also leave over the emulated Ethernet interface"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Bash plus DuckyScript 1.0-derived commands, invoked as QUACK. NOT DuckyScript 3 - no variables, conditionals, loops or Keystroke Reflection. Hak5's docs instruct you to append QUACK to most lines when porting a Rubber Ducky payload. An extension system adds community-contributed commands like RUN and GET."
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "WAIT_FOR_PRESENT and WAIT_FOR_NOT_PRESENT trigger on the presence or absence of a BLE device, giving both remote triggering and crude geofencing"
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "The BLE radio reads the surrounding landscape only to satisfy geofence and trigger conditions. It is not exposed as a general-purpose BLE scanning or attack tool."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No Wi-Fi and no persistent network of its own; the Bash Bunny is not a Cloud C2 device"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD XC up to 2 TB. Must be a single partition with a filesystem the target can read - ext and FAT32 only, exFAT is not supported."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Notable absence: the Bash Bunny has NO Wi-Fi. Its only radio is Bluetooth LE. It reaches a network solely by tethering through the host via emulated USB Ethernet."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Full bash on a Debian base, with a serial console in arming mode and a .deb auto-install hook in the tools folder"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Powered by the target machine"
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "It emulates a keyboard, it does not log one. That is the Key Croc."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "The USB Ethernet impersonation attack does not just enter commands, it intercepts network traffic and credential material - so unauthorised use can engage both computer-misuse and wiretap statutes. VID and PID spoofing to defeat device whitelisting may be treated as circumventing a security control, which is a separate offence in several jurisdictions. Get explicit written authorisation naming the machines."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-06",
+      "app_store": "Yes - official payload repository, 2,957 stars, last pushed 2026-06-13",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Bash Bunny",
+      "Bunny",
+      "Bash Bunny MK2",
+      "BB Mark II"
+    ],
+    "sources": [
+      {
+        "url": "https://documentation.hak5.org/bash-bunny/",
+        "what": "ATTACKMODE list and combinations, VID/PID/MAN/PROD/SERIAL spoofing, QUACK and the DuckyScript 1.0 porting note, microSD XC behaviour, BLE geofencing via WAIT_FOR_PRESENT, extension system"
+      },
+      {
+        "url": "https://shop.hak5.org/pages/bash-bunny-compare",
+        "what": "Mark I versus Mark II: quad-core A7 up to 1.3 GHz, 8 GB NAND SSD, microSD XC up to 2 TB and Bluetooth Low Energy added on the Mark II"
+      },
+      {
+        "url": "https://shop.hak5.org/products/bash-bunny",
+        "what": "$200 price, in stock"
+      },
+      {
+        "url": "https://github.com/hak5/bashbunny-payloads",
+        "what": "Official payload repository, 2,957 stars, last pushed 2026-06-13"
+      }
+    ],
+    "research_gaps": [
+      "SoC part number has never been published by Hak5 and no teardown identifies it; only the quad-core Cortex-A7 configuration up to 1.3 GHz is on record",
+      "BLE chipset not published",
+      "RAM amount is not in Hak5's own comparison table; the 512 MB DDR3 figure comes from third-party specification lists only",
+      "No published dimensions, weight or USB connector generation",
+      "Mark II release date is not officially stated; archived shop snapshots bracket it to roughly August 2021, consistent with DEF CON 29"
+    ]
+  },
+  {
+    "id": "omg-cable",
+    "hardware_id": "omg-cable",
+    "name": "O.MG Cable",
+    "firmware": "O.MG Firmware v3.0 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/O-MG/O.MG-Firmware",
+    "firmware_note": "Proprietary closed-source firmware distributed as prebuilt ESP8266 images; the repo holds binaries, a flasher and a self-hosted C2 server, under a EULA that forbids reverse engineering.",
+    "vendor": "Mischief Gadgets (sold via Hak5)",
+    "vendor_url": "https://o.mg.lol",
+    "product_url": "https://shop.hak5.org/products/omg-cable",
+    "category": "usb-hid",
+    "subcategory": "malicious-cable-implant",
+    "status": "available",
+    "released": "2019",
+    "price_usd": 180,
+    "price_note": "Two tiers, three hardware generations, many connector variants. ELITE (Gen 3, current): USB-A active end to Lightning / micro / USB-C all $180; USB-C active end to Lightning / micro / USB-C $200 in TPE, $220 in woven braid; a 2-metre custom-length range at $200-220. BASIC (Gen 1): $150, and USB-A active end only - there is no USB-C Basic. The middle 'Plus' tier (Gen 2, the old O.MG Keylogger Cable) is discontinued from retail but still exists as a model code in firmware. A student bundle runs $215-255. The O.MG Programmer is a separate $25 accessory and is REQUIRED for initial setup, because devices ship deactivated for regulatory compliance.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Deployment is trivial; writing payloads that survive a real target, and understanding the operational risk of a Wi-Fi beacon in a cable, is not.",
+    "build_effort": "assembled",
+    "build_note": "Join its Wi-Fi AP, use the web UI to load payloads. Firmware updates need the separately-sold $25 O.MG Programmer or the browser-based WebFlasher.",
+    "stealth": "covert",
+    "form_factor": "cable",
+    "summary": "A charging cable with an implant built into the connector housing. It works as a real cable, but it also runs a web server on its own Wi-Fi, stores DuckyScript payloads, injects keystrokes into whatever it is plugged into, and on Elite models logs keystrokes from a keyboard plugged through it. It is visually indistinguishable from a normal cable.",
+    "honest_take": "The implant's brain is an ESP8266 - the shipped firmware binary literally contains the string 'Firmware ONLY supports ESP8266!!!'. Not an ESP32 and not a custom ASIC; a CT scan found two dies in one package, which is custom packaging, not custom silicon. There is no separate USB chip either: the ESP8266 has no USB peripheral, so USB is bit-banged in software using the open-source cnlohr/espusb stack. That sets a hard ceiling - 2.4 GHz Wi-Fi only, no Bluetooth, low-speed USB, and storage measured in kilobytes. What $150-220 buys is the engineering that fits all that inside a connector housing that still looks and works like a cable, which genuinely nobody else does as well. Three things to weigh. The tier matters far more than the connector: Basic is 8 payload slots, ~4,000 keystrokes and 120 keys/sec with no keylogger; Elite is 50-300 slots, ~1.5 million keystrokes, 890 keys/sec, the keylogger and the C2. The 'geo-fencing' feature is not GPS - it is Wi-Fi SSID presence detection, so it fences on 'is this network in range', not on location. And the firmware is closed with a EULA that forbids reverse engineering, so you cannot audit the cable you are about to plug into a client's machine.",
+    "best_for": [
+      "Red-team drops where a cable will be picked up and used",
+      "Keystroke injection that survives being left in place indefinitely",
+      "Hardware keylogging through a pass-through keyboard (Elite only)",
+      "Security-awareness demonstrations about untrusted cables and chargers"
+    ],
+    "not_for": [
+      "Bluetooth or 5 GHz work - the ESP8266 is 2.4 GHz Wi-Fi only",
+      "Large payloads or bulk data exfiltration (kilobyte-scale storage)",
+      "Anyone who needs auditable open firmware",
+      "Keylogging on a Basic-tier cable - that feature is Elite only"
+    ],
+    "hardware": {
+      "mcu_primary": "Espressif ESP8266",
+      "mcu_primary_note": "Confirmed three ways: the shipped firmware binary contains the literal string 'Firmware ONLY supports ESP8266!!!' along with Espressif NONOS SDK markers; Mischief Gadgets' flash.py instantiates ESP8266ROM; and the flash layout uses the ESP8266 signature offsets. The published memory map ships exactly two profiles, 1024 KB and 2048 KB, which is the Basic and Elite split. Independent teardown work found the Wi-Fi OUI DC:4F:22, which is Espressif.",
+      "mcu_secondary": null,
+      "mcu_secondary_note": "There is NO separate USB controller. The ESP8266 has no USB peripheral at all, so USB is bit-banged in software on GPIO using the open-source cnlohr/espusb stack - Mike Grover credited cnlohr for that work in 2019. This is why the device is limited to low-speed USB and why 'USB overclock' is even a meaningful setting (120 keys/sec on Basic, 890 on Elite): you can only overclock a software stack. A Lumafield industrial CT scan found a second silicon die bonded under the main processor, so the 'custom silicon' framing refers to custom packaging of two dies, not a custom ASIC.",
+      "radios": [
+        {
+          "ic": "ESP8266 (integrated)",
+          "role": "wifi-24",
+          "note": "2.4 GHz 802.11b/g/n only. Toggles between AP mode (it broadcasts its own network) and station mode (it joins yours). No Bluetooth, no 5 GHz."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. Powered by the host port it is plugged into, which is also its operational limitation - unplugged, it is inert.",
+      "charging": "n/a (bus powered)",
+      "pmic": null,
+      "storage": "ESP8266 SPI flash: 1 MB on Basic, 2 MB on Elite. Basic gets 8 payload slots and a maximum payload of about 4,000 keystrokes; Elite gets 50 to 300 slots (default 50) with a maximum payload around 1,500,000 keystrokes, plus roughly 650,000 keystrokes of keylog capacity. A partition editor lets you retask the space - 200 slots, one giant payload, or 100% keylog.",
+      "connectivity": [
+        "The cable's own connectors",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Moulded cable housing - TPE or woven braid, in white or black",
+      "notable_physical": [
+        "Implant hidden inside a standard connector housing",
+        "Works as a genuine charge and data cable",
+        "Connector variants: USB-A or USB-C on the host end; Lightning, micro-USB or USB-C on the device end; plus directional C-to-C and 2-metre custom lengths"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "The core function. Payloads are DuckyScript with O.MG-specific enhancements."
+      },
+      "usb_keylogger": {
+        "v": "partial",
+        "note": "ELITE TIER ONLY, and narrower than it sounds: it logs Full-Speed (12 Mbps) USB keyboards only - not Low-Speed or High-Speed ones - wired as host to O.MG-active to O.MG-passive to keyboard. Roughly 650,000 keystrokes of storage. Mischief Gadgets publishes a verified-keyboard list (Apple Magic Keyboard, Keychron K1/K6, Drop CTRL and others). Basic-tier cables have no keylogger."
+      },
+      "usb_exfil": {
+        "v": "partial",
+        "note": "Elite tier only - Mischief Gadgets describes a 'covert exfil and comms channel'. Capacity is bounded by a 2 MB flash chip."
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Hak5 markets Elite as 'DuckyScript 3' and Basic as 'DuckyScript 2', but that is a licensing tier label, not the language. The actual O.MG command set has REM, DELAY, STRING/STRINGLN, REPEAT, MOUSE, HIDX, JIGGLER, DUCKY_LANG (192 keymaps), VID/PID/MAN/PRO/SER spoofing, IF_PRESENT/IF_NOTPRESENT, SELF-DESTRUCT and KEYLOGGER - but NO VAR, WHILE, FUNCTION, EXFIL, ATTACKMODE or general IF/THEN/ELSE. Functionally this is DuckyScript 1.0-class plus device-specific extensions, not Hak5's DuckyScript 3."
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Payloads can be triggered over Wi-Fi from the web UI or the C2 server, which is the cable's signature capability. IF_PRESENT / IF_NOTPRESENT / WAIT_FOR_PRESENT gate on nearby Wi-Fi networks."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Broadcasts its own 2.4 GHz access point (default SSID 'O.MG', password 12345678, web UI at 192.168.4.1); can be switched to station mode to join an existing network instead"
+      },
+      "gps": {
+        "v": "no",
+        "note": "IMPORTANT: O.MG's advertised 'geo-fencing' is NOT GPS. There is no GNSS hardware. It is 2.4 GHz SSID/BSSID presence detection with an optional RSSI threshold, so it fences on 'is this Wi-Fi network in range', not on coordinates."
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "O.MG runs its OWN standalone Python C2 server, shipped in the firmware repository - it is NOT Hak5 Cloud C2 and O.MG devices do not appear in Hak5's Cloud C2 device list. It is an asynchronous polling relay, not a real-time shell, encrypted with MonoCypher over plain HTTP so it survives content inspection. Elite tier only."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Served by the ESP8266 over its own AP or over your network in station mode"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Payload authoring in the web UI; the O.MG payload library is a separate, actively maintained Hak5 repository"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs whenever it is plugged in; no separate power needed"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "The ESP8266 has no Bluetooth radio of any kind"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No removable storage - everything lives in the ESP8266's SPI flash"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "This is the most legally exposed device in the whole Hak5 catalogue, because deception is the entire product. A cable engineered to be indistinguishable from an ordinary one, that injects commands and logs keystrokes, is very difficult to characterise as anything other than deliberate unauthorised access and interception. In many jurisdictions, disguise is treated as evidence of intent and some countries have specific offences for possessing or supplying devices designed for unauthorised access. Only use with explicit written authorisation naming the machines, keep tight inventory control so a cable is never left behind, and check your local law - the possession question is genuinely different here from a Rubber Ducky."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "Yes - the hak5/omg-payloads repository, 1,090 stars, last pushed 2025-11",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "OMG Cable",
+      "O.MG",
+      "Mischief Gadgets cable",
+      "Demonseed"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/blob/master/flash.py",
+        "what": "Calls flashapi.ESP8266ROM and writes ESP8266 image offsets, confirming the microcontroller; detects 1 MB / 2 MB / 4 MB flash; payload slot size configurable 4-32 KB"
+      },
+      {
+        "url": "https://github.com/O-MG/WebFlasher/blob/main/assets/memmap.json",
+        "what": "Published memory map with 1024 KB and 2048 KB image sets"
+      },
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/wiki",
+        "what": "8 payload slots on Basic and up to 200 on Plus/Elite; full-speed USB keyboard logging with ~650,000 keystrokes of storage; geofencing, self-destruct, C2 and HIDX StealthLink pages; AP/station toggle; 'Payload Syntax: DuckyScript, with enhancements'"
+      },
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/releases",
+        "what": "Stable v3.0-260728 (2026-07-28); beta v4.0 restricted to Elite devices"
+      },
+      {
+        "url": "https://shop.hak5.org/products/omg-cable",
+        "what": "Live variant list with Elite and Basic tier pricing and every connector combination"
+      },
+      {
+        "url": "https://o.mg.lol/",
+        "what": "Elite feature list: covert exfil and comms channel, hardware keylogger, networked C2, extra storage"
+      },
+      {
+        "url": "https://shop.hak5.org/pages/omg-tier-compare",
+        "what": "Full Basic versus Elite tier table: 8 vs 50-300 payload slots, 4,000 vs 1,500,000 keystroke payloads, 120 vs 890 keys/sec, keylogger, HIDX StealthLink and encrypted network C2 as Elite-only. Header reads 'Feature Tier / Hardware Generation'."
+      },
+      {
+        "url": "https://o.mg.lol/elite-announce/",
+        "what": "Mike Grover confirming the original O.MG Cable and O.MG Keylogger Cable were renamed to Basic and Plus, with Elite as the third generation"
+      },
+      {
+        "url": "https://github.com/cnlohr/espusb",
+        "what": "The open-source software-only ESP8266 USB device stack that O.MG uses for HID emulation, credited by Grover"
+      }
+    ],
+    "research_gaps": [
+      "Exact ESP part and package (ESP8266EX versus ESP8285 versus bare die) is unconfirmed - no teardown shows chip markings, though the stacked-die CT scan and the 1/2 MB flash sizes would both fit an ESP8285",
+      "Wi-Fi range is not specified by the vendor anywhere. The widely-repeated '200+ feet' figure traces to 2019 press coverage, not a spec sheet, and the 'control it from a mile away' claim is not supported by the manufacturer.",
+      "Firmware is closed source and the EULA forbids reverse engineering, so no independent audit of what the cable does is possible"
+    ]
+  },
+  {
+    "id": "omg-plug",
+    "hardware_id": "omg-plug",
+    "name": "O.MG Plug",
+    "firmware": "O.MG Firmware v3.0 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/O-MG/O.MG-Firmware",
+    "firmware_note": "Shared firmware line with the O.MG Cable; same web UI, payload system and C2.",
+    "vendor": "Mischief Gadgets (sold via Hak5)",
+    "vendor_url": "https://o.mg.lol",
+    "product_url": "https://shop.hak5.org/products/omg-plug",
+    "category": "usb-hid",
+    "subcategory": "malicious-charger-implant",
+    "status": "available",
+    "released": "2021",
+    "price_usd": 115,
+    "price_note": "Elite $115 in black or white; Basic $85 in white. The cheapest way into the O.MG ecosystem.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same payload workflow as the O.MG Cable.",
+    "build_effort": "assembled",
+    "build_note": "Join its Wi-Fi AP and load payloads through the web UI.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "The O.MG implant in a USB wall-charger body rather than a cable. It behaves like an ordinary charger while running the same web-managed payload engine, Wi-Fi and C2 as the O.MG Cable. Elite adds up to 200 payload slots, port stealthing, self-destruct and the covert exfiltration channel.",
+    "honest_take": "Same ESP8266 brain and the same closed firmware as the cable, in a keychain-sized shell, and at $85-115 it is the cheapest honest way to evaluate the O.MG ecosystem before spending $180-220 on a cable. The tradeoff is the threat model: a plug is something people connect their own devices to, whereas a cable is something that ends up in a laptop. One specific trap worth knowing: the Plug's Basic tier is weaker than the Cable's Basic - Plug Basic has neither self-destruct nor port stealthing, while Cable Basic at least has self-destruct. If any of the marquee features are the point, you need Elite.",
+    "best_for": [
+      "Drops where a charger is more plausible than a cable",
+      "Cheapest entry point into O.MG payload development",
+      "Awareness demonstrations about public charging"
+    ],
+    "not_for": [
+      "Anyone expecting keylogging (that is a cable pass-through feature)",
+      "Bluetooth or 5 GHz work",
+      "Large-volume exfiltration"
+    ],
+    "hardware": {
+      "mcu_primary": "Espressif ESP8266",
+      "mcu_primary_note": "Same platform as the O.MG Cable, confirmed by the shared flashing tool and firmware images",
+      "mcu_secondary": null,
+      "mcu_secondary_note": "A separate USB/HID controller is required because the ESP8266 has no USB device peripheral; the part is not published",
+      "radios": [
+        {
+          "ic": "ESP8266 (integrated)",
+          "role": "wifi-24",
+          "note": "2.4 GHz 802.11b/g/n, AP or station mode. No Bluetooth."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Mains or host powered depending on how it is deployed",
+      "charging": "n/a",
+      "pmic": null,
+      "storage": "ESP8266 SPI flash. Elite is advertised as 'more storage for loot and up to 200 payload slots'; Basic is 8 slots.",
+      "connectivity": [
+        "USB port(s) in a charger body",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Keychain-sized USB plug housing, black or white",
+      "notable_physical": [
+        "Keychain form factor",
+        "No indicator that distinguishes it from an ordinary USB plug",
+        "Basic tier lacks both self-destruct and port stealthing, unlike the Basic cable"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "DuckyScript with O.MG enhancements, same engine as the cable"
+      },
+      "usb_exfil": {
+        "v": "partial",
+        "note": "Elite tier only - 'covert exfil and comms channel'"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "O.MG's DuckyScript dialect, not Hak5's compiled DuckyScript 3"
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Triggered over Wi-Fi from the web UI or the O.MG C2 server"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "AP mode for management, or station mode to join an existing network"
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "O.MG's own self-hosted C2 server ('Networked C2', Elite tier), not Hak5 Cloud C2"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Served by the ESP8266"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Shares the O.MG payload library"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs whenever powered"
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Keylogging is a pass-through feature of the Elite cable; the Plug has no keyboard in its path"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP8266 has no Bluetooth radio"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as the O.MG Cable - a device deliberately disguised as an innocuous charger, designed to inject commands into whatever is plugged into it, sits at the sharp end of computer-misuse and device-possession law. Some jurisdictions criminalise possessing articles for use in unauthorised access. Written authorisation and strict inventory control; check local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "Yes - shared O.MG payload repository",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "OMG Plug",
+      "O.MG Wall Plug"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/omg-plug",
+        "what": "Elite $115 black/white, Basic $85 white"
+      },
+      {
+        "url": "https://o.mg.lol/",
+        "what": "Plug Elite feature list: more storage and up to 200 payload slots, port stealthing, self-destruct, covert exfil and comms channel, networked C2"
+      },
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/wiki",
+        "what": "Shared firmware feature set, payload slot counts, AP/station toggle, DuckyScript dialect"
+      }
+    ],
+    "research_gaps": [
+      "Whether the Plug is a genuine functioning charger or a dummy body is not clearly documented",
+      "Number and type of USB ports, dimensions, weight and mains voltage range unpublished",
+      "'Port stealthing' is a marketing term Mischief Gadgets does not define technically"
+    ]
+  },
+  {
+    "id": "omg-adapter",
+    "hardware_id": "omg-adapter",
+    "name": "O.MG Adapter",
+    "firmware": "O.MG Firmware v3.0 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/O-MG/O.MG-Firmware",
+    "firmware_note": "Shared O.MG firmware line; Elite-only product, so it ships with the full feature set.",
+    "vendor": "Mischief Gadgets (sold via Hak5)",
+    "vendor_url": "https://o.mg.lol",
+    "product_url": "https://shop.hak5.org/products/omg-adapter",
+    "category": "usb-hid",
+    "subcategory": "malicious-adapter-implant",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 200,
+    "price_note": "$200, Elite tier only, black or white. There is no Basic version of the Adapter.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same workflow as the rest of the O.MG line.",
+    "build_effort": "assembled",
+    "build_note": "Join its Wi-Fi AP and load payloads through the web UI.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "The O.MG implant in a small USB adapter body, so it can be added to a cable the target already owns rather than replacing it. Sold Elite-only, meaning it includes the keylogger, covert exfiltration channel, networked C2 and the full 200-slot payload storage.",
+    "honest_take": "Operationally this is the most flexible shape in the family: you are not asking anyone to accept a new cable, you are adding a small adapter to one they already trust, and it works with whatever cable is already there. That is why it is Elite-only and why it costs the same as the most expensive cables. Same caveats as the rest of the line though - ESP8266, 2.4 GHz Wi-Fi only, closed firmware you cannot audit, and storage measured in kilobytes. And the adapter is the variant most likely to be noticed, because an unexplained dongle between a cable and a port is more visually anomalous than a cable that simply looks like a cable.",
+    "best_for": [
+      "Adding the implant to a cable the target already owns and trusts",
+      "Engagements where swapping a whole cable is impractical",
+      "Anyone who wants the full Elite feature set in the smallest form"
+    ],
+    "not_for": [
+      "Situations where an extra dongle in the path would be spotted",
+      "Bluetooth or 5 GHz work",
+      "Bulk exfiltration"
+    ],
+    "hardware": {
+      "mcu_primary": "Espressif ESP8266",
+      "mcu_primary_note": "Same platform as the rest of the O.MG line, confirmed by the shared flashing tool",
+      "mcu_secondary": null,
+      "mcu_secondary_note": "A separate USB/HID controller is required alongside the ESP8266; the part is not published",
+      "radios": [
+        {
+          "ic": "ESP8266 (integrated)",
+          "role": "wifi-24",
+          "note": "2.4 GHz 802.11b/g/n, AP or station mode. No Bluetooth."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered",
+      "charging": "n/a",
+      "pmic": null,
+      "storage": "ESP8266 SPI flash; Elite tier, so up to 200 payload slots and roughly 650,000 keystrokes of keylog capacity",
+      "connectivity": [
+        "USB-C male (active end) to USB-A female",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Small adapter housing, black or white",
+      "notable_physical": [
+        "Works with the target's existing cable",
+        "Doubles as a genuine USB-C OTG adapter, which enables payloads against mobile devices",
+        "No indicator distinguishing it from an ordinary adapter"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "DuckyScript with O.MG enhancements"
+      },
+      "usb_keylogger": {
+        "v": "yes",
+        "note": "Elite tier, so the hardware keylogger is included - roughly 650,000 keystrokes of storage from full-speed USB keyboards passing through"
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Elite covert exfil and comms channel"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "O.MG's DuckyScript dialect, not Hak5's compiled DuckyScript 3"
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Wi-Fi triggered from the web UI or the O.MG C2 server"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "AP or station mode"
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "O.MG's own self-hosted C2, not Hak5 Cloud C2"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Served by the ESP8266"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Shared O.MG payload library"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Bus powered whenever in the path"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP8266 has no Bluetooth radio"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as the O.MG Cable, and arguably sharper: it is a covert interception device that also logs keystrokes. Keylogging is specifically named in interception statutes in many jurisdictions. Written authorisation naming the machines, strict inventory control, and check local law before purchase as well as before use."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "Yes - shared O.MG payload repository",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "OMG Adapter"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/omg-adapter",
+        "what": "$200, Elite tier only, black and white variants"
+      },
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/wiki",
+        "what": "Shared feature set: keylogger with ~650,000 keystrokes, up to 200 payload slots on Elite, geofencing, self-destruct, C2"
+      },
+      {
+        "url": "https://o.mg.lol/",
+        "what": "Product listing confirming the Adapter is part of the current line"
+      }
+    ],
+    "research_gaps": [
+      "Exact connector configuration (which USB types on each end) is not clearly published",
+      "Dimensions and weight unpublished",
+      "Keylogger capability is inferred from the shared Elite firmware feature set rather than stated explicitly for the Adapter"
+    ]
+  },
+  {
+    "id": "omg-unblocker",
+    "hardware_id": "omg-unblocker",
+    "name": "O.MG UnBlocker",
+    "firmware": "O.MG Firmware v3.0 (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/O-MG/O.MG-Firmware",
+    "firmware_note": "Shared O.MG firmware line; Elite-only, so the full feature set ships enabled.",
+    "vendor": "Mischief Gadgets (sold via Hak5)",
+    "vendor_url": "https://o.mg.lol",
+    "product_url": "https://shop.hak5.org/products/omg-unblocker",
+    "category": "usb-hid",
+    "subcategory": "malicious-adapter-implant",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 150,
+    "price_note": "$150, Elite tier only, in Ember-Red, Charcoal-Black or Ash-White. The colour choice is deliberate: real USB data blockers are commonly sold in exactly these bright colours.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same payload workflow as the rest of the line; the sophistication is in the social engineering, not the operation.",
+    "build_effort": "assembled",
+    "build_note": "Join its Wi-Fi AP and load payloads through the web UI.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "An O.MG implant disguised as a USB data blocker - the small dongle security-conscious people carry specifically to make public charging safe. It looks like a defensive product and is sold in the same bright colours real ones use, but it is a full Elite-tier implant.",
+    "honest_take": "This is the most conceptually vicious device in the entire catalogue, and that is the point of it: it weaponises the exact precaution a careful person takes. Someone who carries a USB condom is by definition someone thinking about USB security, and this turns that habit into the attack. Technically it is the same ESP8266 Elite implant as the Adapter, at $50 less, and it is genuinely useful as an awareness tool - it is the fastest way to make an audience understand that a trusted-looking accessory is not a trust anchor. Note the irony that Mischief Gadgets also sells the $40 Malicious Cable Detector, so the same vendor sells you both the problem and a partial answer. Practically, everything true of the O.MG Adapter is true here: 2.4 GHz only, closed firmware, kilobyte-scale storage.",
+    "best_for": [
+      "Security-awareness training where the lesson is 'defensive accessories are not trust anchors'",
+      "Red-team drops in environments where staff have been taught to use data blockers",
+      "Elite O.MG capability at $50 less than the Adapter"
+    ],
+    "not_for": [
+      "Anyone who wants an actual data blocker - it is the opposite",
+      "Bluetooth or 5 GHz work",
+      "Bulk exfiltration"
+    ],
+    "hardware": {
+      "mcu_primary": "Espressif ESP8266",
+      "mcu_primary_note": "Same platform as the rest of the O.MG line, confirmed by the shared flashing tool and firmware images",
+      "mcu_secondary": null,
+      "mcu_secondary_note": "A separate USB/HID controller is required alongside the ESP8266; the part is not published",
+      "radios": [
+        {
+          "ic": "ESP8266 (integrated)",
+          "role": "wifi-24",
+          "note": "2.4 GHz 802.11b/g/n, AP or station mode. No Bluetooth."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered",
+      "charging": "n/a",
+      "pmic": null,
+      "storage": "ESP8266 SPI flash; Elite tier, so up to 200 payload slots",
+      "connectivity": [
+        "USB pass-through connectors",
+        "2.4 GHz Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "USB data-blocker housing in Ember-Red, Charcoal-Black or Ash-White",
+      "notable_physical": [
+        "USB-A male (active end) to USB-A female",
+        "Passes 5 V downstream exactly as a real data blocker would, so it charges normally and behaves as expected",
+        "Deliberately styled and coloured to resemble a genuine USB data blocker"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Full keystroke injection - the exact thing a real data blocker exists to prevent"
+      },
+      "usb_keylogger": {
+        "v": "partial",
+        "note": "Elite firmware includes the keylogger, but capture depends on a keyboard actually passing through it. Not confirmed specifically for this form factor."
+      },
+      "usb_exfil": {
+        "v": "yes",
+        "note": "Elite covert exfil and comms channel"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "O.MG's DuckyScript dialect, not Hak5's compiled DuckyScript 3"
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Wi-Fi triggered from the web UI or the O.MG C2 server"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "AP or station mode"
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "O.MG's own self-hosted C2, not Hak5 Cloud C2"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Served by the ESP8266"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Shared O.MG payload library"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Bus powered"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP8266 has no Bluetooth radio"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "The highest-risk item here. A device deliberately disguised as a security product, so that a person taking a precaution is instead compromised, is the clearest possible evidence of intent to deceive, and several jurisdictions treat impersonating a protective device or supplying articles for unauthorised access as offences in their own right. Leaving one where a member of the public might pick it up is not defensible under any authorisation you are likely to hold. Use only in tightly controlled, authorised training or engagement settings, keep serial-level inventory, and check local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "Yes - shared O.MG payload repository",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "OMG UnBlocker",
+      "O.MG Data Blocker"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/omg-unblocker",
+        "what": "$150, Elite only, three colourways, in stock"
+      },
+      {
+        "url": "https://o.mg.lol/",
+        "what": "Listed as a current product in the O.MG line"
+      },
+      {
+        "url": "https://github.com/O-MG/O.MG-Firmware/wiki",
+        "what": "Shared Elite feature set: up to 200 payload slots, geofencing, self-destruct, C2, HIDX StealthLink"
+      }
+    ],
+    "research_gaps": [
+      "It passes 5 V downstream like a real blocker, but whether it actually blocks data when no payload is running - or merely appears to - is not documented",
+      "Keylogging in this form factor is inferred from the shared Elite firmware rather than stated",
+      "Dimensions and weight unpublished"
+    ]
+  },
+  {
+    "id": "omg-demonseed-edu",
+    "hardware_id": "omg-demonseed-edu",
+    "name": "O.MG DemonSeed EDU",
+    "firmware": "DemonSeed (Arduino/ATtiny85 sketches)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/jermainlaforce/DemonSeed",
+    "firmware_note": "Not O.MG firmware at all - plain ATtiny85 Arduino sketches. The original Mischief Gadgets repository was deleted; only a community mirror survives.",
+    "vendor": "Mischief Gadgets",
+    "vendor_url": "https://o.mg.lol",
+    "product_url": null,
+    "category": "usb-hid",
+    "subcategory": "diy-education-kit",
+    "status": "discontinued",
+    "released": "2019",
+    "price_usd": 49.99,
+    "price_note": "$49.99 when sold. Listed under 'Educational Kits', archived live from November 2019 to February 2023 and gone by 2024. An earlier $20 DIY build-kit version was sold at DEF CON 2019. Discontinued; no longer purchasable.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "You solder it yourself and flash Arduino sketches. The kit deliberately contains two implants so you can afford to destroy one learning.",
+    "build_effort": "soldering",
+    "build_note": "Self-assembly from a 2-pack of implants plus a programmer and supplies for a programming jig. Mischief Gadgets stated assembly was not covered by warranty and taught it through a YouTube series and a dedicated Discord.",
+    "stealth": "covert",
+    "form_factor": "cable",
+    "summary": "THERE IS NO 'O.MG DevKit'. The educational/development product Mischief Gadgets actually sold was the O.MG DemonSeed EDU: a $49.99 solder-it-yourself kit containing two ATtiny85-based cable implants, a programmer and jig supplies, taught through a video series. It was discontinued around 2023.",
+    "honest_take": "If your source list says 'O.MG DevKit', this is almost certainly what it means - and the substitution matters, because the DemonSeed is not a cut-down O.MG Cable, it is a completely different and far simpler device. Mike Grover said so explicitly: it is not an O.MG Cable and is missing nearly every feature. Critically it has NO WIRELESS AT ALL - it is an ATtiny85 that types a hardcoded payload, so no Wi-Fi, no web UI, no C2, no remote triggering, no keylogging, no payload slots. It was a teaching product about how a cable implant is physically built, and a good one. For a current comparison site the right move is to drop this row entirely and, if you need an O.MG accessory entry, use the $25 O.MG Programmer, which is the item people actually need since every O.MG device ships deactivated and cannot be set up without one.",
+    "best_for": [
+      "Historical interest only - it is discontinued",
+      "Understanding how cable implants are physically constructed"
+    ],
+    "not_for": [
+      "Anyone trying to buy one - it has not been sold since around 2023",
+      "Anyone expecting O.MG Cable features - it has no wireless of any kind",
+      "Anyone who does not want to solder"
+    ],
+    "hardware": {
+      "mcu_primary": "Atmel ATtiny85",
+      "mcu_primary_note": "8-bit AVR in a SOIC-8 package, per Mike Grover's own README. 8 KB flash, software-emulated USB. This is the same class of part as a $2 Digispark, not the ESP8266 used in real O.MG products.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus powered",
+      "charging": "n/a",
+      "pmic": null,
+      "storage": "8 KB of on-chip flash - payload is compiled into the firmware",
+      "connectivity": [
+        "USB via the cable's own connectors"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Self-assembled into a cable housing",
+      "notable_physical": [
+        "Sold as a 2-pack of implants so mistakes are affordable",
+        "Included a programmer and supplies for building a programming jig",
+        "No radio of any kind"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Types a payload compiled into the ATtiny85 firmware"
+      },
+      "usb_payload_lang": {
+        "v": "partial",
+        "note": "Arduino sketches using DigiKeyboard-style libraries, not DuckyScript"
+      },
+      "wifi_ap_mode": {
+        "v": "no",
+        "note": "Notable absence versus every real O.MG product: the DemonSeed has no wireless hardware at all"
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No radio, so no C2 of any kind"
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "No keylogging capability"
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No radio, so no remote trigger. The payload runs on plug-in."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "A cable implant that types a fixed payload, so the same unauthorised-access considerations apply as for any keystroke injector - but with no wireless, no keylogging and no remote control, its practical reach is far smaller than a real O.MG product. It was sold as an educational kit. Get authorisation before using it against any machine you do not own."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "none",
+      "last_release": null,
+      "app_store": "No - the original repository was deleted and only a community mirror survives",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "DemonSeed",
+      "DemonSeed EDU",
+      "O.MG DevKit (misnomer)"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/jermainlaforce/DemonSeed",
+        "what": "Community mirror of the deleted original repository, including Grover's README naming the ATtiny85 in SOIC-8"
+      },
+      {
+        "url": "https://shop.hak5.org/collections/mischief-gadgets",
+        "what": "Complete current O.MG collection - Cable, Cable Woven, Cable 2 Meter, Plug, Adapter, UnBlocker, Field Kit, Programmer, Malicious Cable Detector. No DevKit and no DemonSeed."
+      },
+      {
+        "url": "https://o.mg.lol/",
+        "what": "Vendor's own current product list, which contains no DevKit and no DemonSeed"
+      },
+      {
+        "url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+        "what": "O.MG Programmer USB A+C at $25, using a CP2102 USB-UART bridge - required for initial setup because O.MG devices ship deactivated for regulatory compliance"
+      }
+    ],
+    "research_gaps": [
+      "CONFIRMED NEGATIVE: no 'O.MG DevKit' has ever existed. A sweep of Hak5's full 234-product catalogue and 5,738 archived shop URLs found zero matches for devkit, dev-kit or dev_kit. The DemonSeed EDU is the product that filled this role.",
+      "Exact discontinuation date is not published; archived snapshots show it live until February 2023 and gone by 2024",
+      "Dimensions, weight and the exact contents of the later $49.99 kit versus the earlier $20 DEF CON kit are not fully documented",
+      "Recommend dropping this row from the published comparison, or replacing it with the O.MG Programmer ($25)"
+    ]
+  }
+]
