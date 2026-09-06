@@ -70,7 +70,8 @@ Output a JSON **array** of these objects. Nothing else in the file.
     "mcu_secondary": null,
     "radios": [
       {"ic": "CC1101", "role": "sub-ghz", "note": "300-348, 387-464, 779-928 MHz"},
-      {"ic": "ST25R3916", "role": "nfc", "note": "13.56MHz reader/emulator + 125kHz via same coil"}
+      {"ic": "ST25R3916", "role": "nfc", "note": "13.56MHz reader/emulator only"},
+      {"ic": null, "role": "lf-125khz", "note": "Discrete front end on a separate antenna, driven by STM32 timers - no dedicated IC"}
     ],
     "display": {"type": "Monochrome LCD", "size_in": 1.4, "resolution": "128x64", "color": false, "touch": false},
     "battery_mah": 2100,

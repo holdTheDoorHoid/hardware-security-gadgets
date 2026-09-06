@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find my gadget — Sec Gadget Index</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+<div class="wrap" style="padding-top:38px;padding-bottom:60px">
+  <div class="quiz" id="quiz"></div>
+</div>
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script src="js/quiz-data.js"></script>
+<script src="js/quiz-engine.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("quiz");
+document.getElementById("foot").innerHTML = footerBar();
+
+const ans = { goals:new Set(), budget:null, skill:null, build:null, stealth:null, support:null };
+let step = 0;
+
+const STEPS = [
+  { key:"goals", multi:true, q:"What do you actually want to do?",
+    help:"Pick everything that applies. This matters more than any other answer, so be honest rather than aspirational.",
+    opts:()=>QUIZ.goals.map(g=>({v:g.id,label:g.label,desc:g.desc,icon:g.icon})) },
+
+  { key:"budget", q:"What can you spend?",
+    help:"Total for one device. Where a project is build-it-yourself, we estimate the parts cost.",
+    opts:()=>QUIZ.budgets.map(b=>({v:b.id,label:b.label,desc:b.desc})) },
+
+  { key:"skill", q:"How much have you done before?",
+    help:"There is no wrong answer. Answering low gets you things that work out of the box; answering high unlocks tools with sharper edges.",
+    opts:()=>QUIZ.skills.map(s=>({v:s.id,label:s.label,desc:s.desc})) },
+
+  { key:"build", q:"How much work are you willing to put in?",
+    help:"A lot of the best value in this space is a cheap board plus free open-source firmware, but somebody has to install it.",
+    opts:()=>QUIZ.builds.map(b=>({v:b.id,label:b.label,desc:b.desc})) },
+
+  { key:"stealth", q:"Does it need to look inconspicuous?",
+    help:"Only relevant for authorised physical security work. If you are learning at home, pick the first option.",
+    opts:()=>QUIZ.stealth.map(s=>({v:s.id,label:s.label,desc:s.desc})) },
+
+  { key:"support", q:"How much do documentation and community matter?",
+    help:"Some of the most capable tools here have almost no documentation. Some of the friendliest are limited.",
+    opts:()=>QUIZ.support.map(s=>({v:s.id,label:s.label,desc:s.desc})) }
+];
+
+function render(){
+  if (step >= STEPS.length) return renderResults();
+  const s = STEPS[step];
+  const sel = v => s.multi ? ans.goals.has(v) : ans[s.key] === v;
+  document.getElementById("quiz").innerHTML = `
+    <div class="qcard">
+      <div class="qprog"><i style="width:${(step/STEPS.length)*100}%"></i></div>
+      <div class="qstep">Question ${step+1} of ${STEPS.length}</div>
+      <div class="qq">${esc(s.q)}</div>
+      <p class="qhelp">${esc(s.help)}</p>
+      <div class="qopts">
+        ${s.opts().map(o=>`
+          <button class="qopt ${sel(o.v)?"sel":""}" data-v="${esc(o.v)}">
+            <span class="qi">${o.icon?esc(o.icon):(sel(o.v)?"[x]":"[ ]")}</span>
+            <span><span class="qlab">${esc(o.label)}</span><span class="qdesc">${esc(o.desc)}</span></span>
+          </button>`).join("")}
+      </div>
+      <div class="qnav">
+        <button class="btn" id="back" ${step===0?"disabled":""}>&larr; back</button>
+        <button class="btn btn-p" id="next">${step===STEPS.length-1?"See my results":"next &rarr;"}</button>
+      </div>
+    </div>`;
+
+  document.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{
+    const v = b.dataset.v;
+    if (s.multi){ ans.goals.has(v) ? ans.goals.delete(v) : ans.goals.add(v); render(); }
+    else { ans[s.key]=v; step++; render(); }
+  });
+  document.getElementById("back").onclick = ()=>{ if(step>0){step--;render();} };
+  document.getElementById("next").onclick = ()=>{
+    if (s.multi && ans.goals.size===0){
+      alert("Pick at least one thing you want to do — everything else is scored against it.");
+      return;
+    }
+    if (!s.multi && !ans[s.key]) { alert("Pick one option to continue."); return; }
+    step++; render();
+  };
+}
+
+function resCard(r, i){
+  const d = r.dev;
+  return `<div class="res ${i===0?"top":""}">
+    <div class="res-r">${i+1}</div>
+    <div class="res-b">
+      <div class="between">
+        <div>
+          <h3 style="margin-bottom:2px"><a href="device.html?id=${encodeURIComponent(d.id)}">${esc(d.name)}</a></h3>
+          <div class="tiny dim mono">${esc(d.vendor||"")}${d.firmware?` &middot; ${esc(d.firmware)} firmware`:""}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="card-pr">${priceStr(d)}</div>
+          ${d.price_is_estimate?'<div class="tiny dim">est. parts cost</div>':""}
+        </div>
+      </div>
+
+      <div class="match">match ${r.pct}%<div class="mbar"><i style="width:${r.pct}%"></i></div></div>
+
+      <p class="small mt1" style="color:var(--tx)">${esc(d.summary||"")}</p>
+
+      ${d.honest_take?`<div class="honest"><span class="lbl">The honest take</span><p>${esc(d.honest_take)}</p></div>`:""}
+
+      <ul class="why">
+        ${r.why.map(w=>`<li class="ok">${w}</li>`).join("")}
+        ${r.warn.map(w=>`<li class="warn" style="color:var(--amb)">${w}</li>`).join("")}
+      </ul>
+
+      <div class="card-f" style="border:0;padding-top:12px">
+        <span class="tag ${SKILL_TAG[d.skill_level]||""}">${esc(d.skill_level||"")}</span>
+        <span class="tag">${esc(BUILD_LABEL[d.build_effort]||"")}</span>
+        <span class="tag ${STATUS_TAG[d.status]||""}">${esc(d.status||"")}</span>
+        ${d.legal&&d.legal.risk_level?`<span class="tag ${RISK_TAG[d.legal.risk_level]||""}">legal risk: ${esc(d.legal.risk_level)}</span>`:""}
+        <a class="btn btn-sm" style="margin-left:auto" href="device.html?id=${encodeURIComponent(d.id)}">full breakdown &rarr;</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderResults(){
+  const out = recommend(ans, DB);
+  const goalNames = QUIZ.goals.filter(g=>ans.goals.has(g.id)).map(g=>g.label);
+  const budget = QUIZ.budgets.find(b=>b.id===ans.budget);
+
+  document.getElementById("quiz").innerHTML = `
+    <div class="qprog"><i style="width:100%"></i></div>
+    <div class="between mt2">
+      <div>
+        <h1 style="margin-bottom:4px">Your three best matches</h1>
+        <p class="muted small" style="max-width:65ch">Scored against what you said you want to do, weighted by
+        budget, skill, effort, form factor and how well supported each project is. Read the amber lines —
+        they are the reasons a match might be wrong for you.</p>
+      </div>
+      <button class="btn" id="again">start over</button>
+    </div>
+
+    <div class="panel mt2 tiny mono dim">
+      goals: ${esc(goalNames.join(", ")||"none")} &nbsp;|&nbsp; budget: ${esc(budget?budget.label:"?")}
+      &nbsp;|&nbsp; skill: ${esc(ans.skill)} &nbsp;|&nbsp; effort: ${esc(ans.build)}
+      &nbsp;|&nbsp; stealth: ${esc(ans.stealth)} &nbsp;|&nbsp; support: ${esc(ans.support)}
+    </div>
+
+    ${out.top.every(r=>r.goalFit < .15) ? `<div class="banner mt2">
+      <b>Nothing here is a strong fit.</b> Nothing in the index covers that combination well.
+      The results below are the closest available, but consider splitting the job across two
+      devices, or loosening your budget or effort answers.</div>` : ""}
+
+    <div class="rank mt2">${out.top.map(resCard).join("")}</div>
+
+    ${out.also.length?`
+    <h2 class="mt3">Also worth a look</h2>
+    <p class="muted small">Scored well but lost out on budget, skill fit, or effort.</p>
+    <div class="grid mt1">${out.also.map(r=>deviceCard(r.dev,
+        `<span class="tag tag-cyn" style="margin-left:auto">${r.pct}% match</span>`)).join("")}</div>`:""}
+
+    <div class="banner mt3">
+      <b>Before you buy.</b> Owning these is legal in most places. Using the transmit and attack
+      features against anything you do not own, or do not have written permission to test, is a
+      criminal offence in most countries. Check the legal section on each device page, and check
+      your own local law — the notes here are a starting point, not legal advice.
+    </div>`;
+
+  document.getElementById("again").onclick = ()=>{
+    ans.goals.clear(); ["budget","skill","build","stealth","support"].forEach(k=>ans[k]=null);
+    step=0; render(); scrollTo(0,0);
+  };
+  scrollTo(0,0);
+}
+
+render();
+initTips();
+</script>
+</body>
+</html>

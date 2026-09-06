@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About & method — Sec Gadget Index</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+<div class="wrap narrow" style="padding-top:30px;padding-bottom:60px">
+  <h1>How this site works</h1>
+  <p class="lede muted">An independent index of hardware security tools. No affiliate links, no
+  sponsorships, no vendor review copies. The point is to be the thing you wish existed before you
+  spent $200 on something that turned out to be an ESP32 in a nice case.</p>
+
+  <h2 class="mt3">Confidence, not claims</h2>
+  <p>Most spec sheets in this space are marketing. A vendor writes "5 GHz Wi-Fi attacks" because the
+  chip they used supports 5 GHz, not because their firmware implements it. So every capability here
+  carries a confidence level rather than a tick:</p>
+  <dl class="spec" id="vals"></dl>
+  <p class="small muted mt1"><b>Claimed</b> is the important one. It means the seller says it does this
+  and we could not find any independent confirmation. It is not an accusation, but treat it as a
+  question to ask before you buy.</p>
+
+  <h2 class="mt3">The honest take</h2>
+  <p>Every device has a field that exists purely to say the thing the seller will not. Whether the
+  headline "detector" is really a Bluetooth scan matching a list of known identifiers. Whether the
+  $200 handheld runs the same free firmware you could flash onto a $15 board. Whether the project
+  was last updated in 2021. Whether the attack it advertises still works against anything modern.</p>
+
+  <h2 class="mt3">Firmware is listed separately, on purpose</h2>
+  <p>A Flipper Zero running stock firmware and the same Flipper running a community build are
+  genuinely different products in daily use. So they get separate entries that share a hardware
+  family, and each device page links to its siblings. The same applies to a cheap board running
+  one of the open-source firmware projects: the board is a commodity, the firmware is the product.</p>
+
+  <h2 class="mt3">Why some things are marked restricted</h2>
+  <p>There is a hard line between owning a tool and using it. Owning nearly everything indexed here
+  is lawful in most countries. Transmitting on licensed bands, jamming, deauthenticating networks,
+  cloning credentials, and injecting keystrokes into machines you do not own are separate criminal
+  offences almost everywhere, and the device being legal to buy is not a defence.</p>
+  <p>Capabilities tagged <span class="tag tag-red tiny">restricted</span> are ones where the act of
+  using the feature is typically an offence unless you own the target or hold written authorisation.
+  <span class="tag tag-amb tiny">caution</span> means it is usually lawful to do passively but can
+  cross a line depending on where you are and what you do with the data.</p>
+  <p>Per-device legal notes flag known import and sale restrictions. Those notes are desk research,
+  not legal advice and not a review of primary legislation. Law in this area changes quickly. Check
+  your own jurisdiction.</p>
+
+  <h2 class="mt3">Prices</h2>
+  <p>Prices are manufacturer-direct in US dollars and carry the date they were checked. Where a
+  project is build-it-yourself, the figure is an estimated parts cost and is marked as such.
+  Several devices here are made in tiny batches by one person and are frequently out of stock;
+  street prices can be far above list.</p>
+
+  <h2 class="mt3">What is deliberately not here</h2>
+  <p>Monitor-mode Wi-Fi adapters as standalone products, automotive and CAN bus tools, drone
+  hardware, and physical entry tools. Each is a large field that deserves better than a footnote.</p>
+
+  <h2 class="mt3">Corrections</h2>
+  <p>The data lives in one file, <span class="mono">data/devices.js</span>, with a documented schema.
+  If something here is wrong, it is wrong in a way that is easy to fix, and being told is genuinely
+  welcome. Fields marked "what we could not confirm" on each device page are open questions.</p>
+</div>
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("about");
+document.getElementById("foot").innerHTML = footerBar();
+document.getElementById("vals").innerHTML = Object.entries(T.values)
+  .map(([k,v])=>`<dt class="${v.cls}">${esc(v.label)}</dt><dd>${esc(v.plain)}</dd>`).join("");
+</script>
+</body>
+</html>

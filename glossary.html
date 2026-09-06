@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glossary — Sec Gadget Index</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+<div class="wrap" style="padding-top:30px;padding-bottom:50px">
+  <h1>Plain-language glossary</h1>
+  <p class="muted" style="max-width:75ch">Every capability tracked on this site, in ordinary English
+  first and technical detail second. Where a term is routinely misunderstood or oversold, there is a
+  reality check. Terms marked <span class="tag tag-red tiny">restricted</span> are ones where simply
+  using the feature is a criminal offence in most countries, regardless of who owns the device.</p>
+
+  <input class="search mt2" id="gq" placeholder="filter terms…" style="max-width:420px">
+  <div id="body" class="mt2"></div>
+</div>
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("glossary");
+document.getElementById("foot").innerHTML = footerBar();
+
+function render(q){
+  q = (q||"").toLowerCase();
+  const match = s => !q || String(s||"").toLowerCase().includes(q);
+  let h = "";
+
+  for (const g of T.groups){
+    const rows = Object.entries(T.caps)
+      .filter(([k,m])=>m.group===g.id)
+      .filter(([k,m])=>match(m.label)||match(m.plain)||match(m.detail)||match(k)||(m.aliases||[]).some(match))
+      .sort((a,b)=>a[1].label.localeCompare(b[1].label));
+    if (!rows.length) continue;
+    h += `<h2 class="mt3"><span class="dim mono">${esc(g.icon)}</span> ${esc(g.name)}</h2>
+          <p class="muted small" style="max-width:78ch;margin-top:-6px">${esc(g.blurb)}</p>`;
+    for (const [k,m] of rows){
+      const n = DB.filter(d=>hasCap(d,k)).length;
+      h += `<div class="panel mt1">
+        <div class="between">
+          <h3 class="mb0">${esc(m.label)}
+            ${m.legal==="restricted"?'<span class="tag tag-red">restricted</span>':""}
+            ${m.legal==="caution"?'<span class="tag tag-amb">caution</span>':""}</h3>
+          <span class="tiny dim mono">${n} build${n===1?"":"s"}</span>
+        </div>
+        <p class="mb0" style="margin-top:6px">${esc(m.plain||"")}</p>
+        ${m.detail?`<p class="small muted mb0" style="margin-top:6px">${esc(m.detail)}</p>`:""}
+        ${m.myth?`<div class="mythbox"><b>reality check</b>${esc(m.myth)}</div>`:""}
+        ${m.aliases&&m.aliases.length?`<p class="tiny dim mb0" style="margin-top:8px">Also sold as: ${m.aliases.map(esc).join(" · ")}</p>`:""}
+      </div>`;
+    }
+  }
+
+  const gl = Object.entries(T.glossary).filter(([k,v])=>match(k)||match(v));
+  if (gl.length){
+    h += `<h2 class="mt3">General terms</h2><dl class="spec">` +
+      gl.sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("") + `</dl>`;
+  }
+  document.getElementById("body").innerHTML = h || '<div class="empty">no terms match</div>';
+}
+render("");
+document.getElementById("gq").addEventListener("input", e=>render(e.target.value));
+</script>
+</body>
+</html>

@@ -2391,7 +2391,7 @@
     ],
     "research_gaps": [
       "This is a category object, not one SKU. Chip variants, pin maps and build quality differ between sellers and between revisions of the same seller's board.",
-      "Could not verify a specific product actually named 'Predator' as a Flipper GPIO board - the name appears in the ESP32 Marauder ecosystem but we could not confirm a current Flipper-format product using it",
+      "The 'Predator' board sometimes filed in this category is a separate, poorly-documented design with no identifiable vendor - it has its own entry (flipper-predator-module)",
       "GPS module part numbers are unnamed by most sellers; the Quectel L80-R identification comes only from the open TSGP 4-in-1 design",
       "No independent RF measurement of CC1101 range improvement was found; the benefit is assumed to come from the external antenna",
       "AliExpress and Amazon listings for this class could not be verified individually and may ship any revision"
@@ -2629,6 +2629,170 @@
       "No independent teardown or RF measurement found",
       "Exact current US dollar price and Tindie stock could not be read directly (Tindie returns 403 to automated fetches); the AUD figure from the vendor's own store is used instead",
       "Whether Batch 1 units can be fixed in the field, or only replaced, is not stated"
+    ]
+  },
+  {
+    "id": "flipper-predator-module",
+    "hardware_id": "flipper-predator-module",
+    "name": "Flipper Zero \"Predator\" Module (unbranded ESP32-S2 + display + GPS + 433 MHz)",
+    "firmware": "ESP32 Marauder on the ESP32; sub-GHz and GPS driven by Flipper firmware",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "No official firmware exists for this specific board. Owners flash Marauder to the ESP32-S2 and use the Flipper's own Sub-GHz and GPS support for the rest.",
+    "vendor": "Unbranded - sold under the 'Predator' name by marketplace sellers; no first-party vendor could be verified",
+    "vendor_url": null,
+    "product_url": null,
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 60,
+    "price_note": "ESTIMATE ONLY. No first-party vendor page could be verified on 2026-09-06 - the marketplaces that carry this board (AliExpress, eBay, Amazon) blocked automated access, and the search budget for this session was exhausted. The figure is inferred from comparable ESP32-S2-plus-2.8-inch-display-plus-GPS boards, not read from a listing. Verify the price yourself before publishing it.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same GPIO-mapping problem as every Flipper multiboard, but with worse documentation - even owners writing public notes say they are still working out which GPIO the display uses.",
+    "build_effort": "flash-only",
+    "build_note": "Accessory: designed to sit on the Flipper Zero GPIO header. Owners report having to work out the power arrangement (Flipper rail vs external) themselves.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A marketplace-sourced Flipper Zero expansion board sold under the name 'Predator', built around an ESP32-S2 with a 2.8-inch display, a GPS receiver and a 433 MHz 'A07' sub-GHz module. It is the same category as the generic 3-in-1 multiboards, distinguished mainly by the large screen and by having no identifiable manufacturer behind it.",
+    "honest_take": "Be careful with this one. There is no vendor: 'Predator' is a name that appears on marketplace listings and in a couple of hobbyist GitHub notebooks, not a product line with a company, documentation or support behind it. The public notes that exist are honest about how little is known - one owner's repo openly lists 'which GPIO the display actually uses' and 'whether the A07 is just an RF front end or needs its own firmware' as open questions. Separately, the 'Predator Security Suite' Flipper app that shares the name is a software project with single-digit stars whose README leads with claims about supporting 35 car manufacturers and 18 frequencies; treat that as marketing, not as evidence the hardware opens cars. If you want this class of board, buy the documented equivalents instead.",
+    "best_for": [
+      "People who specifically want a large screen on a Flipper expansion board",
+      "Tinkerers happy to reverse-engineer their own pinout"
+    ],
+    "not_for": [
+      "Anyone who wants documentation or support",
+      "Anyone treating the 'Predator Security Suite' car-key claims as real capability",
+      "Buyers who need to know what they are getting before it arrives"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S2",
+      "mcu_primary_note": "2.4 GHz Wi-Fi only, no Bluetooth at all - the ESP32-S2 has no BLE radio, which is a meaningful gap versus boards using classic ESP32, C5 or C6 parts. Identified from an owner's hardware notes, not from a vendor spec sheet.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101 (in an 'A07' 433 MHz module)",
+          "role": "sub-ghz",
+          "note": "'A07' is a common marketplace label for a 433 MHz CC1101 module with a power amplifier. The exact module and whether a PA is fitted could not be confirmed for this board"
+        },
+        {
+          "ic": "ESP32-S2 (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz only"
+        }
+      ],
+      "display": {
+        "type": "TFT",
+        "size_in": 2.8,
+        "resolution": null,
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Not confirmed. Owner notes list 'power from Flipper vs external' as an unresolved question.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper GPIO header"
+      ],
+      "gpio": "Flipper 18-pin GPIO header. The specific pin mapping is not documented by any vendor; owners are reverse-engineering it.",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "2.8-inch display, unusually large for a Flipper expansion board",
+        "GPS receiver",
+        "433 MHz 'A07' module"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "claimed",
+        "note": "ESP32-S2 with Marauder should do this, but no independent confirmation on this specific board was found"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "ESP32-S2 is 2.4 GHz only"
+      },
+      "wifi_deauth_24": {
+        "v": "claimed",
+        "note": "Standard Marauder capability; unverified on this board"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: the ESP32-S2 has no Bluetooth radio of any kind. Any BLE feature attributed to this board would have to come from the Flipper's own radio, not the module"
+      },
+      "subghz_rx": {
+        "v": "claimed",
+        "note": "A 433 MHz module is fitted; whether the Flipper drives it as a standard external CC1101 is not documented"
+      },
+      "subghz_tx": {
+        "v": "unknown",
+        "note": "Owner notes explicitly list 'whether the A07 is just an RF front end or needs its own firmware' as an open question"
+      },
+      "subghz_external_antenna": {
+        "v": "claimed",
+        "note": "Implied by the module type; not confirmed"
+      },
+      "gps": {
+        "v": "claimed",
+        "note": "A GPS receiver is described in owner notes; the module part number is unknown"
+      },
+      "gps_wardrive_log": {
+        "v": "unknown",
+        "note": "Depends on the GPS and ESP32 UART pin mapping, which is not documented"
+      },
+      "nrf24_scan": {
+        "v": "no",
+        "note": "No nRF24 described on this board, unlike the 3-in-1 and 4-in-1 multiboards"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Nothing about the hardware is restricted, but two things are worth flagging. If the 433 MHz module is an amplified type, transmitting on it can exceed FCC Part 15.231 limits in the US and the 10 mW ERP short-range-device limit in the EU. And the companion 'Predator Security Suite' app is aimed at vehicle remote research - attacking cars you do not own is theft or attempted theft, not a grey area, in essentially every jurisdiction. Check your local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "poor",
+      "last_release": null,
+      "app_store": "No dedicated app; owners use Marauder plus the Flipper's stock apps",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "Predator",
+      "Predator Module",
+      "Flipper Predator board",
+      "ESP32 Predator"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/nofuxallluck/flipper-esp32-predator",
+        "what": "an owner's hardware notebook identifying the board as an ESP32-S2 with a 2.8 inch display and a 433 MHz A07 module, and listing the GPIO mapping, power source and A07 firmware question as unresolved"
+      },
+      {
+        "url": "https://github.com/deepload/Predator-Security-Suite",
+        "what": "the similarly-named Flipper app suite: single-digit stars, README leading with '35 manufacturers' and '18 frequencies' claims, hardware support described only as 'Predator expansion modules (ESP32, GPS, RF)'"
+      },
+      {
+        "url": "https://github.com/DutchCoban/Ma-King-Lab---Flipper-Zero-Predator-module",
+        "what": "a second, empty community repo for the same board - evidence that owners exist but documentation does not"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "the firmware owners flash onto the ESP32-S2"
+      }
+    ],
+    "research_gaps": [
+      "NO FIRST-PARTY VENDOR OR PRODUCT PAGE COULD BE VERIFIED. All hardware detail here comes from two hobbyist GitHub repos, one of which is empty.",
+      "Price is an estimate, not a read listing - marketplace sites blocked automated access and the session's search budget was exhausted",
+      "Whether the 'A07' module is amplified, and whether the Flipper drives it as a standard external CC1101, is unknown",
+      "GPS module part number unknown; SD card presence unknown; display controller unknown",
+      "It is possible that 'Predator' names several unrelated marketplace boards rather than one design - this entry should be re-verified against a live listing before publication"
     ]
   },
   {

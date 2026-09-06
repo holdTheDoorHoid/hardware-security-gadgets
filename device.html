@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Device — Sec Gadget Index</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+<div class="wrap" style="padding-top:30px;padding-bottom:50px"><div id="page"></div></div>
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("browse");
+document.getElementById("foot").innerHTML = footerBar();
+
+const d = byId(qp("id"));
+const page = document.getElementById("page");
+
+if (!d){
+  page.innerHTML = `<div class="empty">device not found<br>
+    <a href="index.html" class="btn mt2">back to browse</a></div>`;
+} else {
+  document.title = `${d.name}${d.firmware?` (${d.firmware})`:""} — Sec Gadget Index`;
+  page.innerHTML = build(d);
+  initTips();
+  const btn = document.getElementById("cmpbtn");
+  if (btn){
+    const sync = () => {
+      const inb = basketGet().includes(d.id);
+      btn.textContent = inb ? "remove from compare" : "add to compare";
+      btn.classList.toggle("btn-p", !inb);
+    };
+    btn.onclick = () => { basketToggle(d.id); sync(); };
+    sync();
+  }
+}
+
+function hwRows(h){
+  if (!h) return "";
+  const r = [];
+  const add = (k,v) => { if (v!=null && v!=="" && !(Array.isArray(v)&&!v.length)) r.push([k,v]); };
+  add("Main processor", h.mcu_primary ? `<span class="mono">${esc(h.mcu_primary)}</span>${h.mcu_primary_note?`<div class="tiny dim">${esc(h.mcu_primary_note)}</div>`:""}` : null);
+  add("Second processor", h.mcu_secondary ? `<span class="mono">${esc(h.mcu_secondary)}</span>` : null);
+  if (h.radios && h.radios.length) add("Radios",
+    h.radios.map(x=>`<div><span class="mono" style="color:var(--grn)">${esc(x.ic||"?")}</span>
+      <span class="tiny dim">${esc(x.role||"")}</span>${x.note?`<div class="tiny muted">${esc(x.note)}</div>`:""}</div>`).join(""));
+  if (h.display) add("Display", h.display.type
+    ? `${esc(h.display.type)}${h.display.size_in?`, ${esc(h.display.size_in)}"`:""}${h.display.resolution?`, ${esc(h.display.resolution)}`:""}${h.display.color?", colour":""}${h.display.touch?", touch":""}`
+    : null);
+  add("Battery", h.battery_mah ? `${esc(h.battery_mah)} mAh${h.battery_note?`<div class="tiny dim">${esc(h.battery_note)}</div>`:""}` : (h.battery_note?esc(h.battery_note):null));
+  add("Charging / power", h.charging);
+  add("Power management", h.pmic);
+  add("Storage", h.storage);
+  add("Connectivity", Array.isArray(h.connectivity)?h.connectivity.map(esc).join(", "):h.connectivity);
+  add("Expansion / GPIO", h.gpio);
+  add("Sensors", Array.isArray(h.sensors)?h.sensors.map(esc).join(", "):h.sensors);
+  add("Dimensions", h.dimensions_mm ? `${esc(h.dimensions_mm)} mm` : null);
+  add("Weight", h.weight_g ? `${esc(h.weight_g)} g` : null);
+  add("Case", h.case);
+  if (h.notable_physical && h.notable_physical.length) add("On the device", h.notable_physical.map(esc).join(", "));
+  if (!r.length) return "";
+  return `<dl class="spec">${r.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
+}
+
+function build(d){
+  const sib = siblings(d);
+  const groups = capsByGroup(d);
+  const L = d.legal || {}, E = d.ecosystem || {};
+
+  return `
+  <div class="tiny dim mono mb0" style="margin-bottom:10px"><a href="index.html">browse</a> / ${esc(d.category||"")}</div>
+
+  <div class="between">
+    <div>
+      <h1 style="margin-bottom:6px">${esc(d.name)}
+        ${d.firmware?`<span class="card-fw" style="font-size:.8rem;vertical-align:middle">${esc(d.firmware)}</span>`:""}</h1>
+      <div class="muted">${d.vendor_url?`<a href="${esc(d.vendor_url)}" target="_blank" rel="noopener">${esc(d.vendor||"")}</a>`:esc(d.vendor||"")}
+        ${d.released?` &middot; <span class="dim">released ${esc(d.released)}</span>`:""}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--mono);font-size:1.9rem;color:var(--grn);font-weight:600">${priceStr(d)}</div>
+      <div class="tiny dim">${d.price_is_estimate?"estimated parts cost":"vendor direct"}${d.price_checked?` &middot; checked ${esc(d.price_checked)}`:""}</div>
+      ${d.product_url?`<a class="btn btn-sm mt1" href="${esc(d.product_url)}" target="_blank" rel="noopener">vendor page &rarr;</a>`:""}
+      <button class="btn btn-sm mt1" id="cmpbtn">add to compare</button>
+    </div>
+  </div>
+
+  <div class="card-f mt2" style="border-top:0;padding-top:0">
+    <span class="tag ${SKILL_TAG[d.skill_level]||""}">skill: ${esc(d.skill_level||"?")}</span>
+    <span class="tag">${esc(BUILD_LABEL[d.build_effort]||d.build_effort||"?")}</span>
+    <span class="tag ${STATUS_TAG[d.status]||""}">${esc(d.status||"?")}</span>
+    <span class="tag">${esc(STEALTH_LABEL[d.stealth]||d.stealth||"")}</span>
+    <span class="tag">${esc(d.form_factor||"")}</span>
+    ${L.risk_level?`<span class="tag ${RISK_TAG[L.risk_level]||""}">legal risk: ${esc(L.risk_level)}</span>`:""}
+  </div>
+
+  ${d.price_note?`<p class="small muted mt1">${esc(d.price_note)}</p>`:""}
+
+  <p class="mt2" style="font-size:1.05rem;max-width:78ch">${linkTerms(esc(d.summary||""))}</p>
+
+  ${d.honest_take?`<div class="honest"><span class="lbl">The honest take &mdash; what the marketing won't tell you</span>
+     <p>${linkTerms(esc(d.honest_take))}</p></div>`:""}
+
+  ${(d.best_for&&d.best_for.length)||(d.not_for&&d.not_for.length)?`
+  <div class="cols" style="grid-template-columns:1fr 1fr;padding:14px 0;gap:16px">
+    ${d.best_for&&d.best_for.length?`<div class="panel"><div class="panel-t" style="color:var(--grn)">Good for</div>
+      <ul style="margin:0;padding-left:18px">${d.best_for.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:"<div></div>"}
+    ${d.not_for&&d.not_for.length?`<div class="panel"><div class="panel-t" style="color:var(--red)">Not the tool for</div>
+      <ul style="margin:0;padding-left:18px">${d.not_for.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:"<div></div>"}
+  </div>`:""}
+
+  ${d.firmware_note||d.firmware_repo?`<div class="panel mt2">
+    <div class="panel-t">This build's firmware${d.firmware?`: ${esc(d.firmware)}`:""}
+      ${d.firmware_kind?` <span class="tag tag-cyn">${esc(d.firmware_kind)}</span>`:""}</div>
+    ${d.firmware_note?`<p class="mb0 small">${esc(d.firmware_note)}</p>`:""}
+    ${d.firmware_repo?`<p class="tiny mt1 mb0"><a href="${esc(d.firmware_repo)}" target="_blank" rel="noopener">${esc(d.firmware_repo)}</a></p>`:""}
+  </div>`:""}
+
+  ${sib.length?`<div class="panel mt2">
+    <div class="panel-t">Same hardware, different firmware &mdash; ${sib.length} other build${sib.length>1?"s":""}</div>
+    <p class="tiny muted" style="margin-top:-4px">The firmware is usually what you are really choosing. Capabilities differ between these.</p>
+    <div class="row">${sib.map(s=>`<a class="btn btn-sm" href="device.html?id=${encodeURIComponent(s.id)}">${esc(s.firmware||s.name)}</a>`).join("")}</div>
+  </div>`:""}
+
+  <h2 class="mt3">What it can actually do</h2>
+  <p class="muted small" style="max-width:72ch">Every row is confidence-rated.
+    ${Object.entries(T.values).map(([k,v])=>`<span class="${v.cls} mono tiny">${v.label}</span> <span class="tiny dim">${esc(v.plain)}</span>`).join(" &nbsp;·&nbsp; ")}</p>
+
+  ${groups.length ? groups.map(g=>`
+    <div class="mt2">
+      <h3 style="color:var(--grn);font-family:var(--mono);font-size:.9rem;text-transform:uppercase;letter-spacing:.07em">
+        <span class="dim">${esc(g.group.icon)}</span> ${esc(g.group.name)}</h3>
+      <p class="tiny dim" style="margin-top:-4px;max-width:78ch">${esc(g.group.blurb)}</p>
+      <div class="tw"><table><tbody>
+        ${g.rows.map(r=>`<tr>
+          <td class="k" style="width:230px">${esc(r.meta.label)}
+            ${r.meta.legal==="restricted"?'<span class="tag tag-red tiny" style="margin-left:5px">restricted</span>':""}
+            ${r.meta.legal==="caution"?'<span class="tag tag-amb tiny" style="margin-left:5px">caution</span>':""}
+            <div class="tiny dim" style="white-space:normal;font-family:var(--sans);margin-top:2px">${esc(r.meta.plain||"")}</div>
+            ${r.meta.aliases&&r.meta.aliases.length?`<div class="tiny" style="color:var(--tx-dim);white-space:normal;margin-top:3px">also called: ${r.meta.aliases.map(esc).join(", ")}</div>`:""}
+          </td>
+          <td style="width:110px">${valPill(r.v,"")}</td>
+          <td>${r.note?esc(r.note):'<span class="dim tiny">—</span>'}
+            ${r.meta.myth&&HAS.has(r.v)?`<div class="mythbox" style="margin-top:8px"><b>reality check</b>${esc(r.meta.myth)}</div>`:""}
+          </td>
+        </tr>`).join("")}
+      </tbody></table></div>
+    </div>`).join("")
+    : `<p class="muted">No capability data recorded yet for this build.</p>`}
+
+  <h2 class="mt3">Hardware</h2>
+  ${hwRows(d.hardware) || '<p class="muted">No hardware detail recorded.</p>'}
+
+  <h2 class="mt3">Legal</h2>
+  <div class="panel">
+    <div class="row" style="margin-bottom:10px">
+      <span class="tag ${RISK_TAG[L.risk_level]||""}">overall risk: ${esc(L.risk_level||"unknown")}</span>
+      ${(L.import_restricted&&L.import_restricted.length)
+        ? L.import_restricted.map(x=>`<span class="tag tag-red">${esc(x)}</span>`).join("")
+        : '<span class="tag">no import restrictions found</span>'}
+    </div>
+    <p class="mb0 small">${linkTerms(esc(L.notes||"No specific legal notes recorded. Owning a tool and using it against systems you do not own are very different things almost everywhere."))}</p>
+    <p class="tiny dim mt1 mb0">This is background research, not legal advice. Laws differ by country and change.</p>
+  </div>
+
+  <h2 class="mt3">Project health</h2>
+  <dl class="spec">
+    <dt>Community</dt><dd>${esc(E.community||"unknown")}</dd>
+    <dt>Documentation</dt><dd>${esc(E.docs_quality||"unknown")}</dd>
+    <dt>Last release</dt><dd>${esc(E.last_release||"unknown")}</dd>
+    <dt>App catalogue</dt><dd>${esc(E.app_store||"none")}</dd>
+    <dt>Risk of abandonment</dt><dd class="${E.abandoned_risk==="low"?"legal-low":E.abandoned_risk==="medium"?"legal-medium":"legal-high"}">${esc(E.abandoned_risk||"unknown")}</dd>
+  </dl>
+
+  ${(function(){
+    const sim = similar(d, 4);
+    if (!sim.length) return "";
+    return `<h2 class="mt3">Compared with similar tools</h2>
+      <p class="muted small" style="max-width:74ch">Ranked by how much their real capabilities overlap
+      with this one, then nudged toward the same category and a similar price. These are the builds
+      worth weighing against it.</p>
+      <div class="grid mt1">${sim.map(r=>deviceCard(r.dev,
+        `<span class="tag tag-cyn" style="margin-left:auto">${Math.round(r.jac*100)}% overlap</span>`)).join("")}</div>
+      <div class="row mt2">
+        <a class="btn btn-p" href="compare.html?ids=${encodeURIComponent([d.id, ...sim.map(r=>r.dev.id)].join(","))}">
+          compare all ${sim.length+1} side by side &rarr;</a>
+      </div>`;
+  })()}
+
+  ${d.research_gaps&&d.research_gaps.length?`
+  <h2 class="mt3">What we could not confirm</h2>
+  <div class="panel"><ul style="margin:0;padding-left:18px">${d.research_gaps.map(x=>`<li class="small muted">${esc(x)}</li>`).join("")}</ul></div>`:""}
+
+  ${d.sources&&d.sources.length?`
+  <h2 class="mt3">Sources</h2>
+  <ol class="small muted" style="padding-left:20px">
+    ${d.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a>${s.what?` &mdash; <span class="dim">${esc(s.what)}</span>`:""}</li>`).join("")}
+  </ol>`:""}
+  `;
+}
+</script>
+</body>
+</html>

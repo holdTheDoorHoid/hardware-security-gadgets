@@ -372,9 +372,11 @@
     },
     "legal": {
       "import_restricted": [
-        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
-        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
-        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+        "Brazil - the one genuine, ongoing import problem. ANATEL has not granted homologation and buyers reported units seized at customs from 2023; the EFF reported ANATEL had flagged the device as a tool for criminal purposes. This is a certification and import matter, NOT a law against owning one. Flipper's own compliance page lists no sales channel for Brazil, though that is weak corroboration on its own because most countries have no channel listed.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED, and demonstrably not in force. ISED announced on 2024-02-08 an intention to ban the Flipper Zero in an auto-theft crackdown; on 2024-03-20 it walked that back to restricting use by illegitimate actors rather than banning the device. As of this check the vendor's own compliance page lists Canada as 'Direct sale'. Many articles and videos still report the ban as though it happened - it did not.",
+        "United States - NOT restricted. The device holds FCC Grants of Equipment Authorization for its SRD, BLE and NFC radios. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned it from its marketplace on 2023-04-07 as a 'card skimming device', but a marketplace policy is not law; the device is legal to own and is sold directly by the vendor.",
+        "European Union / United Kingdom - NOT restricted. The vendor holds a CE Declaration of Conformity and a UKCA Declaration of Conformity, and sells direct into Germany, France, the Netherlands, Poland, the UK and others. No enacted member-state ban was found.",
+        "Australia - NOT restricted as far as could be confirmed. No ACMA prohibition or import ban was found, and the vendor lists Australia as available via reseller."
       ],
       "risk_level": "medium",
       "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
@@ -434,6 +436,10 @@
         "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
       },
       {
+        "url": "https://flipper.net/pages/compliance",
+        "what": "vendor's own compliance page: FCC SRD/BLE/NFC grants, CE and UKCA Declarations of Conformity, MIC/TELEC (JP), EAEU notification; plus the per-country sales-channel table showing Canada as Direct sale and Australia via reseller as of 2026-09-06"
+      },
+      {
         "url": "https://github.com/flipperdevices/flipperzero-firmware/releases/tag/1.4.3",
         "what": "latest stable release 1.4.3, published 2025-12-05"
       },
@@ -446,7 +452,7 @@
       "Exact conducted TX power in dBm as built (antenna + matching network) is not published; only the CC1101 silicon max of +12 dBm is known.",
       "Sources differ on weight (102 g vs 104 g) and on cell capacity (2000 mAh nominal vs 2100 mAh programmed into the gauge).",
       "1.5.0-rc is tagged in the repo but no stable 1.5.0 had been published as of the check date.",
-      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+      "Legal research covered Brazil, Canada, the US, the UK, the EU and Australia against news, encyclopaedic and vendor-compliance sources. It did NOT review primary legislation, regulator databases or customs tariff schedules, so 'no restriction found' should be read as 'none found by desk research', not as a legal clearance. Two specific soft spots: no dated primary ANATEL document was located stating the Brazilian position, and the vendor's per-country sales table is weak evidence about legality because 235 of the 301 listed territories have no sales channel for ordinary commercial reasons."
     ]
   },
   {
@@ -826,9 +832,11 @@
     },
     "legal": {
       "import_restricted": [
-        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
-        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
-        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+        "Brazil - the one genuine, ongoing import problem. ANATEL has not granted homologation and buyers reported units seized at customs from 2023; the EFF reported ANATEL had flagged the device as a tool for criminal purposes. This is a certification and import matter, NOT a law against owning one. Flipper's own compliance page lists no sales channel for Brazil, though that is weak corroboration on its own because most countries have no channel listed.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED, and demonstrably not in force. ISED announced on 2024-02-08 an intention to ban the Flipper Zero in an auto-theft crackdown; on 2024-03-20 it walked that back to restricting use by illegitimate actors rather than banning the device. As of this check the vendor's own compliance page lists Canada as 'Direct sale'. Many articles and videos still report the ban as though it happened - it did not.",
+        "United States - NOT restricted. The device holds FCC Grants of Equipment Authorization for its SRD, BLE and NFC radios. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned it from its marketplace on 2023-04-07 as a 'card skimming device', but a marketplace policy is not law; the device is legal to own and is sold directly by the vendor.",
+        "European Union / United Kingdom - NOT restricted. The vendor holds a CE Declaration of Conformity and a UKCA Declaration of Conformity, and sells direct into Germany, France, the Netherlands, Poland, the UK and others. No enacted member-state ban was found.",
+        "Australia - NOT restricted as far as could be confirmed. No ACMA prohibition or import ban was found, and the vendor lists Australia as available via reseller."
       ],
       "risk_level": "medium",
       "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
@@ -887,6 +895,10 @@
         "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
       },
       {
+        "url": "https://flipper.net/pages/compliance",
+        "what": "vendor's own compliance page: FCC SRD/BLE/NFC grants, CE and UKCA Declarations of Conformity, MIC/TELEC (JP), EAEU notification; plus the per-country sales-channel table showing Canada as Direct sale and Australia via reseller as of 2026-09-06"
+      },
+      {
         "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
         "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
       },
@@ -927,7 +939,7 @@
       "Exact conducted TX power in dBm as built is not published.",
       "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
       "Last tagged stable release is mntm-012 (2025-12-31); dev builds continue (latest seen 2026-08-18) but no newer stable tag existed at the check date - could not determine whether a stable release is planned.",
-      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+      "Legal research covered Brazil, Canada, the US, the UK, the EU and Australia against news, encyclopaedic and vendor-compliance sources. It did NOT review primary legislation, regulator databases or customs tariff schedules, so 'no restriction found' should be read as 'none found by desk research', not as a legal clearance. Two specific soft spots: no dated primary ANATEL document was located stating the Brazilian position, and the vendor's per-country sales table is weak evidence about legality because 235 of the 301 listed territories have no sales channel for ordinary commercial reasons."
     ]
   },
   {
@@ -1307,9 +1319,11 @@
     },
     "legal": {
       "import_restricted": [
-        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
-        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
-        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+        "Brazil - the one genuine, ongoing import problem. ANATEL has not granted homologation and buyers reported units seized at customs from 2023; the EFF reported ANATEL had flagged the device as a tool for criminal purposes. This is a certification and import matter, NOT a law against owning one. Flipper's own compliance page lists no sales channel for Brazil, though that is weak corroboration on its own because most countries have no channel listed.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED, and demonstrably not in force. ISED announced on 2024-02-08 an intention to ban the Flipper Zero in an auto-theft crackdown; on 2024-03-20 it walked that back to restricting use by illegitimate actors rather than banning the device. As of this check the vendor's own compliance page lists Canada as 'Direct sale'. Many articles and videos still report the ban as though it happened - it did not.",
+        "United States - NOT restricted. The device holds FCC Grants of Equipment Authorization for its SRD, BLE and NFC radios. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned it from its marketplace on 2023-04-07 as a 'card skimming device', but a marketplace policy is not law; the device is legal to own and is sold directly by the vendor.",
+        "European Union / United Kingdom - NOT restricted. The vendor holds a CE Declaration of Conformity and a UKCA Declaration of Conformity, and sells direct into Germany, France, the Netherlands, Poland, the UK and others. No enacted member-state ban was found.",
+        "Australia - NOT restricted as far as could be confirmed. No ACMA prohibition or import ban was found, and the vendor lists Australia as available via reseller."
       ],
       "risk_level": "medium",
       "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
@@ -1368,6 +1382,10 @@
         "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
       },
       {
+        "url": "https://flipper.net/pages/compliance",
+        "what": "vendor's own compliance page: FCC SRD/BLE/NFC grants, CE and UKCA Declarations of Conformity, MIC/TELEC (JP), EAEU notification; plus the per-country sales-channel table showing Canada as Direct sale and Australia via reseller as of 2026-09-06"
+      },
+      {
         "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
         "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
       },
@@ -1403,7 +1421,7 @@
     "research_gaps": [
       "Exact conducted TX power in dBm as built is not published.",
       "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
-      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+      "Legal research covered Brazil, Canada, the US, the UK, the EU and Australia against news, encyclopaedic and vendor-compliance sources. It did NOT review primary legislation, regulator databases or customs tariff schedules, so 'no restriction found' should be read as 'none found by desk research', not as a legal clearance. Two specific soft spots: no dated primary ANATEL document was located stating the Brazilian position, and the vendor's per-country sales table is weak evidence about legality because 235 of the 301 listed territories have no sales channel for ordinary commercial reasons."
     ]
   },
   {
@@ -1781,9 +1799,11 @@
     },
     "legal": {
       "import_restricted": [
-        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
-        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
-        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+        "Brazil - the one genuine, ongoing import problem. ANATEL has not granted homologation and buyers reported units seized at customs from 2023; the EFF reported ANATEL had flagged the device as a tool for criminal purposes. This is a certification and import matter, NOT a law against owning one. Flipper's own compliance page lists no sales channel for Brazil, though that is weak corroboration on its own because most countries have no channel listed.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED, and demonstrably not in force. ISED announced on 2024-02-08 an intention to ban the Flipper Zero in an auto-theft crackdown; on 2024-03-20 it walked that back to restricting use by illegitimate actors rather than banning the device. As of this check the vendor's own compliance page lists Canada as 'Direct sale'. Many articles and videos still report the ban as though it happened - it did not.",
+        "United States - NOT restricted. The device holds FCC Grants of Equipment Authorization for its SRD, BLE and NFC radios. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned it from its marketplace on 2023-04-07 as a 'card skimming device', but a marketplace policy is not law; the device is legal to own and is sold directly by the vendor.",
+        "European Union / United Kingdom - NOT restricted. The vendor holds a CE Declaration of Conformity and a UKCA Declaration of Conformity, and sells direct into Germany, France, the Netherlands, Poland, the UK and others. No enacted member-state ban was found.",
+        "Australia - NOT restricted as far as could be confirmed. No ACMA prohibition or import ban was found, and the vendor lists Australia as available via reseller."
       ],
       "risk_level": "medium",
       "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
@@ -1842,6 +1862,10 @@
         "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
       },
       {
+        "url": "https://flipper.net/pages/compliance",
+        "what": "vendor's own compliance page: FCC SRD/BLE/NFC grants, CE and UKCA Declarations of Conformity, MIC/TELEC (JP), EAEU notification; plus the per-country sales-channel table showing Canada as Direct sale and Australia via reseller as of 2026-09-06"
+      },
+      {
         "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
         "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
       },
@@ -1875,7 +1899,7 @@
       "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
       "Could not audit every bundled third-party app; an unknown number are unmaintained upstream.",
       "Patreon-gated builds could not be inspected - only the public GitHub releases and source were reviewed.",
-      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+      "Legal research covered Brazil, Canada, the US, the UK, the EU and Australia against news, encyclopaedic and vendor-compliance sources. It did NOT review primary legislation, regulator databases or customs tariff schedules, so 'no restriction found' should be read as 'none found by desk research', not as a legal clearance. Two specific soft spots: no dated primary ANATEL document was located stating the Brazilian position, and the vendor's per-country sales table is weak evidence about legality because 235 of the 301 listed territories have no sales channel for ordinary commercial reasons."
     ]
   },
   {
@@ -2250,9 +2274,11 @@
     },
     "legal": {
       "import_restricted": [
-        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
-        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
-        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+        "Brazil - the one genuine, ongoing import problem. ANATEL has not granted homologation and buyers reported units seized at customs from 2023; the EFF reported ANATEL had flagged the device as a tool for criminal purposes. This is a certification and import matter, NOT a law against owning one. Flipper's own compliance page lists no sales channel for Brazil, though that is weak corroboration on its own because most countries have no channel listed.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED, and demonstrably not in force. ISED announced on 2024-02-08 an intention to ban the Flipper Zero in an auto-theft crackdown; on 2024-03-20 it walked that back to restricting use by illegitimate actors rather than banning the device. As of this check the vendor's own compliance page lists Canada as 'Direct sale'. Many articles and videos still report the ban as though it happened - it did not.",
+        "United States - NOT restricted. The device holds FCC Grants of Equipment Authorization for its SRD, BLE and NFC radios. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned it from its marketplace on 2023-04-07 as a 'card skimming device', but a marketplace policy is not law; the device is legal to own and is sold directly by the vendor.",
+        "European Union / United Kingdom - NOT restricted. The vendor holds a CE Declaration of Conformity and a UKCA Declaration of Conformity, and sells direct into Germany, France, the Netherlands, Poland, the UK and others. No enacted member-state ban was found.",
+        "Australia - NOT restricted as far as could be confirmed. No ACMA prohibition or import ban was found, and the vendor lists Australia as available via reseller."
       ],
       "risk_level": "medium",
       "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
@@ -2312,6 +2338,10 @@
         "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
       },
       {
+        "url": "https://flipper.net/pages/compliance",
+        "what": "vendor's own compliance page: FCC SRD/BLE/NFC grants, CE and UKCA Declarations of Conformity, MIC/TELEC (JP), EAEU notification; plus the per-country sales-channel table showing Canada as Direct sale and Australia via reseller as of 2026-09-06"
+      },
+      {
         "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
         "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
       },
@@ -2348,7 +2378,7 @@
       "Capabilities are recorded as of the final 2024-02-02 release and were not re-verified on hardware.",
       "Exact conducted TX power in dBm as built is not published.",
       "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
-      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+      "Legal research covered Brazil, Canada, the US, the UK, the EU and Australia against news, encyclopaedic and vendor-compliance sources. It did NOT review primary legislation, regulator databases or customs tariff schedules, so 'no restriction found' should be read as 'none found by desk research', not as a legal clearance. Two specific soft spots: no dated primary ANATEL document was located stating the Brazilian position, and the vendor's per-country sales table is weak evidence about legality because 235 of the 301 listed territories have no sales channel for ordinary commercial reasons."
     ]
   },
   {

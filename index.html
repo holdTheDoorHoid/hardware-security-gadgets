@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sec Gadget Index — hardware security tools, compared honestly</title>
+<meta name="description" content="An independent, sourced comparison of hardware security and pentest gadgets. Real capabilities, no marketing.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+
+<div class="hero"><div class="wrap">
+  <h1>Hardware security gadgets, <span style="color:var(--grn)">compared honestly</span></h1>
+  <p class="lede">Every capability here is <strong>sourced and confidence-rated</strong>. When a
+  seller claims something we could not confirm, it says <span class="v-claimed mono">Claimed</span>,
+  not Yes. When a headline feature is really a Bluetooth scan with a filter list, we say so.
+  Same hardware running different firmware is listed <strong>separately</strong>, because the
+  firmware is usually what you are actually buying.</p>
+  <div class="kpis" id="kpis"></div>
+  <div class="row mt2">
+    <a href="quiz.html" class="btn btn-p">Not sure what you need? Answer 6 questions &rarr;</a>
+    <a href="compare.html" class="btn">Compare side by side</a>
+  </div>
+</div></div>
+
+<div class="wrap"><div class="cols">
+  <aside class="side">
+    <input class="search" id="q" type="search" placeholder="search: nfc, deauth, badusb, cc1101…" autocomplete="off">
+    <div class="row mt1 tiny dim"><span id="count"></span><a href="#" id="reset" style="margin-left:auto">reset</a></div>
+    <div class="mt2" id="filters"></div>
+  </aside>
+  <main>
+    <div class="between mb0" style="margin-bottom:16px">
+      <div class="tiny dim mono" id="sum"></div>
+      <div class="row">
+        <label class="tiny dim mono">sort</label>
+        <select id="sort">
+          <option value="rel">relevance</option>
+          <option value="price-asc">price: low to high</option>
+          <option value="price-desc">price: high to low</option>
+          <option value="name">name</option>
+          <option value="skill">skill: easiest first</option>
+          <option value="caps">most capabilities</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div></div>
+
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("browse");
+document.getElementById("foot").innerHTML = footerBar();
+
+/* ---- KPI strip ---- */
+(function(){
+  const hw = uniq(DB.map(d=>d.hardware_id)).length;
+  const prices = DB.map(priceNum).filter(n=>isFinite(n));
+  const free = DB.filter(d=>priceNum(d)<=25).length;
+  document.getElementById("kpis").innerHTML = `
+    <div class="kpi"><b>${DB.length}</b><span>builds listed</span></div>
+    <div class="kpi"><b>${hw}</b><span>distinct devices</span></div>
+    <div class="kpi"><b>${Object.keys(T.caps).length}</b><span>capabilities tracked</span></div>
+    <div class="kpi"><b>${free}</b><span>under $25</span></div>
+    <div class="kpi"><b>$${prices.length?Math.min(...prices):0}–$${prices.length?Math.max(...prices).toLocaleString():0}</b><span>price range</span></div>`;
+})();
+
+/* ---- build filter UI ---- */
+const state = { q:"", cat:new Set(), skill:new Set(), build:new Set(), status:new Set(),
+                caps:new Set(), pmin:null, pmax:null, sort:"rel" };
+
+const CATS = uniq(DB.map(d=>d.category).filter(Boolean)).sort();
+const CAT_LABEL = {
+  multitool:"All-in-one multitool", wifi:"Wi-Fi", "rfid-nfc":"RFID / NFC", subghz:"Sub-GHz radio",
+  bluetooth:"Bluetooth", "usb-hid":"USB / keystroke", "network-implant":"Network implant",
+  sdr:"Software-defined radio", "hardware-debug":"Chip-level hardware", wardriving:"Wardriving",
+  "detection-defense":"Detection & defence", accessory:"Add-on / accessory"
+};
+/* headline capabilities worth filtering on, per group */
+const FILTER_CAPS = [
+  ["subghz", ["subghz_rx","subghz_tx","subghz_replay","subghz_bruteforce"]],
+  ["rfidnfc",["lf_125khz_read","hf_1356_read","hf_1356_emulate","mifare_classic_attacks","emv_read","magspoof"]],
+  ["ble",    ["ble_scan","ble_spam_apple","ble_hid","ble_sniff","ble_tracker_detect","findmy_track"]],
+  ["wifi",   ["wifi_scan_24","wifi_scan_5","wifi_deauth_24","wifi_deauth_5","wifi_captive_portal","wifi_handshake_capture","wifi_wardriving"]],
+  ["ghz24",  ["nrf24_scan","nrf24_jam","mousejack"]],
+  ["ir",     ["ir_tx","ir_rx","ir_flood"]],
+  ["usb",    ["usb_hid_inject","usb_ethernet_attack","usb_keylogger","usb_exfil","hid_remote_trigger"]],
+  ["network",["ethernet_tap_passive","ethernet_mitm","packet_capture","cloud_c2","hdmi_capture"]],
+  ["hwdebug",["uart","spi_flash_dump","jtag_swd","logic_analyzer","glitching"]],
+  ["sdr",    ["sdr_rx","sdr_tx"]],
+  ["detect", ["detect_flipper","detect_airtag","detect_skimmer","detect_drone","detect_alpr","detect_deauth"]],
+  ["platform",["app_store","scriptable","web_ui","gps","standalone_untethered","sd_logging"]]
+];
+const capCount = k => DB.filter(d=>hasCap(d,k)).length;
+
+function chk(group,val,label,note){
+  return `<label class="chk"><input type="checkbox" data-g="${group}" value="${esc(val)}">
+    <span class="ct">${esc(label)}${note?` <span class="cn">${note}</span>`:""}</span></label>`;
+}
+function buildFilters(){
+  let h = "";
+  h += `<div class="fgroup"><h4>Price (USD)</h4><div class="row">
+    <input type="number" id="pmin" placeholder="min" style="width:80px">
+    <span class="dim">—</span>
+    <input type="number" id="pmax" placeholder="max" style="width:80px"></div></div>`;
+
+  h += `<div class="fgroup"><h4>Category</h4>` +
+       CATS.map(c=>chk("cat",c,CAT_LABEL[c]||c,DB.filter(d=>d.category===c).length)).join("") + `</div>`;
+
+  h += `<div class="fgroup"><h4>Skill level</h4>` +
+       SKILL_ORDER.filter(s=>DB.some(d=>d.skill_level===s))
+        .map(s=>chk("skill",s,s[0].toUpperCase()+s.slice(1),DB.filter(d=>d.skill_level===s).length)).join("") + `</div>`;
+
+  h += `<div class="fgroup"><h4>Effort to get running</h4>` +
+       BUILD_ORDER.filter(b=>DB.some(d=>d.build_effort===b))
+        .map(b=>chk("build",b,BUILD_LABEL[b],DB.filter(d=>d.build_effort===b).length)).join("") + `</div>`;
+
+  h += `<div class="fgroup"><h4>Availability</h4>` +
+       uniq(DB.map(d=>d.status).filter(Boolean)).sort()
+        .map(s=>chk("status",s,s,DB.filter(d=>d.status===s).length)).join("") + `</div>`;
+
+  for (const [gid,keys] of FILTER_CAPS){
+    const g = T.groups.find(x=>x.id===gid); if(!g) continue;
+    const live = keys.filter(k=>T.caps[k] && capCount(k)>0);
+    if (!live.length) continue;
+    h += `<div class="fgroup"><h4>${esc(g.name)}</h4>` +
+      live.map(k=>chk("caps",k,T.caps[k].label,capCount(k))).join("") + `</div>`;
+  }
+  document.getElementById("filters").innerHTML = h;
+}
+buildFilters();
+
+/* ---- wire up ---- */
+document.getElementById("filters").addEventListener("change", e=>{
+  const el = e.target;
+  if (el.dataset.g){
+    const set = state[el.dataset.g];
+    el.checked ? set.add(el.value) : set.delete(el.value);
+  }
+  if (el.id==="pmin") state.pmin = el.value===""?null:+el.value;
+  if (el.id==="pmax") state.pmax = el.value===""?null:+el.value;
+  render();
+});
+document.getElementById("q").addEventListener("input", e=>{ state.q=e.target.value; render(); });
+document.getElementById("sort").addEventListener("change", e=>{ state.sort=e.target.value; render(); });
+document.getElementById("reset").addEventListener("click", e=>{
+  e.preventDefault();
+  state.q=""; state.pmin=state.pmax=null; state.sort="rel";
+  ["cat","skill","build","status","caps"].forEach(k=>state[k].clear());
+  document.getElementById("q").value="";
+  document.querySelectorAll("#filters input").forEach(i=>{ if(i.type==="checkbox") i.checked=false; else i.value=""; });
+  document.getElementById("sort").value="rel";
+  render();
+});
+
+/* ---- filter + render ---- */
+function apply(){
+  let out = DB.slice();
+  if (state.cat.size)    out = out.filter(d=>state.cat.has(d.category));
+  if (state.skill.size)  out = out.filter(d=>state.skill.has(d.skill_level));
+  if (state.build.size)  out = out.filter(d=>state.build.has(d.build_effort));
+  if (state.status.size) out = out.filter(d=>state.status.has(d.status));
+  if (state.caps.size)   out = out.filter(d=>[...state.caps].every(k=>hasCap(d,k)));
+  if (state.pmin!=null)  out = out.filter(d=>d.price_usd!=null && d.price_usd>=state.pmin);
+  if (state.pmax!=null)  out = out.filter(d=>d.price_usd!=null && d.price_usd<=state.pmax);
+  out = searchDevices(out, state.q);
+
+  const nCaps = d => Object.keys(d.capabilities||{}).filter(k=>hasCap(d,k)).length;
+  const S = {
+    "price-asc":  (a,b)=>priceNum(a)-priceNum(b),
+    "price-desc": (a,b)=>priceNum(b)-priceNum(a),
+    "name":       (a,b)=>a.name.localeCompare(b.name)||String(a.firmware||"").localeCompare(String(b.firmware||"")),
+    "skill":      (a,b)=>SKILL_ORDER.indexOf(a.skill_level)-SKILL_ORDER.indexOf(b.skill_level)||priceNum(a)-priceNum(b),
+    "caps":       (a,b)=>nCaps(b)-nCaps(a),
+    "rel":        (a,b)=>{
+        const av=(a.status==="available")-(b.status==="available"); if(av) return -av;
+        return nCaps(b)-nCaps(a) || priceNum(a)-priceNum(b);
+      }
+  };
+  return out.sort(S[state.sort]||S.rel);
+}
+function render(){
+  const list = apply();
+  document.getElementById("count").textContent = `${list.length} of ${DB.length}`;
+  const chosen = [...state.caps].map(k=>T.caps[k].label);
+  document.getElementById("sum").textContent =
+    chosen.length ? `showing builds that do: ${chosen.join(" + ")}` : "";
+  document.getElementById("grid").innerHTML = list.length
+    ? list.map(d=>deviceCard(d)).join("")
+    : `<div class="empty">no builds match those filters<br><span class="tiny">try removing a capability &mdash; requiring several at once narrows fast</span></div>`;
+}
+render();
+initTips();
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compare — Sec Gadget Index</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav"></div>
+<div class="wrap" style="padding-top:30px;padding-bottom:50px">
+  <h1>Compare side by side</h1>
+  <p class="muted" style="max-width:75ch">Pick up to six builds. Rows where the builds actually
+  differ are highlighted, so you can see what you gain or lose. Remember that two rows with the
+  same device name and different firmware are genuinely different products in use.</p>
+
+  <div class="panel mt2">
+    <div class="panel-t">Add a build</div>
+    <div class="cmp-pick">
+      <select id="pick" style="min-width:340px"></select>
+      <button class="btn" id="add">add</button>
+      <button class="btn" id="clear">clear all</button>
+      <label class="chk" style="margin-left:auto"><input type="checkbox" id="diffonly">
+        <span class="ct">only show rows that differ</span></label>
+    </div>
+    <div class="row" id="chips"></div>
+    <div class="mt2">
+      <div class="panel-t">Or jump to a ready-made comparison</div>
+      <div class="row" id="presets"></div>
+    </div>
+  </div>
+
+  <div id="out" class="mt2"></div>
+</div>
+<div id="foot"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/devices.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("nav").innerHTML  = navBar("compare");
+document.getElementById("foot").innerHTML = footerBar();
+
+let sel = (qp("ids") ? qp("ids").split(",") : basketGet()).filter(byId).slice(0,6);
+let diffOnly = false;
+
+/* dropdown */
+const pick = document.getElementById("pick");
+pick.innerHTML = DB.slice().sort((a,b)=>a.name.localeCompare(b.name)||String(a.firmware||"").localeCompare(String(b.firmware||"")))
+  .map(d=>`<option value="${esc(d.id)}">${esc(d.name)}${d.firmware?` — ${esc(d.firmware)}`:""} (${priceStr(d).replace(/<[^>]+>/g,"")})</option>`).join("");
+
+/* presets: same hardware families, then cheapest-per-category matchups */
+(function(){
+  const fams = {};
+  DB.forEach(d=>{ (fams[d.hardware_id] ||= []).push(d); });
+  const multi = Object.values(fams).filter(a=>a.length>1)
+    .sort((a,b)=>b.length-a.length).slice(0,4);
+  const btns = multi.map(a=>
+    `<button class="btn btn-sm" data-ids="${a.slice(0,6).map(x=>esc(x.id)).join(",")}">${esc(a[0].name)}: all ${a.length} firmwares</button>`);
+  const byCat = {};
+  DB.forEach(d=>{ if(d.status==="available") (byCat[d.category] ||= []).push(d); });
+  for (const [c,list] of Object.entries(byCat)){
+    if (list.length < 3) continue;
+    const top = list.sort((a,b)=>priceNum(a)-priceNum(b)).filter((d,i,arr)=>arr.findIndex(x=>x.hardware_id===d.hardware_id)===i).slice(0,4);
+    if (top.length < 3) continue;
+    btns.push(`<button class="btn btn-sm" data-ids="${top.map(x=>esc(x.id)).join(",")}">${esc(c)}: ${top.length} options</button>`);
+  }
+  document.getElementById("presets").innerHTML = btns.slice(0,10).join("") || '<span class="dim tiny">none available</span>';
+  document.getElementById("presets").onclick = e=>{
+    const b = e.target.closest("[data-ids]"); if(!b) return;
+    sel = b.dataset.ids.split(","); basketSet(sel); render();
+  };
+})();
+
+document.getElementById("add").onclick = ()=>{
+  if (sel.length>=6) { alert("Six is the maximum — the table stops being readable past that."); return; }
+  if (!sel.includes(pick.value)) sel.push(pick.value);
+  basketSet(sel); render();
+};
+document.getElementById("clear").onclick = ()=>{ sel=[]; basketSet(sel); render(); };
+document.getElementById("diffonly").onchange = e=>{ diffOnly=e.target.checked; render(); };
+
+function row(label, sub, vals, always){
+  const same = vals.every(v=>v===vals[0]);
+  if (diffOnly && same && !always) return "";
+  return `<tr class="${same?"":"diff"}"><td class="k">${label}${sub?`<div class="tiny dim" style="white-space:normal;font-family:var(--sans)">${sub}</div>`:""}</td>
+    ${vals.map(v=>`<td>${v}</td>`).join("")}</tr>`;
+}
+
+function render(){
+  document.getElementById("chips").innerHTML = sel.length
+    ? sel.map(id=>{const d=byId(id);return `<span class="tag tag-cyn">${esc(d.name)}${d.firmware?` · ${esc(d.firmware)}`:""}
+        <a href="#" data-rm="${esc(id)}" style="color:var(--red);margin-left:5px">×</a></span>`;}).join("")
+    : '<span class="dim tiny">nothing selected yet</span>';
+  document.getElementById("chips").onclick = e=>{
+    const a=e.target.closest("[data-rm]"); if(!a) return; e.preventDefault();
+    sel = sel.filter(x=>x!==a.dataset.rm); basketSet(sel); render();
+  };
+
+  const out = document.getElementById("out");
+  if (sel.length < 2){ out.innerHTML = `<div class="empty">add at least two builds to compare</div>`; return; }
+
+  const ds = sel.map(byId);
+  let h = `<div class="tw"><table class="cmp"><thead><tr><th></th>
+    ${ds.map(d=>`<th><a href="device.html?id=${encodeURIComponent(d.id)}">${esc(d.name)}</a>
+      ${d.firmware?`<div class="card-fw">${esc(d.firmware)}</div>`:""}</th>`).join("")}</tr></thead><tbody>`;
+
+  h += `<tr class="grp"><td colspan="${ds.length+1}">Basics</td></tr>`;
+  h += row("Price","", ds.map(d=>`<span class="mono" style="color:var(--grn)">${priceStr(d)}</span>${d.price_is_estimate?'<div class="tiny dim">est. parts</div>':""}`), true);
+  h += row("Vendor","", ds.map(d=>esc(d.vendor||"—")));
+  h += row("Availability","", ds.map(d=>`<span class="tag ${STATUS_TAG[d.status]||""}">${esc(d.status||"?")}</span>`), true);
+  h += row("Skill level","how much you need to know", ds.map(d=>`<span class="tag ${SKILL_TAG[d.skill_level]||""}">${esc(d.skill_level||"?")}</span>`), true);
+  h += row("Effort to run","assembly and firmware work", ds.map(d=>esc(BUILD_LABEL[d.build_effort]||"?")), true);
+  h += row("Looks like","how obvious it is", ds.map(d=>esc(STEALTH_LABEL[d.stealth]||"?")));
+  h += row("Legal risk","", ds.map(d=>d.legal&&d.legal.risk_level?`<span class="tag ${RISK_TAG[d.legal.risk_level]||""}">${esc(d.legal.risk_level)}</span>`:"—"), true);
+  h += row("Project health","risk it gets abandoned", ds.map(d=>esc((d.ecosystem||{}).abandoned_risk||"?")));
+
+  h += `<tr class="grp"><td colspan="${ds.length+1}">The honest take</td></tr>`;
+  h += row("What to know","", ds.map(d=>`<div class="small">${esc(d.honest_take||"—")}</div>`), true);
+
+  h += `<tr class="grp"><td colspan="${ds.length+1}">Hardware</td></tr>`;
+  h += row("Main processor","", ds.map(d=>`<span class="mono tiny">${esc((d.hardware||{}).mcu_primary||"—")}</span>`));
+  h += row("Radios","", ds.map(d=>{
+    const r=(d.hardware||{}).radios||[]; return r.length?r.map(x=>`<div class="mono tiny" style="color:var(--grn)">${esc(x.ic||"?")}<span class="dim"> ${esc(x.role||"")}</span></div>`).join(""):"—"; }));
+  h += row("Display","", ds.map(d=>{const x=(d.hardware||{}).display;return x&&x.type?esc(`${x.type}${x.resolution?" "+x.resolution:""}`):"—";}));
+  h += row("Battery","", ds.map(d=>{const b=(d.hardware||{}).battery_mah;return b?`${esc(b)} mAh`:esc((d.hardware||{}).battery_note||"—");}));
+  h += row("Storage","", ds.map(d=>esc((d.hardware||{}).storage||"—")));
+  h += row("Expansion","", ds.map(d=>esc((d.hardware||{}).gpio||"—")));
+
+  /* capability rows: union of all keys any selected device mentions */
+  for (const g of T.groups){
+    const keys = uniq(ds.flatMap(d=>Object.keys(d.capabilities||{})))
+      .filter(k=>T.caps[k] && T.caps[k].group===g.id)
+      .filter(k=>ds.some(d=>hasCap(d,k)))
+      .sort((a,b)=>T.caps[a].label.localeCompare(T.caps[b].label));
+    if (!keys.length) continue;
+    let body = "";
+    for (const k of keys){
+      const m = T.caps[k];
+      const vals = ds.map(d=>{const c=cap(d,k);
+        return `${valPill(c.v,"")}${c.note?`<div class="tiny dim" style="margin-top:3px">${esc(c.note)}</div>`:""}`;});
+      body += row(esc(m.label) + (m.legal==="restricted"?' <span class="tag tag-red tiny">restricted</span>':""), esc(m.plain||""), vals);
+    }
+    if (body) h += `<tr class="grp"><td colspan="${ds.length+1}">${esc(g.name)}</td></tr>` + body;
+  }
+
+  h += `</tbody></table></div>`;
+  out.innerHTML = h;
+}
+render();
+initTips();
+</script>
+</body>
+</html>
