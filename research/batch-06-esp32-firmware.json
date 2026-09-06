@@ -1,0 +1,585 @@
+[
+  {
+    "id": "marauder-v8",
+    "hardware_id": "marauder-v8",
+    "name": "ESP32 Marauder v8",
+    "firmware": "ESP32 Marauder",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "The official Marauder firmware on the official v8 board. Same MIT-licensed firmware that runs on ~25 other boards; the v8 exists to give it a battery, touchscreen, GPS, SD and two SMA antennas.",
+    "vendor": "Just Call Me Koko LLC",
+    "vendor_url": "https://www.justcallmekokollc.com",
+    "product_url": "https://www.justcallmekokollc.com/products/marauder-v8",
+    "category": "wifi",
+    "subcategory": "wifi-bluetooth-audit",
+    "status": "out-of-stock",
+    "released": "2026",
+
+    "price_usd": 100,
+    "price_note": "Sold out at the vendor as of 2026-09-06. Battery is NOT included - you supply a 3.7V 18650. Add ~$8 for the cell and ~$8 for a microSD, so realistically ~$116 all-in.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "beginner",
+    "skill_note": "Touchscreen menu, no command line needed for the common functions; it arrives flashed and working.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in a 3D-printed enclosure. You add an 18650 cell and a microSD card yourself.",
+
+    "stealth": "overt",
+    "form_factor": "handheld",
+
+    "summary": "The current flagship official Marauder board: an ESP32-C5 with a 2.8-inch touchscreen, GPS, microSD and dual SMA antenna connectors. The C5 makes it the first Marauder that can see and transmit on 5 GHz as well as 2.4 GHz. It is a Wi-Fi and BLE analysis and attack tool, and nothing else.",
+    "honest_take": "This is a Wi-Fi/BLE box, not a Flipper competitor - there is no sub-GHz, no NFC, no RFID and no IR, so the ~30% of Flipper use cases that involve gates, badges and TV remotes are simply absent. Its headline deauth attack only works against unprotected management frames: 802.11w/PMF stops it dead, and WPA3 makes PMF mandatory, so on any modern network deauth increasingly does nothing. The firmware is free and MIT-licensed and runs on a $20 M5StickC Plus2, so what you are paying $100 for is the C5's 5 GHz radio, the touchscreen, the GPS and the antenna connectors - which is a fair deal, but understand that is what you are buying.",
+    "best_for": ["Wi-Fi site survey and channel analysis across both bands", "Wardriving with GPS and Wigle-compatible logging", "Detecting BLE trackers, Flipper Zeros and Flock Safety cameras", "Learning 802.11 management-frame behaviour hands-on"],
+    "not_for": ["Sub-GHz, NFC, RFID or IR work - it has none of that hardware", "Deauthing WPA3 or any PMF-enabled network", "Cracking Wi-Fi passwords on-device - it captures handshakes, your laptop cracks them", "Bluetooth Classic work - the C5 is BLE-only"],
+
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "Single-core 32-bit RISC-V up to 240MHz. The only Espressif part with dual-band 2.4+5GHz Wi-Fi 6 (802.11ax, a/b/g/n/ac backward compatible). 384KB SRAM plus external PSRAM.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "ESP32-C5", "role": "wifi", "note": "Dual-band 2.4GHz + 5GHz Wi-Fi 6. Marauder's configs.h sets HAS_DUAL_BAND for this board and drops channel hop delay from 1000ms to 250ms."},
+        {"ic": "ESP32-C5", "role": "bluetooth", "note": "Bluetooth 5 LE only. No Bluetooth Classic / BR/EDR on any C5."}
+      ],
+      "display": {"type": "ILI9341 TFT", "size_in": 2.8, "resolution": "320x240", "color": true, "touch": true},
+      "battery_mah": null,
+      "battery_note": "Takes a user-supplied 3.7V 18650 flat-top cell; not included. Onboard LiPo charging circuit and on-screen fuel gauge.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD slot, used for pcap capture and firmware updates",
+      "connectivity": ["USB-C", "Wi-Fi 2.4/5GHz", "Bluetooth LE"],
+      "gpio": null,
+      "sensors": ["GPS (multi-constellation, ceramic antenna, SMA-upgradeable)"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure",
+      "notable_physical": ["Dual female SMA connectors for Wi-Fi and GPS antennas", "2.8-inch resistive/capacitive touch navigation", "MagSafe mount compatible", "Activity LED"]
+    },
+
+    "capabilities": {
+      "wifi_scan_24":            {"v": "yes", "note": "AP, station, probe-request and raw sniffing; channel analyzer and packet-rate graphing"},
+      "wifi_scan_5":             {"v": "yes", "note": "ESP32-C5 dual-band radio; HAS_DUAL_BAND set for this board in configs.h"},
+      "wifi_monitor_mode":       {"v": "yes", "note": "ESP-IDF promiscuous mode; raw capture written to SD as pcap"},
+      "wifi_injection":          {"v": "partial", "note": "Raw 802.11 frame TX via esp_wifi_80211_tx. Fine for management frames (deauth, beacon, CSA); not general-purpose injection like an Atheros adapter"},
+      "wifi_deauth_24":          {"v": "yes", "note": "Broadcast, targeted and manual modes. Only works where management frames are unprotected - 802.11w/PMF defeats it entirely"},
+      "wifi_deauth_5":           {"v": "partial", "note": "The C5 can transmit on 5GHz, but 5GHz deauth is new and far less tested than the 2.4GHz path. Same PMF limitation applies"},
+      "wifi_evil_twin":          {"v": "yes", "note": "WIFI_SCAN_EVIL_PORTAL - clones a scanned SSID and serves a captive portal"},
+      "wifi_captive_portal":     {"v": "yes", "note": "EvilPortal module, HTML served from SD card, credentials logged to SD"},
+      "wifi_handshake_capture":  {"v": "yes", "note": "Passive and active EAPOL capture (WIFI_SCAN_EAPOL / ACTIVE_EAPOL), saved as pcap. Cracking happens off-device"},
+      "wifi_pmkid":              {"v": "unknown", "note": "EAPOL capture is explicit in the source; a dedicated PMKID mode is not. Could not confirm"},
+      "wifi_beacon_spam":        {"v": "yes", "note": "Random, list-based, rickroll and 'funny' beacon spam modes"},
+      "wifi_probe_sniff":        {"v": "yes", "note": "WIFI_SCAN_PROBE - logs probe requests and the SSIDs clients are looking for"},
+      "wifi_wardriving":         {"v": "yes", "note": "Wi-Fi, station and BLE wardrive modes with GPS tagging, Wigle-compatible CSV to SD"},
+      "wifi_ap_mode":            {"v": "yes", "note": "WIFI_HOSTSPOT mode"},
+      "packet_capture":          {"v": "yes", "note": "pcap files written to microSD"},
+      "ble_scan":                {"v": "yes", "note": "NimBLE-based; general scan plus analyzer and signal-strength fox hunt"},
+      "ble_advertise":           {"v": "yes", "note": "Used by all the spam and AirTag-spoof modes"},
+      "ble_spam_apple":          {"v": "yes", "note": "BT_ATTACK_SOUR_APPLE and BT_ATTACK_APPLE_JUICE. Apple has hardened against this since 2023; effectiveness varies by iOS version"},
+      "ble_spam_android":        {"v": "yes", "note": "BT_ATTACK_GOOGLE_SPAM - Fast Pair advertisement spam"},
+      "ble_spam_samsung":        {"v": "yes", "note": "BT_ATTACK_SAMSUNG_SPAM"},
+      "ble_spam_swift_pair":     {"v": "yes", "note": "BT_ATTACK_SWIFTPAIR_SPAM - Windows Swift Pair popups"},
+      "bt_classic":              {"v": "no", "note": "Notable absence. ESP32-C5 is Bluetooth 5 LE only - no BR/EDR. No classic inquiry scans or legacy pairing work"},
+      "ble_sniff":               {"v": "partial", "note": "It observes advertisements, which is what every ESP32 'BLE sniffer' really does. It cannot follow a connection across channel hops like a dedicated sniffer"},
+      "ble_tracker_detect":      {"v": "yes", "note": "BT_SCAN_AIRTAG and AIRTAG_MON - matches Apple Find My advertisement payloads"},
+      "ble_tracker_spoof":       {"v": "yes", "note": "BT_SPOOF_AIRTAG broadcasts Find My advertisements"},
+      "findmy_track":            {"v": "partial", "note": "BT_FINDMY_SOUND and BT_ATTACK_FINDMY_LIVE interact with Find My accessories; not a tracking network client"},
+      "detect_flipper":          {"v": "yes", "note": "BT_SCAN_FLIPPER - matches the Flipper Zero's BLE advertisement name/pattern. Trivially defeated by renaming the Flipper"},
+      "detect_airtag":           {"v": "yes", "note": "Matches Apple Find My BLE advertisement type"},
+      "detect_skimmer":          {"v": "yes", "note": "BT_SCAN_SKIMMERS - matches known credit-card-skimmer BLE module names (HC-05 style) and default pairing patterns, not skimmers as such"},
+      "detect_pineapple":        {"v": "yes", "note": "WIFI_SCAN_PINESCAN - flags one BSSID advertising many SSIDs, the PineAP/KARMA signature"},
+      "detect_pwnagotchi":       {"v": "yes", "note": "WIFI_SCAN_PWN - matches the pwnagotchi beacon advertisement"},
+      "detect_surveillance_cam": {"v": "partial", "note": "BT_SCAN_FLOCK and BT_SCAN_FLOCK_WARDRIVE match the BLE signature of Flock Safety ALPR cameras specifically. BT_SCAN_RAYBAN matches Meta Ray-Ban glasses. Not a general camera detector"},
+      "gps":                     {"v": "yes", "note": "Onboard multi-constellation module with ceramic antenna, SMA-upgradeable"},
+      "gps_wardrive_log":        {"v": "yes", "note": "Wigle-compatible CSV"},
+      "sd_logging":              {"v": "yes", "note": "pcap, wardrive CSV and captured portal credentials"},
+      "scriptable":              {"v": "partial", "note": "Serial/CLI command interface drivable from a PC or Android; no on-device scripting language"},
+      "standalone_untethered":   {"v": "yes", "note": "Battery, touchscreen and SD - fully usable with no host"},
+      "subghz_rx":               {"v": "no", "note": "Notable absence. No sub-GHz radio of any kind. Cannot touch garage doors, gates or key fobs"},
+      "hf_1356_read":            {"v": "no", "note": "Notable absence. No NFC hardware"},
+      "lf_125khz_read":          {"v": "no", "note": "Notable absence. No RFID hardware"},
+      "ir_tx":                   {"v": "no", "note": "No IR emitter on this board"},
+      "usb_hid_inject":          {"v": "no", "note": "The Marauder firmware implements no HID/BadUSB function on this board"}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and using it to scan and log is legal in most places. Transmitting deauthentication frames against networks you do not own is a separate matter - the US FCC has fined hotel and conference operators for Wi-Fi deauth blocking, and equivalent computer-misuse laws apply in most countries. The captive-portal feature collects other people's credentials, which is where casual use turns into a criminal offence fastest. Check your local law."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No - single monolithic firmware, but a web-based Marauder Installer and a Flipper Zero companion app exist",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Marauder v8", "ESP32 Marauder V8"],
+    "sources": [
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder", "what": "repo metadata: MIT licence, last commit 2026-09-05, v1.15.1 released 2026-08-24, 12.2k stars"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h", "what": "v8 board block defining HAS_DUAL_BAND, HAS_TOUCH, HAS_GPS, HAS_SD, HAS_PSRAM"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.h", "what": "complete scan/attack mode list used for the capability table"},
+      {"url": "https://www.justcallmekokollc.com/products/marauder-v8", "what": "price $100, sold out, ESP32-C5, dual-band, 2.8in touch, dual SMA, 18650 not included"},
+      {"url": "https://www.espressif.com/en/products/socs/esp32-c5", "what": "ESP32-C5 is dual-band 2.4+5GHz Wi-Fi 6, Bluetooth 5 LE only, single-core RISC-V 240MHz"},
+      {"url": "https://www.wi-fi.org/discover-wi-fi/security", "what": "Wi-Fi Alliance: WPA3 networks require Protected Management Frames (PMF)"}
+    ],
+    "research_gaps": [
+      "Exact v8 hardware release date not stated by the vendor; 2026 inferred from firmware target history and ESP32-C5 availability",
+      "Whether 5GHz deauth is actually functional on the C5 path, or only 5GHz scanning, is not documented",
+      "No battery capacity figure - depends which 18650 the user fits",
+      "Dimensions and weight not published"
+    ]
+  },
+  {
+    "id": "marauder-mini-v3",
+    "hardware_id": "marauder-mini-v3",
+    "name": "ESP32 Marauder Mini v3",
+    "firmware": "ESP32 Marauder",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Same official Marauder firmware as the v8, built for the Mini v3 target. Also dual-band via ESP32-C5, but with a small screen and no touch.",
+    "vendor": "Just Call Me Koko LLC",
+    "vendor_url": "https://www.justcallmekokollc.com",
+    "product_url": "https://www.justcallmekokollc.com/products/esp32-marauder-mini-v3",
+    "category": "wifi",
+    "subcategory": "wifi-bluetooth-audit",
+    "status": "available",
+    "released": "2026",
+
+    "price_usd": 95,
+    "price_note": "Stock fluctuates - listed in stock on the storefront and sold out on the product page on the same day (2026-09-06). Battery NOT included (vendor suggests a 3.7V 820mAh 653042 cell, ~$8) and no microSD included, so ~$110 all-in.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "beginner",
+    "skill_note": "5-way tactile switch menu; arrives flashed. Smaller screen makes the denser views harder to read than the v8.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled with a 3D-printed enclosure. You add a LiPo cell (watch the polarity - the vendor warns wrong polarity damages the charge circuit) and a microSD.",
+
+    "stealth": "discreet",
+    "form_factor": "pocket",
+
+    "summary": "The pocket-sized official Marauder. Same ESP32-C5 dual-band radio and same firmware as the v8, in a roughly 2.5 x 1.5 inch package with a small screen, 5-way switch, GPS and microSD. Aimed at being carried every day rather than sat on a bench.",
+    "honest_take": "It is the v8's radio and firmware minus the touchscreen and minus the 18650, for $5 less - the value is the form factor, not the capability. The same caveats bite harder here: no sub-GHz, no NFC, no IR, and deauth that 802.11w/PMF and therefore WPA3 defeats outright. The tiny screen makes the channel analyser and packet views genuinely cramped, and with no battery in the box it is not actually pocketable until you buy one.",
+    "best_for": ["Everyday-carry Wi-Fi and BLE recon", "GPS wardriving in a jacket pocket", "Spotting BLE trackers and Flipper Zeros while walking around"],
+    "not_for": ["Reading dense packet views - the screen is small", "Sub-GHz, NFC or IR anything", "Deauthing modern PMF/WPA3 networks", "Long sessions - it takes a small ~820mAh cell"],
+
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "Single-core RISC-V up to 240MHz, dual-band 2.4+5GHz Wi-Fi 6, Bluetooth 5 LE. configs.h sets HAS_DUAL_BAND and HAS_PSRAM for the mini_v3 target.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "ESP32-C5", "role": "wifi", "note": "Dual-band 2.4GHz + 5GHz Wi-Fi 6"},
+        {"ic": "ESP32-C5", "role": "bluetooth", "note": "Bluetooth 5 LE only, no Bluetooth Classic"}
+      ],
+      "display": {"type": "Small colour TFT", "size_in": 1.44, "resolution": null, "color": true, "touch": false},
+      "battery_mah": 820,
+      "battery_note": "Not included. Vendor recommends a 3.7V 820mAh 653042 LiPo. Onboard charging circuit; wrong polarity will damage it.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD slot for pcap and wardrive logs",
+      "connectivity": ["USB-C", "Wi-Fi 2.4/5GHz", "Bluetooth LE"],
+      "gpio": null,
+      "sensors": ["GPS (multi-constellation)"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure",
+      "notable_physical": ["5-way tactile navigation switch", "GPS antenna bulkhead upgrade option", "Stock Wi-Fi antenna included"]
+    },
+
+    "capabilities": {
+      "wifi_scan_24":            {"v": "yes", "note": "Full Marauder scan suite"},
+      "wifi_scan_5":             {"v": "yes", "note": "ESP32-C5 dual-band; HAS_DUAL_BAND set for mini_v3"},
+      "wifi_monitor_mode":       {"v": "yes", "note": "Promiscuous capture to SD"},
+      "wifi_injection":          {"v": "partial", "note": "Raw management-frame TX only, not general injection"},
+      "wifi_deauth_24":          {"v": "yes", "note": "Defeated by 802.11w/PMF, which WPA3 mandates"},
+      "wifi_deauth_5":           {"v": "partial", "note": "5GHz TX exists on the C5; deauth on 5GHz is far less tested"},
+      "wifi_evil_twin":          {"v": "yes", "note": "EvilPortal with SSID cloning"},
+      "wifi_captive_portal":     {"v": "yes", "note": "Portal HTML from SD, credentials logged to SD"},
+      "wifi_handshake_capture":  {"v": "yes", "note": "EAPOL capture to pcap; cracking is off-device"},
+      "wifi_beacon_spam":        {"v": "yes", "note": "Random, list and rickroll modes"},
+      "wifi_probe_sniff":        {"v": "yes", "note": "Probe request logging"},
+      "wifi_wardriving":         {"v": "yes", "note": "GPS-tagged, Wigle-compatible CSV - the headline use case for this form factor"},
+      "wifi_ap_mode":            {"v": "yes", "note": "Hotspot mode"},
+      "packet_capture":          {"v": "yes", "note": "pcap to microSD"},
+      "ble_scan":                {"v": "yes", "note": "Scan, analyzer and fox-hunt modes"},
+      "ble_spam_apple":          {"v": "yes", "note": "Sour Apple / Apple Juice; increasingly patched by Apple"},
+      "ble_spam_android":        {"v": "yes", "note": "Fast Pair spam"},
+      "ble_spam_samsung":        {"v": "yes", "note": "Samsung pairing spam"},
+      "ble_spam_swift_pair":     {"v": "yes", "note": "Windows Swift Pair spam"},
+      "bt_classic":              {"v": "no", "note": "ESP32-C5 is BLE-only. No BR/EDR"},
+      "ble_tracker_detect":      {"v": "yes", "note": "AirTag scan and monitor modes"},
+      "ble_tracker_spoof":       {"v": "yes", "note": "AirTag advertisement spoofing"},
+      "detect_flipper":          {"v": "yes", "note": "Matches the Flipper's BLE advertisement pattern"},
+      "detect_skimmer":          {"v": "yes", "note": "Matches known skimmer BLE module naming patterns"},
+      "detect_pineapple":        {"v": "yes", "note": "One BSSID advertising many SSIDs"},
+      "detect_pwnagotchi":       {"v": "yes", "note": "Matches the pwnagotchi beacon"},
+      "detect_surveillance_cam": {"v": "partial", "note": "Flock Safety ALPR camera BLE signature and Meta Ray-Ban glasses only"},
+      "gps":                     {"v": "yes", "note": "Multi-constellation module included"},
+      "gps_wardrive_log":        {"v": "yes", "note": "Wigle CSV"},
+      "sd_logging":              {"v": "yes", "note": "microSD"},
+      "scriptable":              {"v": "partial", "note": "CLI over serial from a PC or Android"},
+      "standalone_untethered":   {"v": "yes", "note": "Once you fit a cell"},
+      "subghz_rx":               {"v": "no", "note": "No sub-GHz radio"},
+      "hf_1356_read":            {"v": "no", "note": "No NFC hardware"},
+      "ir_tx":                   {"v": "no", "note": "No IR emitter"}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Scanning and logging are broadly legal; transmitting deauth frames at networks you do not own is not, and the captive-portal credential capture is the feature most likely to cross into criminal territory. Check your local law."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No - monolithic firmware with a web installer and Flipper companion app",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Marauder Mini", "Marauder Mini v3"],
+    "sources": [
+      {"url": "https://www.justcallmekokollc.com/products/esp32-marauder-mini-v3", "what": "price $95, ESP32-C5, dual-band, GPS, SD, 820mAh recommended cell, ~2.5x1.5in"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h", "what": "MARAUDER_MINI_V3 block: HAS_DUAL_BAND, HAS_PSRAM, HAS_GPS, HAS_SD, HAS_MINI_SCREEN, no HAS_BATTERY"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/releases/latest", "what": "v1.15.1 ships a dedicated mini_v3 binary; release notes head the C5 section 'ESP32-C5 (5GHz support)'"},
+      {"url": "https://www.espressif.com/en/products/socs/esp32-c5", "what": "ESP32-C5 dual-band Wi-Fi 6, BLE 5 only"}
+    ],
+    "research_gaps": [
+      "Screen size 1.44in is inferred from the Marauder wiki's Mini entry; the Mini v3 product page does not restate it",
+      "Screen resolution, dimensions and weight not published",
+      "Stock status contradicted itself between the storefront and the product page on the same day"
+    ]
+  },
+  {
+    "id": "marauder-v7",
+    "hardware_id": "marauder-v7",
+    "name": "ESP32 Marauder v7",
+    "firmware": "ESP32 Marauder",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Still a first-class firmware target - v1.15.1 ships a marauder_v7.bin - even though the board itself is no longer sold. 2.4GHz only.",
+    "vendor": "Just Call Me Koko LLC",
+    "vendor_url": "https://www.justcallmekokollc.com",
+    "product_url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/Marauder-v7",
+    "category": "wifi",
+    "subcategory": "wifi-bluetooth-audit",
+    "status": "discontinued",
+    "released": "2024",
+
+    "price_usd": null,
+    "price_note": "No longer listed in the vendor's catalogue as of 2026-09-06; superseded by the v8 and Mini v3. Secondhand only, and prices there are not a reliable figure to quote.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "beginner",
+    "skill_note": "Physical keyboard plus buttons; menu-driven.",
+    "build_effort": "assembled",
+    "build_note": "Shipped assembled. Firmware updates still supported via the web installer.",
+
+    "stealth": "overt",
+    "form_factor": "handheld",
+
+    "summary": "The generation before the v8: an ESP32 with a full screen, a small physical keyboard, battery, GPS, SD and a temperature sensor. It is 2.4GHz only - the dual-band C5 did not arrive until the v8 and Mini v3. Still fully supported by current firmware.",
+    "honest_take": "Buying one secondhand today means paying for a board whose radio is a generation behind, and the 5 GHz gap is the one that actually matters now that most real networks have a 5 GHz side the v7 cannot even see. It is not obsolete - the firmware still gets releases - but a $20 M5StickC Plus2 runs the same 2.4GHz feature set, so the v7's value is the keyboard, the GPS and the battery rather than anything the radio does.",
+    "best_for": ["2.4GHz Wi-Fi and BLE work where the keyboard is genuinely useful", "GPS wardriving on a budget if you already own one"],
+    "not_for": ["Anything on 5 GHz - the radio cannot see it", "Sub-GHz, NFC or IR", "Buying new - it is discontinued"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "An ESP32-family part, 2.4GHz only (configs.h does not set HAS_DUAL_BAND for MARAUDER_V7). The vendor never published the exact part number and the board is no longer listed, so it is left null rather than guessed.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": null, "role": "wifi", "note": "2.4GHz only - no HAS_DUAL_BAND in the v7 config block"},
+        {"ic": null, "role": "bluetooth", "note": "HAS_BT and HAS_BT_REMOTE set in configs.h"}
+      ],
+      "display": {"type": "Colour TFT", "size_in": null, "resolution": null, "color": true, "touch": false},
+      "battery_mah": null,
+      "battery_note": "HAS_BATTERY set in configs.h; capacity not published",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD slot",
+      "connectivity": ["USB-C", "Wi-Fi 2.4GHz", "Bluetooth"],
+      "gpio": null,
+      "sensors": ["GPS", "Temperature sensor"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure",
+      "notable_physical": ["Small physical keyboard (HAS_MINI_KB)", "Navigation buttons", "GPS"]
+    },
+
+    "capabilities": {
+      "wifi_scan_24":            {"v": "yes", "note": "Full Marauder scan suite"},
+      "wifi_scan_5":             {"v": "no", "note": "2.4GHz radio only. This is the main reason to prefer a v8 or Mini v3"},
+      "wifi_monitor_mode":       {"v": "yes", "note": "Promiscuous capture to SD"},
+      "wifi_deauth_24":          {"v": "yes", "note": "Defeated by 802.11w/PMF and therefore by WPA3"},
+      "wifi_evil_twin":          {"v": "yes", "note": "EvilPortal"},
+      "wifi_captive_portal":     {"v": "yes", "note": "Credentials logged to SD"},
+      "wifi_handshake_capture":  {"v": "yes", "note": "EAPOL to pcap"},
+      "wifi_beacon_spam":        {"v": "yes", "note": "Beacon spam modes"},
+      "wifi_probe_sniff":        {"v": "yes", "note": "Probe request logging"},
+      "wifi_wardriving":         {"v": "yes", "note": "GPS-tagged Wigle CSV"},
+      "packet_capture":          {"v": "yes", "note": "pcap to microSD"},
+      "ble_scan":                {"v": "yes", "note": "NimBLE scanning"},
+      "ble_spam_apple":          {"v": "yes", "note": "Sour Apple"},
+      "ble_spam_android":        {"v": "yes", "note": "Fast Pair spam"},
+      "ble_tracker_detect":      {"v": "yes", "note": "AirTag detection"},
+      "detect_flipper":          {"v": "yes", "note": "Flipper BLE advertisement match"},
+      "detect_pineapple":        {"v": "yes", "note": "PineAP/KARMA signature"},
+      "gps":                     {"v": "yes", "note": "Onboard module"},
+      "gps_wardrive_log":        {"v": "yes", "note": "Wigle CSV"},
+      "sd_logging":              {"v": "yes", "note": "microSD"},
+      "standalone_untethered":   {"v": "yes", "note": "Battery and screen onboard"},
+      "subghz_rx":               {"v": "no", "note": "No sub-GHz radio"},
+      "hf_1356_read":            {"v": "no", "note": "No NFC hardware"}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Same position as the rest of the line: scanning is generally fine, transmitting deauth at networks you do not own is not, and harvesting credentials through the portal is the sharpest legal edge. Check your local law."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Marauder v7", "Marauder v7.1"],
+    "sources": [
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h", "what": "MARAUDER_V7 block: HAS_MINI_KB, HAS_BATTERY, HAS_GPS, HAS_SD, HAS_TEMP_SENSOR, and notably no HAS_DUAL_BAND"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/releases/latest", "what": "v1.15.1 still ships marauder_v7.bin - the board is discontinued but the firmware target is not"},
+      {"url": "https://www.justcallmekokollc.com/", "what": "current catalogue lists only the v8 and Mini v3; no v7 SKU"}
+    ],
+    "research_gaps": [
+      "Exact MCU part number never published by the vendor - deliberately left null",
+      "Screen size/resolution, battery capacity, dimensions and weight not published",
+      "Release year 2024 is inferred from firmware target history, not a vendor statement",
+      "No current price - the board is out of the catalogue"
+    ]
+  },
+  {
+    "id": "marauder-v6-1",
+    "hardware_id": "marauder-v6-1",
+    "name": "ESP32 Marauder v6.1",
+    "firmware": "ESP32 Marauder",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Older official board, still a maintained firmware target (v6_1.bin ships with v1.15.1). Touchscreen, 2.4GHz only.",
+    "vendor": "Just Call Me Koko LLC",
+    "vendor_url": "https://www.justcallmekokollc.com",
+    "product_url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/Marauder-v6",
+    "category": "wifi",
+    "subcategory": "wifi-bluetooth-audit",
+    "status": "discontinued",
+    "released": "2023",
+
+    "price_usd": null,
+    "price_note": "Out of the vendor's catalogue as of 2026-09-06. Secondhand prices vary too widely to quote as a figure.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "beginner",
+    "skill_note": "Touchscreen plus physical buttons.",
+    "build_effort": "assembled",
+    "build_note": "Shipped assembled; still updatable through the web installer.",
+
+    "stealth": "overt",
+    "form_factor": "handheld",
+
+    "summary": "The touchscreen Marauder that preceded the v7 and v8. ESP32, 2.4GHz only, with a touch display, IP5306-based battery management, buttons, a NeoPixel, microSD, GPS and a temperature sensor. The v6.1 added GPS over the plain v6.",
+    "honest_take": "Two generations old and 2.4GHz only, which is the limitation that matters most today. The firmware still supports it, so it is not e-waste, but there is no reason to seek one out - the same firmware runs on a $20 M5StickC Plus2 with the same radio capability, and a current v8 adds 5 GHz that no amount of firmware can retrofit onto this board.",
+    "best_for": ["Owners who already have one - it still gets current firmware", "Learning 802.11 on 2.4GHz with a touchscreen UI"],
+    "not_for": ["5 GHz networks", "Sub-GHz, NFC or IR", "Buying today - discontinued and superseded twice over"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "An ESP32-family part, 2.4GHz only (no HAS_DUAL_BAND in the v6/v6.1 config block). Exact part number never published by the vendor, so left null.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": null, "role": "wifi", "note": "2.4GHz only"},
+        {"ic": null, "role": "bluetooth", "note": "HAS_BT and HAS_BT_REMOTE set in configs.h"}
+      ],
+      "display": {"type": "Colour TFT with touch", "size_in": null, "resolution": null, "color": true, "touch": true},
+      "battery_mah": null,
+      "battery_note": "HAS_BATTERY with HAS_IP5306 - an IP5306 power-bank management IC. Capacity not published.",
+      "charging": "USB-C",
+      "pmic": "IP5306",
+      "storage": "microSD slot",
+      "connectivity": ["USB-C", "Wi-Fi 2.4GHz", "Bluetooth"],
+      "gpio": null,
+      "sensors": ["GPS (v6.1 only - the plain v6 has none)", "Temperature sensor"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure",
+      "notable_physical": ["Touchscreen", "Physical buttons", "NeoPixel RGB LED"]
+    },
+
+    "capabilities": {
+      "wifi_scan_24":            {"v": "yes", "note": "Full Marauder scan suite"},
+      "wifi_scan_5":             {"v": "no", "note": "2.4GHz radio only"},
+      "wifi_monitor_mode":       {"v": "yes", "note": "Promiscuous capture to SD"},
+      "wifi_deauth_24":          {"v": "yes", "note": "Defeated by 802.11w/PMF and therefore by WPA3"},
+      "wifi_evil_twin":          {"v": "yes", "note": "EvilPortal"},
+      "wifi_captive_portal":     {"v": "yes", "note": "Credentials logged to SD"},
+      "wifi_handshake_capture":  {"v": "yes", "note": "EAPOL to pcap"},
+      "wifi_beacon_spam":        {"v": "yes", "note": "Beacon spam modes"},
+      "wifi_wardriving":         {"v": "yes", "note": "GPS-tagged on the v6.1; the plain v6 has no GPS"},
+      "packet_capture":          {"v": "yes", "note": "pcap to microSD"},
+      "ble_scan":                {"v": "yes", "note": "NimBLE scanning"},
+      "ble_spam_apple":          {"v": "yes", "note": "Sour Apple"},
+      "ble_tracker_detect":      {"v": "yes", "note": "AirTag detection"},
+      "detect_flipper":          {"v": "yes", "note": "Flipper BLE advertisement match"},
+      "detect_pineapple":        {"v": "yes", "note": "PineAP/KARMA signature"},
+      "gps":                     {"v": "partial", "note": "v6.1 has GPS; the plain v6 does not - this is the difference between the two"},
+      "sd_logging":              {"v": "yes", "note": "microSD"},
+      "standalone_untethered":   {"v": "yes", "note": "Battery and touchscreen onboard"},
+      "subghz_rx":               {"v": "no", "note": "No sub-GHz radio"},
+      "hf_1356_read":            {"v": "no", "note": "No NFC hardware"}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Scanning is broadly legal; deauthing networks you do not own and harvesting portal credentials are not. Check your local law."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Marauder v6.1", "Marauder v6.2"],
+    "sources": [
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h", "what": "v6/v6.1 block: HAS_TOUCH, HAS_BATTERY + HAS_IP5306, HAS_NEOPIXEL_LED, HAS_GPS, HAS_TEMP_SENSOR, no HAS_DUAL_BAND"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/releases/latest", "what": "v1.15.1 still ships v6.bin and v6_1.bin"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/Marauder-Versions", "what": "version comparison table showing GPS present on v6.1 and absent on v6"}
+    ],
+    "research_gaps": [
+      "Exact MCU part number never published - left null",
+      "Screen size/resolution, battery capacity, dimensions and weight not published",
+      "Release year 2023 inferred from firmware history, not a vendor statement"
+    ]
+  },
+  {
+    "id": "marauder-m5stickc-plus2",
+    "hardware_id": "m5stickc-plus2",
+    "name": "M5StickC Plus2 (ESP32 Marauder)",
+    "firmware": "ESP32 Marauder",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "The same official Marauder firmware flashed onto a stock $20 M5Stack dev kit. This is the cheapest legitimate way to run Marauder, and it is why the official boards have to justify themselves on hardware rather than software.",
+    "vendor": "M5Stack",
+    "vendor_url": "https://m5stack.com",
+    "product_url": "https://shop.m5stack.com/products/m5stickc-plus2-esp32-mini-iot-development-kit",
+    "category": "wifi",
+    "subcategory": "wifi-bluetooth-audit",
+    "status": "discontinued",
+    "released": "2023",
+
+    "price_usd": 19.95,
+    "price_note": "M5Stack has marked the StickC Plus2 EOL and it is out of stock as of 2026-09-06; the shop points buyers at the M5StickS3 ($21.50) instead. The Plus2 is still the last Stick with Bluetooth Classic, which is why people still hunt for it.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "You flash it yourself - the web installer makes this a few minutes, but nothing arrives working and there is no support if it goes wrong.",
+    "build_effort": "flash-only",
+    "build_note": "Buy the dev kit, flash the m5stickc_plus2 binary with the browser-based Marauder Installer. No soldering. Adding SD card storage requires building an adapter onto the front pin header.",
+
+    "stealth": "discreet",
+    "form_factor": "keychain",
+
+    "summary": "A stock M5Stack M5StickC Plus2 dev kit running the official ESP32 Marauder firmware. Roughly $20 buys you most of the Marauder Wi-Fi and BLE feature set in a 48 x 24 mm package with a 1.14-inch screen and a 200 mAh battery. It is the reference point every purpose-built ESP32 security gadget should be measured against.",
+    "honest_take": "This is the honest baseline for the whole category: the firmware is free and MIT-licensed, so a $20 dev kit gives you the same 2.4GHz Wi-Fi and BLE attacks as a $100 purpose-built board. What you give up is real though - no SD card slot means no sustained pcap capture, the 200 mAh battery gives well under an hour with the radio busy, there is no GPS so no wardriving, and no external antenna connector. And it is 2.4GHz only, so no 5 GHz, plus deauth that PMF and WPA3 defeat. Worth knowing it is now EOL at M5Stack, and that it is the only board here with Bluetooth Classic - the ESP32-S3 successors are all BLE-only.",
+    "best_for": ["Learning what Marauder actually does before spending real money", "Pocket BLE and 2.4GHz Wi-Fi scanning", "Bluetooth Classic work, which the S3-based successors cannot do at all"],
+    "not_for": ["Packet capture - there is no SD card slot", "Wardriving - no GPS", "Any session longer than about an hour - 200 mAh", "USB HID/BadUSB - no native USB, only a CH9102 bridge"],
+
+    "hardware": {
+      "mcu_primary": "ESP32-PICO-V3-02",
+      "mcu_primary_note": "Xtensa dual-core ESP32 (ECO V3) up to 240MHz, 8MB flash, 2MB Quad PSRAM in a SiP package.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "ESP32-PICO-V3-02", "role": "wifi", "note": "2.4GHz 802.11 b/g/n only"},
+        {"ic": "ESP32-PICO-V3-02", "role": "bluetooth", "note": "Bluetooth v4.2 BR/EDR (Classic) AND Bluetooth LE - the only board in this batch with Classic"}
+      ],
+      "display": {"type": "ST7789V2 TFT", "size_in": 1.14, "resolution": "135x240", "color": true, "touch": false},
+      "battery_mah": 200,
+      "battery_note": "3.7V LiPo, internal. No runtime published; expect well under an hour with the radio transmitting.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None onboard - no microSD slot. Marauder can use SD only if you build an adapter onto the front pin header",
+      "connectivity": ["USB-C (via CH9102 USB-serial bridge)", "Wi-Fi 2.4GHz", "Bluetooth Classic + LE", "Grove HY2.0-4P"],
+      "gpio": "1x HY2.0-4P Grove (I2C/IO/UART) plus an 8-pin HAT-compatible header",
+      "sensors": ["MPU6886 6-axis IMU", "SPM1423 microphone", "BM8563 RTC"],
+      "dimensions_mm": "48.0 x 24.0 x 13.5",
+      "weight_g": 16.7,
+      "case": "Plastic dev-kit enclosure",
+      "notable_physical": ["3 buttons", "IR emitter on G19", "Passive buzzer", "Power latched via a HOLD pin on G4 - firmware must hold it high or the unit powers off"]
+    },
+
+    "capabilities": {
+      "wifi_scan_24":            {"v": "yes", "note": "Full Marauder scan suite"},
+      "wifi_scan_5":             {"v": "no", "note": "ESP32 classic is 2.4GHz only"},
+      "wifi_monitor_mode":       {"v": "yes", "note": "Promiscuous mode works; capture has nowhere persistent to go without an SD adapter"},
+      "wifi_deauth_24":          {"v": "yes", "note": "Defeated by 802.11w/PMF and therefore by WPA3"},
+      "wifi_evil_twin":          {"v": "yes", "note": "EvilPortal, but portal HTML normally lives on SD which this board lacks"},
+      "wifi_captive_portal":     {"v": "partial", "note": "Works, but with no SD slot the portal assets and captured credentials have only onboard flash to live in"},
+      "wifi_handshake_capture":  {"v": "partial", "note": "EAPOL capture runs, but with no SD card there is no practical place to store pcaps"},
+      "wifi_beacon_spam":        {"v": "yes", "note": "Beacon spam modes"},
+      "wifi_probe_sniff":        {"v": "yes", "note": "Probe request logging"},
+      "wifi_wardriving":         {"v": "no", "note": "No GPS and no SD - the two things wardriving needs"},
+      "packet_capture":          {"v": "partial", "note": "No SD slot as shipped; requires a hand-built adapter on the front header"},
+      "ble_scan":                {"v": "yes", "note": "NimBLE scanning"},
+      "ble_spam_apple":          {"v": "yes", "note": "Sour Apple"},
+      "ble_spam_android":        {"v": "yes", "note": "Fast Pair spam"},
+      "ble_spam_swift_pair":     {"v": "yes", "note": "Windows Swift Pair spam"},
+      "bt_classic":              {"v": "yes", "note": "ESP32-PICO-V3-02 supports Bluetooth v4.2 BR/EDR. Rare and increasingly hard to buy - every S3 successor dropped it"},
+      "ble_tracker_detect":      {"v": "yes", "note": "AirTag detection"},
+      "detect_flipper":          {"v": "yes", "note": "Flipper BLE advertisement match"},
+      "detect_pineapple":        {"v": "yes", "note": "PineAP/KARMA signature"},
+      "detect_skimmer":          {"v": "yes", "note": "Matches known skimmer BLE module naming patterns"},
+      "gps":                     {"v": "no", "note": "No GPS hardware"},
+      "sd_logging":              {"v": "addon", "note": "Requires hand-building an SD adapter onto the 8-pin front header"},
+      "ir_tx":                   {"v": "partial", "note": "The board has an IR emitter on G19, but Marauder itself has no IR feature - other firmwares (NEMO, Bruce) use it"},
+      "usb_hid_inject":          {"v": "no", "note": "No native USB. The CH9102 is a USB-serial bridge only, so this board physically cannot present as a HID keyboard"},
+      "standalone_untethered":   {"v": "partial", "note": "Battery and screen onboard, but 200 mAh limits sessions to well under an hour"},
+      "subghz_rx":               {"v": "no", "note": "No sub-GHz radio"},
+      "hf_1356_read":            {"v": "no", "note": "No NFC hardware"}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The hardware is a generic IoT dev kit and is unrestricted everywhere. The legal exposure comes entirely from what you flash onto it and point it at: deauthing networks you do not own and running credential-harvesting portals are offences in most jurisdictions regardless of how cheap the hardware was. Check your local law."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No - but M5Burner and the Marauder web installer make swapping firmware easy",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["M5StickC Plus2 Marauder", "StickC Plus2"],
+    "sources": [
+      {"url": "https://docs.m5stack.com/en/core/M5StickC%20PLUS2", "what": "ESP32-PICO-V3-02, 8MB flash/2MB PSRAM, ST7789V2 135x240, 200mAh, MPU6886, BM8563, CH9102 bridge, no SD slot, 48x24x13.5mm, 16.7g"},
+      {"url": "https://documentation.espressif.com/esp32-pico_series_datasheet_en.pdf", "what": "ESP32-PICO series supports Wi-Fi b/g/n, Bluetooth v4.2 BR/EDR and Bluetooth LE"},
+      {"url": "https://github.com/justcallmekoko/ESP32Marauder/releases/latest", "what": "v1.15.1 ships a dedicated m5stickc_plus2 binary"},
+      {"url": "https://shop.m5stack.com/products/m5stickc-plus2-esp32-mini-iot-development-kit", "what": "price $19.95, now marked EOL and out of stock"}
+    ],
+    "research_gaps": [
+      "M5Stack publishes no battery runtime figure",
+      "No antenna type stated beyond '2.4 GHz 3D Antenna'; no u.FL/IPEX connector is documented"
+    ]
+  }
+]

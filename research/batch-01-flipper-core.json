@@ -1,0 +1,2763 @@
+[
+  {
+    "id": "flipper-zero-official",
+    "hardware_id": "flipper-zero",
+    "name": "Flipper Zero",
+    "firmware": "Official (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/flipperdevices/flipperzero-firmware",
+    "firmware_note": "The firmware it ships with. Region-locked sub-GHz TX, no BLE spam, no EMV, no Type 4 NFC emulation - conservative on purpose.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/flipper-zero",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 169,
+    "price_note": "Direct from the vendor, in stock at time of checking. A microSD card is required and is not in the box. Grey-market resellers in countries where import is awkward charge well above this.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "The menus are genuinely approachable and you can do something useful on day one; understanding WHY an attack works is the hard part, not driving the device.",
+    "build_effort": "assembled",
+    "build_note": "Works out of the box. Add a microSD card, run the mobile/desktop updater once, done.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A pocket multitool built around four independent radios - a CC1101 sub-GHz transceiver, an ST25R3916 13.56 MHz NFC front end, a separate 125 kHz coil driven straight off the STM32, and the STM32WB55's own Bluetooth LE core - plus infrared, iButton and an 18-pin GPIO header. Stock firmware is the sane default: everything is signed, supported and gets security fixes, and the sub-GHz transmitter is restricted to what is legal where you provisioned the device. Best first stop for anyone learning RF and access control.",
+    "honest_take": "The single biggest misconception is that it does Wi-Fi. It does not - there is no Wi-Fi radio in the device at all, and every Wi-Fi feature you have seen in a video is an ESP32 add-on board doing the work. The second is that stock firmware is crippled; it is not, it just will not transmit outside your region and will not ship the joke apps. For pure NFC research a Proxmark3 is far more capable, and for anything spectrum-shaped an RTL-SDR at a quarter the price sees vastly more.",
+    "best_for": [
+      "Learning RF and access-control basics with good guardrails",
+      "Physical red-team work on legacy 125 kHz badge systems",
+      "Universal IR remote and everyday gate/garage cloning you are authorised to do",
+      "A first hardware-hacking device that will not brick itself"
+    ],
+    "not_for": [
+      "Wi-Fi attacks of any kind without the add-on board",
+      "Cracking modern rolling-code car keys",
+      "Serious NFC/smartcard research - get a Proxmark3",
+      "Spectrum analysis or anything needing IQ samples"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RG",
+      "mcu_primary_note": "Dual core: Cortex-M4 @64MHz runs the application, Cortex-M0+ @32MHz runs the BLE stack. Linker script in the firmware confirms 1024K flash; 256KB SRAM total.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "TI CC1101 transceiver. Silicon is specified by TI for 300-348, 387-464 and 779-928 MHz only - it is NOT continuous 300-928 MHz. Max +12 dBm, OOK/ASK/2-FSK/4-FSK/GFSK/MSK, 0.6-600 kbps. Fixed-function transceiver, not an SDR."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz ONLY. Reader for ISO14443-3A/3B/4A/4B, ISO15693, FeliCa. It has nothing to do with the 125 kHz LF path."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125 kHz has NO dedicated chip. It is a discrete analog front end on its own separate coil, driven by the STM32: TIM1/TIM2 generate the carrier, COMP1 with a 1.2V internal reference demodulates the return. Confirmed in targets/f7/furi_hal/furi_hal_rfid.c."
+        },
+        {
+          "ic": "STM32WB55 integrated radio",
+          "role": "bluetooth",
+          "note": "Bluetooth LE only, on the M0+ coprocessor. There is NO Bluetooth Classic and no Wi-Fi anywhere in this device."
+        },
+        {
+          "ic": "TSOP-75338",
+          "role": "infrared",
+          "note": "38 kHz IR receiver plus 3 discrete transmit LEDs. Learns and replays consumer IR."
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (orange backlight)",
+        "size_in": 1.4,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "Li-Po. The firmware's fuel-gauge config (targets/f7/furi_hal/furi_hal_power_config.c) programs design capacity 2100 mAh; some spec sheets quote the cell as 2000 mAh nominal. Roughly a week idle, about a day of heavy RF use.",
+      "charging": "USB-C",
+      "pmic": "TI BQ25896 charger + TI BQ27220 fuel gauge",
+      "storage": "microSD up to 256GB. NOT included, and the device is close to useless without one - all saved signals, cards, IR libraries and apps live on it.",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "GPIO 18-pin",
+        "1-Wire",
+        "Infrared"
+      ],
+      "gpio": "18-pin header, 3.3V logic (5V tolerant it is NOT). Exposes UART, SPI, I2C, 1-Wire and SWD. Pin 9 is a switchable 3.3V rail and pin 1 a switchable 5V rail, 1.2A max each, 5W total across the header; each I/O pin sources up to 20mA through a 51 ohm series resistor with ESD protection.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "100 x 40 x 25",
+      "weight_g": 102,
+      "case": "Polycarbonate/ABS, several translucent colourways",
+      "notable_physical": [
+        "5-way D-pad plus back button",
+        "IR window (TSOP-75338 receiver + 3 TX LEDs)",
+        "iButton / 1-Wire contact pad on the top edge",
+        "18-pin GPIO header",
+        "Two separate RFID antennas: a 125 kHz LF coil and a 13.56 MHz HF antenna",
+        "No external antenna connector of any kind"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-348 / 387-464 / 779-928 MHz via CC1101. RX is not region-restricted on any firmware."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture and replay works reliably against STATIC-code devices: most older garage doors, gate remotes, barriers, some doorbells and cheap wireless sensors."
+      },
+      "subghz_external_antenna": {
+        "v": "no",
+        "note": "There is no SMA or u.FL connector. The antenna is internal and fixed."
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "CC1101 tops out around +12 dBm and there is no PA. Real-world range is tens of metres, not the hundreds people claim."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM4102, HID Prox, Indala, IoProx and friends. Reads the ID off the card."
+      },
+      "lf_125khz_write": {
+        "v": "partial",
+        "note": "Writes only to writable blank fobs (T5577, EM4305). You cannot rewrite a factory EM4100 or a real HID card - those are read-only silicon."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Emulates saved LF credentials well. This is genuinely one of the things it is best at."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443-3A/3B/4A/4B, ISO15693, FeliCa, MIFARE Ultralight/Classic/Plus/DESFire, SLIX, ST25TB. 'Read' means UID plus whatever the card hands over without keys."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Only to 'magic'/gen1a-gen4 cards with a writable UID, which you have to buy separately. You cannot write a UID onto a normal card."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Read and emulate ISO15693-3, plus SLIX variants."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reads FeliCa and has a listener, but no key material means Suica-style stored-value cards are read-only curiosities."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "READ ONLY on every firmware. nfc_listener_defs.c has NULL for MfDesfire on official AND on all the community forks - DESFire emulation does not exist. Reading gets you the card's application/file structure and UID, not encrypted file contents, because AES/3DES keys are not recoverable."
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "3 IR LEDs. Universal remote plus a large community IR database on the SD card."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP-75338 receiver."
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Learns raw and decoded consumer IR protocols."
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built in, with community-maintained code sets for TVs, ACs, projectors and audio gear."
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The STM32WB55's BLE core can advertise arbitrary payloads, which is what all the 'spam' and tag-emulation apps exploit."
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Acts as a BLE keyboard/mouse - remote control apps and BLE-based BadUSB."
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "STM32WB55 is Bluetooth LE only. No A2DP, no Classic pairing, no BR/EDR sniffing. A common misconception."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "The BLE stack is a connectable peripheral/central stack, not a promiscuous sniffer. It cannot follow connections like an Ubertooth or a Sniffle dongle."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB with Rubber Ducky-compatible scripts. Full-speed USB HID, enumerates as a keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Ducky Script. Large community payload libraries."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "USB-to-UART bridge and an on-device UART terminal via the GPIO header."
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "I2C on the GPIO header; community i2ctools app."
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "SWD only, not JTAG, and via community apps (SWD probe) or the Wi-Fi devboard running Black Magic Probe. Not a first-class debugger."
+      },
+      "glitching": {
+        "v": "no",
+        "note": "No fault-injection hardware - no crowbar, no precise clock/voltage glitch path."
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Reads, writes and emulates Dallas/Cyfral/Metakom iButton keys. Niche outside eastern Europe but works properly."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Needs a UART GPS module on the GPIO header."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Everything is stored on the microSD card as readable files."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JavaScript engine (js_app) is built into official firmware and every fork; plus C apps via the SDK."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Official app catalog at lab.flipper.net."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully self-contained on battery - no phone or laptop required for its core functions."
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "Requires the official Flipper Zero Wi-Fi Dev Board (ESP32-S2) or a third-party ESP32 on the GPIO header. The Flipper itself has no Wi-Fi radio."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "No firmware or add-on board in this ecosystem does 5 GHz. The official devboard's ESP32-S2 is 2.4 GHz only."
+      },
+      "wifi_monitor_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on, not on the Flipper. Promiscuous mode on ESP32, not true monitor mode with full radiotap."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Runs entirely on an ESP32 add-on flashed with ESP32 Marauder or similar. The Flipper is only a screen, keypad and battery for it."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz hardware only."
+      },
+      "wifi_evil_twin": {
+        "v": "addon",
+        "note": "Evil Portal / Marauder on the ESP32 add-on board."
+      },
+      "wifi_captive_portal": {
+        "v": "addon",
+        "note": "Evil Portal app drives an ESP32 add-on; the portal HTML lives on the Flipper's SD card."
+      },
+      "wifi_handshake_capture": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board. Capture quality is well below a proper Wi-Fi adapter in monitor mode."
+      },
+      "wifi_pmkid": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_beacon_spam": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_probe_sniff": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Wardriver / Marauder companion apps log WiGLE-format CSV, but need both an ESP32 board and a GPS module on the GPIO header."
+      },
+      "wifi_ap_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on only."
+      },
+      "nrf24_scan": {
+        "v": "addon",
+        "note": "Needs an nRF24L01+ module wired to the GPIO header. Apps exist in the community app packs."
+      },
+      "mousejack": {
+        "v": "addon",
+        "note": "MouseJacker app plus an nRF24L01+ module on GPIO. Only works against unpatched 2.4 GHz keyboard/mouse dongles, a shrinking target set."
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver - you tune it to a frequency and modulation, you do not get IQ samples."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Same - no arbitrary waveform generation."
+      },
+      "subghz_tx": {
+        "v": "partial",
+        "note": "REGION-LOCKED. The firmware has a 'region' service; the provisioning app sets your region on first update and TX is limited to that region's civil allow-list - e.g. EU gets 433.05-434.79 and 868.15-868.55 MHz, US/Americas get 304.10-321.95 and 915-928 MHz. Try anything else and it refuses with 'transmission on this frequency is restricted in your region'. RX stays unrestricted."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "It can RECORD a rolling-code transmission and tell you the protocol (KeeLoq, Security+ 2.0, Somfy, etc.), but replaying a captured code does not work by design - the receiver has already moved past it. Stock firmware deliberately ships no rolling-code bypass."
+      },
+      "subghz_bruteforce": {
+        "v": "no",
+        "note": "No brute-force app in stock firmware. Community apps add it, and it only ever helps against short static codes such as 8-12 bit DIP-switch remotes."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Dictionary attack against known/default keys runs on device. The mfkey32 READER attack also runs on device (via the mfkey app from the catalog): you emulate the card at a real reader, collect nonces, and crack Crypto-1 - minutes on the Flipper's CPU. What you cannot do on stock is a card-only attack - no nested/hardnested is built in."
+      },
+      "nfc_type4_ndef": {
+        "v": "partial",
+        "note": "Official firmware has an ISO14443-4A listener and an NDEF parser plugin, so it reads NDEF fine. It has NO Type4Tag or Ntag4xx protocol module - those exist only in the community forks - so it cannot present itself as a writable NDEF Type 4 tag."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "Official firmware has only a small helper table (nfc_emv_parser.c) that resolves EMV application IDs and currency codes for other parsers. There is NO EMV poller in the official tree - the protocol module does not exist. You cannot 'read a bank card' on stock firmware."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulation exists for ISO14443-3A, ISO14443-4A, ISO15693-3, MIFARE Ultralight, MIFARE Classic, SLIX and FeliCa. It does NOT exist for ISO14443-3B, ISO14443-4B, DESFire or ST25TB - those entries are NULL in nfc_listener_defs.c."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No BLE scanner app in stock firmware."
+      },
+      "ble_spam_apple": {
+        "v": "no",
+        "note": "Not in official firmware. Community forks only."
+      },
+      "ble_spam_android": {
+        "v": "no",
+        "note": "Not in official firmware."
+      },
+      "ble_spam_samsung": {
+        "v": "no",
+        "note": "Not in official firmware."
+      },
+      "ble_spam_swift_pair": {
+        "v": "no",
+        "note": "Not in official firmware."
+      },
+      "findmy_track": {
+        "v": "no",
+        "note": "The FindMy Flipper app is not part of official firmware."
+      },
+      "magspoof": {
+        "v": "addon",
+        "note": "Needs external magspoof coil hardware on GPIO plus a community app; not a stock feature."
+      },
+      "usb_mass_storage": {
+        "v": "partial",
+        "note": "Available as a catalog app rather than built in."
+      },
+      "spi_flash_dump": {
+        "v": "addon",
+        "note": "Via the community SPI Mem Manager app and test clips; not built in."
+      },
+      "logic_analyzer": {
+        "v": "partial",
+        "note": "Community app only, low sample rate - fine for slow buses, not a replacement for a real analyser."
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
+        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+      ],
+      "risk_level": "medium",
+      "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2025-12",
+      "app_store": "Yes - official catalog at lab.flipper.net, plus community packs",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Flipper",
+      "Dolphin",
+      "OFW",
+      "Stock firmware"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware",
+        "what": "official firmware source; app tree, NFC poller/listener tables, release tags"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_rfid.c",
+        "what": "proof that 125 kHz LF is STM32 TIM1/TIM2 + COMP1, not the ST25R3916"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_power_config.c",
+        "what": "battery design capacity 2100 mAh; BQ27220 gauge / BQ25896 charger"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "authoritative list of which NFC protocols can be EMULATED"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "authoritative list of which NFC protocols can be READ"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 specified bands 300-348/387-464/779-928 MHz, +12 dBm, modulations"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/sub-ghz/frequencies",
+        "what": "per-region TX allow-lists and region provisioning"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/gpio-and-modules",
+        "what": "18-pin GPIO header, 3.3V, rail current limits"
+      },
+      {
+        "url": "https://flipper.net/products/flipper-zero.js",
+        "what": "vendor price and stock status (Shopify product JSON) checked 2026-09-06"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Flipper_Zero",
+        "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
+      },
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware/releases/tag/1.4.3",
+        "what": "latest stable release 1.4.3, published 2025-12-05"
+      },
+      {
+        "url": "https://blog.flipper.net/can-flipper-zero-steal-your-car/",
+        "what": "vendor's own technical rebuttal of the car-theft claim"
+      }
+    ],
+    "research_gaps": [
+      "Exact conducted TX power in dBm as built (antenna + matching network) is not published; only the CC1101 silicon max of +12 dBm is known.",
+      "Sources differ on weight (102 g vs 104 g) and on cell capacity (2000 mAh nominal vs 2100 mAh programmed into the gauge).",
+      "1.5.0-rc is tagged in the repo but no stable 1.5.0 had been published as of the check date.",
+      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+    ]
+  },
+  {
+    "id": "flipper-zero-momentum",
+    "hardware_id": "flipper-zero",
+    "name": "Flipper Zero",
+    "firmware": "Momentum",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/Next-Flip/Momentum-Firmware",
+    "firmware_note": "The polished fork: unlocked sub-GHz TX, deep UI/theming customisation, and BLE Spam, FindMy and NFC Maker compiled in. Direct continuation of Xtreme by the same developers.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/flipper-zero",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 169,
+    "price_note": "Direct from the vendor, in stock at time of checking. A microSD card is required and is not in the box. Grey-market resellers in countries where import is awkward charge well above this.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Easier to live with than stock in some ways - the settings app puts everything on device - but it hands you transmit capability that stock deliberately withholds, so the responsibility is on you.",
+    "build_effort": "flash-only",
+    "build_note": "About five minutes through the web updater at momentum-fw.dev or lab.flipper.net. No soldering, and you can go back to official firmware just as easily.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A pocket multitool built around four independent radios - a CC1101 sub-GHz transceiver, an ST25R3916 13.56 MHz NFC front end, a separate 125 kHz coil driven straight off the STM32, and the STM32WB55's own Bluetooth LE core - plus infrared, iButton and an 18-pin GPIO header. Momentum is the customisation-first community firmware: it removes the sub-GHz region lock, can push the CC1101 beyond its rated bands, and bundles the apps people actually install anyway - BLE Spam, FindMy Flipper, NFC Maker, Wardriver, Bad-Keyboard. It is the direct continuation of Xtreme, written by the same developers.",
+    "honest_take": "It is a very well-built fork, but almost everything people credit it with is either an APP that also runs on other firmware, or a hardware capability that was always there and was only being withheld by policy. The extended frequency range (281-361 / 378-481 / 749-962 MHz) is the one to be careful about: it drives the CC1101's PLL outside TI's specified bands and the antenna matching is wrong there, so you get poor performance and the projects themselves warn it can damage the hardware. Also note the release cadence - the last tagged stable is mntm-012 from 2025-12-31 and everything since has been dev builds.",
+    "best_for": [
+      "Anyone who wants the region lock gone plus a heavily customisable UI",
+      "Having BLE Spam, FindMy Flipper, NFC Maker and Wardriver compiled in rather than hunted down",
+      "NFC work that needs Type 4 / NTAG4xx reading or NDEF tag emulation",
+      "Sub-GHz research in a country whose band plan the stock region lock gets wrong"
+    ],
+    "not_for": [
+      "Wi-Fi attacks without the ESP32 add-on board",
+      "Cracking modern rolling-code car keys",
+      "Anyone who wants signed, vendor-supported firmware",
+      "Transmitting legally without checking your own band plan first"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RG",
+      "mcu_primary_note": "Dual core: Cortex-M4 @64MHz runs the application, Cortex-M0+ @32MHz runs the BLE stack. Linker script in the firmware confirms 1024K flash; 256KB SRAM total.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "TI CC1101 transceiver. Silicon is specified by TI for 300-348, 387-464 and 779-928 MHz only - it is NOT continuous 300-928 MHz. Max +12 dBm, OOK/ASK/2-FSK/4-FSK/GFSK/MSK, 0.6-600 kbps. Fixed-function transceiver, not an SDR."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz ONLY. Reader for ISO14443-3A/3B/4A/4B, ISO15693, FeliCa. It has nothing to do with the 125 kHz LF path."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125 kHz has NO dedicated chip. It is a discrete analog front end on its own separate coil, driven by the STM32: TIM1/TIM2 generate the carrier, COMP1 with a 1.2V internal reference demodulates the return. Confirmed in targets/f7/furi_hal/furi_hal_rfid.c."
+        },
+        {
+          "ic": "STM32WB55 integrated radio",
+          "role": "bluetooth",
+          "note": "Bluetooth LE only, on the M0+ coprocessor. There is NO Bluetooth Classic and no Wi-Fi anywhere in this device."
+        },
+        {
+          "ic": "TSOP-75338",
+          "role": "infrared",
+          "note": "38 kHz IR receiver plus 3 discrete transmit LEDs. Learns and replays consumer IR."
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (orange backlight)",
+        "size_in": 1.4,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "Li-Po. The firmware's fuel-gauge config (targets/f7/furi_hal/furi_hal_power_config.c) programs design capacity 2100 mAh; some spec sheets quote the cell as 2000 mAh nominal. Roughly a week idle, about a day of heavy RF use.",
+      "charging": "USB-C",
+      "pmic": "TI BQ25896 charger + TI BQ27220 fuel gauge",
+      "storage": "microSD up to 256GB. NOT included, and the device is close to useless without one - all saved signals, cards, IR libraries and apps live on it.",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "GPIO 18-pin",
+        "1-Wire",
+        "Infrared"
+      ],
+      "gpio": "18-pin header, 3.3V logic (5V tolerant it is NOT). Exposes UART, SPI, I2C, 1-Wire and SWD. Pin 9 is a switchable 3.3V rail and pin 1 a switchable 5V rail, 1.2A max each, 5W total across the header; each I/O pin sources up to 20mA through a 51 ohm series resistor with ESD protection.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "100 x 40 x 25",
+      "weight_g": 102,
+      "case": "Polycarbonate/ABS, several translucent colourways",
+      "notable_physical": [
+        "5-way D-pad plus back button",
+        "IR window (TSOP-75338 receiver + 3 TX LEDs)",
+        "iButton / 1-Wire contact pad on the top edge",
+        "18-pin GPIO header",
+        "Two separate RFID antennas: a 125 kHz LF coil and a 13.56 MHz HF antenna",
+        "No external antenna connector of any kind"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-348 / 387-464 / 779-928 MHz via CC1101. RX is not region-restricted on any firmware."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture and replay works reliably against STATIC-code devices: most older garage doors, gate remotes, barriers, some doorbells and cheap wireless sensors."
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "The Flipper still has no antenna connector, but community firmware supports an EXTERNAL CC1101 module over GPIO (hardware SPI), and those modules do have SMA connectors and sometimes an amplifier."
+      },
+      "subghz_amplified": {
+        "v": "addon",
+        "note": "Only via an external amplified CC1101 module on the GPIO header; the internal radio is unchanged."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM4102, HID Prox, Indala, IoProx and friends. Reads the ID off the card."
+      },
+      "lf_125khz_write": {
+        "v": "partial",
+        "note": "Writes only to writable blank fobs (T5577, EM4305). You cannot rewrite a factory EM4100 or a real HID card - those are read-only silicon."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Emulates saved LF credentials well. This is genuinely one of the things it is best at."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443-3A/3B/4A/4B, ISO15693, FeliCa, MIFARE Ultralight/Classic/Plus/DESFire, SLIX, ST25TB. 'Read' means UID plus whatever the card hands over without keys."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Only to 'magic'/gen1a-gen4 cards with a writable UID, which you have to buy separately. You cannot write a UID onto a normal card."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Read and emulate ISO15693-3, plus SLIX variants."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reads FeliCa and has a listener, but no key material means Suica-style stored-value cards are read-only curiosities."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "READ ONLY on every firmware. nfc_listener_defs.c has NULL for MfDesfire on official AND on all the community forks - DESFire emulation does not exist. Reading gets you the card's application/file structure and UID, not encrypted file contents, because AES/3DES keys are not recoverable."
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "3 IR LEDs. Universal remote plus a large community IR database on the SD card."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP-75338 receiver."
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Learns raw and decoded consumer IR protocols."
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built in, with community-maintained code sets for TVs, ACs, projectors and audio gear."
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The STM32WB55's BLE core can advertise arbitrary payloads, which is what all the 'spam' and tag-emulation apps exploit."
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Acts as a BLE keyboard/mouse - remote control apps and BLE-based BadUSB."
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "STM32WB55 is Bluetooth LE only. No A2DP, no Classic pairing, no BR/EDR sniffing. A common misconception."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "The BLE stack is a connectable peripheral/central stack, not a promiscuous sniffer. It cannot follow connections like an Ubertooth or a Sniffle dongle."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB with Rubber Ducky-compatible scripts. Full-speed USB HID, enumerates as a keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Ducky Script. Large community payload libraries."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "USB-to-UART bridge and an on-device UART terminal via the GPIO header."
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "I2C on the GPIO header; community i2ctools app."
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "SWD only, not JTAG, and via community apps (SWD probe) or the Wi-Fi devboard running Black Magic Probe. Not a first-class debugger."
+      },
+      "glitching": {
+        "v": "no",
+        "note": "No fault-injection hardware - no crowbar, no precise clock/voltage glitch path."
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Reads, writes and emulates Dallas/Cyfral/Metakom iButton keys. Niche outside eastern Europe but works properly."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Needs a UART GPS module on the GPIO header."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Everything is stored on the microSD card as readable files."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JavaScript engine (js_app) is built into official firmware and every fork; plus C apps via the SDK."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Official app catalog at lab.flipper.net."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully self-contained on battery - no phone or laptop required for its core functions."
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "Requires the official Flipper Zero Wi-Fi Dev Board (ESP32-S2) or a third-party ESP32 on the GPIO header. The Flipper itself has no Wi-Fi radio."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "No firmware or add-on board in this ecosystem does 5 GHz. The official devboard's ESP32-S2 is 2.4 GHz only."
+      },
+      "wifi_monitor_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on, not on the Flipper. Promiscuous mode on ESP32, not true monitor mode with full radiotap."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Runs entirely on an ESP32 add-on flashed with ESP32 Marauder or similar. The Flipper is only a screen, keypad and battery for it."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz hardware only."
+      },
+      "wifi_evil_twin": {
+        "v": "addon",
+        "note": "Evil Portal / Marauder on the ESP32 add-on board."
+      },
+      "wifi_captive_portal": {
+        "v": "addon",
+        "note": "Evil Portal app drives an ESP32 add-on; the portal HTML lives on the Flipper's SD card."
+      },
+      "wifi_handshake_capture": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board. Capture quality is well below a proper Wi-Fi adapter in monitor mode."
+      },
+      "wifi_pmkid": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_beacon_spam": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_probe_sniff": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Wardriver / Marauder companion apps log WiGLE-format CSV, but need both an ESP32 board and a GPS module on the GPIO header."
+      },
+      "wifi_ap_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on only."
+      },
+      "nrf24_scan": {
+        "v": "addon",
+        "note": "Needs an nRF24L01+ module wired to the GPIO header. Apps exist in the community app packs."
+      },
+      "mousejack": {
+        "v": "addon",
+        "note": "MouseJacker app plus an nRF24L01+ module on GPIO. Only works against unpatched 2.4 GHz keyboard/mouse dongles, a shrinking target set."
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver - you tune it to a frequency and modulation, you do not get IQ samples."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Same - no arbitrary waveform generation."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Region lock removed. Momentum additionally offers an EXTENDED range of 281-361 / 378-481 / 749-962 MHz, which is outside the CC1101's TI-specified bands - performance there is poor because the antenna match is wrong, and the projects warn it can damage the hardware. Legality is entirely on you."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "Be precise here. Community firmware lets you SAVE and re-send captured rolling-code signals, and adds manual creation/pairing for protocols like KeeLoq, FAAC SLH, BFT Mitto, Somfy Telis, Nice Flor-S, CAME Atomo and Security+ 2.0 - that is programming a NEW remote into a receiver you control, which needs physical access to the receiver's learn button. It does NOT let you clone someone's rolling-code remote from a captured press. The genuine exception is the RollBack class of attack (Csikor et al., arXiv:2210.11923): replaying two or more consecutively captured codes can roll a receiver's counter back and make old codes valid again. That is implemented openly in the 'rolling_flaws' app and is what the 2025 'DarkWeb firmware' stories were repackaging. Even where it works it only reaches the LOCK/UNLOCK remote-keyless-entry function on some brands - it does NOT touch the immobiliser, so it does not start a car."
+      },
+      "subghz_bruteforce": {
+        "v": "yes",
+        "note": "Sub-GHz Bruteforcer app included. Only meaningful against short STATIC codes - 8-12 bit DIP-switch style remotes and some fixed-code gates. It will not brute-force a rolling code in any useful timeframe."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Best-in-class for a device this cheap, but know the boundary. On device: dictionary attack against known keys, and the mfkey32 READER attack (emulate the card at a real reader, harvest nonces, recover Crypto-1 keys in a few minutes). Community firmware also adds card-only nested attack collection. What still generally needs a PC is the heavy maths: hardnested and full nested recovery, where the Flipper collects nonces into a .nested.log and a desktop tool or web service does the cracking. Static nested can be finished on device. Once keys are known it emulates the card and can write to 'magic' cards."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "This is a genuine community-firmware-only capability. The forks add Type4Tag and Ntag4xx protocol modules that official firmware does not have: they READ NTAG 4xx and generic ISO14443-4 Type 4 tags, and there is a Type4Tag LISTENER, so the Flipper can present itself as an NDEF Type 4 tag (this is what the NFC Maker app uses to serve URLs, Wi-Fi credentials, contact cards). Note Ntag4xx itself is read-only - its listener entry is NULL - and DESFire emulation does not exist on any firmware."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "Community firmware has a real EMV poller, so it can read the openly-readable side of a contactless bank card: PAN, expiry, cardholder name where present, and sometimes a transaction log. That is NOT cloning - it cannot produce the dynamic cryptogram a terminal demands, so it cannot pay. Worth knowing: the EMV plugin was silently BROKEN for a long stretch - it shipped as a plugin that never loaded at all - and was only fixed in Unleashed PR #1073, merged 2026-08-20, then flowed downstream. If you used a build from before late August 2026, EMV appeared to be supported but did nothing."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulation exists for ISO14443-3A, ISO14443-4A, ISO15693-3, MIFARE Ultralight, MIFARE Classic, MIFARE Plus, SLIX, FeliCa and generic Type 4 Tag. Still NULL and therefore impossible: ISO14443-3B, ISO14443-4B, DESFire, ST25TB, NTAG4xx."
+      },
+      "magspoof": {
+        "v": "addon",
+        "note": "MagSpoof app is bundled, but it needs an external coil/H-bridge on the GPIO header to actually emit a magstripe field."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Mass Storage app bundled - the Flipper presents an SD-card image as a USB drive."
+      },
+      "spi_flash_dump": {
+        "v": "addon",
+        "note": "SPI Mem Manager app is bundled; you still need test clips/wires to reach the chip."
+      },
+      "logic_analyzer": {
+        "v": "partial",
+        "note": "Bundled community app. Low sample rate - fine for UART/I2C at modest speeds, not a bench analyser."
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "Community BLE scanner/tracker-detector apps exist in the app packs; not a core firmware feature."
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Apple Continuity (proximity-pair popups, Nearby Action modals). Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Google Fast Pair. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_samsung": {
+        "v": "yes",
+        "note": "Samsung EasySetup (Buds/Watch). Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Microsoft Swift Pair - shows on Windows where Swift Pair notifications are enabled, which is the Windows 10/11 default. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "findmy_track": {
+        "v": "yes",
+        "note": "Read this carefully because the name misleads everyone: FindMy Flipper does NOT find or track other people's AirTags. It turns the Flipper itself INTO a trackable tag, broadcasting a BLE beacon that Apple's Find My network (or Samsung SmartThings / Tile) picks up, so YOU can locate your own Flipper. Setup is either cloning an existing tag's MAC and payload (which requires killing the original tag's battery so it stops rotating keys) or generating OpenHaystack key pairs with Docker/Python on a PC and importing a .keys file. It is an app, not a radio feature - the underlying hardware capability is just 'BLE can advertise'."
+      },
+      "ble_tracker_detect": {
+        "v": "partial",
+        "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
+        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+      ],
+      "risk_level": "medium",
+      "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2025-12",
+      "app_store": "Yes - bundled Momentum-Apps set plus the official catalog",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Momentum",
+      "MNTM",
+      "Momentum FW"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware",
+        "what": "official firmware source; app tree, NFC poller/listener tables, release tags"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_rfid.c",
+        "what": "proof that 125 kHz LF is STM32 TIM1/TIM2 + COMP1, not the ST25R3916"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_power_config.c",
+        "what": "battery design capacity 2100 mAh; BQ27220 gauge / BQ25896 charger"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "authoritative list of which NFC protocols can be EMULATED"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "authoritative list of which NFC protocols can be READ"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 specified bands 300-348/387-464/779-928 MHz, +12 dBm, modulations"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/sub-ghz/frequencies",
+        "what": "per-region TX allow-lists and region provisioning"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/gpio-and-modules",
+        "what": "18-pin GPIO header, 3.3V, rail current limits"
+      },
+      {
+        "url": "https://flipper.net/products/flipper-zero.js",
+        "what": "vendor price and stock status (Shopify product JSON) checked 2026-09-06"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Flipper_Zero",
+        "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "community-fork emulation table; DESFire/Ntag4xx/EMV are NULL"
+      },
+      {
+        "url": "https://github.com/DarkFlippers/unleashed-firmware/pull/1073",
+        "what": "the PR that fixed the EMV plugin, which until 2026-08-20 shipped but never loaded"
+      },
+      {
+        "url": "https://arxiv.org/abs/2210.11923",
+        "what": "RollBack: the actual academic basis for the rolling-code resync attack"
+      },
+      {
+        "url": "https://willyjl.dev/blog/the-controversy-behind-apple-ble-spam",
+        "what": "BLE Spam author on protocols supported and why it is now a party trick"
+      },
+      {
+        "url": "https://github.com/MatthewKuKanich/FindMyFlipper",
+        "what": "original FindMy Flipper app - Flipper broadcasts AS a tag"
+      },
+      {
+        "url": "https://github.com/Next-Flip/Momentum-Firmware",
+        "what": "README: 'direct continuation of the Xtreme firmware'; extended 281-361/378-481/749-962 MHz; feature list"
+      },
+      {
+        "url": "https://github.com/Next-Flip/Momentum-Apps",
+        "what": "bundled external apps incl. ble_spam, wardriver, nfc_maker, evil_portal, rolling_flaws"
+      },
+      {
+        "url": "https://momentum-fw.dev/",
+        "what": "release channel: mntm-012 stable 31.12.25, dev builds through 18.08.26"
+      }
+    ],
+    "research_gaps": [
+      "Exact conducted TX power in dBm as built is not published.",
+      "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
+      "Last tagged stable release is mntm-012 (2025-12-31); dev builds continue (latest seen 2026-08-18) but no newer stable tag existed at the check date - could not determine whether a stable release is planned.",
+      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+    ]
+  },
+  {
+    "id": "flipper-zero-unleashed",
+    "hardware_id": "flipper-zero",
+    "name": "Flipper Zero",
+    "firmware": "Unleashed",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/DarkFlippers/unleashed-firmware",
+    "firmware_note": "The conservative unlock: removes region restrictions and adds a lot of sub-GHz protocol work, while staying close to official firmware and API-compatible with its apps.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/flipper-zero",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 169,
+    "price_note": "Direct from the vendor, in stock at time of checking. A microSD card is required and is not in the box. Grey-market resellers in countries where import is awkward charge well above this.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Behaves almost exactly like stock, so nothing new to learn; the difference is what it will let you transmit.",
+    "build_effort": "flash-only",
+    "build_note": "Five minutes via the web installer at web.unleashedflip.com. Extra apps come as a separate app pack you copy to the SD card.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A pocket multitool built around four independent radios - a CC1101 sub-GHz transceiver, an ST25R3916 13.56 MHz NFC front end, a separate 125 kHz coil driven straight off the STM32, and the STM32WB55's own Bluetooth LE core - plus infrared, iButton and an 18-pin GPIO header. Unleashed is the most stable and most actively released community fork. It removes the sub-GHz region lock, adds a large number of sub-GHz protocol decoders and manual-creation flows, an on-device frequency analyser and external CC1101 module support, and stays API-compatible with official firmware apps. Extra apps ship separately as an app pack rather than being compiled in.",
+    "honest_take": "If you want the region lock gone and nothing else weird, this is the one - it is the least opinionated fork and by some distance the most frequently released. It is also where most of the real sub-GHz and NFC engineering in this ecosystem now happens; the other forks pull from it. Do not expect a flashier device: Unleashed deliberately does not ship the animations, theming and joke apps, and BLE Spam is a bundled SD-card app rather than a firmware feature.",
+    "best_for": [
+      "Removing the region lock with the least deviation from stock behaviour",
+      "Serious sub-GHz protocol work - this is where most of that engineering happens",
+      "People who want frequent, well-tested releases",
+      "Driving an external CC1101 module for better range or an amplifier"
+    ],
+    "not_for": [
+      "Wi-Fi attacks without the ESP32 add-on board",
+      "Cracking modern rolling-code car keys",
+      "Anyone who wants themes, animations and every app preinstalled - use RogueMaster or Momentum",
+      "Transmitting legally without checking your own band plan first"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RG",
+      "mcu_primary_note": "Dual core: Cortex-M4 @64MHz runs the application, Cortex-M0+ @32MHz runs the BLE stack. Linker script in the firmware confirms 1024K flash; 256KB SRAM total.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "TI CC1101 transceiver. Silicon is specified by TI for 300-348, 387-464 and 779-928 MHz only - it is NOT continuous 300-928 MHz. Max +12 dBm, OOK/ASK/2-FSK/4-FSK/GFSK/MSK, 0.6-600 kbps. Fixed-function transceiver, not an SDR."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz ONLY. Reader for ISO14443-3A/3B/4A/4B, ISO15693, FeliCa. It has nothing to do with the 125 kHz LF path."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125 kHz has NO dedicated chip. It is a discrete analog front end on its own separate coil, driven by the STM32: TIM1/TIM2 generate the carrier, COMP1 with a 1.2V internal reference demodulates the return. Confirmed in targets/f7/furi_hal/furi_hal_rfid.c."
+        },
+        {
+          "ic": "STM32WB55 integrated radio",
+          "role": "bluetooth",
+          "note": "Bluetooth LE only, on the M0+ coprocessor. There is NO Bluetooth Classic and no Wi-Fi anywhere in this device."
+        },
+        {
+          "ic": "TSOP-75338",
+          "role": "infrared",
+          "note": "38 kHz IR receiver plus 3 discrete transmit LEDs. Learns and replays consumer IR."
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (orange backlight)",
+        "size_in": 1.4,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "Li-Po. The firmware's fuel-gauge config (targets/f7/furi_hal/furi_hal_power_config.c) programs design capacity 2100 mAh; some spec sheets quote the cell as 2000 mAh nominal. Roughly a week idle, about a day of heavy RF use.",
+      "charging": "USB-C",
+      "pmic": "TI BQ25896 charger + TI BQ27220 fuel gauge",
+      "storage": "microSD up to 256GB. NOT included, and the device is close to useless without one - all saved signals, cards, IR libraries and apps live on it.",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "GPIO 18-pin",
+        "1-Wire",
+        "Infrared"
+      ],
+      "gpio": "18-pin header, 3.3V logic (5V tolerant it is NOT). Exposes UART, SPI, I2C, 1-Wire and SWD. Pin 9 is a switchable 3.3V rail and pin 1 a switchable 5V rail, 1.2A max each, 5W total across the header; each I/O pin sources up to 20mA through a 51 ohm series resistor with ESD protection.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "100 x 40 x 25",
+      "weight_g": 102,
+      "case": "Polycarbonate/ABS, several translucent colourways",
+      "notable_physical": [
+        "5-way D-pad plus back button",
+        "IR window (TSOP-75338 receiver + 3 TX LEDs)",
+        "iButton / 1-Wire contact pad on the top edge",
+        "18-pin GPIO header",
+        "Two separate RFID antennas: a 125 kHz LF coil and a 13.56 MHz HF antenna",
+        "No external antenna connector of any kind"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-348 / 387-464 / 779-928 MHz via CC1101. RX is not region-restricted on any firmware."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture and replay works reliably against STATIC-code devices: most older garage doors, gate remotes, barriers, some doorbells and cheap wireless sensors."
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "The Flipper still has no antenna connector, but community firmware supports an EXTERNAL CC1101 module over GPIO (hardware SPI), and those modules do have SMA connectors and sometimes an amplifier."
+      },
+      "subghz_amplified": {
+        "v": "addon",
+        "note": "Only via an external amplified CC1101 module on the GPIO header; the internal radio is unchanged."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM4102, HID Prox, Indala, IoProx and friends. Reads the ID off the card."
+      },
+      "lf_125khz_write": {
+        "v": "partial",
+        "note": "Writes only to writable blank fobs (T5577, EM4305). You cannot rewrite a factory EM4100 or a real HID card - those are read-only silicon."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Emulates saved LF credentials well. This is genuinely one of the things it is best at."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443-3A/3B/4A/4B, ISO15693, FeliCa, MIFARE Ultralight/Classic/Plus/DESFire, SLIX, ST25TB. 'Read' means UID plus whatever the card hands over without keys."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Only to 'magic'/gen1a-gen4 cards with a writable UID, which you have to buy separately. You cannot write a UID onto a normal card."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Read and emulate ISO15693-3, plus SLIX variants."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reads FeliCa and has a listener, but no key material means Suica-style stored-value cards are read-only curiosities."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "READ ONLY on every firmware. nfc_listener_defs.c has NULL for MfDesfire on official AND on all the community forks - DESFire emulation does not exist. Reading gets you the card's application/file structure and UID, not encrypted file contents, because AES/3DES keys are not recoverable."
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "3 IR LEDs. Universal remote plus a large community IR database on the SD card."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP-75338 receiver."
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Learns raw and decoded consumer IR protocols."
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built in, with community-maintained code sets for TVs, ACs, projectors and audio gear."
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The STM32WB55's BLE core can advertise arbitrary payloads, which is what all the 'spam' and tag-emulation apps exploit."
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Acts as a BLE keyboard/mouse - remote control apps and BLE-based BadUSB."
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "STM32WB55 is Bluetooth LE only. No A2DP, no Classic pairing, no BR/EDR sniffing. A common misconception."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "The BLE stack is a connectable peripheral/central stack, not a promiscuous sniffer. It cannot follow connections like an Ubertooth or a Sniffle dongle."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB with Rubber Ducky-compatible scripts. Full-speed USB HID, enumerates as a keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Ducky Script. Large community payload libraries."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "USB-to-UART bridge and an on-device UART terminal via the GPIO header."
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "I2C on the GPIO header; community i2ctools app."
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "SWD only, not JTAG, and via community apps (SWD probe) or the Wi-Fi devboard running Black Magic Probe. Not a first-class debugger."
+      },
+      "glitching": {
+        "v": "no",
+        "note": "No fault-injection hardware - no crowbar, no precise clock/voltage glitch path."
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Reads, writes and emulates Dallas/Cyfral/Metakom iButton keys. Niche outside eastern Europe but works properly."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Needs a UART GPS module on the GPIO header."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Everything is stored on the microSD card as readable files."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JavaScript engine (js_app) is built into official firmware and every fork; plus C apps via the SDK."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Official app catalog at lab.flipper.net."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully self-contained on battery - no phone or laptop required for its core functions."
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "Requires the official Flipper Zero Wi-Fi Dev Board (ESP32-S2) or a third-party ESP32 on the GPIO header. The Flipper itself has no Wi-Fi radio."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "No firmware or add-on board in this ecosystem does 5 GHz. The official devboard's ESP32-S2 is 2.4 GHz only."
+      },
+      "wifi_monitor_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on, not on the Flipper. Promiscuous mode on ESP32, not true monitor mode with full radiotap."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Runs entirely on an ESP32 add-on flashed with ESP32 Marauder or similar. The Flipper is only a screen, keypad and battery for it."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz hardware only."
+      },
+      "wifi_evil_twin": {
+        "v": "addon",
+        "note": "Evil Portal / Marauder on the ESP32 add-on board."
+      },
+      "wifi_captive_portal": {
+        "v": "addon",
+        "note": "Evil Portal app drives an ESP32 add-on; the portal HTML lives on the Flipper's SD card."
+      },
+      "wifi_handshake_capture": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board. Capture quality is well below a proper Wi-Fi adapter in monitor mode."
+      },
+      "wifi_pmkid": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_beacon_spam": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_probe_sniff": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Wardriver / Marauder companion apps log WiGLE-format CSV, but need both an ESP32 board and a GPS module on the GPIO header."
+      },
+      "wifi_ap_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on only."
+      },
+      "nrf24_scan": {
+        "v": "addon",
+        "note": "Needs an nRF24L01+ module wired to the GPIO header. Apps exist in the community app packs."
+      },
+      "mousejack": {
+        "v": "addon",
+        "note": "MouseJacker app plus an nRF24L01+ module on GPIO. Only works against unpatched 2.4 GHz keyboard/mouse dongles, a shrinking target set."
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver - you tune it to a frequency and modulation, you do not get IQ samples."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Same - no arbitrary waveform generation."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Region lock removed across the CC1101's rated 300-348 / 387-464 / 779-928 MHz bands. A settings file (subghz/assets/setting_user) can add custom frequencies and push beyond the rated range, which the project itself warns can damage the hardware. Legality is on you."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "Be precise here. Community firmware lets you SAVE and re-send captured rolling-code signals, and adds manual creation/pairing for protocols like KeeLoq, FAAC SLH, BFT Mitto, Somfy Telis, Nice Flor-S, CAME Atomo and Security+ 2.0 - that is programming a NEW remote into a receiver you control, which needs physical access to the receiver's learn button. It does NOT let you clone someone's rolling-code remote from a captured press. The genuine exception is the RollBack class of attack (Csikor et al., arXiv:2210.11923): replaying two or more consecutively captured codes can roll a receiver's counter back and make old codes valid again. That is implemented openly in the 'rolling_flaws' app and is what the 2025 'DarkWeb firmware' stories were repackaging. Even where it works it only reaches the LOCK/UNLOCK remote-keyless-entry function on some brands - it does NOT touch the immobiliser, so it does not start a car."
+      },
+      "subghz_bruteforce": {
+        "v": "yes",
+        "note": "Sub-GHz Bruteforcer app included. Only meaningful against short STATIC codes - 8-12 bit DIP-switch style remotes and some fixed-code gates. It will not brute-force a rolling code in any useful timeframe."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Best-in-class for a device this cheap, but know the boundary. On device: dictionary attack against known keys, and the mfkey32 READER attack (emulate the card at a real reader, harvest nonces, recover Crypto-1 keys in a few minutes). Community firmware also adds card-only nested attack collection. What still generally needs a PC is the heavy maths: hardnested and full nested recovery, where the Flipper collects nonces into a .nested.log and a desktop tool or web service does the cracking. Static nested can be finished on device. Once keys are known it emulates the card and can write to 'magic' cards."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "This is a genuine community-firmware-only capability. The forks add Type4Tag and Ntag4xx protocol modules that official firmware does not have: they READ NTAG 4xx and generic ISO14443-4 Type 4 tags, and there is a Type4Tag LISTENER, so the Flipper can present itself as an NDEF Type 4 tag (this is what the NFC Maker app uses to serve URLs, Wi-Fi credentials, contact cards). Note Ntag4xx itself is read-only - its listener entry is NULL - and DESFire emulation does not exist on any firmware."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "Community firmware has a real EMV poller, so it can read the openly-readable side of a contactless bank card: PAN, expiry, cardholder name where present, and sometimes a transaction log. That is NOT cloning - it cannot produce the dynamic cryptogram a terminal demands, so it cannot pay. Worth knowing: the EMV plugin was silently BROKEN for a long stretch - it shipped as a plugin that never loaded at all - and was only fixed in Unleashed PR #1073, merged 2026-08-20, then flowed downstream. If you used a build from before late August 2026, EMV appeared to be supported but did nothing."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulation exists for ISO14443-3A, ISO14443-4A, ISO15693-3, MIFARE Ultralight, MIFARE Classic, MIFARE Plus, SLIX, FeliCa and generic Type 4 Tag. Still NULL and therefore impossible: ISO14443-3B, ISO14443-4B, DESFire, ST25TB, NTAG4xx."
+      },
+      "magspoof": {
+        "v": "addon",
+        "note": "MagSpoof app is bundled, but it needs an external coil/H-bridge on the GPIO header to actually emit a magstripe field."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Mass Storage app bundled - the Flipper presents an SD-card image as a USB drive."
+      },
+      "spi_flash_dump": {
+        "v": "addon",
+        "note": "SPI Mem Manager app is bundled; you still need test clips/wires to reach the chip."
+      },
+      "logic_analyzer": {
+        "v": "partial",
+        "note": "Bundled community app. Low sample rate - fine for UART/I2C at modest speeds, not a bench analyser."
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "Community BLE scanner/tracker-detector apps exist in the app packs; not a core firmware feature."
+      },
+      "ble_spam_apple": {
+        "v": "partial",
+        "note": "Apple Continuity. Note the difference from Momentum: Unleashed does NOT compile BLE Spam into the firmware - it ships in the separate all-the-plugins app pack you copy to the SD card. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_android": {
+        "v": "partial",
+        "note": "Google Fast Pair. Note the difference from Momentum: Unleashed does NOT compile BLE Spam into the firmware - it ships in the separate all-the-plugins app pack you copy to the SD card. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_samsung": {
+        "v": "partial",
+        "note": "Samsung EasySetup. Note the difference from Momentum: Unleashed does NOT compile BLE Spam into the firmware - it ships in the separate all-the-plugins app pack you copy to the SD card. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_swift_pair": {
+        "v": "partial",
+        "note": "Microsoft Swift Pair. Note the difference from Momentum: Unleashed does NOT compile BLE Spam into the firmware - it ships in the separate all-the-plugins app pack you copy to the SD card. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "findmy_track": {
+        "v": "yes",
+        "note": "Read this carefully because the name misleads everyone: FindMy Flipper does NOT find or track other people's AirTags. It turns the Flipper itself INTO a trackable tag, broadcasting a BLE beacon that Apple's Find My network (or Samsung SmartThings / Tile) picks up, so YOU can locate your own Flipper. Setup is either cloning an existing tag's MAC and payload (which requires killing the original tag's battery so it stops rotating keys) or generating OpenHaystack key pairs with Docker/Python on a PC and importing a .keys file. It is an app, not a radio feature - the underlying hardware capability is just 'BLE can advertise'. Unleashed compiles this one in (applications/system/find_my_flipper), as it does the mfkey cracker."
+      },
+      "ble_tracker_detect": {
+        "v": "partial",
+        "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
+        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+      ],
+      "risk_level": "medium",
+      "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "Yes - official catalog plus the maintained all-the-plugins pack",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Unleashed",
+      "UL",
+      "unlshd"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware",
+        "what": "official firmware source; app tree, NFC poller/listener tables, release tags"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_rfid.c",
+        "what": "proof that 125 kHz LF is STM32 TIM1/TIM2 + COMP1, not the ST25R3916"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_power_config.c",
+        "what": "battery design capacity 2100 mAh; BQ27220 gauge / BQ25896 charger"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "authoritative list of which NFC protocols can be EMULATED"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "authoritative list of which NFC protocols can be READ"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 specified bands 300-348/387-464/779-928 MHz, +12 dBm, modulations"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/sub-ghz/frequencies",
+        "what": "per-region TX allow-lists and region provisioning"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/gpio-and-modules",
+        "what": "18-pin GPIO header, 3.3V, rail current limits"
+      },
+      {
+        "url": "https://flipper.net/products/flipper-zero.js",
+        "what": "vendor price and stock status (Shopify product JSON) checked 2026-09-06"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Flipper_Zero",
+        "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "community-fork emulation table; DESFire/Ntag4xx/EMV are NULL"
+      },
+      {
+        "url": "https://github.com/DarkFlippers/unleashed-firmware/pull/1073",
+        "what": "the PR that fixed the EMV plugin, which until 2026-08-20 shipped but never loaded"
+      },
+      {
+        "url": "https://arxiv.org/abs/2210.11923",
+        "what": "RollBack: the actual academic basis for the rolling-code resync attack"
+      },
+      {
+        "url": "https://willyjl.dev/blog/the-controversy-behind-apple-ble-spam",
+        "what": "BLE Spam author on protocols supported and why it is now a party trick"
+      },
+      {
+        "url": "https://github.com/MatthewKuKanich/FindMyFlipper",
+        "what": "original FindMy Flipper app - Flipper broadcasts AS a tag"
+      },
+      {
+        "url": "https://github.com/DarkFlippers/unleashed-firmware",
+        "what": "README: regional TX restrictions removed, extended range warning, protocol list; release unlshd-092 (2026-08-21)"
+      },
+      {
+        "url": "https://github.com/xMasterX/all-the-plugins",
+        "what": "the separately-shipped app pack containing ble_spam, rolling_flaws, mfc_editor, nfc_magic, marauder companion"
+      }
+    ],
+    "research_gaps": [
+      "Exact conducted TX power in dBm as built is not published.",
+      "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
+      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+    ]
+  },
+  {
+    "id": "flipper-zero-roguemaster",
+    "hardware_id": "flipper-zero",
+    "name": "Flipper Zero",
+    "firmware": "RogueMaster",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins",
+    "firmware_note": "Kitchen-sink build: takes Unleashed and official upstream and bolts on essentially every community app and game that exists, plus heavy theming.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/flipper-zero",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "available",
+    "released": "2020",
+    "price_usd": 169,
+    "price_note": "Direct from the vendor, in stock at time of checking. A microSD card is required and is not in the box. Grey-market resellers in countries where import is awkward charge well above this.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Not because it is technically harder, but because the sheer number of bundled apps - many unmaintained - makes it harder to tell what actually works and what is broken.",
+    "build_effort": "flash-only",
+    "build_note": "Web installer from rogue-master.net. Bear in mind the very large asset packs slow the device down noticeably.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A pocket multitool built around four independent radios - a CC1101 sub-GHz transceiver, an ST25R3916 13.56 MHz NFC front end, a separate 125 kHz coil driven straight off the STM32, and the STM32WB55's own Bluetooth LE core - plus infrared, iButton and an 18-pin GPIO header. RogueMaster is the maximalist fork: it tracks Unleashed and official upstream and adds nearly every community plugin, game, IR remote and asset pack in existence. Frequent builds, an enormous app list, and a Patreon that gates the most frequent compiled releases (GitHub releases run roughly monthly; the source is open either way).",
+    "honest_take": "The value here is curation-by-inclusion, not original engineering - almost all the RF and NFC work it ships comes from Unleashed and official upstream, which the changelog is honest about crediting. The cost is real: hundreds of bundled apps of wildly varying quality, large asset packs that make the device sluggish, and a much bigger surface for something to be subtly broken. If you want everything to try and do not mind the mess, it is great. If you want to trust that a feature works, use Unleashed.",
+    "best_for": [
+      "Trying the widest possible range of community apps without hunting them down",
+      "Games, themes and general tinkering",
+      "Having every IR remote and AC protocol preloaded"
+    ],
+    "not_for": [
+      "Anyone who wants a lean, predictable device",
+      "Wi-Fi attacks without the add-on board",
+      "Relying on any given bundled app being maintained"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RG",
+      "mcu_primary_note": "Dual core: Cortex-M4 @64MHz runs the application, Cortex-M0+ @32MHz runs the BLE stack. Linker script in the firmware confirms 1024K flash; 256KB SRAM total.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "TI CC1101 transceiver. Silicon is specified by TI for 300-348, 387-464 and 779-928 MHz only - it is NOT continuous 300-928 MHz. Max +12 dBm, OOK/ASK/2-FSK/4-FSK/GFSK/MSK, 0.6-600 kbps. Fixed-function transceiver, not an SDR."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz ONLY. Reader for ISO14443-3A/3B/4A/4B, ISO15693, FeliCa. It has nothing to do with the 125 kHz LF path."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125 kHz has NO dedicated chip. It is a discrete analog front end on its own separate coil, driven by the STM32: TIM1/TIM2 generate the carrier, COMP1 with a 1.2V internal reference demodulates the return. Confirmed in targets/f7/furi_hal/furi_hal_rfid.c."
+        },
+        {
+          "ic": "STM32WB55 integrated radio",
+          "role": "bluetooth",
+          "note": "Bluetooth LE only, on the M0+ coprocessor. There is NO Bluetooth Classic and no Wi-Fi anywhere in this device."
+        },
+        {
+          "ic": "TSOP-75338",
+          "role": "infrared",
+          "note": "38 kHz IR receiver plus 3 discrete transmit LEDs. Learns and replays consumer IR."
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (orange backlight)",
+        "size_in": 1.4,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "Li-Po. The firmware's fuel-gauge config (targets/f7/furi_hal/furi_hal_power_config.c) programs design capacity 2100 mAh; some spec sheets quote the cell as 2000 mAh nominal. Roughly a week idle, about a day of heavy RF use.",
+      "charging": "USB-C",
+      "pmic": "TI BQ25896 charger + TI BQ27220 fuel gauge",
+      "storage": "microSD up to 256GB. NOT included, and the device is close to useless without one - all saved signals, cards, IR libraries and apps live on it.",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "GPIO 18-pin",
+        "1-Wire",
+        "Infrared"
+      ],
+      "gpio": "18-pin header, 3.3V logic (5V tolerant it is NOT). Exposes UART, SPI, I2C, 1-Wire and SWD. Pin 9 is a switchable 3.3V rail and pin 1 a switchable 5V rail, 1.2A max each, 5W total across the header; each I/O pin sources up to 20mA through a 51 ohm series resistor with ESD protection.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "100 x 40 x 25",
+      "weight_g": 102,
+      "case": "Polycarbonate/ABS, several translucent colourways",
+      "notable_physical": [
+        "5-way D-pad plus back button",
+        "IR window (TSOP-75338 receiver + 3 TX LEDs)",
+        "iButton / 1-Wire contact pad on the top edge",
+        "18-pin GPIO header",
+        "Two separate RFID antennas: a 125 kHz LF coil and a 13.56 MHz HF antenna",
+        "No external antenna connector of any kind"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-348 / 387-464 / 779-928 MHz via CC1101. RX is not region-restricted on any firmware."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture and replay works reliably against STATIC-code devices: most older garage doors, gate remotes, barriers, some doorbells and cheap wireless sensors."
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "The Flipper still has no antenna connector, but community firmware supports an EXTERNAL CC1101 module over GPIO (hardware SPI), and those modules do have SMA connectors and sometimes an amplifier."
+      },
+      "subghz_amplified": {
+        "v": "addon",
+        "note": "Only via an external amplified CC1101 module on the GPIO header; the internal radio is unchanged."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM4102, HID Prox, Indala, IoProx and friends. Reads the ID off the card."
+      },
+      "lf_125khz_write": {
+        "v": "partial",
+        "note": "Writes only to writable blank fobs (T5577, EM4305). You cannot rewrite a factory EM4100 or a real HID card - those are read-only silicon."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Emulates saved LF credentials well. This is genuinely one of the things it is best at."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443-3A/3B/4A/4B, ISO15693, FeliCa, MIFARE Ultralight/Classic/Plus/DESFire, SLIX, ST25TB. 'Read' means UID plus whatever the card hands over without keys."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Only to 'magic'/gen1a-gen4 cards with a writable UID, which you have to buy separately. You cannot write a UID onto a normal card."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Read and emulate ISO15693-3, plus SLIX variants."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reads FeliCa and has a listener, but no key material means Suica-style stored-value cards are read-only curiosities."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "READ ONLY on every firmware. nfc_listener_defs.c has NULL for MfDesfire on official AND on all the community forks - DESFire emulation does not exist. Reading gets you the card's application/file structure and UID, not encrypted file contents, because AES/3DES keys are not recoverable."
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "3 IR LEDs. Universal remote plus a large community IR database on the SD card."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP-75338 receiver."
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Learns raw and decoded consumer IR protocols."
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built in, with community-maintained code sets for TVs, ACs, projectors and audio gear."
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The STM32WB55's BLE core can advertise arbitrary payloads, which is what all the 'spam' and tag-emulation apps exploit."
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Acts as a BLE keyboard/mouse - remote control apps and BLE-based BadUSB."
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "STM32WB55 is Bluetooth LE only. No A2DP, no Classic pairing, no BR/EDR sniffing. A common misconception."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "The BLE stack is a connectable peripheral/central stack, not a promiscuous sniffer. It cannot follow connections like an Ubertooth or a Sniffle dongle."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB with Rubber Ducky-compatible scripts. Full-speed USB HID, enumerates as a keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Ducky Script. Large community payload libraries."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "USB-to-UART bridge and an on-device UART terminal via the GPIO header."
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "I2C on the GPIO header; community i2ctools app."
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "SWD only, not JTAG, and via community apps (SWD probe) or the Wi-Fi devboard running Black Magic Probe. Not a first-class debugger."
+      },
+      "glitching": {
+        "v": "no",
+        "note": "No fault-injection hardware - no crowbar, no precise clock/voltage glitch path."
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Reads, writes and emulates Dallas/Cyfral/Metakom iButton keys. Niche outside eastern Europe but works properly."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Needs a UART GPS module on the GPIO header."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Everything is stored on the microSD card as readable files."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JavaScript engine (js_app) is built into official firmware and every fork; plus C apps via the SDK."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Official app catalog at lab.flipper.net."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully self-contained on battery - no phone or laptop required for its core functions."
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "Requires the official Flipper Zero Wi-Fi Dev Board (ESP32-S2) or a third-party ESP32 on the GPIO header. The Flipper itself has no Wi-Fi radio."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "No firmware or add-on board in this ecosystem does 5 GHz. The official devboard's ESP32-S2 is 2.4 GHz only."
+      },
+      "wifi_monitor_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on, not on the Flipper. Promiscuous mode on ESP32, not true monitor mode with full radiotap."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Runs entirely on an ESP32 add-on flashed with ESP32 Marauder or similar. The Flipper is only a screen, keypad and battery for it."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz hardware only."
+      },
+      "wifi_evil_twin": {
+        "v": "addon",
+        "note": "Evil Portal / Marauder on the ESP32 add-on board."
+      },
+      "wifi_captive_portal": {
+        "v": "addon",
+        "note": "Evil Portal app drives an ESP32 add-on; the portal HTML lives on the Flipper's SD card."
+      },
+      "wifi_handshake_capture": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board. Capture quality is well below a proper Wi-Fi adapter in monitor mode."
+      },
+      "wifi_pmkid": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_beacon_spam": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_probe_sniff": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Wardriver / Marauder companion apps log WiGLE-format CSV, but need both an ESP32 board and a GPS module on the GPIO header."
+      },
+      "wifi_ap_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on only."
+      },
+      "nrf24_scan": {
+        "v": "addon",
+        "note": "Needs an nRF24L01+ module wired to the GPIO header. Apps exist in the community app packs."
+      },
+      "mousejack": {
+        "v": "addon",
+        "note": "MouseJacker app plus an nRF24L01+ module on GPIO. Only works against unpatched 2.4 GHz keyboard/mouse dongles, a shrinking target set."
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver - you tune it to a frequency and modulation, you do not get IQ samples."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Same - no arbitrary waveform generation."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Region lock removed, inheriting Unleashed's sub-GHz stack and custom-frequency settings file. Legality is on you."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "Be precise here. Community firmware lets you SAVE and re-send captured rolling-code signals, and adds manual creation/pairing for protocols like KeeLoq, FAAC SLH, BFT Mitto, Somfy Telis, Nice Flor-S, CAME Atomo and Security+ 2.0 - that is programming a NEW remote into a receiver you control, which needs physical access to the receiver's learn button. It does NOT let you clone someone's rolling-code remote from a captured press. The genuine exception is the RollBack class of attack (Csikor et al., arXiv:2210.11923): replaying two or more consecutively captured codes can roll a receiver's counter back and make old codes valid again. That is implemented openly in the 'rolling_flaws' app and is what the 2025 'DarkWeb firmware' stories were repackaging. Even where it works it only reaches the LOCK/UNLOCK remote-keyless-entry function on some brands - it does NOT touch the immobiliser, so it does not start a car."
+      },
+      "subghz_bruteforce": {
+        "v": "yes",
+        "note": "Sub-GHz Bruteforcer app included. Only meaningful against short STATIC codes - 8-12 bit DIP-switch style remotes and some fixed-code gates. It will not brute-force a rolling code in any useful timeframe."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Best-in-class for a device this cheap, but know the boundary. On device: dictionary attack against known keys, and the mfkey32 READER attack (emulate the card at a real reader, harvest nonces, recover Crypto-1 keys in a few minutes). Community firmware also adds card-only nested attack collection. What still generally needs a PC is the heavy maths: hardnested and full nested recovery, where the Flipper collects nonces into a .nested.log and a desktop tool or web service does the cracking. Static nested can be finished on device. Once keys are known it emulates the card and can write to 'magic' cards."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "This is a genuine community-firmware-only capability. The forks add Type4Tag and Ntag4xx protocol modules that official firmware does not have: they READ NTAG 4xx and generic ISO14443-4 Type 4 tags, and there is a Type4Tag LISTENER, so the Flipper can present itself as an NDEF Type 4 tag (this is what the NFC Maker app uses to serve URLs, Wi-Fi credentials, contact cards). Note Ntag4xx itself is read-only - its listener entry is NULL - and DESFire emulation does not exist on any firmware."
+      },
+      "emv_read": {
+        "v": "partial",
+        "note": "Community firmware has a real EMV poller, so it can read the openly-readable side of a contactless bank card: PAN, expiry, cardholder name where present, and sometimes a transaction log. That is NOT cloning - it cannot produce the dynamic cryptogram a terminal demands, so it cannot pay. Worth knowing: the EMV plugin was silently BROKEN for a long stretch - it shipped as a plugin that never loaded at all - and was only fixed in Unleashed PR #1073, merged 2026-08-20, then flowed downstream. If you used a build from before late August 2026, EMV appeared to be supported but did nothing."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulation exists for ISO14443-3A, ISO14443-4A, ISO15693-3, MIFARE Ultralight, MIFARE Classic, MIFARE Plus, SLIX, FeliCa and generic Type 4 Tag. Still NULL and therefore impossible: ISO14443-3B, ISO14443-4B, DESFire, ST25TB, NTAG4xx."
+      },
+      "magspoof": {
+        "v": "addon",
+        "note": "MagSpoof app is bundled, but it needs an external coil/H-bridge on the GPIO header to actually emit a magstripe field."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Mass Storage app bundled - the Flipper presents an SD-card image as a USB drive."
+      },
+      "spi_flash_dump": {
+        "v": "addon",
+        "note": "SPI Mem Manager app is bundled; you still need test clips/wires to reach the chip."
+      },
+      "logic_analyzer": {
+        "v": "partial",
+        "note": "Bundled community app. Low sample rate - fine for UART/I2C at modest speeds, not a bench analyser."
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "Community BLE scanner/tracker-detector apps exist in the app packs; not a core firmware feature."
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Apple Continuity. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Google Fast Pair. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_samsung": {
+        "v": "yes",
+        "note": "Samsung EasySetup. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Microsoft Swift Pair. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "findmy_track": {
+        "v": "yes",
+        "note": "Read this carefully because the name misleads everyone: FindMy Flipper does NOT find or track other people's AirTags. It turns the Flipper itself INTO a trackable tag, broadcasting a BLE beacon that Apple's Find My network (or Samsung SmartThings / Tile) picks up, so YOU can locate your own Flipper. Setup is either cloning an existing tag's MAC and payload (which requires killing the original tag's battery so it stops rotating keys) or generating OpenHaystack key pairs with Docker/Python on a PC and importing a .keys file. It is an app, not a radio feature - the underlying hardware capability is just 'BLE can advertise'."
+      },
+      "ble_tracker_detect": {
+        "v": "partial",
+        "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
+        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+      ],
+      "risk_level": "medium",
+      "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-08",
+      "app_store": "Yes - and hundreds of apps are already bundled",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "RogueMaster",
+      "RM",
+      "wPlugins"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware",
+        "what": "official firmware source; app tree, NFC poller/listener tables, release tags"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_rfid.c",
+        "what": "proof that 125 kHz LF is STM32 TIM1/TIM2 + COMP1, not the ST25R3916"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_power_config.c",
+        "what": "battery design capacity 2100 mAh; BQ27220 gauge / BQ25896 charger"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "authoritative list of which NFC protocols can be EMULATED"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "authoritative list of which NFC protocols can be READ"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 specified bands 300-348/387-464/779-928 MHz, +12 dBm, modulations"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/sub-ghz/frequencies",
+        "what": "per-region TX allow-lists and region provisioning"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/gpio-and-modules",
+        "what": "18-pin GPIO header, 3.3V, rail current limits"
+      },
+      {
+        "url": "https://flipper.net/products/flipper-zero.js",
+        "what": "vendor price and stock status (Shopify product JSON) checked 2026-09-06"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Flipper_Zero",
+        "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "community-fork emulation table; DESFire/Ntag4xx/EMV are NULL"
+      },
+      {
+        "url": "https://github.com/DarkFlippers/unleashed-firmware/pull/1073",
+        "what": "the PR that fixed the EMV plugin, which until 2026-08-20 shipped but never loaded"
+      },
+      {
+        "url": "https://arxiv.org/abs/2210.11923",
+        "what": "RollBack: the actual academic basis for the rolling-code resync attack"
+      },
+      {
+        "url": "https://willyjl.dev/blog/the-controversy-behind-apple-ble-spam",
+        "what": "BLE Spam author on protocols supported and why it is now a party trick"
+      },
+      {
+        "url": "https://github.com/MatthewKuKanich/FindMyFlipper",
+        "what": "original FindMy Flipper app - Flipper broadcasts AS a tag"
+      },
+      {
+        "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins",
+        "what": "README/changelog: upstream sync dates, bundled app list, Patreon release cadence; release RM0819-2255 (2026-08-20)"
+      }
+    ],
+    "research_gaps": [
+      "Exact conducted TX power in dBm as built is not published.",
+      "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
+      "Could not audit every bundled third-party app; an unknown number are unmaintained upstream.",
+      "Patreon-gated builds could not be inspected - only the public GitHub releases and source were reviewed.",
+      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+    ]
+  },
+  {
+    "id": "flipper-zero-xtreme",
+    "hardware_id": "flipper-zero",
+    "name": "Flipper Zero",
+    "firmware": "Xtreme",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/Flipper-XFW/Xtreme-Firmware",
+    "firmware_note": "DISCONTINUED. The repo is archived and its own README tells you to install something else. Its developers moved on and built Momentum.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/flipper-zero",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "discontinued",
+    "released": "2020",
+    "price_usd": 169,
+    "price_note": "Direct from the vendor, in stock at time of checking. A microSD card is required and is not in the box. Grey-market resellers in countries where import is awkward charge well above this.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Listed for historical accuracy only; there is no reason to choose it today.",
+    "build_effort": "flash-only",
+    "build_note": "Do not. The repo is archived, the last release is XFW-0053 from 2024-02-02, and it targets a long-obsolete official firmware API - modern apps from the catalog will not load.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "Historically the customisation-focused Flipper Zero fork, and the firmware that originated BLE Spam and the Xtreme Settings app. It is now discontinued: the GitHub repository is archived, the last release was 2024-02-02 and the last commit 2024-11-19. Its own README carries a caution telling users to install a different firmware.",
+    "honest_take": "This is a dead project and you should not install it - it is here so people who find old tutorials and YouTube videos know what happened to it. It did not vanish because it was bad; the same developers carried the work forward into Momentum, which is explicitly described in Momentum's README as 'a direct continuation of the Xtreme firmware'. Interestingly, Xtreme's own archived README points users to Unleashed rather than Momentum. Anything you liked about Xtreme exists in Momentum today.",
+    "best_for": [
+      "Nothing current - it is listed only so people who find old tutorials know what happened to it"
+    ],
+    "not_for": [
+      "Any current use - install Momentum or Unleashed instead",
+      "Running modern catalog apps, which target a newer firmware API"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RG",
+      "mcu_primary_note": "Dual core: Cortex-M4 @64MHz runs the application, Cortex-M0+ @32MHz runs the BLE stack. Linker script in the firmware confirms 1024K flash; 256KB SRAM total.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "TI CC1101 transceiver. Silicon is specified by TI for 300-348, 387-464 and 779-928 MHz only - it is NOT continuous 300-928 MHz. Max +12 dBm, OOK/ASK/2-FSK/4-FSK/GFSK/MSK, 0.6-600 kbps. Fixed-function transceiver, not an SDR."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz ONLY. Reader for ISO14443-3A/3B/4A/4B, ISO15693, FeliCa. It has nothing to do with the 125 kHz LF path."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125 kHz has NO dedicated chip. It is a discrete analog front end on its own separate coil, driven by the STM32: TIM1/TIM2 generate the carrier, COMP1 with a 1.2V internal reference demodulates the return. Confirmed in targets/f7/furi_hal/furi_hal_rfid.c."
+        },
+        {
+          "ic": "STM32WB55 integrated radio",
+          "role": "bluetooth",
+          "note": "Bluetooth LE only, on the M0+ coprocessor. There is NO Bluetooth Classic and no Wi-Fi anywhere in this device."
+        },
+        {
+          "ic": "TSOP-75338",
+          "role": "infrared",
+          "note": "38 kHz IR receiver plus 3 discrete transmit LEDs. Learns and replays consumer IR."
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (orange backlight)",
+        "size_in": 1.4,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "Li-Po. The firmware's fuel-gauge config (targets/f7/furi_hal/furi_hal_power_config.c) programs design capacity 2100 mAh; some spec sheets quote the cell as 2000 mAh nominal. Roughly a week idle, about a day of heavy RF use.",
+      "charging": "USB-C",
+      "pmic": "TI BQ25896 charger + TI BQ27220 fuel gauge",
+      "storage": "microSD up to 256GB. NOT included, and the device is close to useless without one - all saved signals, cards, IR libraries and apps live on it.",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "GPIO 18-pin",
+        "1-Wire",
+        "Infrared"
+      ],
+      "gpio": "18-pin header, 3.3V logic (5V tolerant it is NOT). Exposes UART, SPI, I2C, 1-Wire and SWD. Pin 9 is a switchable 3.3V rail and pin 1 a switchable 5V rail, 1.2A max each, 5W total across the header; each I/O pin sources up to 20mA through a 51 ohm series resistor with ESD protection.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "100 x 40 x 25",
+      "weight_g": 102,
+      "case": "Polycarbonate/ABS, several translucent colourways",
+      "notable_physical": [
+        "5-way D-pad plus back button",
+        "IR window (TSOP-75338 receiver + 3 TX LEDs)",
+        "iButton / 1-Wire contact pad on the top edge",
+        "18-pin GPIO header",
+        "Two separate RFID antennas: a 125 kHz LF coil and a 13.56 MHz HF antenna",
+        "No external antenna connector of any kind"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-348 / 387-464 / 779-928 MHz via CC1101. RX is not region-restricted on any firmware."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture and replay works reliably against STATIC-code devices: most older garage doors, gate remotes, barriers, some doorbells and cheap wireless sensors."
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "The Flipper still has no antenna connector, but community firmware supports an EXTERNAL CC1101 module over GPIO (hardware SPI), and those modules do have SMA connectors and sometimes an amplifier."
+      },
+      "subghz_amplified": {
+        "v": "addon",
+        "note": "Only via an external amplified CC1101 module on the GPIO header; the internal radio is unchanged."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM4100/EM4102, HID Prox, Indala, IoProx and friends. Reads the ID off the card."
+      },
+      "lf_125khz_write": {
+        "v": "partial",
+        "note": "Writes only to writable blank fobs (T5577, EM4305). You cannot rewrite a factory EM4100 or a real HID card - those are read-only silicon."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Emulates saved LF credentials well. This is genuinely one of the things it is best at."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443-3A/3B/4A/4B, ISO15693, FeliCa, MIFARE Ultralight/Classic/Plus/DESFire, SLIX, ST25TB. 'Read' means UID plus whatever the card hands over without keys."
+      },
+      "hf_1356_write": {
+        "v": "partial",
+        "note": "Only to 'magic'/gen1a-gen4 cards with a writable UID, which you have to buy separately. You cannot write a UID onto a normal card."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Read and emulate ISO15693-3, plus SLIX variants."
+      },
+      "felica": {
+        "v": "partial",
+        "note": "Reads FeliCa and has a listener, but no key material means Suica-style stored-value cards are read-only curiosities."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "READ ONLY on every firmware. nfc_listener_defs.c has NULL for MfDesfire on official AND on all the community forks - DESFire emulation does not exist. Reading gets you the card's application/file structure and UID, not encrypted file contents, because AES/3DES keys are not recoverable."
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "3 IR LEDs. Universal remote plus a large community IR database on the SD card."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP-75338 receiver."
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Learns raw and decoded consumer IR protocols."
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built in, with community-maintained code sets for TVs, ACs, projectors and audio gear."
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The STM32WB55's BLE core can advertise arbitrary payloads, which is what all the 'spam' and tag-emulation apps exploit."
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Acts as a BLE keyboard/mouse - remote control apps and BLE-based BadUSB."
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "STM32WB55 is Bluetooth LE only. No A2DP, no Classic pairing, no BR/EDR sniffing. A common misconception."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "The BLE stack is a connectable peripheral/central stack, not a promiscuous sniffer. It cannot follow connections like an Ubertooth or a Sniffle dongle."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB with Rubber Ducky-compatible scripts. Full-speed USB HID, enumerates as a keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Ducky Script. Large community payload libraries."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "USB-to-UART bridge and an on-device UART terminal via the GPIO header."
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "I2C on the GPIO header; community i2ctools app."
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "SWD only, not JTAG, and via community apps (SWD probe) or the Wi-Fi devboard running Black Magic Probe. Not a first-class debugger."
+      },
+      "glitching": {
+        "v": "no",
+        "note": "No fault-injection hardware - no crowbar, no precise clock/voltage glitch path."
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Reads, writes and emulates Dallas/Cyfral/Metakom iButton keys. Niche outside eastern Europe but works properly."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Needs a UART GPS module on the GPIO header."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Everything is stored on the microSD card as readable files."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "JavaScript engine (js_app) is built into official firmware and every fork; plus C apps via the SDK."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Official app catalog at lab.flipper.net."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully self-contained on battery - no phone or laptop required for its core functions."
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "Requires the official Flipper Zero Wi-Fi Dev Board (ESP32-S2) or a third-party ESP32 on the GPIO header. The Flipper itself has no Wi-Fi radio."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "No firmware or add-on board in this ecosystem does 5 GHz. The official devboard's ESP32-S2 is 2.4 GHz only."
+      },
+      "wifi_monitor_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on, not on the Flipper. Promiscuous mode on ESP32, not true monitor mode with full radiotap."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Runs entirely on an ESP32 add-on flashed with ESP32 Marauder or similar. The Flipper is only a screen, keypad and battery for it."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz hardware only."
+      },
+      "wifi_evil_twin": {
+        "v": "addon",
+        "note": "Evil Portal / Marauder on the ESP32 add-on board."
+      },
+      "wifi_captive_portal": {
+        "v": "addon",
+        "note": "Evil Portal app drives an ESP32 add-on; the portal HTML lives on the Flipper's SD card."
+      },
+      "wifi_handshake_capture": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board. Capture quality is well below a proper Wi-Fi adapter in monitor mode."
+      },
+      "wifi_pmkid": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_beacon_spam": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_probe_sniff": {
+        "v": "addon",
+        "note": "ESP32 Marauder on the add-on board."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "Wardriver / Marauder companion apps log WiGLE-format CSV, but need both an ESP32 board and a GPS module on the GPIO header."
+      },
+      "wifi_ap_mode": {
+        "v": "addon",
+        "note": "On the ESP32 add-on only."
+      },
+      "nrf24_scan": {
+        "v": "addon",
+        "note": "Needs an nRF24L01+ module wired to the GPIO header. Apps exist in the community app packs."
+      },
+      "mousejack": {
+        "v": "addon",
+        "note": "MouseJacker app plus an nRF24L01+ module on GPIO. Only works against unpatched 2.4 GHz keyboard/mouse dongles, a shrinking target set."
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver - you tune it to a frequency and modulation, you do not get IQ samples."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Same - no arbitrary waveform generation."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Region lock was removed, within the CC1101's rated bands. Historical - as of the final 2024 release."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "Be precise here. Community firmware lets you SAVE and re-send captured rolling-code signals, and adds manual creation/pairing for protocols like KeeLoq, FAAC SLH, BFT Mitto, Somfy Telis, Nice Flor-S, CAME Atomo and Security+ 2.0 - that is programming a NEW remote into a receiver you control, which needs physical access to the receiver's learn button. It does NOT let you clone someone's rolling-code remote from a captured press. The genuine exception is the RollBack class of attack (Csikor et al., arXiv:2210.11923): replaying two or more consecutively captured codes can roll a receiver's counter back and make old codes valid again. That is implemented openly in the 'rolling_flaws' app and is what the 2025 'DarkWeb firmware' stories were repackaging. Even where it works it only reaches the LOCK/UNLOCK remote-keyless-entry function on some brands - it does NOT touch the immobiliser, so it does not start a car."
+      },
+      "subghz_bruteforce": {
+        "v": "yes",
+        "note": "Sub-GHz Bruteforcer app included. Only meaningful against short STATIC codes - 8-12 bit DIP-switch style remotes and some fixed-code gates. It will not brute-force a rolling code in any useful timeframe."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Best-in-class for a device this cheap, but know the boundary. On device: dictionary attack against known keys, and the mfkey32 READER attack (emulate the card at a real reader, harvest nonces, recover Crypto-1 keys in a few minutes). Community firmware also adds card-only nested attack collection. What still generally needs a PC is the heavy maths: hardnested and full nested recovery, where the Flipper collects nonces into a .nested.log and a desktop tool or web service does the cracking. Static nested can be finished on device. Once keys are known it emulates the card and can write to 'magic' cards."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "This is a genuine community-firmware-only capability. The forks add Type4Tag and Ntag4xx protocol modules that official firmware does not have: they READ NTAG 4xx and generic ISO14443-4 Type 4 tags, and there is a Type4Tag LISTENER, so the Flipper can present itself as an NDEF Type 4 tag (this is what the NFC Maker app uses to serve URLs, Wi-Fi credentials, contact cards). Note Ntag4xx itself is read-only - its listener entry is NULL - and DESFire emulation does not exist on any firmware."
+      },
+      "emv_read": {
+        "v": "unknown",
+        "note": "Could not verify the state of the EMV poller in the final 2024 build. The EMV plugin was broken across the community forks for a long period and was only fixed in August 2026, well after Xtreme was archived - so on Xtreme it is at best unverified and quite possibly non-functional."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulation exists for ISO14443-3A, ISO14443-4A, ISO15693-3, MIFARE Ultralight, MIFARE Classic, MIFARE Plus, SLIX, FeliCa and generic Type 4 Tag. Still NULL and therefore impossible: ISO14443-3B, ISO14443-4B, DESFire, ST25TB, NTAG4xx."
+      },
+      "magspoof": {
+        "v": "addon",
+        "note": "MagSpoof app is bundled, but it needs an external coil/H-bridge on the GPIO header to actually emit a magstripe field."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Mass Storage app bundled - the Flipper presents an SD-card image as a USB drive."
+      },
+      "spi_flash_dump": {
+        "v": "addon",
+        "note": "SPI Mem Manager app is bundled; you still need test clips/wires to reach the chip."
+      },
+      "logic_analyzer": {
+        "v": "partial",
+        "note": "Bundled community app. Low sample rate - fine for UART/I2C at modest speeds, not a bench analyser."
+      },
+      "ble_scan": {
+        "v": "partial",
+        "note": "Community BLE scanner/tracker-detector apps exist in the app packs; not a core firmware feature."
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Apple Continuity. BLE Spam ORIGINATED in Xtreme before moving to Momentum. Historical: as of the 2024 release, and largely mitigated by vendors since. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Google Fast Pair. Historical, as of the final 2024 release. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_samsung": {
+        "v": "yes",
+        "note": "Samsung EasySetup. Historical, as of the final 2024 release. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Microsoft Swift Pair. Historical, as of the final 2024 release. Real, but oversold. The STM32WB55 BLE stack advertises one payload at a time and cycles through them, so this is protocol-level nuisance advertising, not RF jamming and not a flood. Apple (iOS 17.2+), Google, Microsoft and Samsung all added cooldowns and sanity checks after 2023, so on current phones it is mostly a party trick. The app's own author describes it that way."
+      },
+      "findmy_track": {
+        "v": "unknown",
+        "note": "FindMy Flipper's rise post-dates Xtreme's final release; could not confirm whether the archived build bundles a working version."
+      },
+      "ble_tracker_detect": {
+        "v": "partial",
+        "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "Brazil - customs seizures and blocked ANATEL certification (2023, ongoing). NOT a ban on owning one: ANATEL flagged the device as a tool for criminal purposes and has not granted homologation, so imports get held at customs. Possession itself is not what is prohibited.",
+        "Canada - PROPOSED February 2024, NEVER ENACTED. ISED announced on 2024-02-08 an intention to ban the Flipper Zero as part of an auto-theft crackdown, then on 2024-03-20 walked it back to restricting use by illegitimate actors rather than banning the device. No ban was ever put in force. Many articles still report the ban as though it happened.",
+        "United States - NOT restricted. CBP held a shipment of about 15,000 units in late 2022 and later released them. Amazon banned sales on its marketplace on 2023-04-07, calling it a card-skimming device, but a marketplace policy is not law and the device is legal to own and is sold directly by the vendor."
+      ],
+      "risk_level": "medium",
+      "notes": "Owning a Flipper Zero is legal in the US, the UK, the EU and most of the world - the device is CE/FCC marked and sold openly by the vendor. What gets people in trouble is USE, not ownership: transmitting on sub-GHz frequencies you are not licensed for, opening a gate or car that is not yours, cloning an access credential without permission, or interfering with a radio service are separate offences almost everywhere, and they are the offences people actually get charged with. Note also that the community firmwares remove a region lock that exists specifically to keep you inside your national band plan - once you flash one, staying legal is on you. Be careful with the reporting on this device: several widely-repeated 'bans' were proposals that were dropped, marketplace policies, or one-off customs and airport-security incidents rather than law. Treat this as 'check your own local law', not legal advice."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "sparse",
+      "last_release": "2024-02",
+      "app_store": "No longer maintained; app API is obsolete",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "Xtreme",
+      "XFW",
+      "Xtreme Firmware",
+      "Flipper-XFW"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware",
+        "what": "official firmware source; app tree, NFC poller/listener tables, release tags"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_rfid.c",
+        "what": "proof that 125 kHz LF is STM32 TIM1/TIM2 + COMP1, not the ST25R3916"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/targets/f7/furi_hal/furi_hal_power_config.c",
+        "what": "battery design capacity 2100 mAh; BQ27220 gauge / BQ25896 charger"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "authoritative list of which NFC protocols can be EMULATED"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/flipperdevices/flipperzero-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "authoritative list of which NFC protocols can be READ"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 specified bands 300-348/387-464/779-928 MHz, +12 dBm, modulations"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/sub-ghz/frequencies",
+        "what": "per-region TX allow-lists and region provisioning"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/gpio-and-modules",
+        "what": "18-pin GPIO header, 3.3V, rail current limits"
+      },
+      {
+        "url": "https://flipper.net/products/flipper-zero.js",
+        "what": "vendor price and stock status (Shopify product JSON) checked 2026-09-06"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Flipper_Zero",
+        "what": "dated regulatory timeline: ANATEL seizures 2023, CBP 2022 seizure and release, Amazon ban 2023-04-07, ISED announcement 2024-02-08 and its 2024-03-20 reversal"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_poller_defs.c",
+        "what": "community-fork NFC read table incl. EMV, Type4Tag, Ntag4xx pollers"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/DarkFlippers/unleashed-firmware/dev/lib/nfc/protocols/nfc_listener_defs.c",
+        "what": "community-fork emulation table; DESFire/Ntag4xx/EMV are NULL"
+      },
+      {
+        "url": "https://github.com/DarkFlippers/unleashed-firmware/pull/1073",
+        "what": "the PR that fixed the EMV plugin, which until 2026-08-20 shipped but never loaded"
+      },
+      {
+        "url": "https://arxiv.org/abs/2210.11923",
+        "what": "RollBack: the actual academic basis for the rolling-code resync attack"
+      },
+      {
+        "url": "https://willyjl.dev/blog/the-controversy-behind-apple-ble-spam",
+        "what": "BLE Spam author on protocols supported and why it is now a party trick"
+      },
+      {
+        "url": "https://github.com/MatthewKuKanich/FindMyFlipper",
+        "what": "original FindMy Flipper app - Flipper broadcasts AS a tag"
+      },
+      {
+        "url": "https://github.com/Flipper-XFW/Xtreme-Firmware",
+        "what": "archived repo; README caution 'Xtreme is no longer in development'; final release XFW-0053 (2024-02-02), last push 2024-11-19"
+      },
+      {
+        "url": "https://github.com/Next-Flip/Momentum-Firmware",
+        "what": "Momentum README confirming it is the direct continuation by the same developers"
+      }
+    ],
+    "research_gaps": [
+      "Capabilities are recorded as of the final 2024-02-02 release and were not re-verified on hardware.",
+      "Exact conducted TX power in dBm as built is not published.",
+      "Sources differ on weight (102 g vs 104 g) and cell capacity (2000 vs 2100 mAh).",
+      "Legal research covered Brazil, Canada, the US, the UK and the EU. No confirmed enacted import or sale ban was found in Australia, the EU or any EU member state, but absence of evidence is not proof - this was desk research against news and encyclopaedic sources, not a review of primary legislation or customs tariff schedules, and it should be re-checked before being relied on."
+    ]
+  },
+  {
+    "id": "flipper-wifi-devboard",
+    "hardware_id": "flipper-wifi-devboard",
+    "name": "Flipper Zero Wi-Fi Dev Board",
+    "firmware": "Official (Black Magic Probe / DAPLink)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/flipperdevices/blackmagic-esp32-s2",
+    "firmware_note": "Stock firmware is a DEBUGGER, not an attack tool: SWD over Wi-Fi or USB, plus UART log capture. Offensive Wi-Fi means reflashing it with ESP32 Marauder or GhostESP.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/wifi-devboard",
+    "category": "accessory",
+    "subcategory": "wifi-addon",
+    "status": "out-of-stock",
+    "released": "2022",
+    "price_usd": 35,
+    "price_note": "Listed at $35 (SKU FLP-M-WIFI) but the product page reports OutOfStock and renders a 'Sold out' button. Compounding that, the ESP32-S2-WROVER module it is built on is marked End-of-Life by Espressif, so it may not return in this form. Third-party clones cost the same or less.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Plugging it in is trivial; getting offensive Wi-Fi out of it means flashing third-party firmware and knowing what a deauth frame is and when sending one is legal.",
+    "build_effort": "assembly",
+    "build_note": "No soldering - it presses onto the 18-pin GPIO header. Power the Flipper OFF first: the official docs warn that hot-plugging a module sharing the 3.3V rail can corrupt the microSD card.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A small ESP32-S2-WROVER board that presses onto the Flipper's GPIO header and gives it the Wi-Fi radio it does not otherwise have. Flipper's own firmware for it is a debug probe - Black Magic Probe SWD over Wi-Fi or USB, DAPLink over USB, and UART log capture that works even when the Flipper's OS is down. The Wi-Fi attack features everyone buys it for come from reflashing it with third-party firmware such as ESP32 Marauder.",
+    "honest_take": "Two things to get straight. First, this board is where every 'Flipper Zero Wi-Fi hack' video actually happens - the Flipper is just a screen, keypad and battery; the ESP32 does all of it, and you could flash the same Marauder firmware onto a $10 ESP32 dev board. Second, and less well known: the ESP32-S2 has NO Bluetooth radio at all, so Marauder's BLE features - blespam, findmy, sniffbt, Flipper-detection - are compiled out and silently do nothing on this board. It is also single-core, 2.4 GHz only, and the module is EOL at Espressif. Third-party ESP32/ESP32-S3 boards in the same form factor cost about the same and keep Bluetooth. The official board's one real advantage is the thing the clones mostly skip: SWD debugging over Wi-Fi.",
+    "best_for": [
+      "Adding 2.4 GHz Wi-Fi scanning and attacks to a Flipper via Marauder or GhostESP",
+      "Wireless SWD debugging of other embedded targets (Black Magic Probe)",
+      "Reading Flipper boot/crash logs over UART when the OS itself is broken",
+      "Wardriving with a GPS module, logging WiGLE-format CSV"
+    ],
+    "not_for": [
+      "Anything Bluetooth - the ESP32-S2 has no BT radio whatsoever",
+      "5 GHz networks - 2.4 GHz only",
+      "Anyone who already owns any ESP32 board and can flash it themselves"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S2-WROVER",
+      "mcu_primary_note": "Single-core Xtensa LX7 up to 240MHz, 320KB SRAM, 4MB SPI flash + 2MB PSRAM, native full-speed USB OTG (which is why it does USB CDC/DAP with no bridge chip). Marked End-of-Life by Espressif on datasheet v1.4.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-S2 integrated Wi-Fi",
+          "role": "wifi",
+          "note": "802.11 b/g/n, 2412-2484 MHz. 2.4 GHz ONLY - no 802.11a/ac and no 5 GHz anywhere in the datasheet. NO Bluetooth: the ESP32-S2 silicon has no BT block at all."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery - powered from the Flipper's 3.3V rail or its own USB-C port. Module datasheet draw at 3.3V is 298-340mA TX / 81-88mA RX, so sustained scanning is a heavy load on the Flipper's cell.",
+      "charging": "USB-C (data + power, direct to the ESP32)",
+      "pmic": null,
+      "storage": "4MB flash + 2MB PSRAM on-module; microSD only if you wire one to the header yourself",
+      "connectivity": [
+        "USB-C",
+        "Wi-Fi 2.4GHz",
+        "Flipper 18-pin GPIO header"
+      ],
+      "gpio": "Mates with the Flipper's 18-pin header; taps SWDIO/SWCLK plus both UARTs (USART and LPUART). Broken-out ESP IO for SD card and GPS.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB; optional plastic cover",
+      "notable_physical": [
+        "On-board PCB antenna (no u.FL on this SKU)",
+        "BOOT and RESET tactile switches",
+        "Status LEDs",
+        "USB-C port wired straight to the ESP32"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "802.11 b/g/n on 2412-2484 MHz. scanall/sniffbeacon/sniffprobe under Marauder."
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "2.4 GHz radio only. No 5 GHz support exists in the silicon."
+      },
+      "wifi_monitor_mode": {
+        "v": "partial",
+        "note": "ESP32 promiscuous mode - you get frames, but not the full radiotap fidelity of a proper adapter in monitor mode."
+      },
+      "wifi_injection": {
+        "v": "partial",
+        "note": "Raw 802.11 TX works, but only because Marauder overrides Espressif's ieee80211_raw_frame_sanity_check() with a -zmuldefs linker trick. It is a hack against a vendor blob and is inherently fragile across SDK versions."
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Genuinely works on the S2, and is NOT degraded relative to the original ESP32 - both use the same sanity-check bypass, and the S2 build explicitly enables it. Marauder prints a bypass status banner at boot that tells you whether deauth will actually transmit."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "2.4 GHz only."
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Evil Portal / karma under Marauder, with custom captive-portal HTML served from an SD card you attach."
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal, HTML from SD."
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "sniffpwn and EAPOL capture to PCAP on SD."
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "sniffpmkid, captured to PCAP on SD."
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Beacon spam/random/list, plus probe and rickroll modes."
+      },
+      "wifi_karma": {
+        "v": "yes",
+        "note": "karma command under Marauder."
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "sniffprobe, and mactrack for following a specific device."
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Supported (wardrive, GPS commands compiled in) but you must attach both a GPS module and an SD card to the header - neither ships with the board."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used by the stock firmware's own web UI and by Evil Portal."
+      },
+      "packet_capture": {
+        "v": "partial",
+        "note": "PCAP to SD card, if you wire an SD card up."
+      },
+      "detect_pineapple": {
+        "v": "yes",
+        "note": "sniffpinescan - matches on Wi-Fi Pineapple's characteristic beaconing/SSID behaviour, not on any hardware identifier."
+      },
+      "detect_pwnagotchi": {
+        "v": "yes",
+        "note": "sniffpwn - matches Pwnagotchi's advertised beacon payload."
+      },
+      "detect_flipper": {
+        "v": "no",
+        "note": "Marauder's Flipper-detection works over BLE, which this board has no radio for. Compiled out."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP32-S2 has no Bluetooth radio. Marauder's HAS_BT block is commented out for this target, so blespam, findmy, sniffbt, spoofat and sniffskim parse but do nothing."
+      },
+      "ble_spam_apple": {
+        "v": "no",
+        "note": "No Bluetooth radio on the ESP32-S2."
+      },
+      "jtag_swd": {
+        "v": "yes",
+        "note": "This is the board's official purpose: Black Magic Probe SWD over Wi-Fi or USB, and DAPLink/CMSIS-DAP over USB. Documented limitation - Black Magic mode does not support RTOS threads."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "Reads the Flipper's UART logs independently of the Flipper OS, so boot, update and crash logs survive an unbootable device. USB only for now."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "The ESP32 serves its own web interface, which is how you switch between Black Magic and DAPLink modes."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "GPS support is compiled into the Marauder build, but the module is not included - you wire it to the header."
+      },
+      "sd_logging": {
+        "v": "addon",
+        "note": "SD support is compiled in; no card slot on the board."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The board itself is an unremarkable ESP32 development board and is not restricted anywhere we could find - it is the Flipper it attaches to that attracts import attention, not this. The risk is entirely in what you flash onto it and where you point it: sending deauthentication frames at networks you do not own or have written authorisation to test is illegal in most jurisdictions, and in the US the FCC has issued multi-million-dollar fines to hotels and venues for Wi-Fi deauth quite separately from computer-misuse law. Running a captive portal that harvests credentials is a further offence again. Check your own local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2025-09",
+      "app_store": "Yes - Marauder companion and Evil Portal ship in the official Flipper app catalog, though the ESP-side firmware is third-party",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "WiFi Devboard",
+      "Wi-Fi Developer Board",
+      "ESP32-S2 devboard",
+      "Marauder board",
+      "FLP-M-WIFI"
+    ],
+    "sources": [
+      {
+        "url": "https://cdn.flipperzero.one/Flipper_Zero_WI-FI_Module_V1_Schematic.PDF",
+        "what": "official schematic confirming the ESP32-S2-WROVER module and SWD/UART wiring"
+      },
+      {
+        "url": "https://developer.flipper.net/flipperzero/doxygen/dev_board.html",
+        "what": "official dev docs naming the module and its debug roles"
+      },
+      {
+        "url": "https://documentation.espressif.com/esp32-s2-wrover_esp32-s2-wrover-i_datasheet_en.pdf",
+        "what": "datasheet: 2.4GHz only, no Bluetooth block, and the End-of-Life marking"
+      },
+      {
+        "url": "https://github.com/flipperdevices/blackmagic-esp32-s2",
+        "what": "official firmware - Black Magic Probe / DAPLink, not an attack tool"
+      },
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-firmware/tree/dev/documentation/devboard",
+        "what": "official docs for BMP/DAPLink modes and the power-off-before-plugging warning"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h",
+        "what": "MARAUDER_FLIPPER block with //#define HAS_BT commented out - proof BLE features are compiled out"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "targets.json listing the Flipper board as an ESP32-S2 build target; the raw-frame sanity-check bypass in WiFiScan.cpp"
+      },
+      {
+        "url": "https://github.com/GhostESP-Revival/GhostESP",
+        "what": "independent corroboration that S2 lacks Bluetooth hardware"
+      },
+      {
+        "url": "https://flipper.net/products/wifi-devboard",
+        "what": "price $35 and OutOfStock status, checked 2026-09-06"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm which Espressif SDK version first introduced ieee80211_raw_frame_sanity_check(); the bypass mechanism is confirmed from Marauder source but the originating IDF version is not.",
+      "No measured board-level current draw or battery-life-in-hours figure from Flipper; only ESP32-S2-WROVER module datasheet figures.",
+      "No dated Espressif product-change notice found for the ESP32-S2-WROVER EOL - the EOL marking is confirmed on datasheet v1.4 but the discontinuation date is not.",
+      "The user-facing docs page for this board appears to have been removed from docs.flipper.net (all candidate paths 404); could not determine whether that is deliberate deprecation.",
+      "Board dimensions and weight are not published by the vendor.",
+      "Not verified on physical hardware."
+    ]
+  },
+  {
+    "id": "flipper-video-game-module",
+    "hardware_id": "flipper-video-game-module",
+    "name": "Flipper Zero Video Game Module",
+    "firmware": "Official",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/flipperdevices/video-game-module",
+    "firmware_note": "Mirrors the Flipper's 128x64 screen to a monitor as 640x480p60 DVI-D, reads the on-board IMU, and exposes a small CLI. That is all it does.",
+    "vendor": "Flipper Devices",
+    "vendor_url": "https://flipper.net",
+    "product_url": "https://flipper.net/products/video-game-module-for-flipper-zero",
+    "category": "accessory",
+    "subcategory": "display-dev-addon",
+    "status": "available",
+    "released": "2024-02",
+    "price_usd": 49,
+    "price_note": "$49 (SKU FLP-M-VGM), in stock at time of checking. Note the shop URL that circulates in third-party articles (/products/video-game-module) is a 404 - the live handle is /products/video-game-module-for-flipper-zero, which is probably why people assume it was discontinued. It was not.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Trivial to plug in and mirror the screen; writing your own firmware means the Raspberry Pi Pico SDK and C.",
+    "build_effort": "assembly",
+    "build_note": "Presses onto the GPIO header, no soldering. Custom firmware is UF2 drag-and-drop over USB-C, or flashable from the Flipper itself using the Video Game Module Tool app with no PC at all.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "An RP2040 board that presses onto the Flipper's GPIO header, outputs 640x480p60 video over an HDMI-shaped connector, and carries a 6-axis motion sensor for tilt-controlled games. Developed with Raspberry Pi and announced February 2024. It is a genuinely open, Pico-compatible dev board: schematics are published, the toolchain is the standard Pico SDK, and it exposes 11 spare GPIO.",
+    "honest_take": "Be clear that this is a games and development accessory, not a security tool - there is nothing offensive in the design and nobody has built anything offensive on it. Two technical points worth knowing: the video is DVI-D bit-banged by the RP2040's PIO units via PicoDVI with no transmitter chip, which only works because the chip is overclocked to 252MHz at raised core voltage (1.2V) against a 133MHz rated spec; and Flipper carefully avoid the word HDMI because they have no adopter licence. The bigger problem is that the ecosystem stalled: the official firmware has not been touched since May 2024, the game engine meant to seed it has been untouched since February 2024, and about 1% of the official app catalog targets it. At $49 you are paying roughly ten times a bare Raspberry Pi Pico for the same RP2040, plus a video connector, an IMU and a Flipper-shaped case.",
+    "best_for": [
+      "Playing Flipper games on a monitor and using tilt controls",
+      "Using the Flipper as a host for ordinary Raspberry Pi Pico projects, including as a USB oscilloscope",
+      "Getting a second, independently programmable MCU with 11 spare GPIO onto a Flipper"
+    ],
+    "not_for": [
+      "Any security or offensive capability - it adds none",
+      "Anyone who just wants an RP2040, which costs about $4 as a bare Pico",
+      "Relying on an active software ecosystem - it has largely stalled"
+    ],
+    "hardware": {
+      "mcu_primary": "RP2040",
+      "mcu_primary_note": "Dual Cortex-M0+, rated 133MHz. The shipped firmware over-volts to 1.2V and sets the clock to 252MHz - roughly 1.9x rated - because generating DVI in software needs it. Core 1 does nothing but drive the scanline buffer.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {
+        "type": "Video OUTPUT only (DVI-D over an HDMI-type connector)",
+        "size_in": null,
+        "resolution": "640x480p60, 16bpp RGB565 (internal 320x240 framebuffer, pixel-doubled)",
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery. Powered over its own USB-C (5V) or from the Flipper's 3.3V/5V rails.",
+      "charging": "USB-C (wired directly to the RP2040; no USB-PD)",
+      "pmic": null,
+      "storage": "On-board flash for the RP2040 firmware; no card slot",
+      "connectivity": [
+        "USB-C (device or host)",
+        "DVI-D over HDMI-type connector",
+        "Flipper 18-pin GPIO header",
+        "14-pin breakout"
+      ],
+      "gpio": "14-pin breakout = 11 ESD-protected GPIO (RP2040 16, 17, 21, 22, 23, 24, 25, 26, 27, 28, 29) + 2 GND + 3.3V. GPIO 8-15 and 18-20 are consumed internally by the video output. Pins 23/24/25/29 are used internally on a real Pico but are free here.",
+      "sensors": [
+        "ICM-42688-P 6-axis IMU (3-axis gyro + 3-axis accelerometer, SPI, up to 32kHz ODR). No magnetometer, so no absolute heading."
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic shell matching the Flipper",
+      "notable_physical": [
+        "HDMI-type connector carrying DVI-D (DDC SDA/SCL and CEC are wired)",
+        "BOOT and RESET buttons (need a paper clip)",
+        "Three GPIO that double as green/red/blue LEDs",
+        "Pico-compatible pinout"
+      ]
+    },
+    "capabilities": {
+      "hdmi_capture": {
+        "v": "no",
+        "note": "It is video OUT only. It cannot capture or ingest video from anything - a common misreading of the name."
+      },
+      "uart": {
+        "v": "yes",
+        "note": "Talks to the Flipper over the Expansion Module Protocol on USART (pins 13/14) or LPUART (15/16); the breakout GPIO can drive your own serial links."
+      },
+      "i2c": {
+        "v": "partial",
+        "note": "Available on the breakout GPIO if you program the RP2040 yourself; nothing in the stock firmware uses it."
+      },
+      "spi_flash_dump": {
+        "v": "no",
+        "note": "No such function exists in the shipped firmware. You could write one, but a bare Pico is a better base."
+      },
+      "logic_analyzer": {
+        "v": "no",
+        "note": "Not implemented. The PIO units could do it, but nobody has shipped it for this board."
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Fully user-programmable, but in C against the Raspberry Pi Pico SDK - not scripting. Flash by UF2 drag-and-drop, or from the Flipper itself with the Video Game Module Tool app."
+      },
+      "usb_mass_storage": {
+        "v": "partial",
+        "note": "Enumerates as a UF2 mass-storage volume in bootloader mode for flashing. Not a general storage feature."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Runs standalone on USB-C power as an ordinary RP2040 board, but its Flipper-facing features obviously need the Flipper."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "No restrictions found anywhere. This board has no radio and adds no transmit capability of any kind, so it raises none of the radio-law questions the Flipper itself does. It is, legally speaking, a Raspberry Pi Pico with a video connector."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2024-05",
+      "app_store": "Technically yes, but only about 5-6 of roughly 441 official catalog apps target it, and most of those are Flipper's own demos",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "VGM",
+      "Video Game Module",
+      "FLP-M-VGM"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/flipperdevices/video-game-module",
+        "what": "official hardware/firmware repo; ICM42688P driver, PicoDVI submodule, 252MHz/1.2V overclock in app/frame.c. Last push 2024-05-06."
+      },
+      {
+        "url": "https://github.com/Wren6991/PicoDVI",
+        "what": "the PIO-based DVI implementation the module depends on - proves there is no TMDS transmitter chip"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/video-game-module/gpio",
+        "what": "official pinout, published schematics, and the link identifying the ICM-42688-P"
+      },
+      {
+        "url": "https://blog.flipper.net/introducing-video-game-module-powered-by-raspberry-pi/",
+        "what": "announcement 2024-02-13; 640x480 60Hz; the deliberate avoidance of the word HDMI"
+      },
+      {
+        "url": "https://docs.flipper.net/zero/video-game-module/custom-firmware",
+        "what": "UF2 flashing and on-Flipper firmware switching"
+      },
+      {
+        "url": "https://github.com/flipperdevices/flipperzero-game-engine",
+        "what": "the game engine intended to seed the ecosystem - untouched since 2024-02-28"
+      },
+      {
+        "url": "https://flipper.net/products/video-game-module-for-flipper-zero",
+        "what": "price $49 and InStock status, checked 2026-09-06"
+      }
+    ],
+    "research_gaps": [
+      "Could not read the published schematic PDFs directly (the S3 bucket returned 403), so the TMDS resistor network was not verified from the schematic - the PIO/PicoDVI mechanism was confirmed from firmware source instead.",
+      "Could not pin down the date units actually began shipping, as distinct from the 2024-02-13 announcement.",
+      "The official app-catalog API returns 0 for every download count, so real install numbers are unknown.",
+      "Board dimensions and weight are not published by the vendor.",
+      "Not verified on physical hardware."
+    ]
+  }
+]

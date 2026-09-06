@@ -1,0 +1,2786 @@
+[
+  {
+    "id": "rabbit-labs-poltergeist",
+    "hardware_id": "rabbit-labs-poltergeist",
+    "name": "Rabbit-Labs Poltergeist 5GHz Wi-Fi Board",
+    "firmware": "GhostESP (Revival)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/GhostESP-Revival/GhostESP",
+    "firmware_note": "Ships pre-flashed with GhostESP; the board is a hardware target for that firmware rather than having firmware of its own.",
+    "vendor": "Rabbit-Labs",
+    "vendor_url": "https://rabbit-labs.com",
+    "product_url": "https://rabbit-labs.com/product/rabbit-labs-poltergeist-5ghz-wifi-board/",
+    "category": "accessory",
+    "subcategory": "flipper-wifi-board",
+    "status": "available",
+    "released": "2026",
+    "price_usd": 145.99,
+    "price_note": "Listed at 145.99 on sale from 159.99 on 2026-09-06, with only 3 units shown in stock. Rabbit-Labs restocks in small batches and this SKU has repeatedly sold out.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Plugs onto the GPIO header and is pre-flashed, but everything useful happens in GhostESP menus that assume you know what a beacon frame and a deauth are.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero as the host (GPIO header), or can run standalone off its own USB-C. No soldering; re-flashing is done in a browser at flasher.site.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "An ESP32-C5 expansion board for the Flipper Zero, notable mainly because the C5 is Espressif's first dual-band part, so this is one of the few Flipper add-ons that can actually see and attack 5 GHz Wi-Fi. It also carries a high-output 940 nm IR blaster, an OLED status screen and a microSD slot, and can be driven either from the Flipper over UART or standalone over USB-C.",
+    "honest_take": "The genuinely new thing here is the ESP32-C5's 5 GHz radio; the rest is a well-built carrier board for firmware someone else writes for free. At ~$146 you are paying roughly ten times the cost of a bare ESP32-C5 dev board for the Flipper form factor, the IR section and Rabbit-Labs' QC. Also note that deauth on 5 GHz is increasingly a dead end: any network with 802.11w/PMF enabled (mandatory on WPA3, common on modern WPA2 gear) simply ignores the frames.",
+    "best_for": [
+      "Wi-Fi assessment on 5 GHz-only networks where 2.4 GHz-only boards are blind",
+      "Using a Flipper as a front-end for GhostESP",
+      "Long-range IR remote work alongside Wi-Fi testing"
+    ],
+    "not_for": [
+      "Anything sub-GHz - there is no CC1101 on this board",
+      "Reliable deauth against WPA3 or PMF-enabled networks",
+      "Buyers who just want a cheap ESP32; a bare C5 dev board is under $20"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "RISC-V single-core, Espressif's first dual-band 2.4/5 GHz Wi-Fi 6 SoC, with Bluetooth 5 LE and 802.15.4. Exact module variant (C5 vs C5-MINI-1 vs C5-WROOM) not published by the vendor.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz and 5 GHz, Wi-Fi 6 (802.11ax) capable; used here for scanning, beacon spam, deauth and packet capture"
+        },
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "ble",
+          "note": "Bluetooth 5 LE - used for BLE scanning and advertisement spam in GhostESP"
+        }
+      ],
+      "display": {
+        "type": "OLED status screen",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery. Powered from the Flipper GPIO header or its own USB-C.",
+      "charging": "USB-C (power/flashing only)",
+      "pmic": null,
+      "storage": "microSD slot (ships with an 8 GB card)",
+      "connectivity": [
+        "USB-C",
+        "Flipper GPIO header (UART)",
+        "Wi-Fi 2.4/5 GHz",
+        "BLE"
+      ],
+      "gpio": "Mates with the Flipper Zero 18-pin GPIO header; an expansion footprint is present for add-on modules",
+      "sensors": [
+        "IR receiver (wide-angle)"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB; cases sold separately by third parties",
+      "notable_physical": [
+        "4 populated high-output 940 nm IR LEDs (6 pads on the PCB, vendor says only 4 should be used)",
+        "OLED status screen",
+        "microSD slot",
+        "IR path can be switched between the Flipper and the ESP32"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32-C5 radio, driven by GhostESP AP/station scan"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "This is the board's headline feature; the C5 is one of very few Flipper-attachable parts that can see 5 GHz at all"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Raw 802.11 management frame injection via GhostESP"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Supported by GhostESP on C5 targets, but ineffective against any AP with 802.11w/PMF enabled - which is mandatory on WPA3"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "GhostESP beacon spam modes"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "GhostESP captures WPA handshakes and PMKID to PCAP on the SD card"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "GhostESP feature; cracking happens off-device"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "GhostESP Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "GhostESP Evil Portal serves a captive page from SD"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Probe request capture in GhostESP"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "GhostESP supports wardrive export, but there is no GPS on this board - you need an external GPS module on the expansion footprint"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used for the Evil Portal and for the board's own web/serial control"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "GhostESP BLE scan modes"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "BLE advertisement spam; modern iOS versions ignore most of these popups"
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "GhostESP BLE spam"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Arbitrary advertisement TX from the C5's BLE radio"
+      },
+      "detect_airtag": {
+        "v": "partial",
+        "note": "BLE scan matching Apple Find My advertisement payloads; it flags advertising trackers, it does not defeat MAC rotation or find non-advertising ones"
+      },
+      "detect_flipper": {
+        "v": "partial",
+        "note": "Matches the BLE advertisement/name pattern a stock Flipper broadcasts; a Flipper with BLE off or renamed will not show"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "4 high-output 940 nm LEDs, ~35 degree spread; drivable by either the Flipper's IR app or the ESP32"
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "Wide-angle IR receiver wired to the ESP32; GhostESP can capture and retransmit"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD for PCAP and Evil Portal files"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs off its own USB-C with the OLED as the UI; the Flipper is optional"
+      },
+      "gps": {
+        "v": "addon",
+        "note": "No GPS onboard. Rabbit-Labs sells a 'Dr Where GPS' module for the expansion slot"
+      },
+      "subghz_tx": {
+        "v": "no",
+        "note": "Notable absence: unlike the ESP32-C5 multi-boards from other vendors, this board has no CC1101"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning the board is unremarkable. Sending deauthentication frames against networks you do not own or have written permission to test is a computer-misuse offence in the US (FCC has fined hotels and venues for exactly this) and in most other jurisdictions. Beacon spam and BLE spam are less clearly criminal but can constitute unlawful interference. Check your local law and get written authorisation."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-09",
+      "app_store": "No - firmware features come from GhostESP; the Flipper side uses the GhostESP companion FAP",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Poltergeist",
+      "RL Poltergeist",
+      "Poltergeist C5"
+    ],
+    "sources": [
+      {
+        "url": "https://rabbit-labs.com/product/rabbit-labs-poltergeist-5ghz-wifi-board/",
+        "what": "price, stock, spec bullets, IR LED count and wavelength, OLED, SD, pre-flashed GhostESP"
+      },
+      {
+        "url": "https://www.espressif.com/en/products/socs/esp32-c5",
+        "what": "ESP32-C5 is dual-band 2.4/5 GHz Wi-Fi 6 with BLE 5 and 802.15.4"
+      },
+      {
+        "url": "https://docs.ghostesp.net/latest/wifi/deauth/",
+        "what": "GhostESP documents that 5 GHz deauth requires a C5-based device"
+      },
+      {
+        "url": "https://github.com/GhostESP-Revival/GhostESP/releases",
+        "what": "active release cadence, v2.1.3 on 2026-09-05, C5 5 GHz channel-hopping improvements"
+      },
+      {
+        "url": "https://docs.espressif.com/projects/esp-idf/en/stable/esp32c5/api-guides/wifi-security.html",
+        "what": "ESP-IDF C5 Wi-Fi security guide, PMF behaviour"
+      }
+    ],
+    "research_gaps": [
+      "Exact ESP32-C5 module variant and antenna arrangement not published",
+      "OLED size/controller and IR LED part number not published",
+      "No independent teardown found; all hardware detail comes from the vendor page",
+      "Measured IR range and TX power not published",
+      "The GhostESP-Revival release assets we inspected (v2.1.2/v2.1.3) list targets such as ACE C5, Banshee C5, AwokMini and Cardputer but no 'Poltergeist' build - it is unclear whether Rabbit-Labs ships a generic C5 build, a rebadged target, or its own fork. Worth confirming before telling a reader they can re-flash from upstream.",
+      "Release year inferred from ESP32-C5 availability and the product's first appearance; not stated by the vendor"
+    ]
+  },
+  {
+    "id": "rabbit-labs-slim-shady",
+    "hardware_id": "rabbit-labs-slim-shady",
+    "name": "Rabbit-Labs The Slim Shady (IR Blaster)",
+    "firmware": "n/a - passive IR board driven by the Flipper's own IR app",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No microcontroller and no firmware. The Flipper's stock Infrared app drives the LEDs once GPIO signal output is enabled.",
+    "vendor": "Rabbit-Labs",
+    "vendor_url": "https://rabbit-labs.com",
+    "product_url": "https://rabbit-labs.com/product/the-slim-shady-ir-blaster/",
+    "category": "accessory",
+    "subcategory": "flipper-ir-board",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 59.99,
+    "price_note": "59.99-85.99 depending on options direct from Rabbit-Labs on 2026-09-06; EUR 68 from Lab401 in the EU. A separate 'Slim Shady Prototype' SKU at $99 is a 17-unit collector run, not a different product.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Push it onto the GPIO header, set Infrared > GPIO Settings > Signal Output to Detect and 5V on GPIO to Auto. That is the whole setup.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero as the host. Draws power directly from the GPIO header, no drivers, no firmware changes.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A passive infrared LED array that plugs onto the Flipper Zero's GPIO header and replaces the Flipper's single weak IR LED with a wide-angle flood of high-output 940 nm emitters. It is a range-and-coverage upgrade for the Flipper's existing Infrared app: universal-remote work, TV-B-Gone style sweeps, and hitting several devices in a room at once.",
+    "honest_take": "Two things to be clear about. First, this is a resistor-and-LED board with no chip on it - $60-$86 buys you Rabbit-Labs' thermal design, hand assembly and the credit-card-slim form factor, not silicon. Second, the IR flood is for consumer remote-control protocols, not for blinding security cameras: these LEDs emit 38 kHz-modulated pulse trains a few milliseconds long, most surveillance cameras run an IR-cut filter in daylight and auto-exposure at night, and even if you did bloom the sensor you would produce an obvious white glare that reads as deliberate tampering. Treat 'IR flood' as 'wider remote coverage', not as camera defeat.",
+    "best_for": [
+      "Turning off every TV in a large room or a bar",
+      "IR work at longer range than the Flipper's built-in LED allows",
+      "Wide-angle coverage where you cannot aim precisely"
+    ],
+    "not_for": [
+      "Blinding or defeating CCTV and facial recognition",
+      "Anything needing a tight long-throw beam - the Masta-Blasta is the 'throw' board, this is the 'flood' one",
+      "Anyone expecting a chip on the board"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No microcontroller. Passive LED driver board.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "None; powered from the Flipper's GPIO 5V rail",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper GPIO header"
+      ],
+      "gpio": "Mates with the Flipper Zero 18-pin GPIO header; uses the IR signal output pin plus 5V and GND",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, slim profile designed to fit under a silicone sleeve; cases sold separately via TronCases",
+      "notable_physical": [
+        "Vendor states 18 IR LEDs of which 8 are high output",
+        "Flush mount, no status LEDs",
+        "Designed for heat dissipation, runs cooler than competing blasters per vendor"
+      ]
+    },
+    "capabilities": {
+      "ir_tx": {
+        "v": "yes",
+        "note": "This is its only function. Vendor claims switching up to 1 MHz, well above the 38-56 kHz carriers consumer IR uses"
+      },
+      "ir_flood": {
+        "v": "yes",
+        "note": "Wide-angle emission pattern - vendor's stated design goal is coverage and 'lucky reflections', not throw"
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Uses the Flipper's stock Infrared app and its universal remote database; the board only adds output power"
+      },
+      "ir_rx": {
+        "v": "no",
+        "note": "No receiver on this board. IR learning still uses the Flipper's own onboard IR receiver"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Infrared remote control is unregulated as radio spectrum. The legal exposure is in what you do with it - switching off displays, projectors or equipment you do not own can be criminal mischief or disorderly conduct regardless of the technology used. Owning and using it on your own equipment is unremarkable."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a - uses the Flipper's built-in Infrared app",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Slim Shady",
+      "Slim Shady IR Blaster",
+      "RL Slim Shady"
+    ],
+    "sources": [
+      {
+        "url": "https://rabbit-labs.com/product/the-slim-shady-ir-blaster/",
+        "what": "price range, in-stock status, vendor claim of 18 LEDs / 8 high output, 1 MHz switching, flood-vs-throw positioning"
+      },
+      {
+        "url": "https://lab401.com/products/slim-shady-ir-blaster",
+        "what": "EU price and stock, the exact Flipper GPIO settings needed, and a conflicting LED count of 12"
+      },
+      {
+        "url": "https://rabbit-labs.com/product/the-rabbit-labs-slim-shady-prototype/",
+        "what": "confirms the $99 'Prototype' is a 17-unit collector run of pre-production boards, not a different design"
+      },
+      {
+        "url": "https://ipvm.com/reports/face-recognition-blocking-glasses-tested",
+        "what": "independent testing showing IR-based countermeasures largely fail against modern camera/face-recognition systems"
+      },
+      {
+        "url": "https://ellipsesecurity.com/2018/05/850nm-vs-940nm-ir-illuminator/",
+        "what": "940 nm is the invisible-but-weaker wavelength; ~50% less effective range than 850 nm"
+      }
+    ],
+    "research_gaps": [
+      "LED count is disputed: Rabbit-Labs says 18 LEDs (8 high output), Lab401's listing for the same product says 12 high-power LEDs. Could not resolve which revision is shipping.",
+      "No LED part number, forward current, radiant intensity (mW/sr) or measured range published",
+      "Current draw from the Flipper 5V rail not published; unclear how close it runs to the Flipper's boost converter limit",
+      "Release year is inferred from the earliest marketplace listings found, not stated by the vendor"
+    ]
+  },
+  {
+    "id": "rabbit-labs-ghost-board",
+    "hardware_id": "rabbit-labs-ghost-board",
+    "name": "Rabbit-Labs RL Ghost Board (ESP32-C6)",
+    "firmware": "GhostESP (Revival) v1.6.1 as shipped",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/GhostESP-Revival/GhostESP",
+    "firmware_note": "Ships pre-flashed with GhostESP; all of the board's features are that firmware's features, and it is upgradeable in a browser.",
+    "vendor": "Rabbit-Labs",
+    "vendor_url": "https://rabbit-labs.com",
+    "product_url": "https://rabbit-labs.com/product/spookyesp-the-esp32-c6-board-that-sends-shivers-down-your-spine/",
+    "category": "accessory",
+    "subcategory": "flipper-wifi-board",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 74.99,
+    "price_note": "74.99 bare; 79.19 with a 32 GB SD card; 117.99 bundled with a GPS module. Checked 2026-09-06, in stock.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Plug and play physically, but the GhostESP menus expect you to already understand APs, stations, deauth and captive portals.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero on the GPIO header (or USB-C for standalone use). Pre-flashed; no soldering.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "An ESP32-C6 carrier board for the Flipper Zero, pre-flashed with GhostESP, with an SD slot, three RGB status LEDs and an expansion header for GPS or another ESP32. It gives a Flipper 2.4 GHz Wi-Fi and BLE attack and capture tooling that the Flipper's own STM32WB radio cannot do.",
+    "honest_take": "Underneath, this is an ESP32-C6 module - about $6-10 in single quantities, or $15-20 as a finished dev board - on a Flipper-shaped PCB with an SD slot and three RGB LEDs, running firmware written by volunteers. That is a real convenience and Rabbit-Labs' build quality is well reviewed, but $75 is mostly form factor, assembly and brand. Note also the ESP32-C6 is 2.4 GHz only: it cannot see or touch 5 GHz networks, which is where most modern traffic lives. And the 'AirTag detector' and 'Flipper detector' features are BLE advertisement pattern-matching, not tracking-hardware detection.",
+    "best_for": [
+      "Adding Wi-Fi and BLE tooling to a Flipper without carrying a second device",
+      "Evil Portal / captive portal demos",
+      "Learning 802.11 management-frame behaviour on 2.4 GHz"
+    ],
+    "not_for": [
+      "5 GHz networks - use a C5-based board like the Poltergeist instead",
+      "Sub-GHz work; there is no CC1101 here",
+      "Anyone who would rather flash the same free firmware onto a $15 ESP32-C6 dev board"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C6",
+      "mcu_primary_note": "RISC-V, 2.4 GHz Wi-Fi 6 (2.4 GHz only), Bluetooth 5 LE, 802.15.4 (Zigbee/Thread radio present in silicon; GhostESP does not expose Zigbee attack tooling). Exact module variant not published.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-C6 (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz only, 802.11b/g/n/ax"
+        },
+        {
+          "ic": "ESP32-C6 (integrated)",
+          "role": "ble",
+          "note": "Bluetooth 5 LE - scanning and advertisement spam"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery; powered from the Flipper GPIO header or USB-C",
+      "charging": "USB-C (power/flashing only)",
+      "pmic": null,
+      "storage": "microSD slot (32 GB card in some bundles)",
+      "connectivity": [
+        "USB-C",
+        "Flipper GPIO header (UART)",
+        "Wi-Fi 2.4 GHz",
+        "BLE"
+      ],
+      "gpio": "Flipper 18-pin GPIO header, plus an expansion slot documented by the vendor as taking GPS, a second ESP32, or other modules",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB",
+      "notable_physical": [
+        "Three RGB LEDs with Stealth / Normal / Rainbow modes",
+        "microSD slot",
+        "Expansion slot for GPS or a second ESP32"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "GhostESP AP and station scans"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "Notable absence: the ESP32-C6 radio is 2.4 GHz only, so 5 GHz networks are invisible to this board"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "802.11 management frame injection; blocked by 802.11w/PMF on WPA3 and PMF-enabled WPA2"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "GhostESP beacon spam with customisable SSID lists"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "GhostESP Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Portal HTML served from the microSD card"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "PCAP of handshakes / PMKID to SD; cracking is off-device"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "GhostESP feature"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Probe request and beacon capture"
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "GhostESP has wardrive export but needs the optional GPS module for coordinates"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used for the portal and control interface"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Several GhostESP BLE scan modes including raw packet view"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "BLE advertisement spam; largely mitigated on current iOS"
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "GhostESP BLE spam"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Arbitrary advertisements from the C6 BLE radio"
+      },
+      "detect_airtag": {
+        "v": "partial",
+        "note": "Matches Apple Find My BLE advertisement payloads in a scan list; does not defeat MAC rotation or find a tracker in its silent period"
+      },
+      "detect_flipper": {
+        "v": "partial",
+        "note": "Matches the BLE advertisement/name pattern of a stock Flipper Zero; trivially evaded by renaming or disabling BLE"
+      },
+      "detect_generic_ble": {
+        "v": "yes",
+        "note": "Raw BLE packet scanning"
+      },
+      "gps": {
+        "v": "addon",
+        "note": "GPS is a bundle option (Rabbit-Labs 'Dr Where GPS') on the expansion slot, not onboard"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "PCAP and portal files on microSD"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Runs from USB-C without a Flipper, but with no screen the Flipper (or a serial terminal) is the practical UI"
+      },
+      "zigbee": {
+        "v": "unknown",
+        "note": "The ESP32-C6 has an 802.15.4 radio in silicon, but no exposed Zigbee tooling was found in GhostESP"
+      },
+      "subghz_tx": {
+        "v": "no",
+        "note": "No CC1101 on this board"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The board itself is a plain ESP32 carrier and is not restricted anywhere we found. Using it to deauthenticate clients, stand up a fake AP or harvest credentials through a captive portal against networks you do not own is a computer-misuse offence in most jurisdictions and an FCC interference issue in the US. Owning it and testing your own network is fine; check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-09",
+      "app_store": "No - features come from GhostESP; the Flipper side uses the GhostESP companion FAP",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "RL Ghost Board",
+      "Ghost Board",
+      "SpookyESP",
+      "GhostESP board"
+    ],
+    "sources": [
+      {
+        "url": "https://rabbit-labs.com/product/spookyesp-the-esp32-c6-board-that-sends-shivers-down-your-spine/",
+        "what": "price tiers, in-stock status, ESP32-C6, SD slot, three RGB LEDs, expansion slot, shipped GhostESP v1.6.1"
+      },
+      {
+        "url": "https://github.com/GhostESP-Revival/GhostESP",
+        "what": "current maintained firmware, GPL-3.0, full feature list and supported chip list including ESP32-C6"
+      },
+      {
+        "url": "https://api.github.com/repos/Spooks4576/Ghost_ESP",
+        "what": "the original Ghost_ESP repo is archived, last push 2025-04-22"
+      },
+      {
+        "url": "https://github.com/jaylikesbunda/ghost_esp_app",
+        "what": "the Flipper Zero companion FAP for GhostESP"
+      },
+      {
+        "url": "https://docs.ghostesp.net/latest/wifi/deauth/",
+        "what": "GhostESP's own documentation stating 5 GHz deauth needs a C5 board, i.e. not this one"
+      }
+    ],
+    "research_gaps": [
+      "Exact ESP32-C6 module variant, antenna type and PCB revision not published",
+      "No independent teardown found",
+      "Whether the expansion slot is a documented pinout or a Rabbit-Labs-proprietary connector could not be confirmed",
+      "Release year is inferred (GhostESP itself only appeared in 2024), not stated by the vendor"
+    ]
+  },
+  {
+    "id": "rabbit-labs-flux-capacitor",
+    "hardware_id": "rabbit-labs-flux-capacitor",
+    "name": "Rabbit-Labs Flux Capacitor (Amplified CC1101)",
+    "firmware": "n/a - uses the Flipper's external sub-GHz module support",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No firmware of its own. The Flipper drives it over hardware SPI once Sub-GHz > Radio Settings is switched from Internal to External; Momentum and Unleashed builds also drive the PA enable lines.",
+    "vendor": "Rabbit-Labs",
+    "vendor_url": "https://rabbit-labs.com",
+    "product_url": "https://rabbit-labs.com/product/rabbit-labs-flux-capacitor-amplified-cc1101/",
+    "category": "accessory",
+    "subcategory": "flipper-subghz-board",
+    "status": "available",
+    "released": "2024",
+    "price_usd": 58.99,
+    "price_note": "58.99 with the stock 433 MHz antenna, 63.99 with the high-gain antenna. Checked 2026-09-06, in stock. The Ebyte E07-433M20S module it is built around costs roughly $8-12 on its own.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Physically plug-and-play, but you must switch the Flipper to the external radio, and you must understand that an amplified TX has legal consequences the internal radio does not.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero (GPIO header). An antenna MUST be attached before transmitting or the PA can be damaged.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A Flipper Zero GPIO board carrying an Ebyte E07-433M20S module - a CC1101 with an integrated power amplifier and low-noise amplifier - on a low-noise 5 V regulated supply with an SMA antenna. It replaces the Flipper's internal sub-GHz radio for both receive and transmit, raising rated TX from the CC1101's +12 dBm maximum to +20 dBm and adding an LNA on receive.",
+    "honest_take": "Two hard truths. One: the amplifier is band-locked. The E07-433M20S is specified 425-450.5 MHz, so this board is a 433 MHz device - at 315 MHz, 868 MHz or 915 MHz the PA and matching network are out of band and you are worse off than the Flipper's stock radio, not better. Two: the extra power is the legally dangerous part. In the US, 433 MHz consumer remotes operate under FCC Part 15.231, which caps field strength at roughly 11 mV/m at 3 m and forbids continuous transmission; +20 dBm into a gain antenna is far outside that, and 433.05-434.79 MHz overlaps the 70 cm amateur band, where unlicensed transmission is separately prohibited. Ten dB is also only about 3x the range in free space, not the kilometres the module's marketing implies - that figure assumes 5 dBi antennas at 2.5 m height in open ground at 1.2 kbps, not a jammer-in-a-pocket scenario.",
+    "best_for": [
+      "Receiving weak 433 MHz signals at range that the stock Flipper radio misses",
+      "Licensed amateurs working legally in the 70 cm band",
+      "Bench work on 433 MHz devices where you control the RF environment"
+    ],
+    "not_for": [
+      "315 MHz, 868 MHz or 915 MHz work - the amplifier does not cover those bands",
+      "Anyone who cannot articulate why the extra transmit power is legal where they are",
+      "Defeating rolling codes; more power does not help against KeeLoq or AES rolling-code systems"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU. The Flipper's STM32WB55 drives the CC1101 over SPI.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101 (inside Ebyte E07-433M20S)",
+          "role": "sub-ghz",
+          "note": "Module rated 425-450.5 MHz, max TX 20 dBm (19-21 dBm), RX sensitivity -109 dBm typical at 2.4 kbps, TX current ~100 mA, RX ~20 mA, OOK/ASK/GFSK/2-FSK/4-FSK/MSK, 26 MHz crystal"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "None; powered from the Flipper's 5 V GPIO rail through a low-noise regulator per the vendor",
+      "charging": null,
+      "pmic": "Vendor states an ultra-low-noise 5 V regulator; exact part not published",
+      "storage": null,
+      "connectivity": [
+        "Flipper GPIO header (SPI)",
+        "SMA antenna connector"
+      ],
+      "gpio": "Flipper 18-pin GPIO header; uses the hardware SPI pins plus PA/LNA enable lines (the E07 exposes TX_EN and RX_EN)",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB",
+      "notable_physical": [
+        "SMA antenna connector with 90-degree bullet-style 433 MHz antenna included",
+        "Two-part naming: PA and LNA are integrated in the Ebyte module, not discrete on the Rabbit-Labs PCB"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "-109 dBm typical at 2.4 kbps per the E07 datasheet. The LNA genuinely helps the front end, but note this is not directly comparable to TI's bare-CC1101 figure of -116 dBm at 0.6 kBaud - different data rates. Treat 'better RX' as real but unquantified"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Rated 20 dBm / 100 mW at 433 MHz, versus a bare CC1101's +12 dBm maximum - so about +8 dB, roughly 2.5x free-space range. See legal notes"
+      },
+      "subghz_amplified": {
+        "v": "yes",
+        "note": "Integrated PA and LNA in the Ebyte module; the specific PA die part number is not published by Ebyte"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "SMA. Vendor warns that transmitting with no antenna attached can permanently damage the module"
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Uses the Flipper's own Sub-GHz app with the radio set to External; capture and replay behaviour is unchanged"
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Notable absence: amplification does nothing against rolling codes. KeeLoq/AES remotes still defeat replay regardless of TX power"
+      },
+      "subghz_bruteforce": {
+        "v": "partial",
+        "note": "The Flipper's brute-force FAPs work through the external radio, but this raises the legal exposure sharply because you are now transmitting continuously at 100 mW"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "This is the highest-risk item in this batch. Owning it is fine. Transmitting is where the trouble is: in the US, 433 MHz unlicensed use falls under 47 CFR 15.231, which permits only short control transmissions at low field strength and explicitly forbids continuous transmission - a 100 mW amplified carrier is not compliant, and 433.05-434.79 MHz also sits inside the 70 cm amateur allocation where you need a licence. In the EU, 433.05-434.79 MHz is a short-range-device band with a 10 mW ERP limit for most sub-bands, so 100 mW is illegal there too without a specific authorisation. Amplified transmission also converts what might be nuisance-level interference into something regulators actually chase. Check your local rules and do not transmit into the air without authorisation."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a - uses the Flipper's built-in Sub-GHz app and community FAPs",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Flux Capacitor",
+      "RL Flux Capacitor",
+      "Amplified CC1101 board"
+    ],
+    "sources": [
+      {
+        "url": "https://rabbit-labs.com/product/rabbit-labs-flux-capacitor-amplified-cc1101/",
+        "what": "price variants, in-stock status, E07-433M20S chipset, 100 mW, 425-450 MHz, SMA, low-noise regulator, mandatory-antenna warning"
+      },
+      {
+        "url": "https://www.cdebyte.com/Uploadfiles/Files/2022-1-12/2022112107401932.pdf",
+        "what": "E07-433M20S datasheet: 425-450.5 MHz, 19/20/21 dBm min/typ/max, -109 dBm sensitivity, 100 mA TX, 20 mA RX, built-in PA+LNA, 2 km figure's test conditions"
+      },
+      {
+        "url": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-15/subpart-C/subject-group-ECFR2f2e5828339709e/section-15.231",
+        "what": "47 CFR 15.231 field-strength limits and the prohibition on continuous transmission for 433 MHz control devices"
+      },
+      {
+        "url": "https://github.com/quen0n/flipperzero-ext-cc1101",
+        "what": "reference design and wiring for external CC1101 modules on the Flipper GPIO header"
+      },
+      {
+        "url": "https://www.cdebyte.com/products/E07-433M20S",
+        "what": "Ebyte product page confirming 425-450.5 MHz / 20 dBm / SPI"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "bare CC1101 maximum output is +12 dBm across 300-348 / 387-464 / 779-928 MHz, which is the baseline this board improves on"
+      }
+    ],
+    "research_gaps": [
+      "Ebyte does not publish the PA die part number inside the E07-433M20S, so the actual amplifier IC could not be identified",
+      "Rabbit-Labs does not publish the regulator part, PCB revision or a schematic",
+      "No independent measurement of delivered TX power at the SMA connector was found; the 20 dBm figure is the module's datasheet rating, not a measurement of this board",
+      "Behaviour outside 425-450 MHz (e.g. at 315 or 868 MHz) is not documented by the vendor; the out-of-band degradation stated here is inferred from the module's specified range",
+      "Release year is inferred from the earliest marketplace listings found, not stated by the vendor"
+    ]
+  },
+  {
+    "id": "rabbit-labs-multi-pass-magspoof",
+    "hardware_id": "rabbit-labs-multi-pass-magspoof",
+    "name": "Rabbit-Labs Multi Pass MagSpoof Flipper Board",
+    "firmware": "n/a - driven by the magspoof_flipper app",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/zacharyweiss/magspoof_flipper",
+    "firmware_note": "No firmware onboard. The Flipper runs the MagSpoof app (zacharyweiss upstream, or the HummusSec fork the vendor recommends) and toggles an H-bridge on GPIO pins A7/A6/A4.",
+    "vendor": "Rabbit-Labs",
+    "vendor_url": "https://rabbit-labs.com",
+    "product_url": "https://rabbit-labs.com/product/rabbit-labs-multi-pass-magspoof-flipper-board/",
+    "category": "accessory",
+    "subcategory": "flipper-magstripe-board",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 30.85,
+    "price_note": "30.85 direct from Rabbit-Labs on 2026-09-06, in stock. The Tindie listing for the same board is $42.35 and shows sold out, redirecting buyers to the main site.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The board is simple, but the app is a work in progress that often has to be compiled yourself, and getting a reliable swipe is a matter of practised technique.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero (GPIO header) plus the MagSpoof FAP. Hand-soldered and tested by the vendor; no assembly needed by the buyer.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A credit-card-thin PCB carrying an H-bridge, two large capacitors and a coil, based on Samy Kamkar's MagSpoof. Attached to a Flipper Zero it generates a changing magnetic field that a magnetic-stripe reader head interprets as a card being swiped, letting you replay previously captured track data. Its practical selling point over the Flipper's internal-TX hack is that it does not risk damaging the Flipper's own radio hardware.",
+    "honest_take": "This is a legacy attack that gets less useful every year, and the board cannot read anything - it only replays track data you already have, in a format you had to obtain some other way. Against modern payment it is essentially dead: EMV chip and contactless generate a per-transaction cryptogram, so a cloned magstripe fails, and US merchants have been chip-liable since 2015. Where it still works is old, dumb readers - hotel door locks, gym and arcade cards, some parking and access badges, and time clocks - which is genuinely a real physical-red-team niche, just a much narrower one than the word 'MagSpoof' suggests. Also budget for frustration: the app the vendor points you at is openly described as buggy, and upstream magspoof_flipper has not had a code push since April 2025.",
+    "best_for": [
+      "Physical red team work against legacy magstripe access control",
+      "Demonstrating why magstripe should have been retired",
+      "Testing hotel-lock and badge readers you are authorised to test"
+    ],
+    "not_for": [
+      "Cloning modern chip or contactless payment cards - the cryptogram is what is checked, not the stripe",
+      "Reading cards; there is no read head on this board",
+      "Anyone expecting a polished, maintained app experience"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU. The Flipper's STM32WB55 bit-bangs the H-bridge directly.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "None; powered from the Flipper GPIO header. Two oversized capacitors act as the local energy reservoir for each field pulse.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper GPIO header"
+      ],
+      "gpio": "Default pins A7, A6 and A4 per the magspoof_flipper app; reassignable in the app's settings",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, deliberately no thicker than a credit card so it can be swiped through shielded reader slots",
+      "notable_physical": [
+        "Credit-card-thickness PCB designed to physically fit a swipe slot",
+        "Two oversized capacitors to maximise field strength per pulse",
+        "Coil electromagnet",
+        "Hand-soldered and individually tested by the vendor"
+      ]
+    },
+    "capabilities": {
+      "magspoof": {
+        "v": "yes",
+        "note": "Emulates a card swipe by driving a coil through an H-bridge; the reader head sees flux reversals identical to a real stripe"
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable absence: this is magnetic stripe, not 125 kHz RFID. It shares nothing with the Flipper's LF antenna"
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Not NFC. Contactless EMV is untouched by this board"
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "Cannot read cards at all - it is transmit-only and needs track data you obtained elsewhere"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "The hardware is a coil and an H-bridge and is not itself restricted. The use is the problem: in the US, possessing or using a device to encode or replay payment card data with intent to defraud is charged under 18 U.S.C. 1029 (access device fraud), and most states have separate skimming statutes; equivalent offences exist across the EU and UK. Replaying access badges you are not authorised to use is trespass or burglary depending on jurisdiction. Rabbit-Labs' own listing states it is for educational, research and personal use. Use only on cards and readers you own or are contracted to test, and keep the authorisation in writing."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": "2025-04",
+      "app_store": "Yes - magspoof is on Flipper Lab, but the vendor recommends the HummusSec fork which usually needs compiling",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Multi Pass",
+      "MagSpoof board",
+      "RL Multi Pass"
+    ],
+    "sources": [
+      {
+        "url": "https://rabbit-labs.com/product/rabbit-labs-multi-pass-magspoof-flipper-board/",
+        "what": "current price 30.85, in stock, credit-card-thickness PCB, two oversized capacitors, required app fork and compatible firmware branches"
+      },
+      {
+        "url": "https://www.tindie.com/products/tehrabbitt/rabbit-labstm-multi-pass-magspoof-flipper-board/",
+        "what": "Tindie SKU sold out at $42.35, ships from Sayreville NJ, 11 reviews, vendor's note that it cannot read cards"
+      },
+      {
+        "url": "https://github.com/zacharyweiss/magspoof_flipper",
+        "what": "app requirements: H-bridge + capacitor + coil on pins A7/A6/A4, warning that internal TX risks frying the Flipper, and that this board is a listed compatible module"
+      },
+      {
+        "url": "https://api.github.com/repos/zacharyweiss/magspoof_flipper",
+        "what": "last code push 2025-04-02, not archived, 729 stars - i.e. maintained slowly"
+      },
+      {
+        "url": "https://samy.pl/magspoof/",
+        "what": "Samy Kamkar's original MagSpoof project this is a port of"
+      }
+    ],
+    "research_gaps": [
+      "The H-bridge driver IC part number is not published ('genuine top-of-the-line Driver ICs' is the only vendor statement)",
+      "Capacitor values and coil turns/inductance not published; no schematic released",
+      "No independent measurement of how many reader models it successfully swipes",
+      "Could not locate the HummusSec magspoof fork repository directly - the vendor references it but does not link it",
+      "Release year is inferred from the earliest marketplace listings found, not stated by the vendor"
+    ]
+  },
+  {
+    "id": "flipper-blackhat",
+    "hardware_id": "flipper-blackhat",
+    "name": "Flipper BlackHat",
+    "firmware": "BlackhatOS (Armbian-based)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/o7-machinehum/flipper-blackhat-os",
+    "firmware_note": "A full Armbian Linux image on microSD, not an embedded firmware. It boots a real Debian userland so you run aircrack-ng, bettercap and Python scripts rather than menu items.",
+    "vendor": "Rootkit Labs (Ryan Walker)",
+    "vendor_url": "https://rootkitlabs.com",
+    "product_url": "https://shop.rootkitlabs.com/products/flipper-blackhat",
+    "category": "accessory",
+    "subcategory": "flipper-linux-board",
+    "status": "out-of-stock",
+    "released": "2025",
+    "price_usd": 133,
+    "price_note": "133 USD / 149.99 CAD. Product page read 'Sold out' on 2026-09-06 while the store's collection page showed it in stock - Shopify collection badges cache, so treat the product page as authoritative and expect intermittent restocks. US orders are quoted duties-included.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "advanced",
+    "skill_note": "This is a Linux box you drive from a command line over a serial bridge. If you are not comfortable with Armbian, wireless drivers and monitor mode, most of it will be out of reach.",
+    "build_effort": "flash-only",
+    "build_note": "Accessory: needs a Flipper Zero as its screen, keypad and power source, plus a fast microSD card you supply (the docs are blunt that slow cards are the cause of nearly all boot problems - SanDisk Extreme / UHS-3 class or better). No Flipper and no SD card are included.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A quad-core Allwinner A33 Linux single-board computer in a Flipper Zero GPIO board shape, which borrows the Flipper's screen, buttons and battery and talks to it over the USB-UART bridge at 115200 baud. It runs an Armbian image with real Linux wireless tooling, and ships with a 5 GHz USB Wi-Fi dongle alongside its onboard 2.4 GHz radio.",
+    "honest_take": "It is not an ESP32 board and comparing it to one misses the point - it is a 2014-era Android tablet SoC running Debian, which is both its strength (real aircrack-ng, real drivers, real scripting) and its weakness (512 MB RAM, a slow A7 cluster, and Wi-Fi that depends on Realtek out-of-tree drivers being happy). The 5 GHz capability everyone quotes comes from the bundled RTL8821CU USB dongle, not from the board's own RTL8723DS radio. Supply is the real problem: it sells out constantly, and the creator's hardware licence (CC BY-NC-SA) explicitly asks people not to resell boards, so there is no second source.",
+    "best_for": [
+      "Running genuine Linux wireless tooling with a Flipper as the interface",
+      "People who want a scriptable Linux target rather than a menu-driven firmware",
+      "Evil Twin and captive portal work with real hostapd/dnsmasq"
+    ],
+    "not_for": [
+      "Anyone expecting ESP32-class instant-on simplicity",
+      "Sub-GHz, NFC or 2.4 GHz non-Wi-Fi work - there is no CC1101, no nRF24, no GPS on it",
+      "Buyers who need it in stock today"
+    ],
+    "hardware": {
+      "mcu_primary": "Allwinner A33",
+      "mcu_primary_note": "Quad-core ARM Cortex-A7 at 1.8 GHz with Mali-400 MP2, a 2014 Android tablet SoC. 512 MB RAM. Boots Linux from microSD.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "RTL8723DS",
+          "role": "wifi",
+          "note": "Onboard 2.4 GHz only, 802.11b/g/n; the OS release notes reference rtw88_8723x driver patches, which tells you the driver situation is not trouble-free"
+        },
+        {
+          "ic": "RTL8821CU",
+          "role": "wifi",
+          "note": "Bundled external USB dongle - this is what provides 5 GHz, not the onboard radio"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery of its own; draws from the Flipper Zero, which is a meaningful load on the Flipper's 2100 mAh cell",
+      "charging": null,
+      "pmic": null,
+      "storage": "microSD required to boot; not included",
+      "connectivity": [
+        "2x USB-A",
+        "USB-C (via FTDI)",
+        "Flipper GPIO header (UART bridge at 115200)",
+        "20-pin FFC header for an optional screen"
+      ],
+      "gpio": "Flipper 18-pin GPIO header for the UART bridge and power; a 20-pin FFC connector (J8) is present for an optional display",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB; Rootkit Labs sells an 'Edgar Case 2.0' separately, and a 'Blackpants' accessory that turns it into a standalone Linux terminal",
+      "notable_physical": [
+        "Two USB-A host ports so you can attach your own Wi-Fi adapters",
+        "Bundled RTL8821CU 5 GHz dongle and stub antenna",
+        "FTDI on the USB-C port for console access"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Onboard RTL8723DS plus any USB adapter you attach"
+      },
+      "wifi_scan_5": {
+        "v": "partial",
+        "note": "Only via the bundled RTL8821CU USB dongle or another 5 GHz adapter; the onboard radio is 2.4 GHz only"
+      },
+      "wifi_monitor_mode": {
+        "v": "partial",
+        "note": "Depends entirely on which adapter and driver you use. Realtek chips are historically the weak end for monitor mode and injection; a known-good Atheros or MediaTek USB adapter is the usual fix"
+      },
+      "wifi_injection": {
+        "v": "partial",
+        "note": "Same caveat - driver-dependent, not guaranteed on the onboard radio"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Via standard Linux tooling; aircrack-ng was added to the V1.4 build"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Documented 'Evil Twin' tool in the Flipper-side app"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal logs credentials to /mnt/ep_logs on the SD card"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "aircrack-ng suite is in the image"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Full Linux hostapd"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Standard Linux tcpdump/pcap workflow"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Python and Bash scripts live in /mnt/scripts/; this is the main way you extend it"
+      },
+      "usb_ethernet_attack": {
+        "v": "unknown",
+        "note": "It has USB host ports and a Linux stack, but no documented gadget-mode attack tooling was found"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "It boots without a Flipper but has no screen or keyboard of its own unless you add the optional FFC display or the Blackpants accessory"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "Notable absence: no CC1101. Despite the Flipper form factor this adds nothing sub-GHz"
+      },
+      "nrf24_scan": {
+        "v": "no",
+        "note": "No nRF24 on the board"
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS module"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "It is a small Linux computer with Wi-Fi adapters; owning one raises no import issue we could find. The capabilities are the standard Linux wireless attack toolset, so the legal line is the usual one: deauthenticating clients, running a rogue AP, or capturing credentials on networks you do not own is a computer-misuse offence almost everywhere and an unlawful-interference issue with the FCC in the US. Note also the hardware licence is CC BY-NC-SA 4.0 and the creator asks that boards not be resold commercially."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-09",
+      "app_store": "No - it is Linux, you install packages; the Flipper-side .fap ships preinstalled in recent Momentum firmware",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "BlackHat",
+      "Flipper Blackhat",
+      "Rootkit Labs Blackhat"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.rootkitlabs.com/products/flipper-blackhat",
+        "what": "price 133 USD / 149.99 CAD, sold-out status on 2026-09-06, spec bullets (A33, 512 MB, RTL8723DS, 2x USB-A, USB-C via FTDI), box contents including the RTL8821CU dongle"
+      },
+      {
+        "url": "https://github.com/o7-machinehum/flipper-blackhat",
+        "what": "hardware repo, CC BY-NC-SA 4.0, creator's no-commercial-resale request"
+      },
+      {
+        "url": "https://github.com/o7-machinehum/flipper-blackhat-os",
+        "what": "BlackhatOS is Armbian-based and MIT-licensed; Buildroot build deprecated"
+      },
+      {
+        "url": "https://github.com/o7-machinehum/flipper-blackhat-os/releases",
+        "what": "V1.4 released 2026-09-04, aircrack added, rtw88_8723x driver patches - i.e. actively maintained and the onboard Wi-Fi driver still needs work"
+      },
+      {
+        "url": "https://github.com/o7-machinehum/flipper-blackhat-app",
+        "what": "the Flipper-side .fap, C, communicates over the USB-UART bridge at 115200 baud"
+      },
+      {
+        "url": "https://github.com/o7-machinehum/flipper-blackhat/wiki/Getting-Started",
+        "what": "SD card speed requirement, Evil Portal log path, Momentum preinstall"
+      },
+      {
+        "url": "https://www.cnx-software.com/2025/03/24/flipper-blackhat-is-a-flipper-zero-dual-band-wi-fi-card-with-an-allwinner-a33-processor/",
+        "what": "independent confirmation of the Allwinner A33 identification"
+      }
+    ],
+    "research_gaps": [
+      "Stock status is contradictory between the product page (sold out) and the collection page (in stock) - unresolved",
+      "No independent teardown or measurement of Wi-Fi injection reliability with the onboard RTL8723DS",
+      "Current draw from the Flipper battery, and how much Flipper runtime it costs, is not published"
+    ]
+  },
+  {
+    "id": "flipper-bffb-v2",
+    "hardware_id": "flipper-bffb-v2",
+    "name": "Flipper Zero BFFB v2",
+    "firmware": "ESP32 Marauder (Dev Board Pro distribution)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Runs the same Marauder firmware as the author's other boards; the BFFB is a hardware target in that project rather than having its own codebase.",
+    "vendor": "JustCallMeKoko LLC",
+    "vendor_url": "https://justcallmekokollc.com",
+    "product_url": "https://justcallmekokollc.com/products/flipper-zero-bffb-v2",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "out-of-stock",
+    "released": "2025",
+    "price_usd": 160,
+    "price_note": "160 USD. Product page read 'Sold out' on 2026-09-06 while the collection page showed in stock; the product page is the safer reading. The v1 board at $146 is also sold out.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Physically plug-and-play with a Flipper, but you are living in Marauder's menus and you will need to understand which antenna belongs on which SMA.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: designed for the Flipper Zero GPIO header, though the ESP32 can be driven standalone over USB. Enclosure designed by AWOK Dynamics. Five antennas must be fitted to the correct connectors.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "The 'Big Flipper Board' from the author of ESP32 Marauder: a maximalist Flipper add-on carrying an ESP32-C5 for dual-band Wi-Fi, two separate CC1101 radios individually tuned for the 400 MHz and 900 MHz bands, an nRF24 with PA and LNA, GPS and a microSD slot, with five SMA connectors on the edge. It is the most radio-dense Flipper add-on board that is actually a designed product rather than a generic import.",
+    "honest_take": "The two band-tuned CC1101s are the genuinely clever bit - a single CC1101 with one antenna is always a compromise across 300-900 MHz, and splitting it lets you also hang your own amplifier on each band. Everything else is the usual multiboard bill of materials, just done properly. Three practical warnings: it is expensive at $160 and almost never in stock; the Marauder wiki carries a dedicated 'BFFB NRF24 Fix' page, which means at least one revision shipped with an nRF24 hardware problem; and 500 mW into an nRF24 is not a magic weapon - it is still a 2.4 GHz GFSK transceiver, and pushing it that hard is an interference and legality question, not a capability upgrade.",
+    "best_for": [
+      "People who want one board instead of four",
+      "Sub-GHz work across both 300-450 and 850-950 MHz without swapping antennas",
+      "Marauder users who want the author's own reference hardware"
+    ],
+    "not_for": [
+      "Anyone on a budget - the same functions exist as separate $15-30 modules",
+      "Buyers who need it now; it is chronically sold out",
+      "Anyone assuming the 500 mW nRF24 is legal to run at full power where they live"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "Dual-band 2.4 and 5 GHz RISC-V Wi-Fi 6 SoC with BLE 5. Exact module variant not published.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "Two separate CC1101s on the board, one matched for the ~400 MHz band and one for the ~900 MHz band, each on its own SMA so an external PA can be added per band"
+        },
+        {
+          "ic": "nRF24L01+ with PA and LNA",
+          "role": "2.4ghz",
+          "note": "Amplified variant. v1 used an Ebyte nRF24 module rated 500 mW"
+        },
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "wifi",
+          "note": "2.4 and 5 GHz"
+        },
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "ble",
+          "note": "Bluetooth 5 LE"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery; powered from the Flipper or USB",
+      "charging": "USB-C (power/flashing)",
+      "pmic": null,
+      "storage": "microSD slot",
+      "connectivity": [
+        "Flipper GPIO header",
+        "USB-C",
+        "5x SMA antenna connectors"
+      ],
+      "gpio": "Flipper 18-pin GPIO header; the GPS is wired directly to the ESP32 rather than to the Flipper",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosure designed by AWOK Dynamics",
+      "notable_physical": [
+        "Five SMA connectors: 400 MHz, 900 MHz, GPS and two 2.4/5.8 GHz",
+        "Two independently band-tuned CC1101 radios",
+        "GPS module wired to the ESP32, not the Flipper"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32-C5 via Marauder"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "ESP32-C5 is dual-band; this is the main v1-to-v2 upgrade"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder management frame injection; ineffective against 802.11w/PMF"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Chip-capable, but the same PMF limitation applies and 5 GHz support in Marauder for C5 is newer and less proven"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Core Marauder feature"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "PCAP to microSD"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Marauder feature; cracking is off-device"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Portal files from microSD"
+      },
+      "wifi_wardriving": {
+        "v": "yes",
+        "note": "Onboard GPS wired to the ESP32; Marauder logs Wigle-compatible CSV"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Marauder sniffers"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32-C5 BLE"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam; largely mitigated on current iOS"
+      },
+      "ble_sniff": {
+        "v": "partial",
+        "note": "ESP32 BLE sniffing is advertisement-channel only; it is not a full connection-following sniffer like a dedicated dongle"
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Two CC1101s, one tuned ~400 MHz and one ~900 MHz"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Both CC1101s can transmit at their band; power is stock CC1101 unless you add your own amplifier"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Dedicated SMA per band"
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "No PA fitted from the factory. The board is designed so you can add your own per band - that is the point of the split"
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Amplified nRF24; see the Marauder wiki's 'BFFB NRF24 Fix' page - at least one revision had a hardware issue here"
+      },
+      "mousejack": {
+        "v": "partial",
+        "note": "The nRF24 hardware supports it, but mousejack targets are now largely patched - see the NRF24-for-Flipper entry"
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Onboard, wired to the ESP32. Module part number not published"
+      },
+      "gps_wardrive_log": {
+        "v": "yes",
+        "note": "Marauder wardrive logging with real coordinates"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD for PCAP, portals and wardrive logs"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "A board that can transmit on sub-GHz, 2.4 GHz Wi-Fi and 2.4 GHz nRF24 concurrently is several separate regulatory questions at once. Deauth against networks you do not own is a computer-misuse offence and an FCC interference issue in the US. Amplified nRF24 output at 500 mW exceeds what most ISM-band rules permit for that class of device in the EU and is well outside the assumptions the chip's certification was built on. Sub-GHz TX at 433 or 915 MHz has its own regional limits. Own it freely; get written authorisation before transmitting anything."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No - the ESP32 side is Marauder; the Flipper side uses a Marauder companion FAP",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "BFFB",
+      "BFFB v2",
+      "Big Flipper Board",
+      "Big F***ing Flipper Board"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/BFFB",
+        "what": "authoritative silicon list: 2x CC1101 at 400 and 900 MHz, Ebyte nRF24 500 mW, GPS wired to the ESP32, microSD, five-antenna ordering, Dev Board Pro firmware distribution, and the existence of a 'BFFB NRF24 Fix' page"
+      },
+      {
+        "url": "https://justcallmekokollc.com/products/flipper-zero-bffb-v2",
+        "what": "v2 price $160, sold-out status, ESP32-C5, AWOK Dynamics enclosure, and a customer review that spells out the acronym"
+      },
+      {
+        "url": "https://justcallmekokollc.com/products/flipper-zero-bffb",
+        "what": "v1 at $146, sold out, ESP32-WROOM-32EU"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "the firmware project, ~12k stars, actively maintained by the same author who sells the board"
+      },
+      {
+        "url": "https://www.geeky-gadgets.com/flipper-zero-gpio-board/",
+        "what": "independent coverage confirming the BFFB name and a $140 launch price in October 2024"
+      }
+    ],
+    "research_gaps": [
+      "Stock status contradictory between product page (sold out) and collection page (in stock)",
+      "GPS module part number not published",
+      "Could not confirm whether BFFB gerbers/schematics are published in the ESP32Marauder repo",
+      "The nature and scope of the 'BFFB NRF24 Fix' erratum was not established - which revisions are affected is unclear",
+      "nRF24 output power on v2 not stated; the 500 mW figure is from the v1 listing",
+      "Release year inferred; v1 launched October 2024 per Geeky Gadgets, v2 followed but no dated announcement was found"
+    ]
+  },
+  {
+    "id": "flipper-bffb-v1",
+    "hardware_id": "flipper-bffb-v1",
+    "name": "Flipper Zero BFFB (v1)",
+    "firmware": "ESP32 Marauder (Dev Board Pro distribution)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Same Marauder firmware family as v2, but flashed for an ESP32-WROOM target ('Other WROOM' setting in the Flipper ESP Flasher app).",
+    "vendor": "JustCallMeKoko LLC",
+    "vendor_url": "https://justcallmekokollc.com",
+    "product_url": "https://justcallmekokollc.com/products/flipper-zero-bffb",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "discontinued",
+    "released": "2024",
+    "price_usd": 146,
+    "price_note": "Last listed at $146 and shown sold out on 2026-09-06; Geeky Gadgets reported $140 at launch in October 2024. Superseded by v2.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Same as v2 - Marauder menus and correct antenna placement across five SMAs.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero on the GPIO header, or USB for standalone ESP32 use.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "The original Big Flipper Board: an ESP32-WROOM-32EU with two band-tuned CC1101 radios (400 MHz and 900 MHz), a 500 mW Ebyte nRF24, GPS and microSD, on five SMA connectors. Functionally identical to v2 except that its Wi-Fi radio is 2.4 GHz only.",
+    "honest_take": "The only meaningful difference from v2 is the Wi-Fi chip, and it is a big one: ESP32-WROOM-32 cannot see 5 GHz at all, so on a modern dual-band network this board is deaf to most of what is happening. If you find one second-hand, price it as a sub-GHz-plus-nRF24 board that happens to have 2.4 GHz Wi-Fi attached, not as a Wi-Fi tool.",
+    "best_for": [
+      "Sub-GHz work across two bands without antenna swapping",
+      "Second-hand buyers who mainly want the dual CC1101 and nRF24"
+    ],
+    "not_for": [
+      "5 GHz Wi-Fi of any kind",
+      "New purchases - v2 supersedes it"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-WROOM-32EU",
+      "mcu_primary_note": "Dual-core Xtensa LX6, 2.4 GHz Wi-Fi and Bluetooth Classic + BLE. The EU suffix denotes the external-antenna (U.FL) variant.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "Two on the board; one matched for ~400 MHz, one for ~900 MHz"
+        },
+        {
+          "ic": "Ebyte nRF24 module",
+          "role": "2.4ghz",
+          "note": "Vendor states 500 mW output - an amplified nRF24 variant. Exact Ebyte part number not published"
+        },
+        {
+          "ic": "ESP32-WROOM-32EU (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz only"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery",
+      "charging": "USB (power/flashing)",
+      "pmic": null,
+      "storage": "microSD slot",
+      "connectivity": [
+        "Flipper GPIO header",
+        "USB",
+        "5x SMA"
+      ],
+      "gpio": "Flipper 18-pin GPIO header; GPS wired to the ESP32",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Five SMA connectors, left to right: 2.4 GHz, 400 MHz, 900 MHz, GPS, 2.4 GHz",
+        "Two band-tuned CC1101s"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32-WROOM-32 via Marauder"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "Notable absence: the ESP32-WROOM-32 radio is 2.4 GHz only"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder; ineffective against 802.11w/PMF"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Marauder"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "PCAP to microSD"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder Evil Portal"
+      },
+      "wifi_wardriving": {
+        "v": "yes",
+        "note": "Onboard GPS and Wigle-compatible logging"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32 BLE"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam"
+      },
+      "bt_classic": {
+        "v": "partial",
+        "note": "The ESP32-WROOM-32 silicon has Bluetooth Classic, but Marauder's tooling is BLE-focused"
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Two CC1101s"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Stock CC1101 power unless you add an external PA"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Dedicated SMA per band"
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "500 mW Ebyte nRF24; see the Marauder wiki's BFFB NRF24 Fix page"
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Wired to the ESP32; part number not published"
+      },
+      "gps_wardrive_log": {
+        "v": "yes",
+        "note": "Marauder wardrive CSV"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same profile as v2: sub-GHz TX, Wi-Fi deauth and an amplified 2.4 GHz nRF24 are three separate regulatory exposures. The 500 mW nRF24 in particular exceeds normal ISM allowances for that device class in the EU. Owning is not the issue; transmitting without authorisation is."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No - Marauder plus a Flipper companion FAP",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "BFFB",
+      "BFFB v1",
+      "Big Flipper Board"
+    ],
+    "sources": [
+      {
+        "url": "https://justcallmekokollc.com/products/flipper-zero-bffb",
+        "what": "v1 price $146, sold-out status, ESP32-WROOM-32EU"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/BFFB",
+        "what": "v1 silicon and antenna ordering, 500 mW Ebyte nRF24, dual band-tuned CC1101, flashing instructions using the 'Other WROOM' setting"
+      },
+      {
+        "url": "https://www.geeky-gadgets.com/flipper-zero-gpio-board/",
+        "what": "$140 launch price, October 2024"
+      }
+    ],
+    "research_gaps": [
+      "Exact Ebyte nRF24 module part number not published",
+      "GPS module part number not published",
+      "No independent teardown found"
+    ]
+  },
+  {
+    "id": "meowkit-s3",
+    "hardware_id": "meowkit-s3",
+    "name": "MeowKit S3",
+    "firmware": "MeowKit firmware (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/mingolucky/MeowKit",
+    "firmware_note": "Open-source PlatformIO firmware; apps are self-contained Lua modules you drag onto the SD card over USB mass storage.",
+    "vendor": "MeowKit (Hong Kong)",
+    "vendor_url": "https://meowkit.cc",
+    "product_url": "https://meowkit.cc/products/meowkit-s3-standard-edition",
+    "category": "multitool",
+    "subcategory": "esp32-handheld",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 143,
+    "price_note": "143 USD for the Standard Edition (list 169) with the store region set to US, checked 2026-09-06. No stock indicator is shown on the product page, so shipping status could not be confirmed. Kickstarter super-early-bird was around $80.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "A finished handheld with a touchscreen, but the interesting work is writing or installing Lua apps.",
+    "build_effort": "assembled",
+    "build_note": "NOT a Flipper accessory - this is a standalone device and a Flipper competitor. It is in this batch only because it is repeatedly filed alongside Flipper add-ons. It needs no host device.",
+    "stealth": "discreet",
+    "form_factor": "handheld",
+    "summary": "A standalone ESP32-S3 pocket device with a 2.0-inch colour touchscreen, 16 MB flash and 8 MB PSRAM, audio in and out, an IMU, an RTC, IR transmit and receive, a microSD slot and an Arduino-style GPIO header. It funded on Kickstarter in late 2025 at nearly 2,800 percent of goal and ships with open-source Lua-scriptable firmware.",
+    "honest_take": "The 'Flipper Zero killer' framing in the YouTube coverage is not supportable by the hardware: there is no sub-GHz radio at all - no CC1101, nothing at 433/868/915 MHz - and no 125 kHz LF RFID, which between them are most of what people actually use a Flipper for. The 13.56 MHz NFC reader is an optional extra, not standard. What it is instead is a very well-specified ESP32-S3 handheld: bigger screen, far more memory, audio, motion sensing and a real GPIO header. Judge it as a maker's pocket computer, not as an RF tool. One published figure to distrust: at least one review quotes 2800 mAh; the vendor's own tech-spec page says 1200 mAh.",
+    "best_for": [
+      "Lua-scriptable ESP32-S3 projects in a finished handheld",
+      "Wi-Fi and BLE work with a decent colour screen",
+      "People who want a GPIO header and audio in a pocket device"
+    ],
+    "not_for": [
+      "Sub-GHz - there is no radio for it at any price",
+      "125 kHz RFID cloning",
+      "Anyone buying it as a Flipper Zero replacement on the strength of the marketing"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3-WROOM-1-N16R8",
+      "mcu_primary_note": "Dual-core Xtensa LX7 at 240 MHz, 16 MB flash, 8 MB PSRAM, 512 KB SRAM",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-S3 (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz 802.11b/g/n only - no 5 GHz"
+        },
+        {
+          "ic": "ESP32-S3 (integrated)",
+          "role": "ble",
+          "note": "Bluetooth 5.0 LE and Mesh; no Bluetooth Classic on the S3"
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56 MHz reader/emulator - listed by the vendor as OPTIONAL, not fitted to every unit"
+        }
+      ],
+      "display": {
+        "type": "IPS LCD (ST7789)",
+        "size_in": 2.0,
+        "resolution": "320x240",
+        "color": true,
+        "touch": true
+      },
+      "battery_mah": 1200,
+      "battery_note": "Li-ion, USB-C 5 V charging via an AXP173 PMU. A third-party review's 2800 mAh figure contradicts the vendor's own documentation and appears wrong.",
+      "charging": "USB-C",
+      "pmic": "AXP173",
+      "storage": "microSD up to 32 GB (3-wire SDMMC, 1-bit mode)",
+      "connectivity": [
+        "USB-C (native OTG: CDC/HID/MSC)",
+        "Wi-Fi 2.4 GHz",
+        "BLE 5.0",
+        "3.5 mm audio jack",
+        "16-pin Dupont GPIO header"
+      ],
+      "gpio": "16-pin Dupont header exposing 3.3 V, 5 V, I2C and SPI",
+      "sensors": [
+        "BMI270 IMU (accel + gyro)",
+        "BMM150 magnetometer",
+        "PCF8563ATL RTC",
+        "ZTS6216 MEMS microphone",
+        "IR receiver 950 nm / 38 kHz"
+      ],
+      "dimensions_mm": "62 x 68.5 x 19",
+      "weight_g": 75,
+      "case": "PC/ABS with 6061 aluminium",
+      "notable_physical": [
+        "Capacitive touch (FT6336) on top of A/B buttons and a 4-way joystick",
+        "ES8311 DAC + NS4150B class-D amp driving a 1 W 8 ohm speaker",
+        "IR TX at 930-970 nm"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32-S3 radio"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "Notable absence: ESP32-S3 is 2.4 GHz only"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Standard ESP32 capability"
+      },
+      "wifi_deauth_24": {
+        "v": "unknown",
+        "note": "The silicon can inject management frames, but whether the stock firmware ships deauth tooling could not be confirmed"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32-S3 BLE 5.0"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "ESP32-S3 BLE"
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "The ESP32-S3 has no Bluetooth Classic radio"
+      },
+      "hf_1356_read": {
+        "v": "addon",
+        "note": "Requires the optional ST25R3916 NFC option; not fitted as standard"
+      },
+      "hf_1356_emulate": {
+        "v": "addon",
+        "note": "Same optional NFC hardware"
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Notable absence: no 125 kHz LF antenna or reader at all"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "930-970 nm emitter"
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "950 nm / 38 kHz receiver"
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "RX and TX both present"
+      },
+      "usb_hid_inject": {
+        "v": "partial",
+        "note": "The S3 has native USB OTG with HID support, so BadUSB-style injection is possible; whether the stock firmware ships a payload runner could not be confirmed"
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Native USB MSC - this is how apps are installed"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Lua app modules on the SD card"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD up to 32 GB"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Own screen, battery and controls - it is not an accessory"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE. No sub-GHz radio of any kind. This is the single biggest gap versus a Flipper Zero"
+      },
+      "subghz_tx": {
+        "v": "no",
+        "note": "Same - no sub-GHz hardware exists on the board"
+      },
+      "ibutton_1wire": {
+        "v": "no",
+        "note": "No iButton contact"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "With no sub-GHz radio and no LF RFID, it raises far fewer regulatory questions than a Flipper Zero, and we found no import restrictions on it. Wi-Fi and BLE misuse - rogue APs, deauth if the firmware supports it, credential capture - remains a computer-misuse question wherever you are. If the optional NFC module is fitted, cloning access credentials you are not authorised to use is a separate offence."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No formal store; Lua app folders are copied to the SD card over USB",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "MeowKit",
+      "MeowKit-S3",
+      "MeowKit S3 Standard Edition"
+    ],
+    "sources": [
+      {
+        "url": "https://docs.meowkit.cc/tech-specs",
+        "what": "authoritative silicon list: ESP32-S3-WROOM-1-N16R8, ST7789, FT6336, 1200 mAh, AXP173, ES8311/NS4150B, BMI270/BMM150, PCF8563ATL, optional ST25R3916, and the absence of any sub-GHz radio"
+      },
+      {
+        "url": "https://meowkit.cc/products/meowkit-s3-standard-edition",
+        "what": "US price $143 (list $169) on 2026-09-06; no stock indicator shown"
+      },
+      {
+        "url": "https://github.com/mingolucky/MeowKit",
+        "what": "open-source PlatformIO firmware, ~252 stars"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/whitecliff/meowkit-versatile-device-for-makers",
+        "what": "the funding campaign, ended"
+      },
+      {
+        "url": "https://www.kicktraq.com/projects/whitecliff/meowkit-versatile-device-for-makers/",
+        "what": "HK$1,388,398 raised from 1,344 backers, 2,776 percent of goal, campaign ran 30 Sep to 14 Nov"
+      },
+      {
+        "url": "https://hackaday.io/project/204067-meowkit-versatile-device-for-makers",
+        "what": "creator identity and feature list"
+      },
+      {
+        "url": "https://docs.meowkit.cc/schematics.md",
+        "what": "published schematics"
+      }
+    ],
+    "research_gaps": [
+      "Current shipping/stock status unknown - the product page shows no stock indicator",
+      "Firmware licence could not be confirmed; no LICENSE file was located",
+      "Whether the stock firmware ships Wi-Fi deauth or a BadUSB payload runner could not be confirmed",
+      "meowkit.com is an unrelated cat-themed kitchenware company - the device vendor is meowkit.cc"
+    ]
+  },
+  {
+    "id": "awok-dual-touch-v3",
+    "hardware_id": "awok-dual-touch-v3",
+    "name": "AWOK Dual Touch v3",
+    "firmware": "None shipped - user flashes ESP32 Marauder or GhostESP",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "AWOK ships the board bare on purpose. The screen-side chip takes Marauder's _v6_1.bin and the Flipper-side chip takes _marauder_dev_board_pro.bin; GhostESP also supports it as MarauderV6_AwokDual.",
+    "vendor": "AWOK Dynamics",
+    "vendor_url": "https://awokdynamics.com",
+    "product_url": "https://awokdynamics.com/products/dual-touch-v3",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "discontinued",
+    "released": "2024",
+    "price_usd": 140,
+    "price_note": "MSRP 140 (reduced from 160) but SOLD OUT at AWOK on 2026-09-06, and delisted by Lab401, whose old URL now redirects to the C5 successor. The only in-stock listing found was a Chicago reseller on Tindie at 219.99, roughly 57 percent over MSRP, making no authorised-reseller claim. The current buyable equivalent is the AWOK Dual C5 Touch at 175 USD/EUR.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "It arrives with no firmware. You must flash two separate chips with two different binaries through two different USB ports before it does anything.",
+    "build_effort": "flash-only",
+    "build_note": "Accessory: designed for the Flipper Zero GPIO header, but each ESP32 also has its own USB port and can run standalone. No battery onboard - AWOK sells a separate 'Dual Board Battery Backpack' that takes a LiPo up to 75x45x10 mm.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A Flipper Zero add-on carrying two physically separate ESP32-WROOM chips: one drives a 240x320 ILI9341 touchscreen for standalone use, the other faces the Flipper over GPIO. A single GPS receiver is routed to either or both chips by DIP switches. It ships with no firmware at all - AWOK sells it explicitly as a development board.",
+    "honest_take": "Get the naming straight first: 'Dual' here means two ESP32 chips, not dual-band. Both are classic ESP32-WROOM, so this board is 2.4 GHz only and blind to 5 GHz networks - the AliExpress boards marketed as 'dual' mean the opposite thing. The touchscreen is also less than it sounds: per AWOK's own support, the top of the screen is up, the bottom is down and the middle is select, so it is a three-zone tap surface, not a touch UI. There is no CC1101 and no nRF24 on this board despite the multiboard framing. And it is effectively end-of-life: sold out at the vendor, delisted by its EU distributor, superseded by the C5 version. Do not pay a reseller $220 for it.",
+    "best_for": [
+      "Running two independent ESP32 firmwares at once - screen UI on one, Flipper CLI on the other",
+      "Wardriving with a Flipper, thanks to the onboard GPS",
+      "People who want to develop their own firmware on known-good Marauder-compatible hardware"
+    ],
+    "not_for": [
+      "5 GHz Wi-Fi - both chips are classic ESP32, 2.4 GHz only",
+      "Sub-GHz or nRF24 work; neither radio is on this board",
+      "Anyone who wants it to work out of the box - it ships blank",
+      "Buying new in 2026; get the C5 version instead"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-WROOM (classic ESP32)",
+      "mcu_primary_note": "Screen-side chip, white USB port. Runs Marauder's MARAUDER_V6_1 profile. Confirmed as classic esp32 (not S2/S3/C3) by the FZEasyMarauderFlash installer source.",
+      "mcu_secondary": "ESP32-WROOM (classic ESP32)",
+      "radios": [
+        {
+          "ic": "ESP32-WROOM (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz 802.11b/g/n only. Two independent radios, one per chip."
+        },
+        {
+          "ic": "ESP32-WROOM (integrated)",
+          "role": "ble",
+          "note": "BLE plus Bluetooth Classic in silicon; Marauder tooling is BLE-focused"
+        }
+      ],
+      "display": {
+        "type": "ILI9341 TFT",
+        "size_in": null,
+        "resolution": "240x320",
+        "color": true,
+        "touch": true
+      },
+      "battery_mah": null,
+      "battery_note": "No battery. AWOK sells a separate 'Dual Board Battery Backpack' (~$37) taking a 3.7 V LiPo up to 75x45x10 mm via JST PH2.0.",
+      "charging": "USB (two ports, one per ESP32)",
+      "pmic": null,
+      "storage": "Disputed - Marauder's config defines an SD chip select, but GhostESP documents the AWOK Dual variants as having no SD support. See research gaps.",
+      "connectivity": [
+        "Flipper GPIO header",
+        "2x USB (white = screen chip, orange = Flipper chip)",
+        "Wi-Fi 2.4 GHz x2",
+        "BLE x2"
+      ],
+      "gpio": "Flipper 18-pin GPIO header to the orange-port ESP32; DIP switches on the back route the GPS UART to either or both chips (default both)",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Injection-moulded case; separate 'Dual ESP32 Cases' SKU covers v2/v3/C5 (sold out)",
+      "notable_physical": [
+        "Two colour-coded USB ports for independent flashing",
+        "DIP switches to route GPS between the two chips",
+        "Internal ceramic GPS antenna with an SMA option for an external one",
+        "Known defect: moulding flash in the front bezel presses on the screen and causes phantom scrolling; AWOK's own fix is to trim the plastic and not overtighten the rear screws"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Both ESP32s; Marauder or GhostESP"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: both chips are classic ESP32, 2.4 GHz only. 'Dual' refers to two chips, not two bands"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder management frame injection; blocked by 802.11w/PMF"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Marauder"
+      },
+      "wifi_handshake_capture": {
+        "v": "partial",
+        "note": "Marauder supports it, but PCAP storage depends on the unresolved SD-card situation on this board"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder / Evil Portal; AWOK maintains a fork of flipper-zero-evil-portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal"
+      },
+      "wifi_wardriving": {
+        "v": "yes",
+        "note": "Onboard GPS; WiGLE-compatible logging is the board's most-cited use"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Marauder sniffers"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Standard ESP32"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Marauder / GhostESP BLE scanning"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam; largely mitigated on current iOS"
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Onboard receiver with internal ceramic antenna and an SMA option. Chipset NOT disclosed for v3 - conspicuous, since AWOK does name the Airoha 3335 on the newer C5 boards"
+      },
+      "gps_wardrive_log": {
+        "v": "yes",
+        "note": "WiGLE-compatible CSV via Marauder"
+      },
+      "sd_logging": {
+        "v": "unknown",
+        "note": "Contradictory: Marauder's board config defines SD_CS and AWOK sells SD cards, but GhostESP's own hardware matrix lists AWOK Dual as having no SD support"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "The screen-side chip has its own display and USB; a Flipper is optional"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: no CC1101 on this board, despite being commonly filed as a 'multiboard'"
+      },
+      "nrf24_scan": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: no nRF24. AWOK sells one as a separate ~$10 DIY board"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The board is two ESP32s and a GPS; we found no import restrictions. The exposure comes from what the firmware does: deauthentication frames and rogue access points against networks you do not own are computer-misuse offences in most jurisdictions and unlawful interference under FCC rules in the US. Passive wardriving (logging SSIDs and locations) is legal in most places but is regulated as personal-data processing in some, so check before publishing collected data."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-09",
+      "app_store": "No - Marauder or GhostESP, plus a Flipper companion FAP",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "AWOK Dual Touch",
+      "Dual Touch v3",
+      "AWOK Dual ESP32 Touch"
+    ],
+    "sources": [
+      {
+        "url": "https://awokdynamics.com/products/dual-touch-v3",
+        "what": "MSRP $140 (from $160), sold out, two ESP32-WROOM chips, no firmware included, the bezel/phantom-scroll defect, 4.62/5 from 29 vendor-hosted reviews"
+      },
+      {
+        "url": "https://awokdynamics.com/pages/faq",
+        "what": "white USB = screen chip, orange USB = Flipper chip; Marauder as the primary firmware; all sales final; no fixed restock timeline"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/SkeletonMan03/FZEasyMarauderFlash/main/EasyInstall.py",
+        "what": "decisive chip identification: chip=esp32 for both v3 ports (v2's orange port was esp32s2)"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/justcallmekoko/ESP32Marauder/master/esp32_marauder/configs.h",
+        "what": "MARAUDER_V6_1 defines ILI9341, 240x320, HAS_TOUCH; DEV_BOARD_PRO is a headless profile with GPS and BT"
+      },
+      {
+        "url": "https://docs.ghostesp.net/latest/getting-started/supported-hardware/",
+        "what": "GhostESP hardware matrix listing AWOK Dual with GPS but no SD support and manual-only OTA"
+      },
+      {
+        "url": "https://lab401.com/products/awok-dual-touch-c5",
+        "what": "the C5 successor at 175 EUR/USD, in stock, dual ESP32-C5-WROOM with Airoha 3335 GNSS - confirms the v3 is superseded"
+      },
+      {
+        "url": "https://www.tindie.com/products/ucshop/flipper-zero-dual-touch-v3-esp32-wi-fi-board-gps/",
+        "what": "the only in-stock v3 found: $219.99 from a Chicago reseller with no authorisation claim"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/update-firmware",
+        "what": "the Marauder project names AWOK Dynamics as a legitimate vendor alongside JustCallMeKoko LLC and Rabbit-Labs"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder/issues/1007",
+        "what": "a Dual Mini V3 bricked to a white screen after a failed SD-card flash; USB driver problems are the dominant failure mode"
+      }
+    ],
+    "research_gaps": [
+      "GPS receiver chipset is not disclosed anywhere for the v3",
+      "Touch controller part not confirmed (XPT2046 is the usual Marauder v6 pairing but this is an inference)",
+      "SD card presence/support is contradictory between Marauder's config and GhostESP's hardware matrix - needs physical verification",
+      "esp32marauder.com claims _marauder_dev_board_pro.bin targets an ESP32-S3, contradicting the flasher source; the flasher source is more authoritative but the conflict is unresolved",
+      "Board dimensions not published; the battery backpack's 75x45x10 mm limit is the only proxy",
+      "Reddit could not be accessed during research, so community sentiment is missing",
+      "Release year inferred from the v2-to-v3 transition in the Marauder flasher; not stated by the vendor"
+    ]
+  },
+  {
+    "id": "awok-dual-mini-v3",
+    "hardware_id": "awok-dual-mini-v3",
+    "name": "AWOK Dual Mini v3",
+    "firmware": "None shipped - user flashes ESP32 Marauder or GhostESP",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Screen-side chip takes Marauder's _mini.bin (MARAUDER_MINI profile), Flipper-side chip takes _marauder_dev_board_pro.bin. GhostESP ships an AwokMini build.",
+    "vendor": "AWOK Dynamics",
+    "vendor_url": "https://awokdynamics.com",
+    "product_url": "https://awokdynamics.com/products/dual-mini-v3",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "discontinued",
+    "released": "2024",
+    "price_usd": 140,
+    "price_note": "MSRP 140 (reduced from 160) but SOLD OUT at AWOK on 2026-09-06. Superseded by the AWOK Dual C5 Mini at 170, also sold out. No authorised in-stock source found.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Ships blank; you flash two chips through two USB ports with two different binaries before it does anything.",
+    "build_effort": "flash-only",
+    "build_note": "Accessory: designed for the Flipper Zero GPIO header, with each ESP32 also usable standalone over its own USB. No battery; AWOK's battery backpack for this model takes a LiPo up to 65x35x10 mm.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "The smaller sibling of the Dual Touch: the same two-ESP32 architecture and onboard GPS, but with a 128x128 colour TFT and a five-way navigation joystick instead of a touchscreen. Like the Touch, it ships with no firmware and is meant to be flashed with Marauder or GhostESP.",
+    "honest_take": "Same caveats as the Touch, minus the flaky touch panel - which arguably makes the Mini the better of the two, since a joystick is a more reliable input than a three-zone tap surface. It is still two classic ESP32s, so still 2.4 GHz only, still no CC1101 and no nRF24, and still discontinued and sold out. Note that GhostESP's own hardware matrix lists the AWOK Mini as having no SD card support, which caps what you can do with packet capture on it.",
+    "best_for": [
+      "Compact standalone Marauder use with a physical joystick",
+      "Wardriving with GPS in a smaller footprint",
+      "Developing your own dual-ESP32 firmware"
+    ],
+    "not_for": [
+      "5 GHz Wi-Fi",
+      "Sub-GHz or nRF24 work",
+      "Anyone wanting a plug-and-play experience"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-WROOM (classic ESP32)",
+      "mcu_primary_note": "Screen-side chip, white USB port, runs Marauder's MARAUDER_MINI profile",
+      "mcu_secondary": "ESP32-WROOM (classic ESP32)",
+      "radios": [
+        {
+          "ic": "ESP32-WROOM (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz only, two independent radios"
+        },
+        {
+          "ic": "ESP32-WROOM (integrated)",
+          "role": "ble",
+          "note": "BLE and Bluetooth Classic in silicon"
+        }
+      ],
+      "display": {
+        "type": "Colour TFT (ST7735-class per the Marauder project's board notes)",
+        "size_in": null,
+        "resolution": "128x128",
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery. Separate 'Dual Board Battery Backpack' takes a 3.7 V LiPo up to 65x35x10 mm for this model.",
+      "charging": "USB (two ports)",
+      "pmic": null,
+      "storage": "GhostESP documents no SD support on the AWOK Mini; Marauder's config defines an SD chip select. Unresolved.",
+      "connectivity": [
+        "Flipper GPIO header",
+        "2x USB (white = screen chip, orange = Flipper chip)",
+        "Wi-Fi 2.4 GHz x2",
+        "BLE x2"
+      ],
+      "gpio": "Flipper 18-pin GPIO header; DIP switches route GPS to either or both ESP32s",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Injection-moulded case (separate SKU, sold out)",
+      "notable_physical": [
+        "Five-way navigation joystick instead of touch",
+        "Two colour-coded USB ports",
+        "Internal ceramic GPS antenna with SMA option"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Both ESP32s via Marauder or GhostESP"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: classic ESP32 chips, 2.4 GHz only"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder; blocked by 802.11w/PMF"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Marauder"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder / Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal"
+      },
+      "wifi_handshake_capture": {
+        "v": "partial",
+        "note": "Capture works but on-board storage is limited by the unresolved SD situation"
+      },
+      "wifi_wardriving": {
+        "v": "yes",
+        "note": "Onboard GPS; WiGLE-compatible logging"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Marauder sniffers"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Standard ESP32"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Marauder / GhostESP"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam"
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Onboard, chipset not disclosed for v3"
+      },
+      "gps_wardrive_log": {
+        "v": "yes",
+        "note": "WiGLE CSV"
+      },
+      "sd_logging": {
+        "v": "unknown",
+        "note": "GhostESP's matrix says no SD on the AwokMini; Marauder's config disagrees"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "128x128 screen and joystick on the screen-side chip"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: no CC1101"
+      },
+      "nrf24_scan": {
+        "v": "no",
+        "note": "NOTABLE ABSENCE: no nRF24; sold separately by AWOK as a ~$10 DIY board"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Same profile as the Dual Touch. No import restrictions found on the board itself. Deauthentication and rogue-AP use against networks you do not own is a computer-misuse offence in most jurisdictions and an FCC interference matter in the US. Passive wardriving is generally legal but the resulting location data may be regulated as personal data where you are."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-09",
+      "app_store": "No - Marauder or GhostESP plus a Flipper companion FAP",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "AWOK Dual Mini",
+      "Dual Mini v3",
+      "AwokMini"
+    ],
+    "sources": [
+      {
+        "url": "https://awokdynamics.com/products/dual-mini-v3",
+        "what": "MSRP $140 (from $160), sold out, two ESP32-WROOM chips, ships without firmware, 4.84/5 from 25 vendor-hosted reviews"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/justcallmekoko/ESP32Marauder/master/esp32_marauder/configs.h",
+        "what": "MARAUDER_MINI is 128x128 with five nav buttons"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/SkeletonMan03/FZEasyMarauderFlash/main/EasyInstall.py",
+        "what": "chip=esp32 (classic) for both v3 ports"
+      },
+      {
+        "url": "https://github.com/Spooks4576/Ghost_ESP/wiki/Board%E2%80%90Specific%E2%80%90Guide",
+        "what": "'AwokMini: 128x128 display with joystick', no SD support"
+      },
+      {
+        "url": "https://github.com/GhostESP-Revival/GhostESP/releases",
+        "what": "v2.1.3 (2026-09-05) still ships an AwokMini build, so firmware support is current even though the hardware is not sold"
+      },
+      {
+        "url": "https://deepwiki.com/justcallmekoko/ESP32Marauder/5.1-supported-boards-and-variants",
+        "what": "MARAUDER_MINI display identified as ST7735-class"
+      },
+      {
+        "url": "https://awokdynamics.com/products/dual-board-battery-backpack",
+        "what": "confirms no onboard battery; 65x35x10 mm LiPo limit for the Mini"
+      },
+      {
+        "url": "https://awokdynamics.com/products/dual-c5-mini",
+        "what": "the C5 successor at $170 (sold out), which does name its Airoha 3335 GNSS unlike the v3"
+      }
+    ],
+    "research_gaps": [
+      "GPS receiver chipset not disclosed for v3",
+      "Exact TFT panel part not confirmed (ST7735-class is from third-party board notes, not the vendor)",
+      "SD card support contradictory between Marauder and GhostESP documentation",
+      "Board dimensions not published",
+      "Reddit inaccessible during research; no independent community sentiment gathered",
+      "Release year inferred from the v2-to-v3 transition in the Marauder flasher; not stated by the vendor"
+    ]
+  },
+  {
+    "id": "flipper-multiboard-3in1-generic",
+    "hardware_id": "flipper-multiboard-3in1-generic",
+    "name": "Flipper Zero 3-in-1 Multi Board (generic ESP32 + CC1101 + nRF24)",
+    "firmware": "ESP32 Marauder on the ESP32; CC1101 and nRF24 driven natively by Flipper firmware",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Only the ESP32 needs firmware, and it is almost always Marauder (sometimes GhostESP). The CC1101 and nRF24 need no firmware at all - Momentum, Unleashed and stock Flipper firmware talk to them directly over SPI.",
+    "vendor": "Multiple - Honey Honey Lab, TSGP Studio, MTools Tec, rek5lab, FlipMods and many unbranded AliExpress sellers",
+    "vendor_url": "https://honeyhoneylab.com",
+    "product_url": "https://honeyhoneylab.com/products/flipper-zero-2in1-wifi-multi-board-esp32-nrf24",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 20,
+    "price_note": "Verified pricing at Honey Honey Lab (Australia) on 2026-09-06: 2-in-1 ESP32+nRF24 from A$15 (~US$10), 3-in-1 ESP32+nRF24+CC1101 from A$25 (~US$16), 3-in-1 with screen A$149 (~US$97), and the ESP32-C5 'Apex 5' from A$122 (~US$79, sold out). Other live sellers on the same date: MTools Tec, rek5lab and FlipMods on Tindie, and Elecrow. Unbranded AliExpress versions of the same open TSGP design sell for less. Treat this as a category with a US$10-100 spread, not a single SKU.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The hard part is not the hardware, it is knowing which GPIO pin mapping each radio expects and switching the Flipper's settings accordingly.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero on the GPIO header. Most versions also expose their own USB-C for flashing the ESP32 standalone. Antennas are usually supplied loose and must go on the right SMA.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "The commodity Flipper Zero expansion board: an ESP32 for Wi-Fi and BLE, a CC1101 for extra sub-GHz range with an external antenna, and an nRF24L01+ for 2.4 GHz raw packet work, usually with three SMA connectors and sometimes a small screen, microSD and GPS. Dozens of sellers ship near-identical designs; TSGP Studio publishes its gerbers openly, which is why the boards look the same everywhere.",
+    "honest_take": "This is genuinely a $6 ESP32 module, a $2-4 CC1101 module, a $2 nRF24 module and a few SMA jacks on a shared PCB - and you can verify that from the market, because a real vendor sells the bare 3-in-1 for about US$16 while brand-name Flipper boards with the same chip count ask $140-160. What the money buys at the low end is that someone routed the SPI bus and sorted out the pin conflicts, and that is not nothing: the three radios share the Flipper's limited GPIO, so most boards make you pick one at a time with a physical toggle, and the pin mapping differs between designs. Honey Honey's own Apex 5 shipped a first batch where the ESP32 and the GPS could not both be connected, which silently broke wardriving until a v2 board remapped the pins. Judge a specific board on whether its pinout matches your firmware's defaults, not on the chip list.",
+    "best_for": [
+      "Getting Wi-Fi, extra sub-GHz range and 2.4 GHz raw packet capability onto a Flipper for one modest price",
+      "Wardriving, on the versions that have GPS and a correct pin map",
+      "People happy to fiddle with GPIO settings"
+    ],
+    "not_for": [
+      "Using all three radios at once - most designs make you toggle between them",
+      "5 GHz Wi-Fi, unless the board specifically uses an ESP32-C5",
+      "Anyone who wants a guaranteed-consistent product; the same photo sells a dozen different pin maps"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S2 or classic ESP32-WROOM on most 3-in-1 boards; ESP32-S3 on the TSGP 4-in-1; ESP32-C5 on the newest 5 GHz versions",
+      "mcu_primary_note": "Varies by seller and revision - this is the single most important thing to check before buying, because it determines whether the board can see 5 GHz at all. Honey Honey's 3-in-1 uses an ESP32-S2 preloaded with Marauder; their Apex 5 uses an ESP32-C5 with 8 MB RAM and 8 MB flash.",
+      "mcu_secondary": "Some designs add a small second MCU for the on-board menu - the TSGP 4-in-1 uses an ESP-01F to drive its OLED",
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "Usually a single 433 MHz-matched module on its own SMA. Higher-end boards (Apex 5) fit two, one for 433 and one for 868, with an LED and a button to switch"
+        },
+        {
+          "ic": "nRF24L01+",
+          "role": "2.4ghz",
+          "note": "2.4 GHz GFSK transceiver, driven directly by Flipper apps - no ESP32 involvement"
+        },
+        {
+          "ic": "ESP32 (integrated)",
+          "role": "wifi",
+          "note": "2.4 GHz on most boards; 2.4 and 5 GHz only on the ESP32-C5 versions"
+        },
+        {
+          "ic": "ESP32 (integrated)",
+          "role": "ble",
+          "note": "BLE scanning and spam via Marauder"
+        }
+      ],
+      "display": {
+        "type": "Small colour or OLED status screen on some versions (Honey Honey quotes 1.2 inch)",
+        "size_in": 1.2,
+        "resolution": null,
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery on any version we found; powered from the Flipper or USB-C",
+      "charging": "USB-C (ESP32 flashing and standalone power)",
+      "pmic": null,
+      "storage": "microSD on most versions, used by Marauder for PCAP and portal files; some boards can also write to the Flipper's own SD card",
+      "connectivity": [
+        "Flipper GPIO header",
+        "USB-C",
+        "3-5x SMA antenna connectors"
+      ],
+      "gpio": "Shares the Flipper's 18-pin header. Typical mapping: CC1101 on the default SPI (pin group 4), nRF24 on 'Extra 7', ESP32 UART on 13/14 or 15/16, GPS NMEA UART on 13/14 - which is exactly where the conflicts arise",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure included by some sellers (Honey Honey, TSGP publish STLs); bare PCB from others",
+      "notable_physical": [
+        "Three or more SMA connectors, one per radio",
+        "A physical toggle or button to select which chipset is connected to the Flipper",
+        "Separate BOOT and RESET buttons for the ESP32"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32 running Marauder"
+      },
+      "wifi_scan_5": {
+        "v": "partial",
+        "note": "Only on the newer ESP32-C5 versions such as Honey Honey's Apex 5; the common ESP32-S2/WROOM boards are 2.4 GHz only"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder management frame injection; blocked by 802.11w/PMF"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Marauder"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Portal files from the board's microSD"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "PCAP to microSD or, on some boards, to the Flipper's SD card"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Marauder; cracking is off-device"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Marauder sniffers"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Only on GPS-equipped boards, and only when the pin map lets the ESP32 and GPS be connected at the same time - Apex 5 Batch 1 shipped without this and could not wardrive"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Standard ESP32"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Marauder BLE"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam; largely mitigated on current iOS"
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "External CC1101 on an SMA antenna; the Flipper drives it natively once Sub-GHz radio is set to External"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Stock CC1101 power, +12 dBm maximum - these boards improve range through the antenna, not through amplification"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Dedicated SMA, which is the real range benefit over the Flipper's internal helical antenna"
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "Standard CC1101 modules on the common boards; amplified E07-style modules are a different product"
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Flipper's own Sub-GHz app through the external radio"
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Driven by Flipper apps over SPI; no firmware needed on the board"
+      },
+      "mousejack": {
+        "v": "partial",
+        "note": "Hardware-capable via the Flipper nrf24 apps, but the underlying vulnerabilities were disclosed in 2016 and largely patched - see the NRF24 module entry"
+      },
+      "nrf24_jam": {
+        "v": "partial",
+        "note": "Community 'jammer' apps exist and are popular, but what they do is hop a single narrowband carrier across nRF24 channels, not wideband jamming. See legal notes"
+      },
+      "gps": {
+        "v": "partial",
+        "note": "Only on 4-in-1 and Apex-class boards. The TSGP 4-in-1 uses a Quectel L80-R; most sellers do not name the module"
+      },
+      "gps_wardrive_log": {
+        "v": "partial",
+        "note": "Depends on GPS presence and correct pin mapping"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD on most versions"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "The ESP32 can run from USB-C with the on-board screen, but the CC1101 and nRF24 are wired to the Flipper's SPI, so they are useless without it"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The board itself is three common radio modules; we found no import restrictions on the category. The risk is in use. Deauthentication frames and rogue access points against networks you do not own are computer-misuse offences in most countries and unlawful interference under FCC rules in the US. The 'nRF24 jammer' apps that circulate for these boards deliberately transmit to disrupt other users' equipment, which is a specific offence in the US (47 U.S.C. 333) and its equivalents elsewhere regardless of how low the power is. Sub-GHz transmission has separate regional limits. Owning the board is not the issue."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "sparse",
+      "last_release": "2026-09",
+      "app_store": "Yes - the Flipper side uses apps from Flipper Lab and the community catalogs; the ESP32 side is Marauder or GhostESP",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "3in1 Multi Board",
+      "Flipper Multi Board",
+      "Marauder Multi Board",
+      "ESP32 + CC1101 + NRF24 board",
+      "4in1 board",
+      "wardriving board"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/HoneyHoneyTeam/3in1-WIFI-MultiBoard-with-Screen",
+        "what": "verbatim spec for a mainstream 3-in-1: ESP32-S2 preloaded with Marauder, CC1101 at 433 MHz, nRF24, 1.2 inch screen, 3x SMA, 3-way toggle to select which chipset is connected, microSD, USB-C - and the key statement that the CC1101 and nRF24 need no extra firmware because Momentum/Unleashed support them natively"
+      },
+      {
+        "url": "https://github.com/HoneyHoneyTeam/ESP32-Marauder-5G-Apex-5-Module---For-Flipper-Zero",
+        "what": "the high-end version: ESP32-C5 with 8 MB RAM/flash, dual CC1101 for 433 and 868 with a switch and LEDs, nRF24, GPS; and the exact GPIO maps (CC1101 SPI default 4, nRF24 Extra 7, ESP32 UART 15/16 on V1 vs default 13/14 on V2, GPS NMEA 13/14) plus the admission that Batch 1 could not wardrive because of that conflict"
+      },
+      {
+        "url": "https://github.com/Daifresne/Flipper-zero-ESP32-NRF24-CC1101-3IN1-board",
+        "what": "TSGP Studio publishes the 3-in-1 PCB gerbers under CERN-OHL v1.2 - which is why identical boards appear from many sellers"
+      },
+      {
+        "url": "https://github.com/Daifresne/Flipper-zero-4IN1-board",
+        "what": "the 4-in-1 variant's parts: ESP32-S3 plus an ESP-01F menu controller, CC1101, nRF24 and a Quectel L80-R GPS, with gerbers, BOM and STLs published under GPL-3.0"
+      },
+      {
+        "url": "https://honeyhoneylab.com/products/flipper-zero-2in1-wifi-multi-board-esp32-nrf24",
+        "what": "a live, verifiable seller of this board class"
+      },
+      {
+        "url": "https://honeyhoneylab.com/collections/all",
+        "what": "verified live pricing and stock on 2026-09-06: 2-in-1 from A$15, 3-in-1 from A$25, 3-in-1 with screen A$149, Apex 5 from A$122 and sold out"
+      },
+      {
+        "url": "https://shop.mtoolstec.com/product/flipper-zero-3-in-1-nrf24esp32cc1101-multi-board-module",
+        "what": "a second live seller of the 3-in-1"
+      },
+      {
+        "url": "https://www.tindie.com/products/rek5lab/flipper-zero-marauder-esp32-cc1101-nrf24l01/",
+        "what": "a third live seller (rek5lab on Tindie)"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "the firmware the ESP32 side runs; ~12,200 stars, last push 2026-09-05, so actively maintained"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 maximum output is +12 dBm - these boards add antenna gain, not amplification"
+      },
+      {
+        "url": "https://www.law.cornell.edu/uscode/text/47/333",
+        "what": "47 U.S.C. 333 text: no person shall willfully or maliciously interfere with radio communications of any licensed or authorised station - the statute the 'jammer' apps run into, with no low-power exemption"
+      }
+    ],
+    "research_gaps": [
+      "This is a category object, not one SKU. Chip variants, pin maps and build quality differ between sellers and between revisions of the same seller's board.",
+      "Could not verify a specific product actually named 'Predator' as a Flipper GPIO board - the name appears in the ESP32 Marauder ecosystem but we could not confirm a current Flipper-format product using it",
+      "GPS module part numbers are unnamed by most sellers; the Quectel L80-R identification comes only from the open TSGP 4-in-1 design",
+      "No independent RF measurement of CC1101 range improvement was found; the benefit is assumed to come from the external antenna",
+      "AliExpress and Amazon listings for this class could not be verified individually and may ship any revision"
+    ]
+  },
+  {
+    "id": "honeyhoney-apex-5",
+    "hardware_id": "honeyhoney-apex-5",
+    "name": "Honey Honey Apex 5 (ESP32 Marauder 5G Module)",
+    "firmware": "ESP32 Marauder (preloaded)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+    "firmware_note": "Ships with Marauder already on the ESP32-C5. The two CC1101s, the nRF24 and the GPS are driven by the Flipper's own firmware over SPI/UART, no extra firmware needed.",
+    "vendor": "Honey Honey Team / Honey Honey Lab (Australia)",
+    "vendor_url": "https://honeyhoneylab.com",
+    "product_url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-5g-apex-5-module-for-flipper/",
+    "category": "accessory",
+    "subcategory": "flipper-multiboard",
+    "status": "out-of-stock",
+    "released": "2026",
+    "price_usd": 79,
+    "price_note": "Listed from A$122 (roughly US$79) on the vendor's own store and SOLD OUT there on 2026-09-06. Also sold on Tindie. Batch 1 went on sale 12 February 2026; Batch 2 followed in April 2026 and is the version you want.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Batch 2 is plug-and-play with default Flipper GPIO settings; Batch 1 needs you to hand-configure four separate GPIO mappings before anything works.",
+    "build_effort": "assembled",
+    "build_note": "Accessory: requires a Flipper Zero on the GPIO header. Ships in a pre-installed two-piece 3D-printed enclosure with five antennas. The ESP32-C5 can also be flashed and run standalone over USB-C.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "The most capable of the commodity Flipper multiboards: an ESP32-C5 with 5 GHz Wi-Fi running Marauder, two separate CC1101s dedicated to 433 MHz and 868 MHz with a hardware switch and indicator LEDs, an nRF24 for 2.4 GHz raw packet work, a GPS, and an SDXC slot, on five antennas. Documentation is unusually good for this market - a full manual with GPIO diagrams is published on GitHub.",
+    "honest_take": "This is what the generic multiboard category looks like when someone actually engineers it, and the vendor's own documentation is refreshingly honest - it states plainly that Batch 1 could not do Marauder wardriving because the ESP32 UART and the GPS UART collided on the Flipper's pins, and that Batch 2 exists to fix exactly that. That is the whole story of this product class in one sentence: the chips are cheap and interchangeable, the pin routing is the hard part. Two caveats before you buy: it is chronically sold out, and dedicating one CC1101 to 868 MHz is a European-centric choice - if you are in North America, 915 MHz devices sit outside where that radio is matched.",
+    "best_for": [
+      "One board that covers 5 GHz Wi-Fi, two sub-GHz bands, 2.4 GHz raw packets and GPS",
+      "Wardriving with a Flipper, on Batch 2 boards",
+      "Buyers who want documentation rather than a photo and a chip list"
+    ],
+    "not_for": [
+      "Anyone who needs it in stock",
+      "915 MHz North American sub-GHz work, where the 868 MHz-matched radio is off-band",
+      "Batch 1 buyers who want wardriving - that batch cannot do it"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "Dual-band 2.4/5 GHz Wi-Fi 6 RISC-V SoC. Vendor states the 8 MB RAM / 8 MB flash version was chosen deliberately for future firmware headroom.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "Two fitted: one matched for 433 MHz, one for 868 MHz, each on its own SMA, selected by a front button with two indicator LEDs"
+        },
+        {
+          "ic": "nRF24L01+",
+          "role": "2.4ghz",
+          "note": "External antenna and an activity LED; driven directly by Flipper apps (channel scan, MouseJacker, sniffer)"
+        },
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "wifi",
+          "note": "2.4 and 5 GHz on an external antenna"
+        },
+        {
+          "ic": "ESP32-C5 (integrated)",
+          "role": "ble",
+          "note": "Bluetooth 5 LE"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery; powered from the Flipper or USB-C",
+      "charging": "USB-C (flashing and standalone power)",
+      "pmic": null,
+      "storage": "SDXC card slot for Marauder PCAP and logs; PCAPs can alternatively be written to the Flipper's own SD card",
+      "connectivity": [
+        "Flipper GPIO header",
+        "USB-C",
+        "5x SMA antenna connectors"
+      ],
+      "gpio": "Batch 2 uses the Flipper's default mappings throughout - CC1101 SPI default 4, nRF24 Extra 7, ESP32 UART default 13/14. Batch 1 required ESP32 UART on Extra 15/16, which collided with the GPS NMEA UART on 13/14 and made wardriving impossible.",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Two-piece 3D-printed enclosure, pre-installed, black or white",
+      "notable_physical": [
+        "Five antennas supplied",
+        "Hardware button plus two LEDs to switch between the 433 and 868 MHz radios",
+        "Separate boot button for ESP32 firmware updates",
+        "Firmware can also be upgraded from the microSD card"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "ESP32-C5 running Marauder"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "The ESP32-C5 is genuinely dual-band; this is the board's headline claim"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Marauder; blocked by 802.11w/PMF"
+      },
+      "wifi_deauth_5": {
+        "v": "partial",
+        "note": "Chip-capable, but PMF defeats it on WPA3 and on PMF-enabled WPA2"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Marauder"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Marauder Evil Portal"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Portal files from the SDXC card"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "PCAP to the board's SD card or to the Flipper's"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Marauder; cracking off-device"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Marauder sniffers"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Works on Batch 2 only. The vendor states outright that Batch 1 does not support Marauder WarDrive because of the GPIO collision between the ESP32 UART and the GPS"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Standard ESP32"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32-C5 BLE via Marauder"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Marauder BLE spam; largely mitigated on current iOS"
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Two CC1101s on external antennas, one per band"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Stock CC1101 power, +12 dBm maximum - no amplifier fitted"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Dedicated SMA per sub-GHz radio"
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "No PA on either sub-GHz chain"
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Flipper's own Sub-GHz app with the radio set to External"
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Flipper apps over SPI on the 'Extra 7' pin group"
+      },
+      "mousejack": {
+        "v": "partial",
+        "note": "The vendor lists MouseJacker among the nRF24 apps, but the underlying vulnerabilities date to 2016 and are largely patched"
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Onboard with an external antenna. Receiver part number not published"
+      },
+      "gps_wardrive_log": {
+        "v": "partial",
+        "note": "Batch 2 only, for the GPIO reason above"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "SDXC slot"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "The ESP32-C5 runs from USB-C, but with no screen and with the CC1101s and nRF24 wired to the Flipper's SPI, it is not a standalone tool"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The board carries no restricted technology and we found no import bans. Using it is where the exposure is: deauthentication and rogue-AP work against networks you do not own is a computer-misuse offence in most countries and unlawful interference under FCC rules in the US; sub-GHz transmission at 433 and 868 MHz is subject to separate regional power and duty-cycle limits, and 868 MHz is not a licence-exempt band in North America. Check your local law before transmitting."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2026-07",
+      "app_store": "Yes - the Flipper side uses community apps; the ESP32 side is Marauder",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Apex 5",
+      "ESP32 Marauder 5G Apex 5",
+      "Honey Honey Apex 5"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/HoneyHoneyTeam/ESP32-Marauder-5G-Apex-5-Module---For-Flipper-Zero",
+        "what": "the vendor's own full manual: ESP32-C5 with 8 MB RAM/flash, dual CC1101 at 433 and 868 with switch and LEDs, nRF24, GPS, SDXC, five antennas, exact GPIO maps for V1 and V2, and the statement that Batch 1 cannot do Marauder WarDrive"
+      },
+      {
+        "url": "https://honeyhoneylab.com/collections/all",
+        "what": "price from A$122 and sold-out status on 2026-09-06"
+      },
+      {
+        "url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-5g-apex-5-module-for-flipper/",
+        "what": "the vendor's Tindie sales channel"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "the preloaded firmware, actively maintained"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 maximum output is +12 dBm - no amplification on this board"
+      }
+    ],
+    "research_gaps": [
+      "GPS receiver part number not published",
+      "No independent teardown or RF measurement found",
+      "Exact current US dollar price and Tindie stock could not be read directly (Tindie returns 403 to automated fetches); the AUD figure from the vendor's own store is used instead",
+      "Whether Batch 1 units can be fixed in the field, or only replaced, is not stated"
+    ]
+  },
+  {
+    "id": "flipper-nrf24-module",
+    "hardware_id": "flipper-nrf24-module",
+    "name": "nRF24L01+ module for Flipper Zero (mousejack / 2.4 GHz)",
+    "firmware": "n/a - driven by Flipper apps over SPI",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/mothball187/flipperzero-nrf24",
+    "firmware_note": "The module has no firmware. Flipper apps talk to it directly over SPI: mothball187's nrf24 suite (sniffer and mousejacker), vad7's nrf24scan and nRF24-Batch, and several community jammer apps.",
+    "vendor": "Generic - Nordic Semiconductor silicon on modules from countless Chinese board houses; also sold pre-wired by Flipper accessory shops",
+    "vendor_url": "https://www.nordicsemi.com/Products/nRF24-series",
+    "product_url": null,
+    "category": "accessory",
+    "subcategory": "flipper-24ghz-module",
+    "status": "available",
+    "released": "2008",
+    "price_usd": 4,
+    "price_note": "A bare nRF24L01+ module is roughly 2-5 USD; the PA+LNA version with an SMA antenna is roughly 6-12 USD. Pre-assembled Flipper-format boards with an nRF24 on them run 15-70 USD. Estimated from typical marketplace pricing rather than a single vendor page.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Buying the module is trivial; wiring seven SPI lines to the right Flipper GPIO pins, and understanding that most of the famous attacks no longer land, is the real work.",
+    "build_effort": "soldering",
+    "build_note": "Accessory: requires a Flipper Zero. A bare module needs jumper wires or soldering to the GPIO header (2, 3, 4, 5, plus 3.3V and GND on the usual mapping); the Flipper's 'Extra 7' GPIO preset in Momentum and Unleashed exists for exactly this. Multiboards fit the same chip pre-wired.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A Nordic nRF24L01+ transceiver on a small module, wired to the Flipper's GPIO header. It gives the Flipper access to the 2.4 GHz band outside Wi-Fi and Bluetooth: scanning for proprietary GFSK links, sniffing and replaying wireless keyboard and mouse traffic, and the MouseJack keystroke-injection attack. It is by far the cheapest capability upgrade a Flipper can get.",
+    "honest_take": "Two blunt points. First, MouseJack is a 2016 vulnerability. Bastille disclosed it in February 2016, the vendors shipped receiver firmware updates that year, mousejack.com is now a dead link, and the canonical Flipper app (mothball187's) has had no code push since August 2022 - so treat 'it can hijack wireless keyboards' as 'it might, against a ten-year-old unpatched dongle you find in a drawer'. Second, the 'nRF24 jammer' apps that make this module popular are not jammers in any meaningful sense: the chip is a narrowband GFSK transceiver with 1 MHz channels and 0 dBm output, so what those apps do is hop a single tone around, which can disrupt other nRF24-family links on the same channels and will do essentially nothing to Wi-Fi or to a connected Bluetooth link. Nordic themselves list the whole nRF24 series as not recommended for new designs, which tells you where this technology sits.",
+    "best_for": [
+      "Cheapest possible way to give a Flipper 2.4 GHz raw packet capability",
+      "Auditing legacy 2.4 GHz proprietary peripherals and remotes",
+      "Learning how Enhanced ShockBurst and address-based addressing work"
+    ],
+    "not_for": [
+      "Attacking Bluetooth or Wi-Fi - the nRF24 cannot speak either protocol",
+      "Reliable MouseJack against current hardware",
+      "Anything described as a 'jammer'; it is neither wideband nor powerful"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU. The Flipper's STM32WB55 drives the nRF24 over SPI.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "nRF24L01+",
+          "role": "2.4ghz",
+          "note": "Nordic Semiconductor 2.4 GHz GFSK transceiver with the Enhanced ShockBurst protocol engine. Nordic list the nRF24 series as not recommended for new designs. PA+LNA module variants add an external amplifier and an SMA connector."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "None; powered from the Flipper's 3.3 V rail. Note the classic reliability complaint with these modules is supply decoupling - many need an extra capacitor across VCC and GND to work at all.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper GPIO header (SPI: SCK, MISO, MOSI, CSN, CE)"
+      ],
+      "gpio": "Wired to the Flipper 18-pin header; Momentum and Unleashed expose an 'Extra 7' GPIO preset that matches the common nRF24 pinout used by multiboards",
+      "sensors": [],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare module, usually with a PCB trace antenna; PA+LNA versions have an SMA connector and a shielded can",
+      "notable_physical": [
+        "Two module families: cheap trace-antenna nRF24L01+ boards, and larger nRF24L01+PA+LNA boards with an external antenna",
+        "The PA+LNA versions are noticeably more sensitive to poor 3.3 V supply"
+      ]
+    },
+    "capabilities": {
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Channel scanning and pseudo-promiscuous capture. The nRF24 has no real promiscuous mode; the community trick is to set a short address and use a preamble-like value so the radio triggers on other links' packets, which works but drops a lot of traffic"
+      },
+      "mousejack": {
+        "v": "partial",
+        "note": "Hardware-capable and there is a working Flipper app, but the vulnerability class was disclosed in 2016 and patched by the major vendors. Success now depends on finding an unpatched receiver. The reference app has not had a code push since August 2022"
+      },
+      "nrf24_jam": {
+        "v": "partial",
+        "note": "Community 'jammer' apps exist and are popular, but this is a narrowband GFSK transceiver hopping a carrier across 1 MHz channels, not wideband jamming. Effective against other nRF24-family links on the same channels; largely ineffective against Wi-Fi and against established Bluetooth connections, which hop adaptively"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "Notable absence: the nRF24L01+ cannot demodulate Bluetooth LE. It is a different, incompatible link layer on the same band"
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Notable absence: it cannot see Wi-Fi at all. People routinely assume otherwise because both are 2.4 GHz"
+      },
+      "zigbee": {
+        "v": "no",
+        "note": "Zigbee is 802.15.4 O-QPSK; the nRF24 is GFSK and cannot decode it"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "A $3 transceiver module is not restricted anywhere we found, and receiving is generally lawful. Two uses carry real exposure. Injecting keystrokes into someone else's computer through their wireless receiver is unauthorised access under the US Computer Fraud and Abuse Act and its equivalents worldwide. Running a 'jammer' app is deliberate interference: in the US, 47 U.S.C. 333 prohibits wilful interference with licensed and authorised radio communications and the FCC has issued substantial fines for consumer jamming, with no low-power exemption. The same is true across the EU and UK. Check your local law; the cheapness of the hardware does not reduce the offence."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": "2024-11",
+      "app_store": "Yes - nrf24 apps are in the Flipper community catalogs",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "NRF24",
+      "nRF24L01+",
+      "Flipper mousejack module",
+      "NRF24 PA LNA"
+    ],
+    "sources": [
+      {
+        "url": "https://www.nordicsemi.com/Products/nRF24-series",
+        "what": "Nordic's own page: 2.4 GHz ISM, Enhanced ShockBurst, and the nRF24 series marked 'Not recommended for new designs'"
+      },
+      {
+        "url": "https://github.com/mothball187/flipperzero-nrf24",
+        "what": "the canonical Flipper nRF24 sniffer/mousejacker app - 328 stars, created June 2022, last code push 2022-08-28, i.e. unmaintained for four years"
+      },
+      {
+        "url": "https://github.com/BastilleResearch/mousejack",
+        "what": "Bastille's original MouseJack research tools, created February 2016, last push December 2017; the affected hardware list includes Logitech Unifying C-U0007 dongles"
+      },
+      {
+        "url": "https://github.com/vad7/nrf24scan",
+        "what": "vad7's nRF24 scanner with resend, 154 stars, last push 2024-11-24 - the most recently maintained serious nRF24 app for Flipper"
+      },
+      {
+        "url": "https://github.com/vad7/nRF24-Batch",
+        "what": "vad7's batch-command nRF24 app, last push 2024-11-02"
+      },
+      {
+        "url": "https://github.com/HoneyHoneyTeam/3in1-WIFI-MultiBoard-with-Screen",
+        "what": "confirms that the nRF24 needs no board firmware - stock and custom Flipper firmwares drive it natively"
+      },
+      {
+        "url": "https://github.com/W0rthlessS0ul/FZ_nRF24_jammer",
+        "what": "a widely-starred community 'jammer' app whose own description claims it disrupts Bluetooth, BLE, drones, Wi-Fi and Zigbee - a good example of the overclaiming this entry pushes back on"
+      },
+      {
+        "url": "https://www.law.cornell.edu/uscode/text/47/333",
+        "what": "47 U.S.C. 333 text: no person shall willfully or maliciously interfere with radio communications of any licensed or authorised station - the statute the 'jammer' apps run into, with no low-power exemption"
+      }
+    ],
+    "research_gaps": [
+      "Could not establish which wireless keyboard and mouse receivers remain MouseJack-vulnerable in 2026; mousejack.com now returns 404 and the affected-device list could not be retrieved",
+      "No independent measurement found of how effective the community nRF24 jammer apps actually are against Bluetooth or Wi-Fi; the assessment here is from the chip's physical limits, not from a test",
+      "Prices are marketplace estimates, not a single vendor quote",
+      "The 'pseudo-promiscuous' address trick is well known in the community but we could not source a Nordic document acknowledging it"
+    ]
+  }
+]
