@@ -5,6 +5,39 @@ Dark theme, fully static, no build step, no dependencies at runtime.
 
 **176 builds across 161 distinct devices, 947 cited sources, 118 tracked capabilities.**
 
+**Live at <https://holdthedoorhoid.github.io/hardware-security-gadgets/>**
+
+---
+
+## Updating the data (no software needed)
+
+This is the whole loop. It does not change, and it needs nothing installed.
+
+1. Go to **github.com** and sign in.
+2. Open the **hardware-security-gadgets** repository.
+3. Click into the **`data`** folder. *This step matters — see the warnings.*
+4. Click **Add file → Upload files**.
+5. Drag the new **`devices.js`** into the browser window.
+6. Type what changed, e.g. *"March 2027 data update"*.
+7. Click **Commit changes**.
+8. Wait about a minute, open the site, and press **Ctrl+Shift+R** (**Cmd+Shift+R** on a Mac).
+   The "builds listed" number on the browse page should reflect the new data.
+
+**Two ways this goes wrong, both silent:**
+
+- The file must be named exactly `devices.js`. Not `devices (1).js`. Browsers rename
+  downloads automatically, so check before you drag.
+- It must go **inside the `data` folder**. Drop it at the top level and GitHub accepts it,
+  the site rebuilds successfully, and it quietly keeps serving the old data. No error appears.
+
+**If something breaks:** on the repository page click **Commits**, find the one before the
+break, and press **Revert**. The site is back within a minute. Nothing here is permanent.
+
+If you regenerate the data rather than hand-editing it, run `python3 build.py` first — that
+writes the new `data/devices.js` — then follow the eight steps above unchanged.
+
+---
+
 ## Run it
 
 ```bash
