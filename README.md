@@ -3,6 +3,8 @@
 An independent, sourced comparison site for hardware security and pentest gadgets.
 Dark theme, fully static, no build step, no dependencies at runtime.
 
+**176 builds across 161 distinct devices, 865 cited sources, 118 tracked capabilities.**
+
 ## Run it
 
 ```bash
