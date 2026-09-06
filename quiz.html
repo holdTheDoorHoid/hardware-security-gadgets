@@ -151,10 +151,15 @@ function renderResults(){
       &nbsp;|&nbsp; stealth: ${esc(ans.stealth)} &nbsp;|&nbsp; support: ${esc(ans.support)}
     </div>
 
-    ${out.top.every(r=>r.goalFit < .15) ? `<div class="banner mt2">
+    ${out.onTopicCount === 0 ? `<div class="banner mt2">
       <b>Nothing here is a strong fit.</b> Nothing in the index covers that combination well.
       The results below are the closest available, but consider splitting the job across two
-      devices, or loosening your budget or effort answers.</div>` : ""}
+      devices, or loosening your budget or effort answers.</div>`
+      : out.thin ? `<div class="banner mt2">
+      <b>Only ${out.onTopicCount} genuine match${out.onTopicCount===1?"":"es"}.</b> Just
+      ${out.onTopicCount===1?"one device":`${out.onTopicCount} devices`} in the index really
+      ${out.onTopicCount===1?"does":"do"} what you asked for at all. Anything listed below
+      ${out.onTopicCount===1?"it":"them"} is a weaker fallback, not a close second.</div>` : ""}
 
     <div class="rank mt2">${out.top.map(resCard).join("")}</div>
 

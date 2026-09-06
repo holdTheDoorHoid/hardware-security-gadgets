@@ -41,12 +41,19 @@ function scoreDevice(dev, ans, goals){
   const per = goals.map(g => ({ goal:g, ...goalCoverage(dev, g) }));
   const goalFit = per.length ? per.reduce((s,p)=>s+p.cov,0)/per.length : .5;
 
+  /* Budget is a GATE, not a nudge. Being far over budget must not be buyable
+     back by raw capability - a beginner asking for "under $50" should never be
+     shown a $279 instrument as their top match. */
   const budget = QUIZ.budgets.find(b=>b.id===ans.budget) || QUIZ.budgets.at(-1);
   const p = priceNum(dev);
-  let budgetFit;
-  if (!isFinite(p))         budgetFit = .5;
-  else if (p <= budget.max) budgetFit = 1;
-  else                      budgetFit = clamp01(budget.max / p);
+  let budgetFit, budgetMult;
+  if (!isFinite(p))              { budgetFit = .5; budgetMult = .85; }
+  else if (p <= budget.max)      { budgetFit = 1;  budgetMult = 1; }
+  else {
+    const ratio = budget.max / p;              // 0..1, how affordable it is
+    budgetFit  = clamp01(ratio);
+    budgetMult = Math.max(.28, .28 + .72 * ratio);
+  }
 
   const ui = SKILL_ORDER.indexOf(ans.skill);
   const di = SKILL_ORDER.indexOf(dev.skill_level);
@@ -64,15 +71,20 @@ function scoreDevice(dev, ans, goals){
   const sRaw = supportScore(dev);
   const supportFit = 1 - imp*(1 - sRaw);
 
+  /* Skill also gates: an expert-only tool is a bad answer for a beginner even
+     if it does everything they asked for. */
+  const skillMult = di <= ui ? 1 : Math.max(.45, 1 - .18 * (di - ui));
+
   const raw =
-      W.goal*goalFit + W.budget*budgetFit + W.skill*skillFit +
+      W.goal*goalFit + W.skill*skillFit +
       W.build*buildFit + W.stealth*stealthFit + W.support*supportFit;
 
-  const mult = STATUS_MULT[dev.status] ?? .8;
-  const max  = W.goal + W.budget + W.skill + W.build + W.stealth + W.support;
+  const mult = (STATUS_MULT[dev.status] ?? .8) * budgetMult * skillMult;
+  const max  = W.goal + W.skill + W.build + W.stealth + W.support;
 
   return {
     dev, per, goalFit, budgetFit, skillFit, buildFit, stealthFit, supportFit, sRaw,
+    budgetMult, skillMult,
     score: raw*mult, pct: Math.round((raw*mult/max)*100)
   };
 }
@@ -140,6 +152,16 @@ function recommend(ans, db){
     seen.add(r.dev.hardware_id);
     uniqueHw.push(r);
   }
-  const top = uniqueHw.slice(0,3).map(r => ({ ...r, ...explain(r, ans) }));
-  return { top, also: uniqueHw.slice(3,9) };
+
+  /* Relevance floor: a device that does almost nothing the user asked for is
+     not a recommendation, it is filler. Only fall back to filler if we cannot
+     otherwise fill three slots. */
+  const RELEVANT = 0.12;
+  const onTopic  = uniqueHw.filter(r => r.goalFit >= RELEVANT);
+  const filler   = uniqueHw.filter(r => r.goalFit <  RELEVANT);
+  const ranked   = onTopic.concat(filler);
+  const thin     = onTopic.length < 3;
+
+  const top = ranked.slice(0,3).map(r => ({ ...r, ...explain(r, ans) }));
+  return { top, also: ranked.slice(3,9), thin, onTopicCount: onTopic.length };
 }
