@@ -1284,6 +1284,26 @@ window.DEVICES = [
    "app_store": {
     "v": "no",
     "note": "None"
+   },
+   "nrf24_scan": {
+    "v": "no",
+    "note": "There is no nRF24 radio on this board and nothing that could substitute for one. The Biscuit Pro carries exactly two radio parts: an ESP32-C5-WROOM-1 doing all Wi-Fi, BLE and 802.15.4 work, and an ESP32-WROOM-32E acting as the BLE gateway to the phone app. Neither can speak Nordic's proprietary Enhanced ShockBurst, and no nRF24L01 or other 2.4 GHz proprietary transceiver appears in the vendor's hardware page, the flasher manifest, or any teardown. The sheet's 2.4 GHz / 5 GHz claim is doubly wrong here: nRF24 is a 2.4 GHz-only technology in the first place, so a 5 GHz nRF24 scan is not a thing that exists."
+   },
+   "detect_deauth": {
+    "v": "yes",
+    "note": "Documented as 'Deauth Sniff' among the Wi-Fi scanning modes, and it is the better implementation of the two in this comparison because it catches disassociation frames as well as deauthentication frames - a disassociation flood is the standard way to slip past a detector that only matches subtype 0xC0. The vendor describes it as identifying whether someone is actively attacking nearby networks. What the wiki does not say is which band it listens on: no scanning mode except the AP scan carries any band statement, so the sheet's claim that this works on 5 GHz as well as 2.4 GHz is unverified in either direction. The C5 is genuinely dual-band and the hardware could do it; the documentation simply does not commit. The firmware is closed, so the frame filter cannot be audited."
+   },
+   "detect_alpr": {
+    "v": "claimed",
+    "note": "The vendor lists 'Flock Camera Detection' as a Bluetooth scanning mode and says it matches on manufacturer data, characteristic names, serial patterns and MAC prefixes. Reading characteristic names is notable because it implies a GATT connection rather than a passive advertisement match, which would be a genuinely stronger method than the pure prefix comparisons used elsewhere in this category - but the firmware is closed, there is no source and no teardown, so none of that is confirmable and the actual signature list cannot be audited or updated by the owner. Two corrections to the sheet regardless of whether the feature works: this is a BLE mode, and BLE exists only in the 2.4 GHz band, so '2.4 GHz and 5 GHz' is not physically meaningful here; and independent detectors consistently find that Flock's strongest signal is a Wi-Fi setup-AP SSID (Flock-XXXXXX, test_flck), which is a Wi-Fi observation the Bluetooth mode by definition cannot make. The device's separate Counter Surveillance dashboard also lists Flock devices as 'surveillance infrastructure' without documenting the matching rules."
+   },
+   "detect_bodycam": {
+    "v": "claimed",
+    "note": "Listed as 'Axon Body Camera Detection' among the BLE scanning modes. The vendor publishes no matching criteria for it, the firmware is closed and there is no independent teardown, so it cannot be confirmed - though on every comparable device this is a match against Axon's 00:25:DF MAC prefix, which flags any Axon BLE product rather than a body camera specifically and misses anything advertising a random resolvable private address. As with the Flock detector, the sheet's dual-band claim does not apply: this is Bluetooth Low Energy, which is 2.4 GHz-only, and there is no 5 GHz BLE."
+   },
+   "detect_meshtastic": {
+    "v": "claimed",
+    "note": "Listed as a first-class BLE scanning mode ('Meshtastic Detection - Identifies Meshtastic mesh radio nodes'). Matching Meshtastic's project-specific BLE service UUID is a trivial and reliable thing to do, so this very likely works, but the firmware is closed and there is no source to confirm the method. Two things the sheet gets wrong. First, this can only ever see a node's BLE companion interface - Meshtastic's actual mesh runs on LoRa in the sub-GHz bands and the Biscuit Pro has no sub-GHz radio at all, so it cannot see mesh traffic, only the presence of a node whose Bluetooth is switched on. Second, BLE is 2.4 GHz-only; there is no 5 GHz component to this and the dual-band claim is meaningless. Note also that the separate 'Mesh Recon' feature is unrelated - that is 802.15.4 on channels 11-26 for Zigbee, Thread and Matter, and the vendor documents no MeshCore support anywhere."
    }
   },
   "legal": {
@@ -1342,6 +1362,50 @@ window.DEVICES = [
    {
     "url": "https://biscuitshop.us/pages/diy-biscuits",
     "what": "free DIY firmware for several off-the-shelf ESP32-C5 boards, described as the Pro/Ultra firmware merged onto a single MCU - free of charge, not open source"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/devices/pro.html",
+    "what": "official wiki hardware page: ESP32-C5 (Scanner) and ESP32-WROOM (System Manager) only, no nRF24 or other proprietary 2.4 GHz transceiver"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/mesh-recon.html",
+    "what": "the only non-Wi-Fi/BLE radio feature is 802.15.4 mesh recon on channels 11-26; no nRF24 support anywhere in the docs"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/wifi-scanning.html",
+    "what": "'Deauth Sniff - Detect deauthentication and disassociation frames in the air'; also the observation that only Scan Access Points mentions band, all other modes are silent on 2.4 vs 5 GHz"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/bluetooth-scanning.html",
+    "what": "'Flock Camera Detection - Locates Flock Safety ALPR equipment', matched via manufacturer data, characteristic names, serial patterns and MAC prefixes"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/counter-surveillance.html",
+    "what": "Flock and Axon devices listed as surveillance infrastructure in the dashboard, with no matching criteria published"
+   },
+   {
+    "url": "https://github.com/koua29/bruce-flock-detector",
+    "what": "independent detector ranking the Flock-XXXXXX / test_flck Wi-Fi setup-AP SSID as the only high-confidence Flock signal and MAC OUI matching as weak"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/bluetooth-scanning.html",
+    "what": "'Axon Body Camera Detection - Detects Axon law enforcement cameras' listed as a BLE scan mode; no matching criteria given"
+   },
+   {
+    "url": "https://maclookup.app/search/result?mac=00%3A25%3ADF",
+    "what": "00:25:DF is Axon Enterprise's IEEE MA-L block - the prefix every comparable detector keys on"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/bluetooth-scanning.html",
+    "what": "Meshtastic Detection listed as a BLE scan mode alongside Flipper, Flock, Axon, Meta Glasses and nyanBOX detectors"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/features/mesh-recon.html",
+    "what": "Mesh Recon is 802.15.4 (Zigbee/Thread/Matter) on channels 11-26 - it is not Meshtastic and does not cover MeshCore"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/devices/pro.html",
+    "what": "hardware page confirms no sub-GHz/LoRa radio, so LoRa mesh traffic is unreachable"
    }
   ],
   "research_gaps": [
@@ -1901,7 +1965,7 @@ window.DEVICES = [
    },
    "usb_hid_inject": {
     "v": "no",
-    "note": "Impossible on this silicon. The ESP32-C3 has only a fixed-function USB Serial/JTAG controller with no OTG mode, which Espressif documents explicitly, and InfiShark's own docs say the Nano 'only ever acts as a device, never as a host'. The 'Wi-Fi adapter' feature works around this by tunnelling IP over the serial port with SLIP, Linux and root only."
+    "note": "The spreadsheet is wrong and this is not a firmware gap - it is physically impossible on this silicon. The ESP32-C3's only USB block is the USB Serial/JTAG Controller, which Espressif documents as 'a fixed-function USB device that is implemented entirely in hardware, meaning that it cannot be reconfigured to perform any function other than a serial port and JTAG debugging functionality', explicitly contrasting it with the USB OTG controllers on other ESP parts. There is no OTG mode and no way to enumerate as a HID keyboard over the USB port, at any firmware version. InfiShark's own documentation concedes the same point: 'The Nano's USB hardware only ever acts as a device, never as a host. It has no USB On-The-Go (OTG) support.' What the device actually has is Bad-BT: a Bluetooth LE keyboard that runs DuckyScript, with an on-device script editor (1024 lines, 64 chars per line). That is a materially weaker attack than a rubber ducky, because the target must first pair with the Nano over Bluetooth and must support BLE HID - you cannot just plug it in. The confusion is understandable: the vendor's own file-transfer portal labels the upload button 'BadUSB Script'."
    },
    "usb_payload_lang": {
     "v": "yes",
@@ -1970,6 +2034,30 @@ window.DEVICES = [
    "web_ui": {
     "v": "partial",
     "note": "A file transfer portal for uploading payloads and pulling captures"
+   },
+   "games": {
+    "v": "yes",
+    "note": "Seven built-in games on the monochrome OLED, one more than the sheet lists: Flappy Bird, Space Invaders, Pong (versus an AI paddle), Breakout, T-Rex Runner, Racer, and Malware Hunter - the last a vampire-survivors-style twin-stick with auto-firing weapons, level-up upgrade cards, a persistent shop and a boss fight, which is a genuinely more ambitious piece of work than the rest. Controls are the three buttons; hold [S] for two seconds to quit, except in Malware Hunter where [S] is an in-game control."
+   },
+   "txt_viewer": {
+    "v": "yes",
+    "note": "A plain-text reader with word wrap, vertical scrolling and a scrollbar on the 128x64 OLED. One file at a time, UTF-8 only, 25 KB maximum, uploaded through the device's own Wi-Fi file-transfer portal under App Settings. Useful as a cheat sheet; it is not a file browser for arbitrary text on the device."
+   },
+   "video_player": {
+    "v": "no",
+    "note": "There is no video player. Nothing in the vendor's complete feature list, the documentation tree or the app menu plays video, and a 128x64 monochrome OLED with no SD card is not a plausible video target. The sheet almost certainly mangled Scroller, which is the opposite thing: a BLE HID remote that controls short-form video playing on your PHONE - [L]/[R] scroll, [S] pauses, double-[S] likes, and a Modify Mode that turns the three buttons into a coarse cursor pad. The Nano acts as a Bluetooth mouse for that app, which is also why the docs warn you to unpair it before using Bad-BT, since that registers as a keyboard instead."
+   },
+   "timer_stopwatch": {
+    "v": "yes",
+    "note": "Two separate apps sharing an MM:SS:CC display. The Timer counts down from a value you dial in with [L]/[R] while [S] steps between minutes, seconds and centiseconds; the Stopwatch counts up with [S] to start/pause and [L] to reset. The alert is the screen flashing - there is no buzzer and no vibration motor in the device, so a timer left in a pocket will not tell you anything."
+   },
+   "pc_monitor": {
+    "v": "claimed",
+    "note": "Listed by the vendor as an app that shows CPU, GPU and memory statistics from a computer over BLE - but the vendor's own feature list marks it '(in development)', and unlike every other built-in app it has no documentation page in the docs tree. Nothing outside the vendor's marketing confirms it works on shipping firmware, and no companion host agent for it appears in the public infishark/infishark SDK repo. Treat it as unshipped until someone demonstrates otherwise."
+   },
+   "emergency_mode": {
+    "v": "yes",
+    "note": "Real, and simpler than the name suggests: holding [L] and [R] together from anywhere in the UI instantly launches Flappy Bird. It is a panic button whose entire purpose is to make the screen stop showing a pentesting tool if someone looks over your shoulder. It can be switched off under Config -> Settings -> System. It does nothing else - it does not stop a running attack, wipe captures or lock the device."
    }
   },
   "legal": {
@@ -2031,6 +2119,58 @@ window.DEVICES = [
    {
     "url": "https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/",
     "what": "XIAO ESP32C3 module specification - 4MB flash, 400KB SRAM, u.FL antenna"
+   },
+   {
+    "url": "https://docs.espressif.com/projects/esp-idf/en/stable/esp32c3/api-guides/usb-serial-jtag-console.html",
+    "what": "Espressif: the ESP32-C3 USB Serial/JTAG Controller is fixed-function hardware that cannot be reconfigured to any other USB function; no OTG"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/pentesting/wi-fi-adapter.md",
+    "what": "vendor documentation stating the Nano's USB hardware only ever acts as a device, never a host, with no OTG support"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/bad-bt.md",
+    "what": "Bad-BT described as a Bluetooth keyboard emulator requiring the target to pair first; the upload control is nonetheless labelled 'BadUSB Script'"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/games/index.md",
+    "what": "official docs enumerating all seven games and their controls"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/basics/features-overview.md",
+    "what": "Games section of the vendor's own complete feature list"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/apps/txtviewer.md",
+    "what": "official docs: scrolling, word wrap, UTF-8 only, 25 KB cap, upload via Config -> Transfer"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/basics/features-overview.md",
+    "what": "complete vendor feature list - Built-in Apps are Scroller, TxtViewer, Mini Keypad, PC Monitor, Stopwatch, Timer; no video player"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/apps/scroller.md",
+    "what": "Scroller documented as a BLE remote for controlling video on a paired phone, not local playback"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/apps/stopwatch-timer.md",
+    "what": "official docs including the explicit note that there is no buzzer or vibration"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/basics/features-overview.md",
+    "what": "vendor feature list: 'PC Monitor - View CPU, GPU, and memory stats over BLE (in development)'"
+   },
+   {
+    "url": "https://github.com/infishark/nano-docs",
+    "what": "docs tree has apps/ pages for scroller, txtviewer, mini-keypad and stopwatch-timer but none for PC Monitor"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/misc/emergency-mode.md",
+    "what": "official docs: hold [R]+[L] to launch Flappy Bird from anywhere, toggle under Config -> Settings -> System"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/infishark/nano-docs/main/docs/basics/features-overview.md",
+    "what": "listed under Other Features as 'Emergency Mode - Instantly launch Flappy Bird to exit pentesting mode'"
    }
   ],
   "research_gaps": [
@@ -9175,6 +9315,22 @@ window.DEVICES = [
    "ble_tracker_detect": {
     "v": "partial",
     "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+   },
+   "rpg_leveling": {
+    "v": "yes",
+    "note": "Replaces the stock three-level cap with a 30-level table: DOLPHIN_LEVELS runs 100, 200, 300, 450, 600 ... 8650, 9999. Same XP-earning mechanic as stock (icounter incremented by dolphin deeds), just a much longer curve, plus a configurable butthurt decay timer defaulting to six hours. It is still purely cosmetic - level does not unlock features or change radio behaviour."
+   },
+   "device_lock": {
+    "v": "yes",
+    "note": "Inherited from stock unchanged (same pin_code.c, 4-to-10 D-pad presses in an RTC backup register, escalating lockout). Momentum adds cosmetic lockscreen customisation on top but does not alter the lock's security properties, and the microSD remains unencrypted."
+   },
+   "rgb_backlight": {
+    "v": "addon",
+    "note": "Requires an aftermarket hardware modification: the RGB backlight mod originated by Victor Nikitchuk (quen0n, github.com/quen0n/flipperzero-firmware-rgb), in which the Flipper's three white LCD backlight LEDs are desoldered and replaced with three addressable SK6805 RGB LEDs, bit-banged as a one-wire chain on the existing backlight line (GPIOA pin 8). This is soldering surface-mount LEDs inside a disassembled Flipper - not a plug-in board. With the mod fitted, Momentum gives you an individual colour per LED from a 20-entry palette plus a rainbow mode with speed, interval and saturation controls. Off by default (.rgb_backlight = false in settings.c); turning the setting on without the mod does nothing."
+   },
+   "subghz_wardrive": {
+    "v": "addon",
+    "note": "This is what 'Subdriving' means on a Flipper, and it is not wardriving in the Wi-Fi sense - there is no continuous automatic sweep-and-log. It requires an external NMEA GPS module wired to the Flipper's GPIO UART (the Flipper has no GPS of its own); you set the baud rate in Sub-GHz radio settings, and 0 disables it. A worker thread parses RMC, GGA and GLL sentences with minmea, and the resulting latitude and longitude are attached to each Sub-GHz receive-history entry and written into saved .sub files, with a 'Captured at:' screen showing the coordinates, a live satellite count and a green/red LED blink for fix status. In other words: you drive around capturing garage, gate and sensor signals as you normally would, and each capture remembers where you were - which the bundled Nearby Files app then uses to sort your .sub, .nfc and .rfid files by distance. It will not initialise if an expansion module is already using the UART."
    }
   },
   "legal": {
@@ -9339,6 +9495,54 @@ window.DEVICES = [
    {
     "url": "https://momentum-fw.dev/",
     "what": "release channel: mntm-012 stable 31.12.25, dev builds through 18.08.26"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/applications/services/dolphin/helpers/dolphin_state.c",
+    "what": "DOLPHIN_LEVELS table of 29 thresholds (100 to 9999) giving 30 levels"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/lib/momentum/settings.c",
+    "what": "butthurt_timer default 21600 seconds"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/tree/dev/applications/services/desktop/helpers",
+    "what": "pin_code.c and pin_code.h present and unmodified from upstream"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/applications/main/momentum_app/scenes/momentum_app_scene_interface_lockscreen.c",
+    "what": "Momentum's added lockscreen scene is presentation only"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/lib/drivers/rgb_backlight.c",
+    "what": "driver attributed to quen0n, modified by Willy-JL and Z3bro; SK6805_LED_COUNT colours plus rainbow mode settings"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/lib/drivers/SK6805.c",
+    "what": "bit-banged SK6805 one-wire driver on GPIOA pin 8, three LEDs"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/lib/momentum/settings.c",
+    "what": ".rgb_backlight = false by default"
+   },
+   {
+    "url": "https://github.com/quen0n/flipperzero-firmware-rgb",
+    "what": "origin of the RGB backlight mod"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/ReadMe.md",
+    "what": "feature list entry 'Subdriving (saving GPS coordinates for Sub-GHz)'"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/applications/main/subghz/helpers/subghz_gps.c",
+    "what": "minmea RMC/GGA/GLL parsing over a configurable UART channel and baud rate"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/applications/main/subghz/scenes/subghz_scene_show_gps.c",
+    "what": "'Captured at:' coordinates pulled from either the saved file (subghz_txrx_get_latitude) or the receive history (subghz_history_get_latitude), with satellite-count LED feedback"
+   },
+   {
+    "url": "https://github.com/Next-Flip/Momentum-Firmware/blob/dev/applications/main/subghz/subghz.c",
+    "what": "subghz_gps_plugin_init gated on last_settings->gps_baudrate != 0"
    }
   ],
   "research_gaps": [
@@ -9717,6 +9921,22 @@ window.DEVICES = [
    "logic_analyzer": {
     "v": "partial",
     "note": "Community app only, low sample rate - fine for slow buses, not a replacement for a real analyser."
+   },
+   "rpg_leveling": {
+    "v": "partial",
+    "note": "The dolphin has an XP counter and levels, but only three of them: dolphin_state.c defines LEVEL2_THRESHOLD 300 and LEVEL3_THRESHOLD 1800 and dolphin_get_level() can return 1, 2 or 3 and nothing higher. Once you hit 1800 icounter the progression is finished permanently. There is also a 0-14 'butthurt' mood value that decays if you ignore the device. No ranks, no titles, no prestige - the long-standing complaint that the stock dolphin stops mattering after a few weeks is accurate."
+   },
+   "device_lock": {
+    "v": "yes",
+    "note": "A genuine PIN lock, and better engineered than most on comparable devices - but it locks the interface, not the data. The code is 4 to 10 presses of the four D-pad directions (two bits each), packed into a single 32-bit STM32 RTC backup register rather than a file. Failures escalate: the first four are free, then 30, 60, 90, 120, 150, 180 seconds and +60 for every failure after that, with a red LED and vibration on each miss. What it does not do is protect anything at rest: the microSD is unencrypted and can be pulled out and read in any card reader, and the device can be reflashed to clear the lock. Use it to stop someone picking up your Flipper and pressing buttons, not to protect captured credentials."
+   },
+   "rgb_backlight": {
+    "v": "no",
+    "note": "The stock Flipper backlight is not RGB and cannot be made RGB in software. The LP5562 LED driver has four channels; the display backlight sits on the WHITE channel alone (LP5562ChannelWhite, driven at 150 uA against 50 uA for the colour channels), while the R, G and B channels go to the separate notification LED next to the D-pad. That is why people see an RGB LED on their Flipper and assume the screen backlight is too. There is no SK6805 or WS2812 driver anywhere in the stock tree, and stock firmware has no RGB backlight setting."
+   },
+   "subghz_wardrive": {
+    "v": "no",
+    "note": "Stock firmware has no GPS support of any kind in the Sub-GHz app - no minmea NMEA parser, no subghz_gps helper, no coordinates stored with a capture. 'Subdriving' is a community-firmware feature and does not exist here."
    }
   },
   "legal": {
@@ -9854,6 +10074,30 @@ window.DEVICES = [
    {
     "url": "https://blog.flipper.net/can-flipper-zero-steal-your-car/",
     "what": "vendor's own technical rebuttal of the car-theft claim"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/dev/applications/services/dolphin/helpers/dolphin_state.c",
+    "what": "LEVEL2_THRESHOLD 300, LEVEL3_THRESHOLD 1800, BUTTHURT_MAX 14; dolphin_get_level() returns at most 3"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/dev/applications/services/desktop/helpers/pin_code.h",
+    "what": "DESKTOP_PIN_CODE_MIN_LEN 4, DESKTOP_PIN_CODE_MAX_LEN 10"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/dev/applications/services/desktop/helpers/pin_code.c",
+    "what": "two bits per digit packed into an RTC backup register via furi_hal_rtc; desktop_helpers_fails_timeout table 0,0,0,0,30,60,90,120,150,180 with +60 per further failure"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/dev/targets/f7/furi_hal/furi_hal_light.c",
+    "what": "LightBacklight maps to LP5562ChannelWhite only; LightRed/Green/Blue map to the separate notification LED channels"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/tree/dev/lib/drivers",
+    "what": "lib/drivers contains lp5562 but no SK6805 or rgb_backlight - the driver does not exist in stock"
+   },
+   {
+    "url": "https://github.com/flipperdevices/flipperzero-firmware/tree/dev/applications/main/subghz/helpers",
+    "what": "no subghz_gps or minmea files in the stock Sub-GHz helper tree"
    }
   ],
   "research_gaps": [
@@ -10234,6 +10478,22 @@ window.DEVICES = [
    "ble_tracker_detect": {
     "v": "partial",
     "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+   },
+   "rpg_leveling": {
+    "v": "yes",
+    "note": "30 levels, and by far the steepest curve of any firmware here: DOLPHIN_LEVELS runs 500, 1250, 2250, 3500 ... 142250, 157250, so maximum level costs roughly sixteen times the XP that Momentum's 9999 does. The sheet is right that RogueMaster has extended levelling, but wrong to treat it as a RogueMaster exclusive - Momentum and the archived Xtreme have the same feature, and only Unleashed and stock lack it. Cosmetic only."
+   },
+   "device_lock": {
+    "v": "yes",
+    "note": "Inherited from stock unchanged - the same pin_code.c 4-to-10-press D-pad code stored in an RTC backup register with escalating failure timeouts. Locks the interface only; the microSD is unencrypted."
+   },
+   "rgb_backlight": {
+    "v": "addon",
+    "note": "Same quen0n SK6805 hardware mod requirement - lib/drivers/rgb_backlight.c is present in the tree. Needs three addressable SK6805 LEDs soldered in place of the stock white backlight LEDs; the firmware setting alone changes nothing on an unmodified unit."
+   },
+   "subghz_wardrive": {
+    "v": "addon",
+    "note": "RogueMaster carries the same Subdriving implementation as Momentum - applications/main/subghz/helpers/subghz_gps.c with minmea, the subghz_scene_show_gps scene, and latitude/longitude carried on the Sub-GHz preset so saved captures are geotagged. It needs the same external NMEA GPS module on the GPIO UART; the Flipper has no GPS of its own. RogueMaster additionally bundles a standalone gps_nmea display app and an ESP32-based Wi-Fi wardriver, but neither of those tags .sub files - only the Sub-GHz GPS helper does."
    }
   },
   "legal": {
@@ -10390,6 +10650,30 @@ window.DEVICES = [
    {
     "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins",
     "what": "README/changelog: upstream sync dates, bundled app list, Patreon release cadence; release RM0819-2255 (2026-08-20)"
+   },
+   {
+    "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins/blob/420/applications/services/dolphin/helpers/dolphin_state.c",
+    "what": "DOLPHIN_LEVELS table of 29 thresholds from 500 to 157250, plus dolphin_state_max_level()"
+   },
+   {
+    "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins/tree/420/applications/services/desktop/helpers",
+    "what": "pin_code.c and pin_code.h present and unmodified from upstream"
+   },
+   {
+    "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins/tree/420/lib/drivers",
+    "what": "rgb_backlight.c, rgb_backlight.h and rgb_backlight_filename.h present"
+   },
+   {
+    "url": "https://github.com/quen0n/flipperzero-firmware-rgb",
+    "what": "origin of the RGB backlight mod"
+   },
+   {
+    "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins/tree/420/applications/main/subghz/helpers",
+    "what": "subghz_gps.c, subghz_gps_plugin.c and minmea.c present"
+   },
+   {
+    "url": "https://github.com/RogueMaster/flipperzero-firmware-wPlugins/blob/420/applications/main/subghz/helpers/subghz_txrx.c",
+    "what": "preset->latitude / preset->longitude set on capture, exposed via subghz_txrx_get_latitude()"
    }
   ],
   "research_gaps": [
@@ -10773,6 +11057,22 @@ window.DEVICES = [
    "ble_tracker_detect": {
     "v": "partial",
     "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+   },
+   "rpg_leveling": {
+    "v": "partial",
+    "note": "Identical to stock - Unleashed did not touch this. Its dolphin_state.c carries the same LEVEL2_THRESHOLD 300 / LEVEL3_THRESHOLD 1800 constants and the same three-level cap. If extended levelling is what you are after, Unleashed is the one popular community firmware that does not give it to you, which is the opposite of what most people assume."
+   },
+   "device_lock": {
+    "v": "yes",
+    "note": "Inherited from stock unchanged - the same applications/services/desktop/helpers/pin_code.c with the 4-to-10-press D-pad code, RTC backup register storage and escalating failure timeouts. Same caveat applies: it locks the UI, and does nothing for the unencrypted microSD."
+   },
+   "rgb_backlight": {
+    "v": "addon",
+    "note": "Same quen0n SK6805 hardware mod - three white LCD backlight LEDs replaced with addressable RGB parts. Unleashed is the most explicit of the firmwares about it: the notification settings screen carries a literal 'RGB Backlight installed' toggle whose default value is false, and the source comments talk about what to do 'if user have mod installed'. With it enabled you get per-LED colours plus rainbow mode with speed, step and width options. Without the physical mod the setting has no effect."
+   },
+   "subghz_wardrive": {
+    "v": "no",
+    "note": "Unleashed is the notable exception: its Sub-GHz app has no GPS integration at all - no subghz_gps helper, no minmea, and no latitude or longitude field in subghz_i.h or the receive history, so captures are not geotagged. It takes a different approach to location entirely, shipping a 'gps' companion-location service that receives coordinates from a paired phone over RPC (the qUnleashed app) rather than from a UART GPS module, but as of the current dev branch nothing outside the example apps consumes it and the Sub-GHz app does not. The bundled Nearby Files app can sort files by distance, but it only reads coordinates that are already in the files - on Unleashed nothing writes them."
    }
   },
   "legal": {
@@ -10933,6 +11233,34 @@ window.DEVICES = [
    {
     "url": "https://github.com/xMasterX/all-the-plugins",
     "what": "the separately-shipped app pack containing ble_spam, rolling_flaws, mfc_editor, nfc_magic, marauder companion"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/blob/dev/applications/services/dolphin/helpers/dolphin_state.c",
+    "what": "same LEVEL2_THRESHOLD 300 / LEVEL3_THRESHOLD 1800 three-level implementation as stock"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/tree/dev/applications/services/desktop/helpers",
+    "what": "pin_code.c and pin_code.h present and unmodified from upstream"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/blob/dev/applications/settings/notification_settings/notification_settings_app.c",
+    "what": "rgb_backlight_installed_value = {false, true} with false as the default, and the rainbow mode/speed/step/wide option tables"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/blob/dev/lib/drivers/SK6805.h",
+    "what": "SK6805 driver, copyright Victor Nikitchuk (quen0n)"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/tree/dev/applications/main/subghz/helpers",
+    "what": "no subghz_gps or minmea files; subghz_i.h and subghz_history.h contain no gps/latitude/longitude references"
+   },
+   {
+    "url": "https://github.com/DarkFlippers/unleashed-firmware/blob/dev/applications/services/gps/gps.h",
+    "what": "the companion-location API (GpsLocation, RECORD_GPS) supplied by a paired phone rather than a GPS module"
+   },
+   {
+    "url": "https://github.com/Stichoza/flipper-nearby-files",
+    "what": "Nearby Files only displays files that already contain GPS coordinates"
    }
   ],
   "research_gaps": [
@@ -11309,6 +11637,22 @@ window.DEVICES = [
    "ble_tracker_detect": {
     "v": "partial",
     "note": "Separate community apps scan for tracker advertisements and match on service UUID / manufacturer data. Not the same thing as FindMy Flipper, and not a firmware feature."
+   },
+   "rpg_leveling": {
+    "v": "yes",
+    "note": "Same 30-level DOLPHIN_LEVELS table (100 through 9999) that Momentum inherited - Momentum is Xtreme's successor and the code is continuous between them. Worth flagging that the Xtreme repository has been archived since 2024-11-19, so this build receives no fixes; anyone wanting this behaviour today should be on Momentum."
+   },
+   "device_lock": {
+    "v": "yes",
+    "note": "Present, under the older upstream filename applications/services/desktop/helpers/pin.c that predates the 2025 rename to pin_code.c, together with the pin_input and pin_timeout scenes. Same D-pad PIN, same UI-only protection. The repository is archived as of 2024-11-19 so this build gets no further fixes."
+   },
+   "rgb_backlight": {
+    "v": "addon",
+    "note": "Xtreme carries lib/drivers/rgb_backlight.c and requires the same quen0n SK6805 hardware mod: three addressable RGB LEDs soldered in place of the stock white LCD backlight LEDs. Repository archived 2024-11-19, so Momentum is the maintained path to the same feature."
+   },
+   "subghz_wardrive": {
+    "v": "addon",
+    "note": "Xtreme has applications/main/subghz/helpers/subghz_gps.c - the original home of the feature that Momentum inherited. Same requirement: an external NMEA GPS module on the GPIO UART, with coordinates written alongside Sub-GHz captures. Repository archived 2024-11-19; Momentum is the maintained continuation."
    }
   },
   "legal": {
@@ -11470,6 +11814,38 @@ window.DEVICES = [
    {
     "url": "https://github.com/Next-Flip/Momentum-Firmware",
     "what": "Momentum README confirming it is the direct continuation by the same developers"
+   },
+   {
+    "url": "https://github.com/Flipper-XFW/Xtreme-Firmware/blob/dev/applications/services/dolphin/helpers/dolphin_state.c",
+    "what": "the same 29-threshold DOLPHIN_LEVELS table Momentum carries"
+   },
+   {
+    "url": "https://api.github.com/repos/Flipper-XFW/Xtreme-Firmware",
+    "what": "archived: true, last push 2024-11-19"
+   },
+   {
+    "url": "https://github.com/Flipper-XFW/Xtreme-Firmware/tree/dev/applications/services/desktop",
+    "what": "helpers/pin.c, scenes/desktop_scene_pin_input.c, scenes/desktop_scene_pin_timeout.c, views/desktop_view_locked.c"
+   },
+   {
+    "url": "https://api.github.com/repos/Flipper-XFW/Xtreme-Firmware",
+    "what": "archived: true, last push 2024-11-19"
+   },
+   {
+    "url": "https://github.com/Flipper-XFW/Xtreme-Firmware/tree/dev/lib/drivers",
+    "what": "rgb_backlight.c and rgb_backlight.h present"
+   },
+   {
+    "url": "https://api.github.com/repos/Flipper-XFW/Xtreme-Firmware",
+    "what": "archived: true, last push 2024-11-19"
+   },
+   {
+    "url": "https://github.com/Flipper-XFW/Xtreme-Firmware/tree/dev/applications/main/subghz/helpers",
+    "what": "subghz_gps.c and subghz_gps.h present"
+   },
+   {
+    "url": "https://api.github.com/repos/Flipper-XFW/Xtreme-Firmware",
+    "what": "archived: true, last push 2024-11-19"
    }
   ],
   "research_gaps": [
@@ -22683,6 +23059,42 @@ window.DEVICES = [
    "detect_generic_wifi": {
     "v": "yes",
     "note": "Wi-Fi scan, channel analyser, and a deauth-frame scanner that shows the attacker's MAC and RSSI"
+   },
+   "detect_bodycam": {
+    "v": "yes",
+    "note": "A BLE GAP advertisement scan that discards every device whose MAC does not begin 00:25:df. The filter is one line - strncasecmp(addrStr, \"00:25:df\", 8) != 0 -> return - and nothing else is checked. 00:25:DF is an IEEE MA-L block registered to Axon Enterprise, Inc. (Scottsdale AZ, registered 2010-01-05), so the match is correct as far as it goes, but it is a three-byte vendor-prefix comparison, not a body-camera protocol decoder: it equally flags Tasers, dock stations and any other Axon-branded BLE product, it cannot tell a camera that is recording from one that is idle, and it sees nothing at all when a device advertises with a random resolvable private address instead of its public MAC. It also has a Locate mode that pins one target MAC and reports live RSSI so you can walk toward it."
+   },
+   "detect_alpr": {
+    "v": "partial",
+    "note": "Two hardcoded signature lists, one Wi-Fi and one BLE, with no update path short of reflashing the whole device. The Wi-Fi half sniffs management frames in promiscuous mode across channels and case-insensitively substring-matches the beacon SSID against six patterns: \"flock\", \"Flock\", \"FLOCK\", \"FS Ext Battery\", \"Penguin\", \"Pigvision\". The BLE half matches an advertised device name against \"FS Ext Battery\", \"Penguin\", \"Flock\", \"Pigvision\", or the MAC against a fixed list of 20 three-byte prefixes. The SSID half is the part that actually works - a Flock setup AP named Flock-XXXXXX is the one genuinely self-identifying signal, and independent detectors treat it as their highest-confidence tier. The MAC list is the weak half: it is generic component-vendor OUIs, not Flock allocations. cc:cc:cc belongs to Silicon Laboratories and 70:c9:4e to Liteon Technology, both of which ship in enormous numbers of unrelated consumer devices, so those entries will produce false positives indefinitely. The bare substrings \"Penguin\" and \"Pigvision\" will also fire on any unrelated network with those words in its name. It does not carry the test_flck SSID signature (CVE-2025-59409) that other detectors flag as confirmed. The brief's premise that Flock disabled the relevant AP around Dec 2025 and that BLE detection broke in spring 2026 could not be sourced: no dated statement to that effect was found, and two independently maintained Flock detectors were still shipping and updating Wi-Fi and BLE Flock signatures as of 2026-09-05."
+   },
+   "detect_smartglasses": {
+    "v": "partial",
+    "note": "A BLE advertisement scan that keeps a device only if its complete or partial 16-bit service UUID list contains 0xFD5F. That UUID is assigned by the Bluetooth SIG to Meta Platforms Technologies, LLC - the company, not the product. So this is a manufacturer-level match, not a glasses detector: anything from Meta advertising that UUID reads as a hit, and the firmware then just shows whatever name the device happens to advertise. It also cannot distinguish glasses that are recording from glasses sitting idle in someone's pocket, which is the question anyone using a Ray-Ban detector actually wants answered. Like the Axon detector it has a Locate mode that follows one MAC by RSSI."
+   },
+   "detect_meshcore": {
+    "v": "partial",
+    "note": "Matches the 128-bit BLE service UUID 6E400001-B5A3-F393-E0A9-E50E24DCCA9E, and that is the only thing it gates on - the optional \"MeshCore-\" device-name prefix check only decides what label gets printed, not whether the device is listed. MeshCore genuinely does advertise that UUID for its companion link, so the match is correct, but that UUID is the Nordic UART Service: a generic BLE-serial profile shared by a very large number of unrelated nRF52 and ESP32 devices - Adafruit Bluefruit boards, VESC motor controllers, Espruino, ble-serial, hobby gamepads and robots all use the identical value. In a room with any DIY BLE gear this will report MeshCore nodes that are not MeshCore nodes. It is also only ever seeing a node's BLE companion interface, never its actual mesh traffic: MeshCore runs over LoRa and there is no LoRa radio in a nyanBOX. Note MeshCore and Meshtastic are separate projects - the firmware's separate Meshtastic detector matches a genuinely project-specific UUID (6BA1B218-15A8-461F-9FA8-5DCAE273EAFD), which makes the contrast in signature quality between the two detectors stark."
+   },
+   "detect_deauth": {
+    "v": "yes",
+    "note": "A real passive monitor, and one of the more honest features on the device. It puts the ESP32 in promiscuous mode with a management-frame-only filter, hops channels, and counts frames matching (frame_control & 0xFC) == 0xC0 - the 802.11 deauthentication subtype. For each hit it records the transmitter address from addr2, the channel, and an averaged RSSI, so you get the attacker's MAC and rough proximity rather than just an alert. Two limits worth knowing: it matches deauthentication only, not disassociation (subtype 0xA0), so a disassociation flood goes unseen; and because it hops channels it will miss bursts on whichever channel it is not sitting on at that instant."
+   },
+   "pwnagotchi_spam": {
+    "v": "yes",
+    "note": "Genuinely implemented, and it is a real protocol attack rather than cosmetic noise. It builds a proper Pwngrid advertisement - a JSON blob with pal, name, face, identity, session_id, grid_version, pwnd_run, pwnd_tot, uptime and a policy object - serialises it, chunks it into vendor-specific information elements with tag 0xDE, appends it to a beacon frame template with the BSSID de:ad:be:ef:de:ad, and transmits with esp_wifi_80211_tx. Real Pwnagotchis parse that and will list the fake peers as friends. It rotates through 13 faces and 11 canned names, or generates random ones. It also has a DoS mode that sends a 46-character and a 104-character run of block glyphs as the face and name, which is a deliberate attempt to overflow the target's e-ink UI layout and freeze its screen - so this is not purely a prank mode."
+   },
+   "drone_spoof": {
+    "v": "yes",
+    "note": "This BROADCASTS fabricated Remote ID, it does not merely detect it - the firmware ships a separate Drone Detector for the receive side. The spoofer encodes 25-byte ASTM F3411 / ASD-STAN prEN 4709-002 Open Drone ID messages (Basic ID with a randomised 20-character serial and randomised UA type, Location with lat/lon, geodetic and barometric altitude, speed, direction, vertical speed and status, plus operator ID) and transmits each one three ways: as a BLE legacy advertisement carrying service data for the Open Drone ID 0xFFFA UUID with application code 0x0D, as an 802.11 beacon carrying a vendor-specific IE with OUI FA-0B-BC and vendor type 0x0D, and as a Wi-Fi NAN action frame. BLE and Wi-Fi MACs are randomised per fake drone, and positions are drawn from the whole globe (-90..90, -180..180), which means the phantom aircraft are scattered rather than plausibly local. Broadcasting counterfeit aircraft identification is the single highest-legal-risk feature on this device in any jurisdiction with a Remote ID rule."
+   },
+   "rpg_leveling": {
+    "v": "yes",
+    "note": "Real but purely cosmetic - it changes nothing about what the hardware can do. XP accrues from time spent inside a tool while you are actively pressing buttons, with an idle cutoff, plus a session bonus of 4 XP at five active minutes and 12 XP at ten. The curve is level^2 + 10, capped at level 99, and the total is stored as a 16-bit counter in two EEPROM bytes (addresses 101 and 102) behind a magic byte, so it survives reboots, saturates at 65535 XP, and is wiped by a reflash. Nine rank titles are shown alongside the number: N00b, Skid, Wannabe, L33t, Hacker, Uber Hacker, Elite, Godlike, Legend. There is an XP reset in settings."
+   },
+   "device_lock": {
+    "v": "partial",
+    "note": "There is a boot-time lock, but treat it as a shoulder-surfing deterrent rather than security. The 'password' is a sequence of up to eight D-pad presses, each stored as a value 1-4 for up/down/left/right, written as plain bytes into EEPROM starting at address 6 with no hashing or encryption. checkPasswordOnBoot() compares the entered sequence byte-for-byte and on a mismatch just flashes an error for 1.5 seconds and lets you try again - there is no attempt counter, no lockout and no escalating delay, so it can be brute-forced by hand and the whole keyspace is at most 4^8 = 65,536 sequences (a four-press code is 256). Anyone with the USB-C cable can read the stored bytes out of the ESP32 or simply reflash through the vendor's web flasher, which clears it. It protects nothing on the device beyond the menu."
    }
   },
   "legal": {
@@ -22734,6 +23146,82 @@ window.DEVICES = [
    {
     "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c5/api-guides/wifi-driver/wifi-vendor-features.html",
     "what": "ESP-IDF: esp_wifi_80211_tx permits beacon, probe and action frames plus non-QoS data only, which is why deauth needs the sanity-check override"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/axon_detector.cpp lines 81-92 - process_scan_result() returns immediately unless the formatted BDA string starts with 00:25:df; Locate mode at lines 92-97"
+   },
+   {
+    "url": "https://maclookup.app/search/result?mac=00%3A25%3ADF",
+    "what": "IEEE MA-L 00:25:DF registered to Axon Enterprise, Inc., initial registration 2010-01-05"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX",
+    "what": "README lists Axon Detector under Bluetooth (BLE) Tools in the current shipping firmware"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/flock_detector.cpp lines 51-77 - the literal wifi_ssid_patterns, mac_prefixes and device_name_patterns arrays; lines 157-177 strcasestr matching; lines 231-290 the promiscuous 802.11 mgmt sniffer; lines 301-334 the BLE path"
+   },
+   {
+    "url": "https://maclookup.app/search/result?mac=CC%3ACC%3ACC",
+    "what": "cc:cc:cc is registered to Silicon Laboratories, not Flock Safety"
+   },
+   {
+    "url": "https://maclookup.app/search/result?mac=70%3AC9%3A4E",
+    "what": "70:c9:4e is registered to Liteon Technology Corporation, not Flock Safety"
+   },
+   {
+    "url": "https://github.com/koua29/bruce-flock-detector",
+    "what": "independent detector, last pushed 2026-09-05, states plainly that OUI alone is weak because ALPR modules share generic vendor MAC ranges and that the SSID is the reliable signal; ranks Flock-XXXXXX and test_flck (CVE-2025-59409) as its only CONFIRMED tier"
+   },
+   {
+    "url": "https://github.com/ReconGrunt/FlipDeFlock",
+    "what": "independent Flock/Axon detector, last pushed 2026-09-05, still documents active dual-band Wi-Fi and BLE Flock detection - no evidence found for a claimed spring-2026 BLE break"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/rayban_detector.cpp lines 86-111 - hasRayBanServiceUUID() walks ESP_BLE_AD_TYPE_16SRV_CMPL and _PART looking for the single value 0xFD5F; line 153 gates the whole detector on it"
+   },
+   {
+    "url": "https://bitbucket.org/bluetooth-SIG/public/raw/main/assigned_numbers/uuids/member_uuids.yaml",
+    "what": "Bluetooth SIG assigned numbers: 16-bit member UUID 0xFD5F belongs to Meta Platforms Technologies, LLC"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/meshcore_detector.cpp lines 83-112 MESHCORE_SERVICE_UUID byte array and hasMeshCoreServiceUUID(); lines 184-188 the hard gate on the UUID; lines 221-231 the name check that only affects the display label. src/meshtastic_detector.cpp lines 83-86 for the contrasting Meshtastic UUID."
+   },
+   {
+    "url": "https://github.com/meshcore-dev/MeshCore/blob/main/docs/companion_protocol.md",
+    "what": "MeshCore companion devices expose service UUID 6E400001-B5A3-F393-E0A9-E50E24DCCA9E with 0002/0003 RX/TX characteristics - i.e. the Nordic UART Service layout"
+   },
+   {
+    "url": "https://github.com/search?q=6E400001-B5A3-F393-E0A9-E50E24DCCA9E&type=code",
+    "what": "the same UUID appears in Adafruit_nRF8001, VESC Tool, Espruino, ble-serial, ESP32-BLE-Gamepad and bleak's generic UUID table - it is not MeshCore-specific"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/deauth_scanner.cpp lines 93-112 packetSniffer() with the 0xFC/0xC0 subtype test and addr2 capture; lines 115-131 promiscuous setup with WIFI_PROMIS_FILTER_MASK_MGMT; lines 213-222 hopChannel()"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/pwnagotchi_spam.cpp lines 38-96 beacon_frame_template, faces/names arrays and the dosFace/dosName block-glyph strings; lines 150-192 sendPwnagotchiBeacon() building the JSON, the 0xDE vendor IE chunking and the esp_wifi_80211_tx call"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/drone_spoofer.cpp - header comment lines 6-7 naming ASTM F3411/prEN 4709-002; lines 85-98 the Wi-Fi beacon template with the 0xDD vendor IE, OUI FA 0B BC and type 0x0D; lines 168-192 randomizeDrone(); lines 203-310 the Basic ID and Location encoders; lines 315-335 the BLE 0xFA/0x0D advertisement; lines 341-375 sendWiFiBeacon() and sendWiFiNAN(), both calling esp_wifi_80211_tx"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/level_system.cpp lines 22-57 EEPROM storage and the 16-bit XP counter; line 33-36 getXPRequiredForLevel() = level*level + 10; lines 81-97 level cap of 99; lines 99-110 the nine rank names. src/nyanBOX.ino lines 309-345 startAppTracking/stopAppTracking/updateAppXP with the 5- and 10-minute session bonuses."
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX",
+    "what": "README documents the Leveling System section: Level Progression, Rank System, Usage Tracking, Session Bonuses, XP Reset"
+   },
+   {
+    "url": "https://github.com/jbohack/nyanBOX/blob/main/firmware-files/legacy-src.tar.xz",
+    "what": "src/password.cpp lines 22-43 - EEPROM_ADDR_PW_SEQ 6, PW_MAX_LEN 8, readStoredSequence() accepting only byte values 1-4, clearPassword(); lines 86-157 checkPasswordOnBoot() with the plain byte comparison and the 1500 ms retry with no lockout; lines 205-285 setPasswordInSettings() writing the raw sequence back to EEPROM"
    }
   ],
   "research_gaps": [
