@@ -127,6 +127,22 @@ function build(d){
     <div class="row">${sib.map(s=>`<a class="btn btn-sm" href="device.html?id=${encodeURIComponent(s.id)}">${esc(s.firmware||s.name)}</a>`).join("")}</div>
   </div>`:""}
 
+  ${(function(){
+    const ch = cheaperEquivalents(d);
+    if (!ch.length) return "";
+    const cheapest = ch[0];
+    const x = (priceNum(d)/priceNum(cheapest)).toFixed(1);
+    return `<div class="panel mt2" style="border-color:var(--amb)">
+      <div class="panel-t" style="color:var(--amb)">Same firmware, cheaper hardware &mdash; up to ${x}x less</div>
+      <p class="small mb0">This build's capabilities come from <b>${esc(d.firmware)}</b>, which is free and
+      also runs on the hardware below. You are paying the difference for the physical device, not the
+      software. That can be entirely worth it &mdash; a case, a battery, a screen, a better radio and
+      an antenna connector are real things. Check the specs before deciding.</p>
+      <div class="grid mt2">${ch.slice(0,3).map(c=>deviceCard(c,
+        `<span class="tag tag-amb" style="margin-left:auto">${(priceNum(d)/priceNum(c)).toFixed(1)}x cheaper</span>`)).join("")}</div>
+    </div>`;
+  })()}
+
   <h2 class="mt3">What it can actually do</h2>
   <p class="muted small" style="max-width:72ch">Every row is confidence-rated.
     ${Object.entries(T.values).map(([k,v])=>`<span class="${v.cls} mono tiny">${v.label}</span> <span class="tiny dim">${esc(v.plain)}</span>`).join(" &nbsp;·&nbsp; ")}</p>

@@ -233,3 +233,54 @@ function similar(d, n){
   }
   return out;
 }
+
+/* ---------- "same firmware, cheaper hardware" ----------
+   The strongest recurring finding in the research: a named open-source firmware
+   often runs on both a $12 board and a $220 boutique handheld. Only real named
+   firmware projects count - "Stock" and "Official" are labels, not a shared project. */
+const GENERIC_FW = new Set(["stock","official","custom","none","none shipped","n/a","na","default",""]);
+function fwFamily(d){
+  if (!d.firmware) return null;
+  if (!["community","third-party-product"].includes(d.firmware_kind)) return null;
+  const n = String(d.firmware).toLowerCase()
+    .replace(/\bv?\d+(\.\d+)*\b/g," ").replace(/\(.*?\)/g," ")
+    .replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim();
+  if (!n || GENERIC_FW.has(n)) return null;
+  /* fold the common aliases so forks group with their parent */
+  if (n.includes("ghost")) return "ghost esp";
+  if (n.includes("marauder")) return "esp32 marauder";
+  if (n.includes("army knife")) return "usb army knife";
+  if (n.includes("nemo")) return "nemo";
+  if (n.includes("bruce")) return "bruce";
+  return n;
+}
+/* other builds of the SAME firmware on cheaper hardware */
+function cheaperEquivalents(d, maxRatio){
+  const fam = fwFamily(d); if (!fam) return [];
+  const p = priceNum(d); if (!isFinite(p) || p <= 0) return [];
+  const cut = p * (maxRatio || 0.6);
+  return DB
+    .filter(x => x.hardware_id !== d.hardware_id && fwFamily(x) === fam)
+    .filter(x => isFinite(priceNum(x)) && priceNum(x) > 0 && priceNum(x) <= cut)
+    .sort((a,b) => priceNum(a) - priceNum(b));
+}
+/* biggest value gaps across the whole index, one row per firmware family */
+function valueGaps(minRatio){
+  const fams = {};
+  for (const d of DB){
+    const f = fwFamily(d); if (!f) continue;
+    if (!isFinite(priceNum(d)) || priceNum(d) <= 0) continue;
+    (fams[f] ||= []).push(d);
+  }
+  const out = [];
+  for (const [fam, list] of Object.entries(fams)){
+    const hw = new Set(list.map(x => x.hardware_id));
+    if (hw.size < 2) continue;
+    const sorted = list.sort((a,b) => priceNum(a) - priceNum(b));
+    const lo = sorted[0], hi = sorted[sorted.length-1];
+    const ratio = priceNum(hi) / priceNum(lo);
+    if (ratio < (minRatio || 2.5)) continue;
+    out.push({ fam, lo, hi, ratio, count: list.length });
+  }
+  return out.sort((a,b) => b.ratio - a.ratio);
+}

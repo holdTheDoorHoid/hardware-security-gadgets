@@ -21,6 +21,11 @@ JSON specifically so the site works from `file://` with no server at all.
 | `compare.html` | Side-by-side matrix of up to six builds, with a "only show rows that differ" toggle. |
 | `device.html?id=…` | Full breakdown: capabilities by group, hardware, legal, project health, sources. |
 | `glossary.html` | Every tracked capability in plain English, with reality checks. |
+
+The browse page and every device page automatically surface **same firmware, cheaper
+hardware** pairs. `valueGaps()` and `cheaperEquivalents()` in `js/common.js` group
+builds by named open-source firmware project, ignoring generic labels like "Stock",
+and flag where identical software runs on very differently priced hardware.
 | `about.html` | Method, confidence levels, and the legal position. |
 
 ## Data model

@@ -24,6 +24,8 @@
   </div>
 </div></div>
 
+<div class="wrap" id="valueband"></div>
+
 <div class="wrap"><div class="cols">
   <aside class="side">
     <input class="search" id="q" type="search" placeholder="search: nfc, deauth, badusb, cc1101…" autocomplete="off">
@@ -69,6 +71,35 @@ document.getElementById("foot").innerHTML = footerBar();
     <div class="kpi"><b>${Object.keys(T.caps).length}</b><span>capabilities tracked</span></div>
     <div class="kpi"><b>${free}</b><span>under $25</span></div>
     <div class="kpi"><b>$${prices.length?Math.min(...prices):0}–$${prices.length?Math.max(...prices).toLocaleString():0}</b><span>price range</span></div>`;
+})();
+
+/* ---- value gaps: same free firmware, very different price ---- */
+(function(){
+  const gaps = valueGaps(2.5).slice(0,4);
+  if (!gaps.length) return;
+  document.getElementById("valueband").innerHTML = `
+    <div class="panel" style="margin-top:22px;border-color:var(--amb)">
+      <div class="between">
+        <div>
+          <div class="panel-t" style="color:var(--amb);margin-bottom:4px">Before you spend &mdash; the firmware is free</div>
+          <p class="small muted mb0" style="max-width:80ch">Several of the most capable tools here are
+          open-source firmware that runs on whatever hardware you put it on. The same software drives
+          both ends of these pairs. The premium buys a case, a battery, a screen or a better radio,
+          which may well be worth it &mdash; but it is not buying capability.</p>
+        </div>
+      </div>
+      <div class="tw mt2"><table><thead><tr>
+        <th>Firmware</th><th>Cheapest hardware</th><th>Priciest hardware</th><th>Gap</th></tr></thead><tbody>
+      ${gaps.map(g=>`<tr>
+        <td class="k">${esc(g.fam)}<div class="tiny dim" style="font-family:var(--sans)">${g.count} builds indexed</div></td>
+        <td><a href="device.html?id=${encodeURIComponent(g.lo.id)}">${esc(g.lo.name)}</a>
+            <div class="mono" style="color:var(--grn)">${priceStr(g.lo)}</div></td>
+        <td><a href="device.html?id=${encodeURIComponent(g.hi.id)}">${esc(g.hi.name)}</a>
+            <div class="mono" style="color:var(--tx-mute)">${priceStr(g.hi)}</div></td>
+        <td><span class="tag tag-amb">${g.ratio.toFixed(1)}x</span></td>
+      </tr>`).join("")}
+      </tbody></table></div>
+    </div>`;
 })();
 
 /* ---- build filter UI ---- */
