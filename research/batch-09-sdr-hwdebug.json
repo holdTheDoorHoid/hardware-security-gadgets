@@ -1,0 +1,2129 @@
+[
+  {
+    "id": "hackrf-one",
+    "hardware_id": "hackrf-one",
+    "name": "HackRF One",
+    "firmware": "Stock (Great Scott Gadgets)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/greatscottgadgets/hackrf",
+    "firmware_note": "Stock firmware turns the board into a dumb USB radio front end; all signal processing happens on the host PC in GNU Radio, SDR++, SDRangel, etc.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/hackrf/one/",
+    "category": "sdr",
+    "subcategory": "wideband-transceiver",
+    "status": "out-of-stock",
+    "released": "2014",
+
+    "price_usd": 330,
+    "price_note": "Great Scott Gadgets still lists HackRF One, but the major US resellers have run dry: Hacker Warehouse shows it out of stock and states it 'is no longer being manufactured as it is replaced with the HackRF Pro', and Adafruit lists it at $339.95 'no longer stocked'. If you are buying new today, HackRF Pro ($400) is the unit actually in production. Sub-$150 'HackRF One' units on AliExpress/Amazon are clones - functional but often with a poor or absent TCXO, no RF shielding, and no revenue to the original developers.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "It is a bare RF front end - you supply the DSP knowledge, the antenna for the band, and the understanding of why your signal looks wrong.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in a plastic case. Antenna is NOT included; you need one per band you care about.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "A half-duplex, 8-bit software-defined radio covering 1 MHz to 6 GHz that both receives and transmits, tethered to a computer over USB 2.0. It is the reference open-source wideband SDR and the one nearly every RF security tutorial is written against. Great Scott Gadgets publishes the full schematics and firmware.",
+    "honest_take": "Two specs people gloss over will bite you: it is 8-bit and it is half-duplex. Eight bits of ADC gives roughly 48 dB of dynamic range, so a strong nearby signal will bury everything else in the same capture - an RTL-SDR is 8-bit too, but a $150 Airspy or a 12-bit PlutoSDR will genuinely hear things a HackRF cannot. Half-duplex means it physically cannot listen while transmitting, which rules out the whole class of attacks that need to see a response mid-transmission. It is also a transmitter, and casually transmitting is how people get in real legal trouble.",
+    "best_for": ["Learning wideband SDR with the best-documented open hardware", "RF replay and signal analysis across a very wide range", "Feeding GNU Radio for research and CTF work", "Serving as the radio half of a PortaPack handheld"],
+    "not_for": ["Anyone who has not yet used an RTL-SDR - start there", "Weak-signal work needing dynamic range (8-bit ADC)", "Full-duplex protocols or anything needing simultaneous TX and RX", "Above 6 GHz, or true DC/low-HF without an upconverter"],
+
+    "hardware": {
+      "mcu_primary": "LPC43xx (ARM Cortex-M4)",
+      "mcu_primary_note": "Main application processor; handles USB and baseband transfer. Official docs name the family as LPC43xx.",
+      "mcu_secondary": "Xilinx CoolRunner-II CPLD",
+      "radios": [
+        {"ic": "MAX2837", "role": "sdr", "note": "2.3-2.7 GHz direct-conversion transceiver, revisions r1-r8. Revision r9 uses the MAX2839 instead."},
+        {"ic": "RFFC5072", "role": "sdr", "note": "Wideband mixer/synthesizer that translates the whole 1 MHz-6 GHz range into the MAX2837's 2.3-2.7 GHz window."},
+        {"ic": "MAX5864", "role": "sdr", "note": "8-bit ADC/DAC pair. This part is the reason HackRF is 8-bit."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery. USB-powered and host-tethered unless paired with a PortaPack.",
+      "charging": null,
+      "pmic": null,
+      "storage": "W25Q80BV 8 Mbit SPI flash for firmware only",
+      "connectivity": ["Micro USB 2.0 High Speed", "SMA female antenna", "SMA female clock in", "SMA female clock out"],
+      "gpio": "Internal pin headers for expansion (P9/P20/P22/P28 etc.), used by PortaPack and Opera Cake",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Injection-moulded plastic enclosure",
+      "notable_physical": ["SMA clock input and output for multi-unit synchronisation", "Si5351C clock generator", "Software-controlled 3.3V/50mA antenna port power for powering an LNA or bias tee"]
+    },
+
+    "capabilities": {
+      "sdr_rx":                {"v": "yes", "note": "1 MHz to 6 GHz, 8-bit I/Q. Below ~10 MHz sensitivity falls off badly; an upconverter is the usual fix."},
+      "sdr_tx":                {"v": "yes", "note": "Same 1 MHz-6 GHz range. Output power is low and varies a lot with frequency (roughly single-digit to low-teens dBm); GSG does not publish a flat figure."},
+      "sdr_bandwidth":         {"v": "yes", "note": "Up to 20 Msps giving ~20 MHz of instantaneous bandwidth; baseband filter is software-configurable."},
+      "sdr_full_duplex":       {"v": "no",  "note": "Half-duplex only. A single mixer and a single ADC/DAC path are shared between TX and RX - this is a hardware limit, not a firmware one."},
+      "subghz_rx":             {"v": "yes", "note": "Covered as part of the general 1 MHz-6 GHz range, not via a dedicated sub-GHz transceiver."},
+      "subghz_tx":             {"v": "yes", "note": "Same. No protocol decoding on-device - the host software does all of it."},
+      "subghz_replay":         {"v": "yes", "note": "Trivially, by recording and replaying raw I/Q with hackrf_transfer. No rolling-code handling of any kind."},
+      "subghz_rolling_code":   {"v": "no",  "note": "Nothing in hardware or stock firmware addresses rolling codes; replaying a captured rolling code does not work by design."},
+      "subghz_external_antenna": {"v": "yes", "note": "SMA female; you need a different antenna for each band of interest."},
+      "ble_sniff":             {"v": "partial", "note": "20 MHz of bandwidth cannot span BLE's 80 MHz of channels, and it cannot hop with a connection. Fine for looking at one advertising channel, useless as a real BLE sniffer - use Sniffle on TI hardware."},
+      "wifi_scan_24":          {"v": "partial", "note": "You can see 2.4 GHz energy and demodulate with enough GNU Radio work, but 20 MHz bandwidth and 8-bit samples make this a research exercise, not a Wi-Fi tool."},
+      "packet_capture":        {"v": "partial", "note": "Captures raw I/Q, not packets. Turning I/Q into packets is entirely on you and your host software."},
+      "scriptable":            {"v": "yes", "note": "libhackrf C API plus Python bindings; first-class GNU Radio, SDRangel, SDR++ and gqrx support."},
+      "standalone_untethered": {"v": "no",  "note": "Needs a host computer over USB unless you bolt on a PortaPack."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning and receiving with a HackRF is legal in most countries, and listening across the spectrum is generally unrestricted in the US (with the notable exception of intercepting cellular voice). Transmitting is a completely different matter: HackRF can transmit on aviation, emergency services, cellular and satellite bands, and doing so without a licence is a criminal offence in nearly every jurisdiction. In the US that is FCC Part 15/301 territory and can carry very large fines. Even a low-power test transmission should go into a shielded enclosure or a dummy load, not an antenna. Check your local regulator before you key up."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No - it is a peripheral; software lives on the host (GNU Radio, SDRangel, SDR++, Universal Radio Hacker)",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["HackRF", "HackRF One r9"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/hackrf/one/", "what": "official specs: 1 MHz-6 GHz, half-duplex, 20 Msps, 8-bit I/Q, antenna port power"},
+      {"url": "https://hackrf.readthedocs.io/en/latest/hardware_components.html", "what": "official IC list: LPC43xx, CoolRunner-II CPLD, MAX2837/MAX2839, RFFC5072, MAX5864, Si5351, W25Q80BV"},
+      {"url": "https://hackerwarehouse.com/product/hackrf-one/", "what": "US reseller price $330 and statement that it is replaced by HackRF Pro"},
+      {"url": "https://www.adafruit.com/product/3583", "what": "Adafruit price $339.95, 'no longer stocked'"}
+    ],
+    "research_gaps": [
+      "Great Scott Gadgets does not publish a TX power figure in dBm; measured values in the community vary widely by frequency and I could not find an official number.",
+      "Could not confirm whether GSG intends to formally discontinue HackRF One or keep it in production alongside HackRF Pro - resellers and the vendor site disagree."
+    ]
+  },
+
+  {
+    "id": "hackrf-pro",
+    "hardware_id": "hackrf-pro",
+    "name": "HackRF Pro",
+    "firmware": "Stock (Great Scott Gadgets)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/greatscottgadgets/hackrf",
+    "firmware_note": "Same firmware tree and same host software as HackRF One - out of the box it behaves like a HackRF One with better analogue performance.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/hackrf/pro/",
+    "category": "sdr",
+    "subcategory": "wideband-transceiver",
+    "status": "available",
+    "released": "2025",
+
+    "price_usd": 400,
+    "price_note": "$400 from Hacker Warehouse. Great Scott Gadgets has publicly flagged that some units from production run r1.2.1-p1 have USB connector reliability problems - check which run you are getting.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Identical learning curve to HackRF One; the improvements are analogue, not conceptual.",
+    "build_effort": "assembled",
+    "build_note": "Assembled. USB-C now, so the old micro-USB cable problem goes away. Antenna still not included.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "The 2025 successor to HackRF One: same architecture and same software, but 100 kHz to 6 GHz instead of 1 MHz, a built-in TCXO, an FPGA in place of the CPLD, RF shielding, USB-C, and the notorious centre-frequency DC spike removed. It is the HackRF you buy new today.",
+    "honest_take": "It fixes the annoyances rather than the fundamentals. It is still half-duplex and still 8-bit at full rate, so the dynamic-range and simultaneous-TX/RX limits of the original are unchanged - the extended-precision 16-bit mode only works at low sample rates. Worth the extra $70 over a HackRF One mostly for the built-in TCXO and the missing DC spike, both of which you would otherwise pay for or work around. If you already own a working HackRF One, this is not an upgrade that unlocks new attacks.",
+    "best_for": ["Buying a new HackRF in 2026", "HF work down to 100 kHz without an external upconverter", "Anyone who was going to add a TCXO to a HackRF One anyway"],
+    "not_for": ["Full-duplex work - it is still half-duplex", "High-dynamic-range receiving at full sample rate", "Existing HackRF One owners looking for new capability"],
+
+    "hardware": {
+      "mcu_primary": "LPC43xx (ARM Cortex-M4)",
+      "mcu_primary_note": "Carried over from HackRF One. Increased RAM and flash versus the original.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery; USB-powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "On-board flash for firmware",
+      "connectivity": ["USB-C (USB 2.0 High Speed)", "SMA RF connector"],
+      "gpio": "Expansion headers retained for compatibility with existing HackRF accessories",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": ["Built-in TCXO", "Installed RF shielding", "FPGA replaces the CoolRunner-II CPLD"]
+    },
+
+    "capabilities": {
+      "sdr_rx":          {"v": "yes", "note": "100 kHz to 6 GHz operating, tunable to 7.1 GHz. Flatter frequency response than HackRF One and no DC spike at centre frequency."},
+      "sdr_tx":          {"v": "yes", "note": "Same range. TX power figures not published by the vendor."},
+      "sdr_bandwidth":   {"v": "yes", "note": "Up to 20 Msps at 8-bit. A half-precision 4-bit mode reaches 40 Msps; an extended-precision 16-bit mode is available only at low sample rates."},
+      "sdr_full_duplex": {"v": "no",  "note": "Still half-duplex. The architectural limit was not changed."},
+      "subghz_rx":       {"v": "yes", "note": "Part of the continuous tuning range."},
+      "subghz_tx":       {"v": "yes", "note": "Part of the continuous tuning range."},
+      "scriptable":      {"v": "yes", "note": "Binary-compatible with existing HackRF host software - libhackrf, GNU Radio, SDRangel, SDR++."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered unless paired with a PortaPack."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same position as HackRF One: receiving is broadly permitted, transmitting on licensed bands without authorisation is a criminal offence in most countries. The wider 100 kHz low end adds LF and the AM broadcast band to what you can accidentally transmit into. Check your local regulator; use a dummy load or shielded enclosure for testing."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No - host software only",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["HackRF Pro SDR"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/hackrf/pro/", "what": "official specs: 100 kHz-6 GHz, tunable to 7.1 GHz, half-duplex, 20 Msps, 8-bit with 16-bit extended and 4-bit half-precision modes, TCXO, FPGA, no DC spike"},
+      {"url": "https://greatscottgadgets.com/", "what": "vendor notice that some r1.2.1-p1 units have USB connector reliability issues"},
+      {"url": "https://hackerwarehouse.com/product/hackrf-pro/", "what": "US reseller price $400"}
+    ],
+    "research_gaps": [
+      "No published TX power specification.",
+      "Exact FPGA part number not stated in the material I could reach."
+    ]
+  },
+
+  {
+    "id": "hackrf-portapack-h4m-mayhem",
+    "hardware_id": "hackrf-portapack-h4m",
+    "name": "HackRF + PortaPack H4M",
+    "firmware": "Mayhem",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/portapack-mayhem/mayhem-firmware",
+    "firmware_note": "Mayhem is the community firmware that turns the PortaPack from a screen into an actual standalone tool - it supplies the spectrum analyser, the capture/replay apps, ADS-B, POCSAG, AIS and the rest.",
+    "vendor": "OpenSourceSDRLab (PortaPack H4M design); Mayhem firmware by the portapack-mayhem community",
+    "vendor_url": "https://opensourcesdrlab.com",
+    "product_url": "https://github.com/portapack-mayhem/mayhem-firmware",
+    "category": "sdr",
+    "subcategory": "handheld-sdr",
+    "status": "available",
+    "released": "2025",
+
+    "price_usd": 190,
+    "price_note": "$190 for the H4M board alone at Hacker Warehouse (HackRF NOT included; out of stock at time of checking). OpenSourceSDRLab sells a complete bundle for around $152 that includes a HackRF - but that bundled HackRF is a clone, not a Great Scott Gadgets unit. A genuine HackRF One is ~$330 on its own, which is why the clone bundles dominate the market.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "Mayhem's menus make individual functions easy to launch, but interpreting what you see - and knowing which buttons are illegal to press - still needs RF knowledge.",
+    "build_effort": "assembly",
+    "build_note": "The PortaPack seats onto the HackRF's internal headers and screws into a shared case - no soldering, but you will need to flash Mayhem yourself unless the seller pre-flashed it.",
+
+    "stealth": "overt",
+    "form_factor": "handheld",
+
+    "summary": "A screen, battery, speaker and navigation controls that bolt onto a HackRF to make it a standalone handheld radio tool, with the community Mayhem firmware doing the actual work. The H4M is the 2025-generation board from OpenSourceSDRLab, adding USB-C, a real power switch, a speaker and microphone, a proper battery fuel gauge, a matte 3.2-inch touchscreen and an I2C-capable GPIO port.",
+    "honest_take": "Read this part carefully: Great Scott Gadgets does not make the PortaPack and never has. The original was a ShareBrained Technology design from 2014, ShareBrained stopped manufacturing years ago, and what you can buy today is a field of third-party boards of wildly varying quality. Almost every 'HackRF PortaPack' bundle on Amazon and AliExpress ships a cloned HackRF, so you are buying clone silicon and sending nothing to the people who designed it. The hardware is also not the product - Mayhem is. Without Mayhem the PortaPack is a screen that does very little, and the radio underneath is still an 8-bit half-duplex HackRF with all the same limits.",
+    "best_for": ["Field RF work with no laptop", "Learning what signals look like, hands-on, away from a desk", "Demos, conference badges-adjacent tinkering, and physical red-team recon"],
+    "not_for": ["Anyone expecting Great Scott Gadgets quality control or support", "Serious DSP - the on-board processing is far weaker than a laptop", "Buying an H3: it uses proprietary firmware nobody maintains"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "The PortaPack has no application processor of its own - Mayhem runs on the HackRF's own LPC43xx (the M4 and M0 cores). The PortaPack supplies display, audio, controls, battery and storage.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {"type": "LCD touchscreen (matte)", "size_in": 3.2, "resolution": "240x320", "color": true, "touch": true},
+      "battery_mah": 2500,
+      "battery_note": "Li-ion with a dedicated fuel-gauge IC reporting real percentage, voltage and current draw in firmware. A sliding switch fully disconnects the battery, fixing the H2's phantom-drain and accidental-power-on-in-a-bag problem.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD card slot",
+      "connectivity": ["USB-C", "microSD", "Headphone jack", "I2C-capable GPIO port"],
+      "gpio": "I2C-capable GPIO header for user add-ons - new in H4M, not present on earlier PortaPacks",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Varies by seller; transparent and aluminium options sold",
+      "notable_physical": ["Built-in speaker and microphone with automatic headphone switching", "Real-time clock with backup cell", "Rotary encoder plus navigation buttons", "Dedicated sliding power switch"]
+    },
+
+    "capabilities": {
+      "sdr_rx":                {"v": "yes", "note": "Inherits the HackRF's 1 MHz-6 GHz (or 100 kHz on a Pro). Mayhem adds an on-screen waterfall and spectrum analyser."},
+      "sdr_tx":                {"v": "yes", "note": "Mayhem exposes transmit apps directly on the device. This is exactly where people get themselves in legal trouble."},
+      "sdr_bandwidth":         {"v": "yes", "note": "Adjustable 2-20 Msps, but on-device processing is far more limited than a host PC - most Mayhem apps work on narrow slices."},
+      "sdr_full_duplex":       {"v": "no",  "note": "The HackRF underneath is half-duplex."},
+      "subghz_rx":             {"v": "yes", "note": "Mayhem includes capture, replay and OOK/key-fob demodulation apps."},
+      "subghz_tx":             {"v": "yes", "note": "Includes an OOK/remote transmit app and a raw replay app."},
+      "subghz_replay":         {"v": "yes", "note": "Capture-to-SD then replay is a headline Mayhem feature and works on fixed-code remotes."},
+      "subghz_rolling_code":   {"v": "no",  "note": "No rolling-code defeat. Replaying a captured KeeLoq/rolling transmission does not open the gate; this is the single most common misconception about the device."},
+      "subghz_bruteforce":     {"v": "partial", "note": "Mayhem has brute-force apps for some fixed-code formats (e.g. de Bruijn sequences for simple OOK). Ineffective against anything modern."},
+      "subghz_external_antenna": {"v": "yes", "note": "Via the HackRF's SMA port."},
+      "ble_sniff":             {"v": "partial", "note": "Mayhem has a BLE receive/advertising app, but it is a narrow-slice look at advertising channels - it cannot follow connections. Not a substitute for Sniffle or an nRF Sniffer."},
+      "ble_advertise":         {"v": "partial", "note": "Mayhem can transmit crafted BLE advertising frames. Effectiveness varies and it is not a full BLE stack."},
+      "wifi_scan_24":          {"v": "partial", "note": "Energy/spectrum view in the 2.4 GHz band, not an 802.11 scanner. It does not associate, decode SSIDs reliably, or capture handshakes."},
+      "gps":                   {"v": "addon", "note": "PortaPack boards have an optional GPS module header; Mayhem supports it for timestamping and some apps. Not fitted by default on most units."},
+      "sd_logging":            {"v": "yes", "note": "Captures and logs write to microSD."},
+      "standalone_untethered": {"v": "yes", "note": "This is the entire point - runs on its own battery with no computer."},
+      "app_store":             {"v": "no",  "note": "No app store. Apps are compiled into the Mayhem firmware image; you update by flashing a new release."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "This is the highest-legal-risk item in this batch, because it puts one-button transmit into a handheld you can carry around. Listening is generally lawful; Mayhem's transmit apps can put you on aviation, marine (AIS), pager, emergency and cellular-adjacent frequencies where transmitting without a licence is a criminal offence in most countries. Replaying a captured signal to open a gate or barrier you do not own is a separate offence again in most jurisdictions, regardless of licensing. Check your local regulator and do transmit testing into a dummy load."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026",
+      "app_store": "No - apps ship inside the firmware image; stable and nightly builds on GitHub",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["PortaPack H4M", "HackRF Portapack H4", "Mayhem Signature Edition"],
+    "sources": [
+      {"url": "https://github.com/portapack-mayhem/mayhem-firmware", "what": "Mayhem supports H1/H2/H4/H4M, GPL-3.0, warns against H3 clones running unmaintained proprietary firmware"},
+      {"url": "https://www.rtl-sdr.com/a-review-of-the-new-hackrf-portapack-h4m/", "what": "independent review: H4M made by OpenSourceSDRLab, ~$152 bundle includes a HackRF clone, list of H4M improvements"},
+      {"url": "https://www.sharebrained.com/portapack/", "what": "ShareBrained confirms it created the original PortaPack, no longer manufactures it, and that many third-party variants now exist"},
+      {"url": "https://hackerwarehouse.com/product/portapack-h4m-for-hackrf/", "what": "US reseller price $190, HackRF explicitly not included, Mayhem must be flashed"}
+    ],
+    "research_gaps": [
+      "The H4M is a closed commercial design; I could not find published schematics, so the display controller, audio codec and fuel-gauge part numbers are unknown.",
+      "Could not confirm whether the H4M's HackRF-side compatibility extends to HackRF Pro."
+    ]
+  },
+
+  {
+    "id": "hackrf-portapack-h2-mayhem",
+    "hardware_id": "hackrf-portapack-h2",
+    "name": "HackRF + PortaPack H2",
+    "firmware": "Mayhem",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/portapack-mayhem/mayhem-firmware",
+    "firmware_note": "Same Mayhem firmware as the H4M; the firmware detects which PortaPack generation it is running on.",
+    "vendor": "Multiple third-party manufacturers (no single official vendor)",
+    "vendor_url": "https://www.sharebrained.com/portapack/",
+    "product_url": "https://github.com/portapack-mayhem/mayhem-firmware",
+    "category": "sdr",
+    "subcategory": "handheld-sdr",
+    "status": "available",
+    "released": "2017",
+
+    "price_usd": 120,
+    "price_note": "Estimate. There is no official vendor and no official price - H2 boards and H2+HackRF-clone bundles circulate on AliExpress, Amazon and eBay from roughly $100 to $200 depending on what clone radio is bundled and whether a case and battery are included. Quality is a genuine lottery.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "Same as the H4M, plus the extra burden of working out whether the board you received is a good one.",
+    "build_effort": "assembly",
+    "build_note": "Plugs onto the HackRF headers. Many sellers ship with old or proprietary firmware; expect to flash Mayhem yourself.",
+
+    "stealth": "overt",
+    "form_factor": "handheld",
+
+    "summary": "The previous-generation PortaPack and still the most widely sold. It does the same job as the H4M - screen, controls, battery, microSD, standalone operation of a HackRF via Mayhem - with an older resistive-feeling screen, micro-USB, no speaker on the base variants, and voltage-only battery monitoring.",
+    "honest_take": "The H2's specific defects are worth knowing before you buy the cheaper option: the encoder knob doubles as the power control and routinely switches the unit on inside a bag, and battery monitoring is a crude voltage reading rather than a fuel gauge. The bigger risk is the counterfeit tier below it - 'H3' boards use proprietary firmware that Mayhem does not support and nobody maintains, and boards that look visually different from the reference design or arrive with a bundled firmware .bin file are a warning sign. If your budget stretches, the H4M fixes essentially all of this.",
+    "best_for": ["The cheapest route to a standalone Mayhem handheld", "People who already own a HackRF and want to try the form factor"],
+    "not_for": ["Anyone who wants a supported product with a warranty", "Buyers who cannot tell a good clone from a bad one", "Long unattended runs - the phantom battery drain is real"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No processor of its own; Mayhem runs on the HackRF's LPC43xx.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {"type": "LCD touchscreen", "size_in": 2.8, "resolution": "240x320", "color": true, "touch": true},
+      "battery_mah": null,
+      "battery_note": "Battery capacity varies by seller. Monitoring is by voltage estimate only, not a fuel-gauge IC.",
+      "charging": "Micro USB",
+      "pmic": null,
+      "storage": "microSD card slot",
+      "connectivity": ["Micro USB", "microSD", "Headphone jack"],
+      "gpio": "No user GPIO port (the I2C GPIO header is an H4M addition)",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Varies by seller",
+      "notable_physical": ["CR1225/CR1220 coin cell backing up the real-time clock", "Optional GPS module header", "Optional speaker connector (H2+ variants)", "TCXO on the PortaPack board"]
+    },
+
+    "capabilities": {
+      "sdr_rx":                {"v": "yes", "note": "Inherits the attached HackRF's range."},
+      "sdr_tx":                {"v": "yes", "note": "Mayhem transmit apps are available on H2 exactly as on H4M."},
+      "sdr_bandwidth":         {"v": "yes", "note": "Same 2-20 Msps as the underlying HackRF, with the same on-device processing limits."},
+      "sdr_full_duplex":       {"v": "no",  "note": "Half-duplex."},
+      "subghz_rx":             {"v": "yes", "note": "Same Mayhem apps as H4M."},
+      "subghz_tx":             {"v": "yes", "note": "Same Mayhem apps as H4M."},
+      "subghz_replay":         {"v": "yes", "note": "Capture and replay to/from microSD."},
+      "subghz_rolling_code":   {"v": "no",  "note": "No rolling-code capability."},
+      "ble_sniff":             {"v": "partial", "note": "Advertising-channel view only; cannot follow connections."},
+      "sd_logging":            {"v": "yes", "note": "microSD."},
+      "standalone_untethered": {"v": "yes", "note": "Battery powered, no host needed."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Identical to the H4M: receiving is generally lawful, one-button transmitting on licensed bands is not, and replaying a captured signal to actuate something you do not own is usually a separate offence. Check your local regulator."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "good",
+      "last_release": "2026",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["PortaPack H2", "PortaPack H2+", "HackRF Portapack"],
+    "sources": [
+      {"url": "https://github.com/portapack-mayhem/mayhem-firmware", "what": "H2 listed as supported and described as a solid middle-ground choice; warning about H3 clones with proprietary firmware"},
+      {"url": "https://github.com/portapack-mayhem/mayhem-firmware/wiki/Hardware-overview", "what": "H2 internals: microSD, GPS module option, CR1225/CR1220 backup cell, speaker connector, TCXO, headset jack auto-switching"},
+      {"url": "https://www.sharebrained.com/portapack/", "what": "confirms the PortaPack originated at ShareBrained and is now made by many unrelated parties"},
+      {"url": "https://www.rtl-sdr.com/a-review-of-the-new-hackrf-portapack-h4m/", "what": "H2 shortcomings the H4M was designed to fix (power switch in bag, charging speed, screen, no speaker)"}
+    ],
+    "research_gaps": [
+      "No single authoritative H2 specification exists because there is no single manufacturer - screen size, battery and speaker presence all vary between sellers.",
+      "Exact H2 display diagonal varies between clone runs; 2.8 inch is the common reference figure but I could not confirm it from a primary source."
+    ]
+  },
+
+  {
+    "id": "rtl-sdr-blog-v4",
+    "hardware_id": "rtl-sdr-blog-v4",
+    "name": "RTL-SDR Blog V4",
+    "firmware": "Stock (RTL-SDR Blog driver)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/rtlsdrblog/rtl-sdr-blog",
+    "firmware_note": "There is no user firmware - the RTL2832U is a fixed-function USB device. The 'driver' is the host-side librtlsdr fork that knows about the V4's R828D tuner and upconverter.",
+    "vendor": "RTL-SDR Blog",
+    "vendor_url": "https://www.rtl-sdr.com",
+    "product_url": "https://www.rtl-sdr.com/store/",
+    "category": "sdr",
+    "subcategory": "rx-only-dongle",
+    "status": "discontinued",
+    "released": "2023",
+
+    "price_usd": 38,
+    "price_note": "The V4 has been end-of-lifed and is no longer listed in the RTL-SDR Blog store. The current model is the RTL-SDR Blog V4L (Lite) at $37.95, which uses an R828S tuner instead of the V4's R828D. The older V3 remains on sale at $34.95-$39.95 (dongle only) or $44.95-$49.95 with the dipole antenna kit. If you are buying today you are buying a V4L or a V3, not a V4.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "beginner",
+    "skill_note": "Plug it in, install SDR++ or SDRSharp, and you are listening in about ten minutes. There is no way to break anything or break the law with it.",
+    "build_effort": "assembled",
+    "build_note": "USB dongle. The bundled dipole kit (on the antenna bundles) is genuinely good and covers most beginner projects.",
+
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+
+    "summary": "A $40 receive-only USB software-defined radio covering roughly 500 kHz to 1.766 GHz, built on the RTL2832U demodulator with an R828D tuner and a built-in upconverter for HF. It is the entry point that the whole SDR hobby is built on, and it is the correct first purchase for almost everyone.",
+    "honest_take": "Buy this first. Seriously - if you are reading a comparison page trying to decide between a HackRF and something else, the honest answer is that you should spend $40 here and learn what a waterfall is before spending $330. It receives only: there is no transmit path, no DAC, no way to make it transmit, and that is a feature, not a limitation - it means you cannot accidentally commit a felony while learning. The real limits are the 8-bit ADC, the ~2.4 Msps of usable bandwidth, and the 1.766 GHz ceiling. Note also that the V4 specifically is now end-of-life; the V4L that replaced it uses a different tuner.",
+    "best_for": ["Absolutely anyone starting in RF or SDR", "ADS-B aircraft tracking, weather satellites, pagers, trunked radio, AIS", "HF/shortwave listening without a separate upconverter", "A cheap second receiver alongside a HackRF"],
+    "not_for": ["Transmitting anything, ever - there is no transmitter", "Above 1.766 GHz (no 2.4 GHz, no Wi-Fi, no BLE)", "Wide captures - usable bandwidth is about 2.4 MHz", "Weak signals next to strong ones - it is 8-bit"],
+
+    "hardware": {
+      "mcu_primary": "RTL2832U",
+      "mcu_primary_note": "Realtek DVB-T demodulator repurposed as a raw 8-bit I/Q sampler over USB. This chip is the entire reason cheap SDR exists.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "R828D", "role": "sdr", "note": "Rafael Micro tuner with three switchable inputs, which is what allows the V4's triplexed HF/VHF/UHF input filtering. The V3 used the single-input R860 (R820T2); the replacement V4L uses an R828S."},
+        {"ic": "SA612", "role": "sdr", "note": "Double-balanced mixer forming a built-in upconverter that shifts HF up by 28.8 MHz, so HF works with no external hardware and without the V3's Nyquist folding around 14.4 MHz."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB 2.0 Type-A", "SMA female antenna"],
+      "gpio": "None",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Aluminium shell (acts as a heat sink and shield)",
+      "notable_physical": ["1 PPM TCXO", "Software-enabled bias tee with an LED indicator", "Triplexed input filtering giving 28-43 dB of out-of-band isolation"]
+    },
+
+    "capabilities": {
+      "sdr_rx":                {"v": "yes", "note": "500 kHz to 1.766 GHz. HF below ~24 MHz goes through the internal upconverter."},
+      "sdr_tx":                {"v": "no",  "note": "Receive only. There is no DAC and no transmit path in the hardware. No firmware or software can change this."},
+      "sdr_bandwidth":         {"v": "partial", "note": "The RTL2832U will claim 3.2 Msps but drops samples above about 2.4 Msps on most hosts. Treat ~2.4 MHz as the real usable bandwidth."},
+      "sdr_full_duplex":       {"v": "no",  "note": "Not applicable - it cannot transmit at all."},
+      "subghz_rx":             {"v": "yes", "note": "The 300-928 MHz remote-control and ISM bands are comfortably inside its range; rtl_433 decodes hundreds of device protocols."},
+      "subghz_tx":             {"v": "no",  "note": "No transmitter."},
+      "gps":                   {"v": "partial", "note": "It can receive GPS L1 at 1575 MHz with an active antenna and the bias tee, but 8-bit sampling makes GNSS decoding marginal."},
+      "packet_capture":        {"v": "partial", "note": "Captures I/Q; rtl_433, dump1090 and multimon-ng turn that into decoded packets for many protocols."},
+      "scriptable":            {"v": "yes", "note": "librtlsdr C API, pyrtlsdr, GNU Radio, SoapySDR. Enormous tooling ecosystem."},
+      "standalone_untethered": {"v": "no",  "note": "Needs a host - though a Raspberry Pi is a perfectly good host."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "About as low-risk as security hardware gets, because it physically cannot transmit. Owning and using one is legal essentially everywhere. The caveats are about what you listen to, not the device: intercepting cellular calls is specifically prohibited in the US, some European countries restrict monitoring emergency-services or non-broadcast traffic, and acting on or disclosing what you overhear can be an offence even where listening is not. Check your local law on scanner/monitoring rules."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No - but the host software ecosystem (SDR++, SDRSharp, gqrx, rtl_433, dump1090, SDRangel) is the largest of any SDR",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["RTL-SDR V4", "RTL SDR Blog V4 dongle"],
+    "sources": [
+      {"url": "https://www.rtl-sdr.com/rtl-sdr-blog-v4-dongle-initial-release/", "what": "official V4 specs: R828D tuner, 500 kHz-1.766 GHz, SA612 upconverter at 28.8 MHz, 1 PPM TCXO, bias tee, triplexed filtering 28-43 dB"},
+      {"url": "https://www.rtl-sdr.com/store/", "what": "V4 EOL confirmation and current pricing: V4L (R828S) $37.95, V3 $34.95-$49.95"},
+      {"url": "https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/", "what": "confirms the product line is receive-only"}
+    ],
+    "research_gaps": [
+      "RTL-SDR Blog does not publish a formal datasheet stating the ADC bit depth; 8-bit is the well-established RTL2832U figure but I could not confirm it from an official V4 document in this pass.",
+      "Could not find a dedicated V4L announcement post explaining exactly why the V4 was end-of-lifed or how the R828S differs in practice from the R828D."
+    ]
+  },
+
+  {
+    "id": "yard-stick-one",
+    "hardware_id": "yard-stick-one",
+    "name": "YARD Stick One",
+    "firmware": "RfCat",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/atlas0fd00m/rfcat",
+    "firmware_note": "Ships with RfCat pre-installed - it gives you an interactive Python shell that drives the radio directly, which is the whole point of the device.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/yardstickone/",
+    "category": "subghz",
+    "subcategory": "sub-ghz-transceiver",
+    "status": "available",
+    "released": "2014",
+
+    "price_usd": 140,
+    "price_note": "$140 at Hacker Warehouse, in stock. Case +$20, antenna +$25-30. Antenna is not included and you need one for your band.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "You drive it from a Python shell and you must already know your target's modulation, data rate, deviation and encoding - it will not find them for you.",
+    "build_effort": "assembled",
+    "build_note": "Assembled USB stick. Bare board unless you buy the case.",
+
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+
+    "summary": "A sub-1 GHz half-duplex transceiver built on a TI CC1111 with RX and TX amplifiers, driven from Python via RfCat. It is not an SDR - it is a configurable protocol radio, which means it is far better than a HackRF at actually talking to a specific device once you know that device's radio parameters.",
+    "honest_take": "The common mistake is comparing it to a HackRF on frequency coverage and concluding it is worse. Different tool: a HackRF gives you raw samples across 6 GHz and leaves the demodulation to you, while a YARD Stick One demodulates in hardware and hands you bytes - which is dramatically more practical for actually interacting with a garage door or a sensor. The flip side is that you must know the modulation and data rate in advance, so people usually reach for an RTL-SDR or HackRF first to characterise a signal and a YARD Stick One second to talk to it. Note the official frequency ranges have gaps; the wider 'unofficial' ranges work in practice but are not guaranteed. It is also a decade old and RfCat development is slow.",
+    "best_for": ["Interacting with a sub-GHz protocol once you know its parameters", "Fuzzing and scripted RF work from Python", "Key-fob, sensor and alarm research", "The device that pairs naturally with an RTL-SDR for reconnaissance"],
+    "not_for": ["Signal discovery - it cannot show you a waterfall", "Anything above 1 GHz (no 2.4 GHz, no BLE, no Wi-Fi)", "Beginners - RfCat assumes you already understand modulation parameters", "Rolling-code defeat"],
+
+    "hardware": {
+      "mcu_primary": "TI CC1111",
+      "mcu_primary_note": "8051 core with an integrated sub-GHz transceiver and USB - the MCU and the radio are the same chip, which is why it can demodulate in hardware and stream bytes.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "CC1111", "role": "sub-ghz", "note": "Official: 300-348, 391-464, 782-928 MHz. Unofficial (works in GSG's experience, not guaranteed): 281-361, 378-481, 749-962 MHz."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB 2.0 Type-A", "SMA female antenna"],
+      "gpio": "Test points / programming header for CC Bootloader; not a general-purpose GPIO product",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board; optional case sold separately",
+      "notable_physical": ["Separate RX and TX amplifiers", "SMA antenna connector", "CC Bootloader allows firmware updates over USB without a programmer"]
+    },
+
+    "capabilities": {
+      "subghz_rx":               {"v": "yes", "note": "300-348, 391-464, 782-928 MHz officially; hardware-demodulated to bytes rather than raw I/Q."},
+      "subghz_tx":               {"v": "yes", "note": "Same ranges. Half-duplex - it cannot listen while transmitting."},
+      "subghz_replay":           {"v": "yes", "note": "Straightforward in RfCat once you have set the correct modulation and data rate."},
+      "subghz_rolling_code":     {"v": "no",  "note": "No rolling-code capability. It is a radio, not a cryptanalysis tool."},
+      "subghz_bruteforce":       {"v": "yes", "note": "Scriptable from Python, which makes it a natural brute-force platform for fixed-code systems - and useless against modern ones."},
+      "subghz_external_antenna": {"v": "yes", "note": "SMA female, antenna not included."},
+      "subghz_amplified":        {"v": "yes", "note": "Both RX and TX amplifiers are on board. GSG does not publish an output figure in dBm."},
+      "sdr_rx":                  {"v": "no",  "note": "Not an SDR. It is a fixed-architecture transceiver - you get demodulated bytes, never raw I/Q, and there is no waterfall."},
+      "scriptable":              {"v": "yes", "note": "RfCat gives an interactive Python shell (rfcat -r) plus an importable library. This is its defining feature."},
+      "standalone_untethered":   {"v": "no",  "note": "Needs a host over USB."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Receiving on sub-GHz is generally lawful. Transmitting is where the risk is: the device's ranges cover licensed land-mobile, amateur, paging and public-safety allocations as well as licence-exempt ISM bands, and transmitting outside the ISM allocations without a licence is an offence in most countries. Separately, transmitting to actuate a gate, garage, alarm or vehicle you do not own is typically a criminal offence in its own right regardless of frequency. Check your local regulator's ISM band plan before transmitting."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2024",
+      "app_store": "No - RfCat is a Python library and shell",
+      "abandoned_risk": "medium"
+    },
+
+    "aliases": ["YS1", "YardStick One", "Yard Stick 1"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/yardstickone/", "what": "official specs: frequency ranges official and unofficial, ASK/OOK/GFSK/2-FSK/4-FSK/MSK, up to 500 kbps, half-duplex, RfCat preinstalled"},
+      {"url": "https://github.com/atlas0fd00m/rfcat", "what": "RfCat firmware and Python host library"},
+      {"url": "https://hackerwarehouse.com/product/yard-stick-one/", "what": "US price $140, in stock, confirms RX and TX amplifiers and SMA connector"}
+    ],
+    "research_gaps": [
+      "No published TX power figure in dBm from Great Scott Gadgets.",
+      "RfCat release cadence is slow; I could not pin an exact last-release date, so abandoned_risk is a judgement call rather than a sourced fact."
+    ]
+  },
+
+  {
+    "id": "limesdr-mini-2",
+    "hardware_id": "limesdr-mini-2",
+    "name": "LimeSDR Mini 2.0",
+    "firmware": "Stock (Lime Microsystems gateware)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/myriadrf/LimeSDR-Mini_GW",
+    "firmware_note": "The ECP5 FPGA gateware is open and can be rebuilt, which is the main reason to pick this over a fixed-function SDR.",
+    "vendor": "Lime Microsystems",
+    "vendor_url": "https://limemicro.com",
+    "product_url": "https://limemicro.com/products/boards/limesdr-mini/",
+    "category": "sdr",
+    "subcategory": "full-duplex-transceiver",
+    "status": "available",
+    "released": "2022",
+
+    "price_usd": 399,
+    "price_note": "$399 via Crowd Supply / Mouser / the Lime store. Materially more expensive than a HackRF for less frequency coverage - you are paying for 12-bit sampling, full duplex, and a user-programmable FPGA.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "expert",
+    "skill_note": "Getting the most out of it means touching FPGA gateware; even basic use has historically involved fighting driver and LimeSuite version mismatches.",
+    "build_effort": "assembled",
+    "build_note": "Assembled USB 3.0 stick. Needs a genuine USB 3.0 port for full sample rates.",
+
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+
+    "summary": "A full-duplex 12-bit SDR covering 10 MHz to 3.5 GHz with 40 MHz of bandwidth, built on the LMS7002M transceiver and a Lattice ECP5 FPGA with 44K LUTs of user-accessible logic. It is aimed at people building radio systems - small cellular basestations, custom protocols - rather than at people poking at garage doors.",
+    "honest_take": "This is a development platform that happens to be usable for security work, not a security tool. Its two genuine advantages over a HackRF are that it is full duplex and 12-bit, which matter enormously if you are implementing a protocol that must respond to what it hears - a HackRF simply cannot do that. Against it: narrower coverage (3.5 GHz vs 6 GHz), a much smaller community, a rougher software story around LimeSuite, and a price that buys a HackRF Pro with change. Unless you specifically need full duplex or FPGA access, most people are better served elsewhere.",
+    "best_for": ["Full-duplex protocol work where you must transmit and receive simultaneously", "Running small cellular stacks (srsRAN, Osmocom, YateBTS)", "Projects where you want to put DSP into FPGA fabric", "Higher dynamic range than an 8-bit SDR gives"],
+    "not_for": ["Beginners - the software stack is unforgiving", "Anything above 3.5 GHz", "Casual spectrum browsing (an RTL-SDR does that for a tenth of the price)"],
+
+    "hardware": {
+      "mcu_primary": "Lattice ECP5 LFE5U-45F",
+      "mcu_primary_note": "44K LUTs and 1944 Kb embedded memory, user-programmable. Replaced the original Mini's much smaller Intel MAX 10.",
+      "mcu_secondary": "FTDI FT601",
+      "radios": [
+        {"ic": "LMS7002M", "role": "sdr", "note": "Lime Microsystems field-programmable RF transceiver. 1 TX and 1 RX channel on this board, 12-bit, full duplex."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus-powered from USB 5V.",
+      "charging": null,
+      "pmic": null,
+      "storage": "128 Mbit flash for FPGA configuration",
+      "connectivity": ["USB 3.0 (FT601)", "SMA TX", "SMA RX"],
+      "gpio": "FPGA I/O headers on board",
+      "sensors": ["none"],
+      "dimensions_mm": "69.0 x 31.4",
+      "weight_g": null,
+      "case": "Bare board (enclosures sold separately)",
+      "notable_physical": ["40 MHz VCTCXO with tuning", "Separate TX and RX SMA connectors, which is how full duplex is physically possible"]
+    },
+
+    "capabilities": {
+      "sdr_rx":          {"v": "yes", "note": "10 MHz to 3.5 GHz, 12-bit, 1 RX channel. Four extra bits over a HackRF is roughly 24 dB more dynamic range."},
+      "sdr_tx":          {"v": "yes", "note": "Same range, 1 TX channel, max 10 dBm depending on frequency."},
+      "sdr_bandwidth":   {"v": "yes", "note": "40 MHz RF bandwidth, 30.72 MSPS."},
+      "sdr_full_duplex": {"v": "yes", "note": "Genuine full duplex with separate TX and RX chains and separate SMA ports. This is the single biggest functional difference from a HackRF."},
+      "subghz_rx":       {"v": "yes", "note": "Covered from 10 MHz up, though it has no protocol decoding of its own."},
+      "subghz_tx":       {"v": "yes", "note": "Covered from 10 MHz up."},
+      "scriptable":      {"v": "yes", "note": "LimeSuite, SoapySDR, GNU Radio, and gateware you can rebuild yourself."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered over USB 3.0."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Receiving is generally lawful. This device is commonly used to run cellular basestation software, and operating even a low-power fake basestation is unambiguously illegal in essentially every country - it transmits on licensed carrier spectrum and can capture or disrupt other people's phone service. Treat any cellular experimentation as requiring a shielded chamber and, in most jurisdictions, a test licence. Check your local regulator."
+    },
+
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+
+    "aliases": ["LimeSDR Mini v2", "LimeSDR Mini 2"],
+    "sources": [
+      {"url": "https://limemicro.com/products/boards/limesdr-mini/", "what": "official specs: LMS7002M, ECP5 LFE5U-45F 44K LUTs, 10 MHz-3.5 GHz, 40 MHz bandwidth, 30.72 MSPS, 12-bit, 1TX/1RX, full duplex, max 10 dBm, USB 3.0 FT601, 69.0 x 31.4 mm"},
+      {"url": "https://www.crowdsupply.com/lime-micro/limesdr-mini-2", "what": "US$399 price and campaign details"}
+    ],
+    "research_gaps": [
+      "Lime Microsystems has had well-publicised commercial difficulties; I could not verify current production status or lead times, so abandoned_risk of 'medium' reflects that uncertainty rather than a confirmed problem."
+    ]
+  },
+
+  {
+    "id": "adalm-pluto",
+    "hardware_id": "adalm-pluto",
+    "name": "ADALM-PLUTO (PlutoSDR)",
+    "firmware": "Stock (Analog Devices Linux image)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/analogdevicesinc/plutosdr-fw",
+    "firmware_note": "Runs embedded Linux on the Zynq's ARM cores and presents itself over USB as a network device plus an IIO device - which is why you can SSH into it and why the AD9364 'unlock' is a config change rather than a hardware mod.",
+    "vendor": "Analog Devices",
+    "vendor_url": "https://www.analog.com",
+    "product_url": "https://www.analog.com/en/resources/evaluation-hardware-and-software/evaluation-boards-kits/adalm-pluto.html",
+    "category": "sdr",
+    "subcategory": "full-duplex-transceiver",
+    "status": "available",
+    "released": "2017",
+
+    "price_usd": 279,
+    "price_note": "Estimate. Distributor pricing varies widely - roughly $278 at Newark, with some distributors listing well over $400. Analog Devices sells it as an educational 'active learning module' and pricing has drifted upward over the years. Clone boards (Zynq7010/7020 + AD9363, sold as 'PlutoSDR compatible') are common and cheaper.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Excellent teaching hardware with genuinely good ADI documentation, but you still need to understand I/Q, sampling and modulation to get anywhere.",
+    "build_effort": "assembled",
+    "build_note": "Assembled in a plastic case. Two SMA ports. The frequency 'unlock' is a two-line change over the USB serial console, no soldering.",
+
+    "stealth": "discreet",
+    "form_factor": "pocket",
+
+    "summary": "A full-duplex 12-bit SDR built on an AD9363 transceiver and a Xilinx Zynq SoC, sold by Analog Devices as a teaching tool. Guaranteed for 325 MHz to 3.8 GHz with 20 MHz of bandwidth, it is widely reconfigured in software to report as the higher-grade AD9364 and open up 70 MHz to 6 GHz with 56 MHz of bandwidth.",
+    "honest_take": "The famous 'hack' deserves a caveat people skip: telling the software the chip is an AD9364 changes what it will let you tune to, but it does not change the silicon's actual calibrated performance. ADI guarantees the AD9363 only from 325 MHz to 3.8 GHz, and unlocked units vary - some are fine at 70 MHz and 6 GHz, some are noticeably worse. Treat the extended range as usable, not specified. Beyond that this is an under-rated device for security work: 12-bit and genuinely full duplex for less than a LimeSDR Mini, with an ARM Linux system on board you can SSH into and run code on.",
+    "best_for": ["Learning SDR with excellent vendor documentation and MATLAB/Simulink support", "Full-duplex work at a lower price than a LimeSDR", "Higher dynamic range than 8-bit devices", "On-device processing - it runs Linux on ARM"],
+    "not_for": ["Relying on the extended 70 MHz-6 GHz range for anything that must be repeatable", "Wideband survey work above 6 GHz", "Anyone wanting the huge HackRF tutorial ecosystem"],
+
+    "hardware": {
+      "mcu_primary": "Xilinx Zynq XC7Z010",
+      "mcu_primary_note": "Dual ARM Cortex-A9 plus FPGA fabric in one package; runs embedded Linux and presents the radio over USB as an IIO device.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "AD9363", "role": "sdr", "note": "Guaranteed 325 MHz-3.8 GHz with 20 MHz bandwidth. Software-configurable to identify as an AD9364 (70 MHz-6 GHz, 56 MHz bandwidth) but performance outside the guaranteed range is not specified and varies unit to unit."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "On-board flash holding the Linux image",
+      "connectivity": ["USB 2.0 (device and host OTG)", "SMA TX", "SMA RX"],
+      "gpio": "Expansion header on the PCB (requires opening the case)",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic enclosure",
+      "notable_physical": ["Separate TX and RX SMA connectors enabling full duplex", "Enumerates as a USB network device - you can SSH into the radio"]
+    },
+
+    "capabilities": {
+      "sdr_rx":          {"v": "yes", "note": "325 MHz-3.8 GHz guaranteed; 70 MHz-6 GHz after the AD9364 software reconfiguration, unspecified performance."},
+      "sdr_tx":          {"v": "yes", "note": "Same ranges. 1 TX channel. The reconfiguration applies to both TX and RX."},
+      "sdr_bandwidth":   {"v": "yes", "note": "20 MHz guaranteed; up to 56 MHz after reconfiguration. 12-bit ADC and DAC."},
+      "sdr_full_duplex": {"v": "yes", "note": "Independent TX and RX chains, genuinely full duplex - unlike any HackRF."},
+      "scriptable":      {"v": "yes", "note": "libiio, pyadi-iio, GNU Radio, SoapySDR, and first-class MATLAB/Simulink support."},
+      "standalone_untethered": {"v": "partial", "note": "It runs Linux on its own ARM cores and you can run code on it, but it takes power and normally its data path from USB - not a battery-powered field device."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Receiving is generally lawful. Its full-duplex capability and cellular-band coverage make it a common platform for cellular experimentation, which is illegal to transmit without a licence essentially everywhere. Transmitting on any licensed allocation without authorisation is an offence in most countries; use a shielded enclosure or dummy load. Check your local regulator."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["PlutoSDR", "Pluto SDR", "ADALM PLUTO"],
+    "sources": [
+      {"url": "https://www.analog.com/en/resources/evaluation-hardware-and-software/evaluation-boards-kits/adalm-pluto.html", "what": "official product page: AD9363, Zynq, 12-bit ADC/DAC, independent full-duplex TX and RX channels"},
+      {"url": "https://www.rtl-sdr.com/adalm-pluto-sdr-hack-tune-70-mhz-to-6-ghz-and-gqrx-install/", "what": "the AD9364 device-string reconfiguration, and the caveat that full range and bandwidth are not guaranteed on every unit"},
+      {"url": "https://github.com/analogdevicesinc/plutosdr-fw", "what": "official firmware source confirming the embedded Linux architecture"}
+    ],
+    "research_gaps": [
+      "Could not confirm a single authoritative current USD price - distributor listings ranged from ~$278 to ~$430, so the price is flagged as an estimate.",
+      "Could not confirm whether current production units use the XC7Z010 exclusively; some sources reference Zynq 7020 on clone boards specifically."
+    ]
+  },
+
+  {
+    "id": "ubertooth-one",
+    "hardware_id": "ubertooth-one",
+    "name": "Ubertooth One",
+    "firmware": "Stock (Great Scott Gadgets)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/greatscottgadgets/ubertooth",
+    "firmware_note": "Firmware plus host tools (ubertooth-btle, ubertooth-rx) with Wireshark and Kismet integration. No further enhancements are planned.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/ubertoothone/",
+    "category": "bluetooth",
+    "subcategory": "bluetooth-sniffer",
+    "status": "discontinued",
+    "released": "2011",
+
+    "price_usd": 125,
+    "price_note": "Great Scott Gadgets retired it in December 2022 after 12 years and 17 production runs and has no plans to make more. The $125 unit at Hacker Warehouse is explicitly described by that reseller as a clone of the open-source design, not a GSG-manufactured board. The design files are public, so anyone can build one.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "expert",
+    "skill_note": "Bluetooth sniffing on this hardware requires understanding piconet timing, hopping and the CC2400's modulation limits - and accepting that it often just does not capture.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board with an RP-SMA dipole antenna. USB.",
+
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+
+    "summary": "The original open-source 2.4 GHz Bluetooth monitoring platform, built on a TI CC2400 radio and an NXP LPC175x ARM Cortex-M3. It made Bluetooth traffic visible to researchers for the first time on affordable hardware. It has been retired by its creator and, for BLE work specifically, has been comprehensively overtaken.",
+    "honest_take": "Do not buy this in 2026 unless you specifically need Bluetooth Classic. It is retired, what is on sale is clones, and for BLE a $20 Sonoff dongle running Sniffle beats it on every axis - Sniffle listens on all three advertising channels at once and supports BLE 5's 2M and coded PHYs, none of which the CC2400 can do. Its Classic capability is also more limited than its reputation suggests: the CC2400 can only demodulate 1 Mbps basic-rate GFSK, so EDR (2 and 3 Mbps) traffic is simply invisible to it, and it decrypts nothing. Historically important, practically superseded.",
+    "best_for": ["Bluetooth Classic (basic rate) research where nothing else affordable exists", "Understanding Bluetooth at the physical layer", "Collectors and courseware that still specifies it"],
+    "not_for": ["BLE sniffing - Sniffle on TI CC1352 hardware is better and cheaper", "Bluetooth EDR (2/3 Mbps) - the radio physically cannot demodulate it", "Decrypting anything", "Anyone who needs a supported product"],
+
+    "hardware": {
+      "mcu_primary": "NXP LPC175x (ARM Cortex-M3)",
+      "mcu_primary_note": "Handles USB and packet processing. Later revisions use the LPC1759.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "CC2400", "role": "bluetooth", "note": "TI 2.4 GHz transceiver. Demodulates 1 Mbps GFSK only - that covers Bluetooth basic rate and BLE 1M PHY, but not EDR's DPSK or BLE 5's 2M and coded PHYs."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB 2.0 Type-A", "RP-SMA antenna"],
+      "gpio": "Expansion header and in-circuit serial programming header",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board; third-party aluminium enclosures exist",
+      "notable_physical": ["2.4 GHz dipole antenna with RP-SMA connector included", "Two Ubertooths can be paired for better capture"]
+    },
+
+    "capabilities": {
+      "ble_sniff":        {"v": "partial", "note": "Sniffs BLE advertising and can follow connections, but only on the 1M PHY, and only on one advertising channel at a time - so it routinely misses the connection request that starts a session."},
+      "bt_classic":       {"v": "partial", "note": "Can monitor Bluetooth basic-rate piconets and recover the LAP/UAP for address discovery. Cannot demodulate EDR, cannot decrypt, and capture is unreliable in practice."},
+      "ble_scan":         {"v": "yes", "note": "Passive discovery of advertising devices."},
+      "ble_advertise":    {"v": "no",  "note": "It is a monitoring tool. The firmware does not implement a transmit-side BLE stack."},
+      "ble_jam":          {"v": "partial", "note": "The CC2400 can emit a carrier and the firmware has spectrum/jamming-adjacent modes, but this is narrow single-channel interference, not wideband jamming of Bluetooth's 79 channels."},
+      "nrf24_scan":       {"v": "partial", "note": "ubertooth-specan gives a general 2.4 GHz spectrum view that will show nRF24 and other 2.4 GHz energy, but it does not decode nRF24 packets."},
+      "packet_capture":   {"v": "yes", "note": "PCAP output with Wireshark and Kismet integration."},
+      "scriptable":       {"v": "yes", "note": "libubertooth C library plus command-line host tools."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered over USB."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning it is legal. Passive monitoring sits in a grey area in a way that receiving broadcast radio does not: Bluetooth is point-to-point personal communication, and wiretapping and interception statutes in the US, UK and EU can apply to intercepting other people's traffic even when it is unencrypted over the air. Sniffing devices you own or have written permission to test is the safe path. The device's transmit capability is limited but the 2.4 GHz band is licence-exempt, so the greater risk here is interception law rather than spectrum law."
+    },
+
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2022",
+      "app_store": "No",
+      "abandoned_risk": "already-abandoned"
+    },
+
+    "aliases": ["Ubertooth", "Ubertooth-1"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/ubertoothone/", "what": "official statement that it is a retired product with no plan to manufacture more"},
+      {"url": "https://greatscottgadgets.com/2022/12-22-ubertooth-retirement/", "what": "December 2022 retirement announcement: 12 years, 17 production runs, no planned hardware or software enhancements, design files remain open"},
+      {"url": "https://hackerwarehouse.com/product/ubertooth-one/", "what": "$125, reseller states openly that the unit sold is a clone of the retired open-source design"},
+      {"url": "https://github.com/greatscottgadgets/ubertooth", "what": "firmware and host tools repository"}
+    ],
+    "research_gaps": [
+      "The GSG product page no longer lists the CC2400/LPC175x part numbers directly; these come from the project repository and long-standing project documentation rather than a current vendor spec sheet."
+    ]
+  },
+
+  {
+    "id": "nrf52840-dongle-nrfsniffer",
+    "hardware_id": "nrf52840-dongle",
+    "name": "Nordic nRF52840 Dongle",
+    "firmware": "nRF Sniffer for Bluetooth LE",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE",
+    "firmware_note": "Nordic's own free sniffer firmware plus a Wireshark extcap plugin - flash it over USB with nRF Connect for Desktop, no programmer needed.",
+    "vendor": "Nordic Semiconductor",
+    "vendor_url": "https://www.nordicsemi.com",
+    "product_url": "https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dongle",
+    "category": "bluetooth",
+    "subcategory": "ble-sniffer",
+    "status": "available",
+    "released": "2018",
+
+    "price_usd": 11,
+    "price_note": "Estimate - I could not open a distributor page in this pass. Nordic sells it as a low-cost dev dongle and it has consistently sat around $10-$12 at DigiKey/Mouser. Sub-$10 clones of the board are common and generally work.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "Flashing is a few clicks in nRF Connect and the output lands in Wireshark - but reading BLE in Wireshark is where the actual difficulty is.",
+    "build_effort": "flash-only",
+    "build_note": "Plug in, hold the reset button to enter bootloader, flash the sniffer image from nRF Connect for Desktop. No soldering, no programmer.",
+
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+
+    "summary": "A $10 USB dongle carrying Nordic's nRF52840 SoC that, flashed with Nordic's free nRF Sniffer firmware, becomes a working BLE packet capture device feeding Wireshark. It is the cheapest legitimate way to start looking at Bluetooth Low Energy traffic.",
+    "honest_take": "First, a correction that trips people up constantly: this dongle does NOT run Sniffle. Sniffle is NCC Group's sniffer and it targets TI CC1352/CC26x2 hardware only - the nRF52840 is not in its supported list and is not mentioned in the project at all. What the Nordic dongle runs is Nordic's own nRF Sniffer, which is a decent free tool but weaker: it watches one advertising channel at a time, so it frequently misses the CONNECT_IND that starts a session and therefore fails to follow the connection you actually care about. If BLE sniffing is the point of your purchase, spend $20 on a Sonoff CC2652P dongle and run Sniffle instead. Buy this one because it is a superb $10 nRF52840 development board that happens to sniff.",
+    "best_for": ["A first, near-free look at BLE traffic in Wireshark", "General nRF52840 development - BLE, 802.15.4, Thread, Zigbee, ANT", "Cheap disposable hardware for BLE experimentation", "Running third-party nRF52840 security firmware"],
+    "not_for": ["Reliable BLE connection following - use Sniffle on TI hardware", "Running Sniffle (unsupported hardware)", "Bluetooth Classic - the nRF52840 has no BR/EDR radio at all", "Debugging - the dongle has no debug support, only USB programming"],
+
+    "hardware": {
+      "mcu_primary": "Nordic nRF52840",
+      "mcu_primary_note": "64 MHz ARM Cortex-M4F, 1 MB flash, 256 KB RAM, with an integrated 2.4 GHz multiprotocol radio and native USB.",
+      "mcu_secondary": null,
+      "radios": [
+        {"ic": "nRF52840 (integrated)", "role": "bluetooth", "note": "2.4 GHz only. Supports Bluetooth 5.4 LE, Bluetooth mesh, Thread, Zigbee, 802.15.4, ANT and proprietary 2.4 GHz modes. No Bluetooth Classic/BR/EDR - that is a hardware limitation."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "1 MB internal flash",
+      "connectivity": ["USB Type-A (integrated into the PCB)"],
+      "gpio": "15 accessible GPIO on castellated edges",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB with an integrated USB-A edge connector",
+      "notable_physical": ["User-programmable RGB LED and green LED", "User button doubling as the bootloader entry button", "PCB trace antenna", "No debug support - programming and USB communication only"]
+    },
+
+    "capabilities": {
+      "ble_sniff":        {"v": "partial", "note": "nRF Sniffer captures BLE and feeds Wireshark, but monitors one advertising channel at a time - so it often misses the connection request and fails to follow the resulting connection. Sniffle on TI hardware watches all three at once."},
+      "ble_scan":         {"v": "yes", "note": "Passive discovery of advertising devices."},
+      "ble_advertise":    {"v": "addon", "note": "Not with the sniffer firmware, but the SoC is a full BLE transceiver - reflash it with the Nordic SDK, Zephyr, or a project like Sniffle's rivals and it can advertise and connect."},
+      "bt_classic":       {"v": "no",  "note": "The nRF52840 has no Bluetooth BR/EDR radio. No firmware can add it."},
+      "zigbee":           {"v": "addon", "note": "The radio supports 802.15.4/Zigbee/Thread, but that needs different firmware from the BLE sniffer image."},
+      "ble_tracker_detect": {"v": "addon", "note": "Possible with third-party firmware, not with the stock nRF Sniffer image."},
+      "packet_capture":   {"v": "yes", "note": "Live capture into Wireshark via an extcap plugin; PCAP output."},
+      "scriptable":       {"v": "yes", "note": "The sniffer ships with a Python host interface; the SoC itself is programmable in C, Zephyr or Rust."},
+      "usb_hid_inject":   {"v": "addon", "note": "The nRF52840 has native USB device support, so custom firmware can present as an HID keyboard - but that is a separate project, not this firmware."},
+      "standalone_untethered": {"v": "no", "note": "Needs a host over USB for capture."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and using it is legal everywhere. It operates only in the 2.4 GHz licence-exempt band, so spectrum law is not the concern. The concern is interception law: BLE traffic is other people's personal communication, and wiretapping statutes in the US, UK and EU can apply to capturing it even unencrypted. Sniff devices you own or have written authorisation to test."
+    },
+
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No - but a very large third-party firmware ecosystem exists for the nRF52840",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["nRF52840 Dongle", "PCA10059", "nRF Sniffer dongle"],
+    "sources": [
+      {"url": "https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dongle", "what": "official specs: nRF52840 64 MHz Cortex-M4F, 1 MB flash, 256 KB RAM, Bluetooth 5.4/mesh/Thread/Zigbee/802.15.4/ANT, 15 GPIO, no debug support"},
+      {"url": "https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE", "what": "official nRF Sniffer supported hardware list: nRF52840 Dongle, nRF52840 DK, nRF52833 DK, nRF52 DK"},
+      {"url": "https://github.com/nccgroup/Sniffle", "what": "Sniffle's hardware list contains only TI CC26x2/CC1352/CC2652/CC1354 boards, the Sonoff CC2652P dongle and the Catsniffer - the nRF52840 is not mentioned anywhere"}
+    ],
+    "research_gaps": [
+      "Could not open a distributor page for a confirmed current price; $11 is an estimate.",
+      "Nordic's documentation does not clearly state which BLE 5 PHYs (2M, coded) the nRF Sniffer firmware supports, so PHY coverage is unconfirmed."
+    ]
+  },
+
+  {
+    "id": "sonoff-zbdongle-p-sniffle",
+    "hardware_id": "sonoff-zbdongle-p",
+    "name": "SONOFF ZBDongle-P (CC2652P) running Sniffle",
+    "firmware": "Sniffle (NCC Group)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/nccgroup/Sniffle",
+    "firmware_note": "Replaces the dongle's Zigbee coordinator firmware entirely and turns a $20 smart-home accessory into the best cheap BLE sniffer available.",
+    "vendor": "ITEAD/SONOFF (hardware); NCC Group (Sniffle firmware)",
+    "vendor_url": "https://itead.cc",
+    "product_url": "https://itead.cc/product/sonoff-zigbee-3-0-usb-dongle-plus/",
+    "category": "bluetooth",
+    "subcategory": "ble-sniffer",
+    "status": "available",
+    "released": "2021",
+
+    "price_usd": 20,
+    "price_note": "$19.90 direct from ITEAD for the ZBDongle-P. Be careful which model you order: only the -P (TI CC2652P) works with Sniffle. The ZBDongle-E uses a Silicon Labs EFM32/EFR32MG21 and is not supported.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Cheap and capable, but you must flash it yourself over its serial bootloader and then interpret BLE link-layer traffic in Wireshark.",
+    "build_effort": "flash-only",
+    "build_note": "Open the aluminium case, hold the BOOT button while plugging in, flash the Sniffle image with cc2538-bsl. Reversible - you can flash it back to Zigbee later.",
+
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+
+    "summary": "A $20 Zigbee dongle whose TI CC2652P is exactly the silicon NCC Group's Sniffle targets. Flashed with Sniffle it captures BLE 5 traffic across all three primary advertising channels simultaneously, supports every BLE 5 PHY including coded, and follows connections far more reliably than single-channel sniffers.",
+    "honest_take": "This is the answer to 'what should I actually buy to sniff BLE', and almost nobody knows it. Watching all three advertising channels at once is not a nice-to-have - it is the difference between catching the connection request and missing it, and Sniffle's own documentation puts connection detection at roughly three times more reliable than single-channel sniffers. It beats a retired $125 Ubertooth and a $11 Nordic dongle on capability while sitting between them on price. The catches are real but small: you must flash it yourself, doing so removes the Zigbee function, and Sniffle is a link-layer capture tool - it does not break encryption, and a connection using LE Secure Connections pairing will be captured but not readable.",
+    "best_for": ["The best value BLE sniffing setup available", "Capturing BLE 5 extended advertising and coded PHY traffic", "Reliably following BLE connections", "Wireshark-based BLE analysis"],
+    "not_for": ["Bluetooth Classic - the CC2652P does not do BR/EDR", "Decrypting BLE - Sniffle captures, it does not break crypto", "Anyone unwilling to flash firmware over a serial bootloader", "Keeping your Zigbee network running on the same dongle"],
+
+    "hardware": {
+      "mcu_primary": "TI CC2652P",
+      "mcu_primary_note": "ARM Cortex-M4F wireless MCU with a multiprotocol 2.4 GHz radio and an integrated +20 dBm power amplifier. This is the part Sniffle is written for.",
+      "mcu_secondary": "CP2102(N)",
+      "radios": [
+        {"ic": "CC2652P (integrated)", "role": "bluetooth", "note": "2.4 GHz multiprotocol. Supports BLE 5 including the 2M and coded PHYs, plus Zigbee/Thread/802.15.4. No Bluetooth Classic."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "Internal flash only",
+      "connectivity": ["USB Type-A via CP2102(N) USB-serial bridge", "SMA external antenna"],
+      "gpio": "BOOT and RESET buttons; debug pads inside the case",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Aluminium housing",
+      "notable_physical": ["+20 dBm PA and an external SMA antenna - unusually good RF for the price", "Removable antenna lets you fit a directional or higher-gain one"]
+    },
+
+    "capabilities": {
+      "ble_sniff":       {"v": "yes", "note": "Captures on all three primary advertising channels simultaneously, supports BT5 extended advertising, extended-length packets, Channel Selection Algorithm #1 and #2, and all PHYs (1M, 2M, coded). Follows connection parameter and PHY changes."},
+      "ble_scan":        {"v": "yes", "note": "With RSSI and MAC address filtering."},
+      "bt_classic":      {"v": "no",  "note": "The CC2652P has no Bluetooth BR/EDR radio."},
+      "zigbee":          {"v": "addon", "note": "This is the dongle's factory function, but flashing Sniffle replaces it. You can flash back."},
+      "packet_capture":  {"v": "yes", "note": "PCAP export plus a Wireshark plugin for live capture."},
+      "scriptable":      {"v": "yes", "note": "Python host software designed to be extended; the capture API is the normal way people use it."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered over USB serial."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The hardware is an ordinary consumer smart-home accessory and legal everywhere. It operates only in the 2.4 GHz licence-exempt band. As with any sniffer, the exposure is interception law rather than spectrum law - capturing other people's Bluetooth traffic can fall under wiretapping and computer-misuse statutes in the US, UK and EU even when the traffic is unencrypted. Sniff only what you own or are authorised in writing to test."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Sonoff Zigbee 3.0 USB Dongle Plus", "ZBDongle-P", "Sniffle dongle", "CC2652P dongle"],
+    "sources": [
+      {"url": "https://github.com/nccgroup/Sniffle", "what": "supported hardware list including the SONOFF CC2652P USB Dongle Plus; features list covering BT5 extended advertising, CSA #1/#2, all PHYs, triple-channel advertising capture and ~3x connection detection reliability; GPL-3.0; v1.10.0"},
+      {"url": "https://itead.cc/product/sonoff-zigbee-3-0-usb-dongle-plus/", "what": "official price $19.90, ZBDongle-P uses TI CC2652P + CP2102(N) with +20 dBm gain and SMA antenna, distinct from the EFR32MG21-based ZBDongle-E"}
+    ],
+    "research_gaps": [
+      "Sniffle's README does not state a licence explicitly in the section I read; GPL-3.0 comes from the repository metadata.",
+      "Could not confirm the exact release date of Sniffle v1.10.0."
+    ]
+  },
+
+  {
+    "id": "ti-cc1352p7-launchpad-sniffle",
+    "hardware_id": "ti-cc1352p7-launchpad",
+    "name": "TI CC1352P7 LaunchPad running Sniffle",
+    "firmware": "Sniffle (NCC Group)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/nccgroup/Sniffle",
+    "firmware_note": "Same Sniffle firmware as the Sonoff dongle, but on a TI development board with an on-board debugger, headers and a sub-GHz radio as well.",
+    "vendor": "Texas Instruments (hardware); NCC Group (Sniffle firmware)",
+    "vendor_url": "https://www.ti.com",
+    "product_url": "https://github.com/nccgroup/Sniffle",
+    "category": "bluetooth",
+    "subcategory": "ble-sniffer",
+    "status": "available",
+    "released": "2022",
+
+    "price_usd": 60,
+    "price_note": "Estimate. TI LaunchPad prices for the CC1352/CC26x2 family have historically sat in the $40-$80 range direct from TI. Sniffle treats all the supported LaunchPads as functionally equivalent, so buy on price and availability.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Same analysis skill as the Sonoff route, but easier to flash (on-board XDS110 debugger) and easier to extend.",
+    "build_effort": "flash-only",
+    "build_note": "Flash over the LaunchPad's built-in debugger with UniFlash - no bootloader button dance and no case to open.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "The reference hardware family for Sniffle. Any of eight TI LaunchPads (CC26x2R, CC2652RB, CC1352R, CC1352P, CC2652R7, CC1352P7, CC2651P3, CC1354P10) run Sniffle identically; the Electronic Cats Catsniffer V3 is also supported. The dual-band parts add a sub-GHz radio the Sonoff dongle does not have.",
+    "honest_take": "Functionally this captures exactly what the $20 Sonoff dongle captures - Sniffle's own documentation says the supported boards are equivalent - so you are paying three times as much for the on-board debugger, the expansion headers, and on the dual-band parts a sub-GHz radio. That is a fair trade if you intend to modify Sniffle or build something on top of it, and a waste of $40 if you just want to sniff BLE. Buy the LaunchPad if you are developing; buy the Sonoff if you are using.",
+    "best_for": ["Developing or modifying Sniffle itself", "Wanting sub-GHz and 2.4 GHz on one board (dual-band parts)", "Easier, more reliable flashing via the on-board debugger", "Access to headers for triggering and instrumentation"],
+    "not_for": ["Anyone who just wants a BLE sniffer - the Sonoff dongle is the same capability for $20", "Bluetooth Classic", "Discreet or field use - it is an open development board"],
+
+    "hardware": {
+      "mcu_primary": "TI CC1352P7 (or any of the eight Sniffle-supported CC13xx/CC26xx parts)",
+      "mcu_primary_note": "ARM Cortex-M4F multiprotocol wireless MCU. The CC1352/CC1354 parts are dual-band (sub-GHz plus 2.4 GHz); the CC26x2 parts are 2.4 GHz only.",
+      "mcu_secondary": "XDS110 on-board debugger",
+      "radios": [
+        {"ic": "CC1352P7 (integrated)", "role": "bluetooth", "note": "2.4 GHz supporting BLE 5 with 1M, 2M and coded PHYs; the P7 also has an integrated PA and a sub-GHz radio. No Bluetooth Classic."}
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered; LaunchPads have battery header options.",
+      "charging": null,
+      "pmic": null,
+      "storage": "Internal flash",
+      "connectivity": ["Micro USB", "BoosterPack headers", "Antenna connector varies by part"],
+      "gpio": "Full BoosterPack 40-pin headers",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare development board",
+      "notable_physical": ["On-board XDS110 debugger and serial", "BoosterPack expansion headers", "Sub-GHz plus 2.4 GHz on the dual-band parts"]
+    },
+
+    "capabilities": {
+      "ble_sniff":      {"v": "yes", "note": "Identical Sniffle capability to the Sonoff dongle: triple advertising channel capture, BT5 extended advertising, CSA #1/#2, all PHYs, connection following."},
+      "ble_scan":       {"v": "yes", "note": "With RSSI and MAC filtering."},
+      "bt_classic":     {"v": "no",  "note": "No BR/EDR radio in this family."},
+      "subghz_rx":      {"v": "addon", "note": "The CC1352/CC1354 parts have a sub-GHz radio, but Sniffle does not use it - you would need different firmware."},
+      "zigbee":         {"v": "addon", "note": "Hardware supports 802.15.4; requires different firmware."},
+      "packet_capture": {"v": "yes", "note": "PCAP and Wireshark plugin."},
+      "scriptable":     {"v": "yes", "note": "Python host software plus a full TI SDK if you want to change the firmware."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "An ordinary development board, legal everywhere. Operating limits are the same as any 2.4 GHz device. The exposure is interception law - capturing other people's Bluetooth traffic can engage wiretapping and computer-misuse statutes even where the traffic is unencrypted. On dual-band parts, note that transmitting on sub-GHz with custom firmware brings spectrum law into play too."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["CC1352P LaunchPad", "LAUNCHXL-CC1352P7", "Sniffle LaunchPad", "Catsniffer V3"],
+    "sources": [
+      {"url": "https://github.com/nccgroup/Sniffle", "what": "full supported hardware list (eight TI LaunchPads plus SONOFF CC2652P dongle and EC Catsniffer V3), stated as functionally equivalent for Sniffle"}
+    ],
+    "research_gaps": [
+      "Could not open a TI store page to confirm a current LaunchPad price; $60 is an estimate covering the family.",
+      "Electronic Cats Catsniffer V3 (CC1352 + RP2040) is also Sniffle-supported and may be a better-value middle option, but I could not verify its current price or availability."
+    ]
+  },
+
+  {
+    "id": "bus-pirate-5",
+    "hardware_id": "bus-pirate-5",
+    "name": "Bus Pirate 5",
+    "firmware": "Stock (Dangerous Prototypes)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/DangerousPrototypes/BusPirate5-firmware",
+    "firmware_note": "Open-source firmware under active development; the on-screen pin labels, voltage and current readouts are a firmware feature, not a separate tool.",
+    "vendor": "Dangerous Prototypes",
+    "vendor_url": "https://buspirate.com",
+    "product_url": "https://buspirate.com/",
+    "category": "hardware-debug",
+    "subcategory": "protocol-bridge",
+    "status": "available",
+    "released": "2024",
+
+    "price_usd": 75,
+    "price_note": "$75 for the Bus Pirate v5 Kit at Hacker Warehouse, in stock. Bus Pirate 5XL and Bus Pirate 6 are newer RP2350-based variants from the same project.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "The terminal interface is friendlier than most, and the on-screen display showing live pin voltages removes a lot of the guesswork that makes hardware hacking frustrating.",
+    "build_effort": "assembled",
+    "build_note": "Assembled with a case in the kit version. Cables and probe hooks included in most kits.",
+
+    "stealth": "overt",
+    "form_factor": "pocket",
+
+    "summary": "A universal serial-protocol bridge: eight IO pins that can speak 1-Wire, I2C, SPI, UART, MIDI and addressable-LED protocols from an interactive terminal, plus a programmable 1-5 V supply with current limiting and a colour LCD that shows what every pin is doing. The modern rewrite of a tool that has been in hardware hackers' bags since 2008.",
+    "honest_take": "It is a bench tool for talking to chips, not an attack tool. The genuinely useful part is not the protocol support - a $5 FTDI cable does UART - it is the current-limited programmable supply and the live per-pin voltage display, which between them stop you from destroying the target while you work out what its pinout is. Two caveats for this comparison: its documented protocol modes do not include JTAG, so for JTAG or SWD you want a Tigard, Glasgow or JTAGulator instead; and its IO range starts at 1.2 V, which is better than most, but it is a level-translated bridge rather than a full logic analyser.",
+    "best_for": ["Working out what an unknown chip speaks", "Dumping and writing SPI and I2C flash and EEPROM", "Powering a target safely with current limiting while you probe it", "A first hardware-hacking tool that will not let you fry things easily"],
+    "not_for": ["JTAG or SWD debugging - not among its documented modes", "High-speed bus capture - use Glasgow or a dedicated analyser", "Automated interface discovery on an unknown board - that is JTAGulator's job", "Side-channel or glitching work"],
+
+    "hardware": {
+      "mcu_primary": "Raspberry Pi RP2040",
+      "mcu_primary_note": "Dual-core Cortex-M0+. The Bus Pirate 5XL and Bus Pirate 6 use the newer RP2350 instead.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {"type": "IPS LCD", "size_in": null, "resolution": "240x320", "color": true, "touch": false},
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "128 Mbit program flash plus 1 Gbit NAND for settings and files",
+      "connectivity": ["USB-C", "10-pin IO connector"],
+      "gpio": "8 IO pins, 1.2-5 V, with optional 10K pull-ups on every pin and analogue voltage measurement on each",
+      "sensors": ["Per-pin voltage measurement", "Power supply current sensing"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Included in the kit",
+      "notable_physical": ["Programmable 1-5 V supply with a 0-500 mA adjustable current limit, current sensing and a resettable fuse", "18 SK6812 RGB LEDs", "Colour LCD showing live pin labels, voltages and current draw"]
+    },
+
+    "capabilities": {
+      "uart":            {"v": "yes", "note": "Documented firmware mode. Terminal-driven, with the LCD showing the live pin state."},
+      "i2c":             {"v": "yes", "note": "Documented firmware mode, with optional on-board 10K pull-ups so you do not need to add them."},
+      "spi_flash_dump":  {"v": "yes", "note": "SPI is a documented mode and flash dumping is a core Bus Pirate use case. The current-limited 1-5 V supply can power the target chip directly."},
+      "jtag_swd":        {"v": "unknown", "note": "The firmware's documented modes are 1-Wire, I2C, SPI, UART, MIDI and serial LEDs. JTAG is not among them in the material I could verify. Do not buy this for JTAG - use Tigard, Glasgow or a JTAGulator."},
+      "logic_analyzer":  {"v": "claimed", "note": "The project describes a logic-analyser function on the 8 IO pins, but I could not confirm sample rate or depth from primary documentation."},
+      "glitching":       {"v": "no",  "note": "No glitching hardware. The programmable supply is for powering targets safely, not for fault injection."},
+      "scriptable":      {"v": "partial", "note": "Primarily an interactive terminal tool. Scripting is via the serial interface rather than a first-class API."},
+      "ibutton_1wire":   {"v": "yes", "note": "1-Wire is a documented firmware mode."},
+      "standalone_untethered": {"v": "no", "note": "Driven from a terminal on a host over USB, though the LCD works standalone."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio and no ability to interfere with anything wireless. Owning and using one is legal everywhere. The legal questions attach to what you connect it to: reading firmware out of a device you do not own, or circumventing a technical protection measure to do so, can engage copyright and computer-misuse law (DMCA section 1201 in the US, the Computer Misuse Act in the UK). Work on your own hardware or with written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["BP5", "Bus Pirate v5"],
+    "sources": [
+      {"url": "https://github.com/DangerousPrototypes/BusPirate5-firmware", "what": "official specs: RP2040 (RP2350 on 5XL/6), 8 IO pins at 1.2-5 V, 10K pull-ups, 1-5 V supply with 0-500 mA limit and current sensing, 240x320 IPS LCD, 18 SK6812 LEDs, 128 Mbit flash + 1 Gbit NAND, modes 1-Wire/I2C/SPI/UART/MIDI/serial LEDs"},
+      {"url": "https://buspirate.com/", "what": "product line overview confirming Bus Pirate 5, 5XL and 6 and the RP2350 move"},
+      {"url": "https://hackerwarehouse.com/product/bus-pirate/", "what": "US price $75 for the v5 Kit, in stock"}
+    ],
+    "research_gaps": [
+      "Could not confirm from primary documentation whether Bus Pirate 5 firmware includes a JTAG mode, or the specifications of its logic-analyser function.",
+      "Could not reach docs.buspirate.com to enumerate the full current mode list or confirm Bus Pirate 5XL/6 pricing and differences."
+    ]
+  },
+
+  {
+    "id": "bus-pirate-v3-6",
+    "hardware_id": "bus-pirate-v3-6",
+    "name": "Bus Pirate v3.6",
+    "firmware": "Community firmware v6.x/v7.x",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/DangerousPrototypes/Bus_Pirate",
+    "firmware_note": "The classic firmware has been effectively frozen for years; every tutorial written between 2010 and 2020 assumes it.",
+    "vendor": "Dangerous Prototypes (design is open; boards made by many)",
+    "vendor_url": "https://buspirate.com",
+    "product_url": "https://buspirate.com/",
+    "category": "hardware-debug",
+    "subcategory": "protocol-bridge",
+    "status": "discontinued",
+    "released": "2010",
+
+    "price_usd": 30,
+    "price_note": "Estimate. No longer an official product, but the open design is cloned widely and sells for roughly $25-$40 on AliExpress, Amazon and via Seeed. Bus Pirate 5 supersedes it at $75.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "Same conceptual difficulty as the Bus Pirate 5, but with a plain terminal and no display to tell you what is going on.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board, usually with a probe cable set. Bare PCB, no case.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "The original Bus Pirate, built on a Microchip PIC24 with five IO pins at 3.3 V logic. Superseded by the Bus Pirate 5 in almost every respect, but still worth knowing about because a decade and a half of hardware-hacking tutorials, courseware and forum answers are written against it specifically.",
+    "honest_take": "Where it still fits is documentation, not capability. If you are following an older write-up or a training course that says 'connect your Bus Pirate and type m for mode', it means this one, and the command syntax carried over only partly to the Bus Pirate 5. It is also cheap enough to be disposable. Everything else argues for the newer board: 3.3 V logic with no 1.8 V support at all is a real problem on modern targets, it is much slower, and the firmware has not meaningfully moved in years. Buy it as a second cheap unit or to follow old tutorials; do not buy it as your only tool.",
+    "best_for": ["Following the very large corpus of older Bus Pirate tutorials", "A cheap, disposable second unit", "Classic 3.3 V and 5 V targets"],
+    "not_for": ["1.8 V targets - it has no 1.8 V level support", "Anything needing speed", "Being your only hardware-hacking tool in 2026"],
+
+    "hardware": {
+      "mcu_primary": "Microchip PIC24FJ64GA002",
+      "mcu_primary_note": "16-bit PIC running the classic Bus Pirate firmware.",
+      "mcu_secondary": "FT232RL USB-serial bridge",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["Mini/Micro USB (varies by clone)", "10-pin probe header"],
+      "gpio": "5 IO pins at 3.3 V logic, 5 V tolerant. On-board 3.3 V and 5 V supplies. Pull-ups require an externally supplied Vpullup voltage.",
+      "sensors": ["Basic voltage measurement on ADC pin"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board",
+      "notable_physical": ["Switchable 3.3 V and 5 V target supplies", "Pull-up resistors that need an external Vpullup rail - a classic source of confusion"]
+    },
+
+    "capabilities": {
+      "uart":           {"v": "yes", "note": "Classic mode. 3.3 V logic, 5 V tolerant."},
+      "i2c":            {"v": "yes", "note": "Classic mode. Needs Vpullup supplied externally for the on-board pull-ups to work."},
+      "spi_flash_dump": {"v": "partial", "note": "Works, and flashrom supports it, but it is slow enough that dumping a large flash chip is a genuinely tedious wait."},
+      "jtag_swd":       {"v": "partial", "note": "OpenOCD can drive it as a bit-bang JTAG adapter. It is extremely slow and a Tigard or dedicated adapter is far better."},
+      "logic_analyzer": {"v": "partial", "note": "A basic SUMP-compatible logic-analyser mode exists but is severely limited in rate and depth."},
+      "glitching":      {"v": "no",  "note": "No fault-injection capability."},
+      "ibutton_1wire":  {"v": "yes", "note": "1-Wire is a classic supported mode."},
+      "scriptable":     {"v": "partial", "note": "A binary 'bitbang' mode exists for scripting, and pyBusPirateLite wraps it, but the terminal interface is the primary one."},
+      "standalone_untethered": {"v": "no", "note": "Terminal-driven over USB."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio. Legal to own and use everywhere. As with any debug tool, the legal exposure is in what you attach it to - extracting firmware from hardware you do not own can engage computer-misuse and anti-circumvention law. Work on your own devices or with written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2020",
+      "app_store": "No",
+      "abandoned_risk": "already-abandoned"
+    },
+
+    "aliases": ["Bus Pirate v3", "BPv3", "Bus Pirate 3.6"],
+    "sources": [
+      {"url": "https://buspirate.com/", "what": "project site confirming the Bus Pirate 5/5XL/6 line supersedes the earlier hardware"},
+      {"url": "https://github.com/DangerousPrototypes/Bus_Pirate", "what": "classic firmware repository"}
+    ],
+    "research_gaps": [
+      "No official vendor or current price - the $30 figure is an estimate based on the clone market.",
+      "Could not verify the exact date of the last classic-firmware release."
+    ]
+  },
+
+  {
+    "id": "tigard",
+    "hardware_id": "tigard",
+    "name": "Tigard",
+    "firmware": "n/a (FTDI FT2232HQ, no user firmware)",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/tigard-tools/tigard",
+    "firmware_note": "There is no firmware to flash - it is an FTDI bridge, and all the intelligence is in host tools like OpenOCD, flashrom and pyftdi.",
+    "vendor": "SecuringHardware.com / tigard-tools",
+    "vendor_url": "https://www.securinghardware.com",
+    "product_url": "https://github.com/tigard-tools/tigard",
+    "category": "hardware-debug",
+    "subcategory": "multi-protocol-adapter",
+    "status": "available",
+    "released": "2020",
+
+    "price_usd": 55,
+    "price_note": "$55 at Hacker Warehouse, in stock, case +$20. Also sold through Crowd Supply, Mouser, 1BitSquared and SecuringHardware.com.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "intermediate",
+    "skill_note": "The hardware is genuinely simple - switches for voltage and mode - but you need to know which host tool to point at it and what a JTAG scan chain is.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board with labelled headers. Case optional. USB-C.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "An FT2232HQ-based multi-protocol, multi-voltage adapter with proper level shifters and dedicated labelled headers for UART, JTAG, SWD, SPI and I2C. Its whole reason to exist is that it handles 1.8 V to 5.5 V correctly and does not require you to guess which pin is which.",
+    "honest_take": "This is the boring, correct answer for most hardware hacking, and the honest pitch is that it saves you from a drawer full of cheap FTDI breakouts that all run at 3.3 V and quietly damage 1.8 V targets. The 1.8 V support is the point - a lot of modern flash and SoCs are 1.8 V and the generic adapters simply do not handle them. Its limits are real though: FT2232H means two channels, so you get one dedicated UART plus one shared port that must be switched between SPI/JTAG and I2C/SWD, and its 'logic analyzer port' is a header for your own analyser, not a built-in one. It does not discover interfaces for you either - that is a JTAGulator.",
+    "best_for": ["Any target running at 1.8 V", "UART, JTAG, SWD, SPI and I2C from one board with labelled headers", "Driving OpenOCD, flashrom, UrJTAG and pyftdi", "The single most sensible first purchase for hardware debug work"],
+    "not_for": ["Discovering unknown pinouts - use a JTAGulator", "High-speed capture or protocol analysis - use Glasgow", "Doing two shared-port protocols at the same time", "Glitching or side-channel work"],
+
+    "hardware": {
+      "mcu_primary": "FTDI FT2232HQ",
+      "mcu_primary_note": "Dual-channel high-speed (480 Mbps) USB to multi-protocol bridge. Channel A is the shared protocol port, channel B is the dedicated UART.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB-C"],
+      "gpio": "Dedicated headers: UART (1x9), JTAG (1x8), Cortex SWD (2x5), SPI/I2C (2x4), I2C Qwiic (JST SH), plus a logic analyzer tap port",
+      "sensors": ["Target voltage sensing (VTGT mode)"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Optional acrylic case",
+      "notable_physical": ["Directional level shifters supporting 1.8-5.5 V operation", "Switch for fixed 1.8 V / 3.3 V / 5.0 V or VTGT target-sensed voltage", "Mode switch selecting SPI/JTAG or I2C/SWD on the shared port", "Indicator LEDs for line activity"]
+    },
+
+    "capabilities": {
+      "uart":           {"v": "yes", "note": "Dedicated port, independent of the shared protocol port, so you can watch a console while doing something else."},
+      "i2c":            {"v": "yes", "note": "On the shared port in I2C/SWD mode. Qwiic-compatible JST SH connector as well as the 2x4 header."},
+      "spi_flash_dump": {"v": "yes", "note": "On the shared port in SPI/JTAG mode. flashrom supports Tigard directly - this is one of its most common uses."},
+      "jtag_swd":       {"v": "yes", "note": "Both. JTAG on the 1x8 header in SPI/JTAG mode, SWD on the standard 2x5 Cortex header in I2C/SWD mode. OpenOCD and UrJTAG supported."},
+      "logic_analyzer": {"v": "partial", "note": "There is a logic analyzer port, but it is a tap for connecting your own analyser - Tigard does not capture traces itself."},
+      "glitching":      {"v": "no",  "note": "No fault-injection hardware."},
+      "scriptable":     {"v": "yes", "note": "pyftdi gives full Python control; OpenOCD, flashrom and UrJTAG all drive it from scripts."},
+      "standalone_untethered": {"v": "no", "note": "It is a USB bridge - the host does everything."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A passive debug adapter with no radio. Legal to own and use everywhere. As always the legal question is the target: extracting firmware or bypassing protection on hardware you do not own can engage anti-circumvention and computer-misuse law (DMCA 1201 in the US, the Computer Misuse Act in the UK). Use it on your own hardware or under a written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Tigard v1.1", "SecuringHardware Tigard"],
+    "sources": [
+      {"url": "https://github.com/tigard-tools/tigard", "what": "official hardware repo: FT2232H dual port, 1.8-5.5 V operation with directional level shifters, selectable 1.8/3.3/5.0 V or VTGT sensing, header list, CC-BY-SA 4.0, seventh production batch January 2025"},
+      {"url": "https://hackerwarehouse.com/product/tigard/", "what": "US price $55 in stock, FT2232HQ, USB-C 480 Mbps, 1.8-5.5 V switchable, OpenOCD/UrJTAG/flashrom/pyftdi support"}
+    ],
+    "research_gaps": []
+  },
+
+  {
+    "id": "glasgow-interface-explorer",
+    "hardware_id": "glasgow-interface-explorer",
+    "name": "Glasgow Interface Explorer",
+    "firmware": "Stock (Glasgow applets and gateware)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/GlasgowEmbedded/glasgow",
+    "firmware_note": "Every protocol is an 'applet' that builds fresh FPGA gateware on demand - which is why it can do timing-critical things a microcontroller-based adapter cannot.",
+    "vendor": "1BitSquared (manufacture); designed by Catherine 'whitequark'",
+    "vendor_url": "https://glasgow-embedded.org",
+    "product_url": "https://1bitsquared.com/products/glasgow",
+    "category": "hardware-debug",
+    "subcategory": "fpga-interface-tool",
+    "status": "out-of-stock",
+    "released": "2019",
+
+    "price_usd": 179,
+    "price_note": "$179 for revC at 1BitSquared, currently out of stock. revD is in pre-launch on Crowd Supply and adds a logic analyzer and analogue measurement of slow signals. Availability has historically been in batches with long gaps.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "The applet model is elegant but assumes you know what interface you are talking to; adding a new applet means writing Amaranth HDL.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board with cables. Optional aluminium case. Software install is a Python toolchain that builds gateware locally.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "An FPGA-based digital interface multitool that reconfigures its logic for each protocol rather than bit-banging from a microcontroller. It handles UART, SPI, QSPI, I2C, JTAG and SWD, debugs ARM7TDMI, ARC and MIPS cores, reads 24-series I2C EEPROMs and 25-series SPI flash, and from revD upwards includes a logic analyzer. Certified open hardware by OSHWA.",
+    "honest_take": "The FPGA is not a gimmick - it is why Glasgow can analyse SPI and QSPI at around 100 MHz and hold precise timing that an FT2232H or an RP2040 cannot. It is also the most technically ambitious tool in this batch and the hardest to buy: production runs in batches, revC is out of stock, and revD has been in pre-launch for a while. If you need something today, get a Tigard. Get a Glasgow if you are doing genuine reverse engineering of unusual or high-speed interfaces and are comfortable in a Python-and-HDL toolchain.",
+    "best_for": ["Reverse engineering unusual or undocumented digital interfaces", "High-speed SPI/QSPI analysis (~100 MHz)", "Reading memory devices and legacy CPU debug ports (ARM7TDMI, ARC, MIPS)", "People who will write their own applets"],
+    "not_for": ["Anyone who needs to buy a tool this week", "Beginners - Tigard is the gentler entry point", "Glitching or power analysis - that is ChipWhisperer's domain", "USB protocol analysis - that is Cynthion"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "FPGA-based design. I could not reach the primary technical description page in this pass, so the exact FPGA part number is not stated here rather than guessed.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB-C", "IO cable header", "Sync cable header"],
+      "gpio": "Multiple independently configurable IO channels with level shifting; official docs state it connects to most digital interfaces with no additional active or passive components and includes extensive protection against operator error",
+      "sensors": ["Analogue measurement of slow (500 kHz) signals on revD and later"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Optional aluminium case (C3 variant)",
+      "notable_physical": ["Per-interface reconfigurable FPGA gateware", "Built-in protection against unexpected conditions and miswiring", "OSHWA certified open hardware, UID UK000081"]
+    },
+
+    "capabilities": {
+      "uart":           {"v": "yes", "note": "Official applet."},
+      "i2c":            {"v": "yes", "note": "Official applet, including a 24-series I2C EEPROM reader/writer applet."},
+      "spi_flash_dump": {"v": "yes", "note": "Official applet for 25-series SPI flash. SPI and QSPI analysis reaches roughly 100 MHz."},
+      "jtag_swd":       {"v": "yes", "note": "Both, plus dedicated debug applets for ARM7TDMI, ARC and MIPS cores."},
+      "logic_analyzer": {"v": "partial", "note": "Present on revD0 and later only. revC boards - the ones on the second-hand market - do not have it."},
+      "glitching":      {"v": "no",  "note": "Not a fault-injection tool. No glitch generation hardware."},
+      "scriptable":     {"v": "yes", "note": "Python-based toolchain; applets are written in Amaranth HDL and driven from Python."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered over USB 2 bulk transfers."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio. Legal to own and use everywhere. The legal question is what you connect it to: dumping firmware or bypassing protection on hardware you do not own can engage anti-circumvention and computer-misuse law. Note that digital preservation and archiving - a stated use case for this tool - has its own copyright considerations depending on jurisdiction."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No - but the applet system is effectively a plugin catalogue in the repository",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Glasgow", "Glasgow revC", "Glasgow revD"],
+    "sources": [
+      {"url": "https://glasgow-embedded.org/latest/intro.html", "what": "official capability list: UART, SPI, QSPI, I2C, JTAG, SWD, ARM7TDMI/ARC/MIPS debug, 24-series EEPROM and 25-series SPI flash applets, logic analyzer on revD0+, ~100 MHz SPI/QSPI, USB 2 bulk bandwidth, revD in pre-launch on Crowd Supply"},
+      {"url": "https://1bitsquared.com/products/glasgow", "what": "$179 revC, out of stock, box contents"},
+      {"url": "https://certification.oshwa.org/uk000081.html", "what": "OSHWA open hardware certification for revC, certified October 2025, creator Catherine 'whitequark'"},
+      {"url": "https://github.com/GlasgowEmbedded/glasgow", "what": "active repository, 3000+ commits, 0BSD/Apache-2.0"}
+    ],
+    "research_gaps": [
+      "Could not reach the revC3 technical description page, so the exact FPGA part number, IO channel and bank count, per-bank voltage range in volts, and current-sensing limits are unconfirmed. This matters because multi-voltage support is one of Glasgow's headline features and readers will want the exact numbers.",
+      "revD pricing and ship date not confirmed."
+    ]
+  },
+
+  {
+    "id": "jtagulator",
+    "hardware_id": "jtagulator",
+    "name": "JTAGulator",
+    "firmware": "Stock (Grand Idea Studio / EXPLIoT)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/grandideastudio/jtagulator",
+    "firmware_note": "Propeller Spin firmware implementing the JTAG, SWD and UART discovery scans; menu-driven over a USB serial console.",
+    "vendor": "EXPLIoT (manufacturing and support since July 2025); designed by Joe Grand, Grand Idea Studio",
+    "vendor_url": "https://www.expliot.io",
+    "product_url": "https://store.expliot.io/products/jtagulator",
+    "category": "hardware-debug",
+    "subcategory": "interface-discovery",
+    "status": "available",
+    "released": "2013",
+
+    "price_usd": 249,
+    "price_note": "$249 from the EXPLIoT store, available. EXPLIoT took over manufacturing and support from Joe Grand's Grand Idea Studio in July 2025. Note EXPLIoT explicitly offers no warranty, given the intrusive nature of the work.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Conceptually simple to operate - hook up 24 wires and run a scan - but you need to understand what a false positive looks like and how to avoid damaging the target.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board, revision D, USB-C. You supply the test hooks and jumper wires.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "A dedicated interface-discovery tool: connect up to 24 unknown test points and it brute-forces the pin combinations to identify JTAG, SWD and UART interfaces automatically. It solves one specific, genuinely painful problem that no other tool in this batch solves.",
+    "honest_take": "It does one job and it is expensive for one job - $249 to find pinouts you could, with patience, find with a multimeter, an oscilloscope and a lot of time. Whether that is worth it depends entirely on how often you face an unlabelled board. For a professional doing regular teardowns it pays for itself the first week; for a hobbyist with one project it does not. Two practical limits: the target I/O voltage range is 1.4 V to 3.3 V, so 5 V targets need level shifting and very low-voltage cores may be out of range; and once it has found the interface you still need a Tigard, Glasgow or dedicated debugger to actually use it. It is a discovery tool, not a debugger.",
+    "best_for": ["Finding JTAG, SWD and UART on boards with no silkscreen and no documentation", "Professional teardown and IoT assessment work", "Saving hours of manual probing on every new target"],
+    "not_for": ["Actually using the interface once found - you need a separate adapter", "5 V targets without external level shifting", "Hobbyists with a single project - the price is hard to justify", "Anything other than JTAG, SWD and UART discovery"],
+
+    "hardware": {
+      "mcu_primary": "Parallax P8X32A (Propeller)",
+      "mcu_primary_note": "Eight-core 32-bit microcontroller. The multiple cores are what let it drive and sample many channels deterministically during a scan.",
+      "mcu_secondary": "FTDI USB-to-serial",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["USB-C (appears as a standard FTDI serial port, no special drivers)"],
+      "gpio": "24 channels with input protection circuitry; adjustable target I/O voltage 1.4 V to 3.3 V for level translation",
+      "sensors": ["Target voltage detection as part of the scan"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board",
+      "notable_physical": ["24 protected channels", "Adjustable 1.4-3.3 V level translation", "Menu-driven serial console at 115200 baud"]
+    },
+
+    "capabilities": {
+      "jtag_swd":       {"v": "yes", "note": "Its core function: automated discovery of JTAG/IEEE 1149.1 and ARM SWD pinouts across up to 24 unknown test points. Discovery only - use another adapter to actually debug."},
+      "uart":           {"v": "yes", "note": "Also automatically identifies UART/asynchronous serial pins and baud rate."},
+      "logic_analyzer": {"v": "yes", "note": "A 24-channel logic analyzer mode compatible with sigrok, added in later firmware."},
+      "spi_flash_dump": {"v": "no",  "note": "Not a flash programmer. It finds debug interfaces; it does not read memories."},
+      "i2c":            {"v": "no",  "note": "I2C discovery is not among its supported scans."},
+      "glitching":      {"v": "no",  "note": "No fault-injection capability."},
+      "scriptable":     {"v": "partial", "note": "Menu-driven over serial; scriptable by driving that serial console, but there is no official API."},
+      "standalone_untethered": {"v": "no", "note": "Driven from a serial terminal on a host."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio, legal to own and use everywhere. The legal exposure is entirely about the target: locating and using a debug port on a device you do not own, to extract firmware or bypass protections, can engage anti-circumvention law (DMCA 1201 in the US) and computer-misuse law (Computer Misuse Act in the UK). This is a tool for your own hardware or authorised assessments."
+    },
+
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+
+    "aliases": ["JTAGulator revD", "Grand Idea Studio JTAGulator"],
+    "sources": [
+      {"url": "http://www.grandideastudio.com/jtagulator/", "what": "official specs: 24 channels with input protection, adjustable target I/O voltage 1.4-3.3 V, identifies JTAG/IEEE 1149.1, ARM SWD and UART; CC-BY-SA 4.0; maintained by EXPLIoT as of July 2025"},
+      {"url": "https://github.com/grandideastudio/jtagulator", "what": "confirms the Parallax P8X32A Propeller, the PropJTAG/PropSWD/PropSerial firmware modules, CC-BY-SA 4.0 licence, and the EXPLIoT handover"},
+      {"url": "https://store.expliot.io/products/jtagulator", "what": "current price $249 USD, in stock, revision D, USB-C, sigrok-compatible 24-channel logic analyzer, no warranty offered"}
+    ],
+    "research_gaps": [
+      "Could not confirm the latest firmware version number or its release date.",
+      "Community activity has been low for years; 'slow' and abandoned_risk 'medium' reflect the recent vendor handover to EXPLIoT rather than a confirmed decline."
+    ]
+  },
+
+  {
+    "id": "chipwhisperer-nano",
+    "hardware_id": "chipwhisperer-nano",
+    "name": "ChipWhisperer-Nano",
+    "firmware": "Stock (NewAE)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+    "firmware_note": "Open-source capture firmware plus the ChipWhisperer Python package and its Jupyter notebook course, which is the actual product.",
+    "vendor": "NewAE Technology",
+    "vendor_url": "https://www.newae.com",
+    "product_url": "https://rtfm.newae.com/Capture/ChipWhisperer-Nano/",
+    "category": "hardware-debug",
+    "subcategory": "side-channel-glitching",
+    "status": "available",
+    "released": "2018",
+
+    "price_usd": 50,
+    "price_note": "Estimate - I could not open a working NewAE or distributor store page in this pass. The Nano has consistently been the ~$50 entry point in the line, against $290 for the Lite.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "The included Jupyter notebooks hold your hand well, but you are learning differential power analysis and fault injection - the concepts are genuinely hard regardless of the tool.",
+    "build_effort": "assembled",
+    "build_note": "Single board with the target MCU and its programmer built in - plug in USB and start the notebooks. Nothing to wire.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "The teaching entry point to NewAE's side-channel and fault-injection line: an 8-bit 20 MS/s capture path and a voltage-glitching output on one board, with an STM32F030 target and its programmer built in. It exists so you can run the ChipWhisperer course without wiring anything.",
+    "honest_take": "Be clear-eyed that this is courseware hardware, and NewAE's own documentation lists the limits plainly: 8-bit at 20 MS/s, a fixed 10 dB analogue gain you cannot change, no clock glitching at all, no ability to multiply or divide the sampling clock, roughly 200 ns of jitter on glitch offset, rising-edge triggering only, and full-speed rather than high-speed USB. Those constraints mean it will teach you AES power analysis on its own bundled target and will struggle on a real-world target you bring yourself. That is a fine $50 - the notebooks are excellent and the concepts transfer - but do not buy it expecting to attack a product with it.",
+    "best_for": ["Learning power analysis and voltage glitching from scratch", "Working through the ChipWhisperer Jupyter course", "University and training lab use", "Deciding whether this field interests you before spending $290 or more"],
+    "not_for": ["Attacking real-world targets you bring yourself", "Clock glitching - the hardware cannot do it", "Precise glitch timing - ~200 ns offset jitter is a lot", "Anything needing dynamic range in the power trace"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "NewAE does not publish the capture-side controller part number in the documentation I could reach.",
+      "mcu_secondary": "STM32F030 (built-in target device)",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered (full-speed USB).",
+      "charging": null,
+      "pmic": null,
+      "storage": "50,000 sample capture buffer",
+      "connectivity": ["Micro USB"],
+      "gpio": "Glitch and measurement points to the on-board target; limited external connectivity compared to Lite and Husky",
+      "sensors": ["AC-coupled power measurement input with fixed ~10 dB gain"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board",
+      "notable_physical": ["Built-in STM32F030 target plus its programmer - no external target needed", "Low-power crowbar voltage glitch circuit with ~8.3 ns increment steps"]
+    },
+
+    "capabilities": {
+      "glitching":      {"v": "partial", "note": "Voltage glitching only, via a low-power crowbar with ~8.3 ns steps but roughly 200 ns of jitter on the offset. Clock glitching is explicitly not supported."},
+      "logic_analyzer": {"v": "no",  "note": "Not a logic analyzer. The ADC captures power traces, not digital buses."},
+      "uart":           {"v": "partial", "note": "Serial communication with the on-board target for the course exercises; not a general-purpose UART adapter."},
+      "jtag_swd":       {"v": "no",  "note": "No JTAG or SWD debug capability."},
+      "spi_flash_dump": {"v": "no",  "note": "Not a flash programmer."},
+      "scriptable":     {"v": "yes", "note": "The ChipWhisperer Python API and Jupyter notebooks are the primary interface and are genuinely well made."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered; captures stream to the PC."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A laboratory instrument with no radio, legal to own and use everywhere. The legal exposure sits with the target: side-channel and fault-injection attacks against a device you do not own, or to extract keys or bypass protections, can engage anti-circumvention law (DMCA 1201 in the US) and computer-misuse law. Some jurisdictions also treat tools designed for circumvention with more suspicion than general-purpose ones - though this is sold and widely used as academic and training equipment. Work on your own hardware or under written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No - but the Jupyter notebook course is effectively the product",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["CW-Nano", "CWNANO", "NAE-CWNANO"],
+    "sources": [
+      {"url": "https://rtfm.newae.com/Capture/ChipWhisperer-Nano/", "what": "official specs and stated limitations: 8-bit 20 MS/s, 50,000 sample buffer, fixed ~10 dB gain, voltage glitching yes / clock glitching no, low-power crowbar ~8.3 ns steps and ~200 ns jitter, rising-edge trigger only, full-speed USB, built-in STM32F030 target and programmer"},
+      {"url": "https://github.com/newaetech/chipwhisperer", "what": "open-source software and firmware"}
+    ],
+    "research_gaps": [
+      "Could not open a NewAE or distributor store page for a confirmed current price; $50 is an estimate.",
+      "The capture-side controller part number is not published in the documentation I could reach."
+    ]
+  },
+
+  {
+    "id": "chipwhisperer-lite",
+    "hardware_id": "chipwhisperer-lite",
+    "name": "ChipWhisperer-Lite (CW1173)",
+    "firmware": "Stock (NewAE)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+    "firmware_note": "Same open-source software stack and Jupyter course as the rest of the line.",
+    "vendor": "NewAE Technology",
+    "vendor_url": "https://www.newae.com",
+    "product_url": "https://rtfm.newae.com/Capture/ChipWhisperer-Lite/",
+    "category": "hardware-debug",
+    "subcategory": "side-channel-glitching",
+    "status": "out-of-stock",
+    "released": "2015",
+
+    "price_usd": 290,
+    "price_note": "$290 at Hacker Warehouse, out of stock at time of checking. Sold in a 1-part version (capture and target on one board) and a 2-part version (capture board plus a separate target, connected by 20-pin and coax cables). NewAE positions the Husky as its successor.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "expert",
+    "skill_note": "Real side-channel work on targets you choose yourself means understanding trace alignment, filtering, leakage models and statistics - the hardware is the easy part.",
+    "build_effort": "assembled",
+    "build_note": "Assembled. The 2-part version needs the 20-pin ribbon and SMA/coax connections made to your target.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "The long-standing mid-tier ChipWhisperer: a 10-bit 105 MS/s capture path with both voltage and clock glitching, a 5-200 MHz synchronous clock generator, and a ~24,500 sample buffer. It is the board most published side-channel research and training material was developed on.",
+    "honest_take": "The step up from the Nano is real and it is mostly about clock glitching and synchronous sampling - the Lite can clock the target and sample in lockstep with it, which removes an enormous amount of trace-alignment pain. The honest caveat is that NewAE has clearly moved on: the Husky supersedes it with a 12-bit 200 MS/s ADC, a five-times-larger buffer and far better triggering, and the Lite is out of stock at resellers. If you can find one cheap second-hand it is still a capable tool with a decade of documentation behind it; buying new, look at the Husky.",
+    "best_for": ["Serious side-channel work on targets you supply (2-part version)", "Clock glitching, which the Nano cannot do", "Following the large body of published ChipWhisperer research", "Training labs where budget rules out a Husky"],
+    "not_for": ["Beginners - start with the Nano and the notebooks", "Work needing deep capture buffers or complex triggers", "Buying new in 2026 if a Husky is available"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "FPGA-based capture design; NewAE does not name the part in the documentation I could reach.",
+      "mcu_secondary": "Atmel XMEGA target on the 1-part version",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "24,573 sample capture buffer",
+      "connectivity": ["Micro USB", "20-pin target connector", "SMA/coax measurement and glitch connections (2-part version)"],
+      "gpio": "20-pin target header carrying clock, trigger, glitch and serial lines",
+      "sensors": ["AC-coupled power measurement input with adjustable gain"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board",
+      "notable_physical": ["Synchronous clock generation 5-200 MHz, so capture is locked to the target clock", "High-power and low-power crowbar options with up to 20 A pulse current"]
+    },
+
+    "capabilities": {
+      "glitching":  {"v": "yes", "note": "Both voltage and clock glitching. Voltage via high- or low-power crowbar with up to 20 A pulse current; clock glitching via XOR or OR insertion, with width and offset adjustable in 0.4% of a clock cycle."},
+      "logic_analyzer": {"v": "no", "note": "Captures power traces, not digital buses."},
+      "uart":       {"v": "partial", "note": "Serial to the target over the 20-pin connector for the attack workflow; not a general-purpose adapter."},
+      "jtag_swd":   {"v": "no",  "note": "No debug-port capability."},
+      "scriptable": {"v": "yes", "note": "ChipWhisperer Python API and Jupyter notebooks."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Laboratory equipment with no radio, legal to own and use. As with the Nano, the exposure is in the target: extracting keys or bypassing protections on devices you do not own can engage anti-circumvention (DMCA 1201) and computer-misuse law. Widely used in academia and commercial evaluation labs. Work on your own hardware or under written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["CW-Lite", "CW1173", "NAE-CWL"],
+    "sources": [
+      {"url": "https://rtfm.newae.com/Capture/ChipWhisperer-Lite/", "what": "official specs: 10-bit 105 MS/s ADC, 24,573 sample buffer, 5-200 MHz clock generation, voltage and clock glitching, high/low-power crowbar with 20 A pulse, 0.4%-of-a-cycle glitch resolution, 1-part vs 2-part difference"},
+      {"url": "https://rtfm.newae.com/Capture/ChipWhisperer-Husky/", "what": "NewAE stating the Husky succeeds the CW1173 Lite with a higher-resolution faster ADC, bigger FPGA and better clocking"},
+      {"url": "https://hackerwarehouse.com/product/chipwhisperer-lite/", "what": "US price $290, out of stock, SKU NAE-CWL"}
+    ],
+    "research_gaps": [
+      "FPGA part number not published in the reachable documentation.",
+      "Could not confirm current NewAE production status for the Lite now that the Husky exists."
+    ]
+  },
+
+  {
+    "id": "chipwhisperer-husky",
+    "hardware_id": "chipwhisperer-husky",
+    "name": "ChipWhisperer-Husky",
+    "firmware": "Stock (NewAE)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+    "firmware_note": "Same open-source Python and Jupyter stack; the Husky's extra trigger modules and glitch sequencing are exposed through the same API.",
+    "vendor": "NewAE Technology",
+    "vendor_url": "https://www.newae.com",
+    "product_url": "https://rtfm.newae.com/Capture/ChipWhisperer-Husky/",
+    "category": "hardware-debug",
+    "subcategory": "side-channel-glitching",
+    "status": "available",
+    "released": "2022",
+
+    "price_usd": 550,
+    "price_note": "Estimate - I could not open a working NewAE or distributor store page in this pass. The Husky has sat around $550 since launch, against $290 for the Lite. A ChipWhisperer-Husky Plus with a 250 MS/s ADC, an Artix-7 A100T and roughly 2.5x the buffer is also sold at a higher price.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "expert",
+    "skill_note": "This is research-grade equipment. Its advanced features - SAD triggering, Arm Trace, 32-glitch sequences - only make sense once you already know why you need them.",
+    "build_effort": "assembled",
+    "build_note": "Assembled. You supply and wire the target; the 20-pin connector and SMB coax connections are the standard interface.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "NewAE's current flagship compact capture board: a 12-bit 200 MS/s ADC with a 131,124-sample buffer, an Artix-7 A35 FPGA, voltage and clock glitching, six trigger modules including sum-of-absolute-differences pattern matching and ARM CoreSight trace, and the ability to fire up to 32 independently-timed glitches per trigger event.",
+    "honest_take": "This is where ChipWhisperer stops being courseware and becomes a real instrument, and the price and learning curve reflect that. Two features genuinely change what is possible: the SAD trigger matches on the shape of the power trace itself, so you can trigger on a specific operation inside a target rather than on an external signal; and the internal 600-1200 MHz VCO makes clock-glitch resolution independent of how slow the target clock is. Neither of those is something you will use in your first month. Be honest with yourself about whether you need them - most people asking 'should I get into side-channel' should spend $50 on a Nano first and come back here in a year.",
+    "best_for": ["Professional side-channel and fault-injection research", "Triggering on power-trace patterns rather than external signals (SAD)", "Glitch campaigns needing many precisely-timed glitches per trigger", "ARM targets where CoreSight trace can drive the trigger"],
+    "not_for": ["Anyone new to side-channel analysis - the Nano is the right start", "Budget-constrained hobby use", "General hardware debug - it does not do JTAG, SPI or logic analysis"],
+
+    "hardware": {
+      "mcu_primary": "Xilinx Artix-7 A35",
+      "mcu_primary_note": "The Husky Plus variant uses the larger Artix-7 A100T. The FPGA is what makes the advanced triggering and glitch sequencing possible.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "131,124 sample ADC buffer (327,828 on Husky Plus)",
+      "connectivity": ["USB", "20-pin target connector", "20-pin User IO header with 8 data pins", "Two SMB connectors for trigger/glitch and auxiliary IO"],
+      "gpio": "20-pin User IO header with 8 data pins in addition to the standard target connector",
+      "sensors": ["AC-coupled power measurement input with adjustable gain from -6.5 dB to +55 dB"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare board",
+      "notable_physical": ["Internal 600-1200 MHz VCO making clock-glitch resolution independent of target clock speed", "High-power and low-power crowbar with 20 A pulse current", "Six trigger modules: edge/level, analogue threshold, UART pattern, SAD over up to 512 samples, ARM Trace, and edge counting"]
+    },
+
+    "capabilities": {
+      "glitching":  {"v": "yes", "note": "Voltage and clock glitching, with up to 32 glitches at different offsets and repeat counts per trigger event. Clock glitching resolution comes from an internal 600-1200 MHz VCO, so it does not degrade on slow targets."},
+      "logic_analyzer": {"v": "no", "note": "Power-trace capture, not digital bus capture."},
+      "uart":       {"v": "partial", "note": "Serial to the target over the standard connector, plus a UART pattern-matching trigger module. Not a general-purpose adapter."},
+      "jtag_swd":   {"v": "partial", "note": "No JTAG or SWD debugging, but it can consume ARM CoreSight trace output as a trigger source."},
+      "scriptable": {"v": "yes", "note": "Full ChipWhisperer Python API; every trigger and glitch parameter is scriptable."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Laboratory equipment with no radio, legal to own and use. The exposure is the target: side-channel key extraction or glitch-based protection bypass on hardware you do not own can engage anti-circumvention (DMCA 1201 in the US) and computer-misuse law, and may also breach contractual terms in evaluation agreements. Standard equipment in academic and commercial security-evaluation labs. Work on your own hardware or under written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["CW-Husky", "CWHUSKY", "ChipWhisperer Husky Plus"],
+    "sources": [
+      {"url": "https://rtfm.newae.com/Capture/ChipWhisperer-Husky/", "what": "official specs: 12-bit 200 MS/s (250 MS/s Plus), 131,124 sample buffer (327,828 Plus), gain -6.5 to +55 dB, voltage and clock glitching, 20 A crowbar pulse, internal 600-1200 MHz VCO, up to 32 glitches per trigger, six trigger modules including SAD over 512 samples and Arm Trace, 5-200 MHz clock, 20-pin target and User IO headers, dual SMB"},
+      {"url": "https://www.newae.com/chipwhisperer", "what": "product line page: Husky Artix A35, Husky Plus Artix-7 A100T with 250 MS/s ADC and 4 trigger sequences vs 2"}
+    ],
+    "research_gaps": [
+      "Could not open a store page for a confirmed current price; $550 is an estimate, and the Husky Plus price is unknown.",
+      "Could not confirm whether the ChipWhisperer-Pro is still in production."
+    ]
+  },
+
+  {
+    "id": "greatfet-one",
+    "hardware_id": "greatfet-one",
+    "name": "GreatFET One",
+    "firmware": "Stock (Great Scott Gadgets)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/greatscottgadgets/greatfet",
+    "firmware_note": "Open firmware plus a Python API; new capabilities arrive as firmware and Python, not as new hardware.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/greatfet/one/",
+    "category": "hardware-debug",
+    "subcategory": "usb-interface-tool",
+    "status": "available",
+    "released": "2019",
+
+    "price_usd": 90,
+    "price_note": "$90 at Hacker Warehouse, in stock, SKU GSG-GF1. Expansion boards ('neighbors') sold separately.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Enormously flexible, which is another way of saying it does not tell you what to do - you write Python against a general-purpose interface API.",
+    "build_effort": "assembled",
+    "build_note": "Assembled board with 100 expansion pins exposed. Acrylic case sold separately.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "A general-purpose USB-attached interface board with 100 expansion pins, two USB ports, and a Python API covering SPI, I2C, UART, JTAG, logic analysis, ADC/DAC and USB peripheral emulation. It is the successor to the GoodFET and the most common hardware for running Facedancer.",
+    "honest_take": "Its identity is genuinely blurry and that is the main thing to understand before buying. It is not the best UART adapter (Tigard is cheaper and better labelled), not the best logic analyser (Glasgow, or a $10 dedicated one), and not the best USB analyser (Cynthion, from the same vendor). What it is best at is being the one board that can do a bit of everything from Python, and being solid Facedancer hardware for USB device emulation. If you have a specific problem, a specific tool beats it; if you do not yet know what your problem is, it is a reasonable thing to own.",
+    "best_for": ["Running Facedancer for USB device emulation and host fuzzing", "Scripted, arbitrary digital and analogue I/O from Python", "Prototyping with expansion 'neighbor' boards", "Being one flexible board rather than five specific ones"],
+    "not_for": ["Being the best at any one protocol", "USB protocol capture - use Cynthion", "Side-channel or glitching work", "Anyone who wants a labelled, obvious interface"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Great Scott Gadgets does not name the part on the product page; the design shares its lineage with the HackRF's LPC43xx family. Not stated here rather than guessed.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["Two USB ports (Hi-Speed USB)", "100 expansion pins"],
+      "gpio": "100 expansion pins carrying programmable digital I/O, analogue I/O (ADC/DAC) and serial protocol lines; header layout supports stacking 'neighbor' expansion boards",
+      "sensors": ["ADC inputs"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Optional acrylic case",
+      "notable_physical": ["Two USB ports - one for the host, one to present emulated devices", "High-throughput hardware-assisted streaming serial engine", "Neighbor expansion board ecosystem"]
+    },
+
+    "capabilities": {
+      "uart":            {"v": "yes", "note": "Supported serial protocol via the Python API."},
+      "i2c":             {"v": "yes", "note": "Supported serial protocol via the Python API."},
+      "spi_flash_dump":  {"v": "yes", "note": "SPI is supported and flash dumping is a common use, driven from Python."},
+      "jtag_swd":        {"v": "partial", "note": "JTAG is listed among the supported serial protocols. SWD support is not stated on the product page."},
+      "logic_analyzer":  {"v": "yes", "note": "Logic analysis is an official listed capability; the streaming serial engine gives it useful throughput."},
+      "glitching":       {"v": "no",  "note": "No dedicated fault-injection hardware."},
+      "usb_hid_inject":  {"v": "yes", "note": "Via Facedancer - it can emulate an arbitrary USB device including an HID keyboard."},
+      "usb_mass_storage": {"v": "yes", "note": "Via Facedancer, which can emulate mass-storage devices."},
+      "packet_capture":  {"v": "partial", "note": "It can act as a USB device and proxy traffic through Facedancer, but for capturing traffic between an existing host and device, Cynthion is the right tool."},
+      "scriptable":      {"v": "yes", "note": "A Python API is the primary interface - this is the device's defining characteristic."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered over USB."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio, legal to own and use everywhere. The notable capability from a legal standpoint is USB device emulation via Facedancer - presenting a malicious USB device to a computer you do not own or are not authorised to test is unauthorised access under computer-misuse law in most countries (CFAA in the US, Computer Misuse Act in the UK). Use it on your own systems or under written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["GreatFET", "GSG-GF1"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/greatfet/one/", "what": "official capability list: 100 expansion pins, SPI/I2C/UART/JTAG, logic analysis, programmable digital I/O, analogue I/O (ADC/DAC), Hi-Speed USB, Python API, Facedancer support, neighbor expansion boards"},
+      {"url": "https://hackerwarehouse.com/product/greatfet-one/", "what": "US price $90, in stock, SKU GSG-GF1, two USB ports"},
+      {"url": "https://github.com/greatscottgadgets/greatfet", "what": "firmware and Python host library"}
+    ],
+    "research_gaps": [
+      "The MCU part number is not published on the product page and I could not confirm it from the hardware repository in this pass.",
+      "SWD support is not documented; only JTAG is listed."
+    ]
+  },
+
+  {
+    "id": "cynthion",
+    "hardware_id": "cynthion",
+    "name": "Cynthion",
+    "firmware": "Stock (LUNA gateware + Apollo)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/greatscottgadgets/cynthion",
+    "firmware_note": "The FPGA gateware is LUNA, the debug controller firmware is Apollo, and the capture UI is Packetry - all open source and all separately replaceable.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/cynthion/",
+    "category": "hardware-debug",
+    "subcategory": "usb-analyzer",
+    "status": "out-of-stock",
+    "released": "2024",
+
+    "price_usd": 210,
+    "price_note": "$209.95 at Adafruit for the version with the milled aluminium enclosure, out of stock at time of checking. A bare-board version sells for roughly $150. Note the name: this shipped as 'Cynthion' in September 2024 after being developed under the name LUNA.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "advanced",
+    "skill_note": "Packetry makes capture straightforward, but reading USB descriptors, transfers and endpoint traffic is a skill in itself.",
+    "build_effort": "assembled",
+    "build_note": "Assembled, optionally in a milled aluminium case. Critically, no USB cables are included and you will need several A and C cables to wire host, target and control.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "An FPGA-based USB test instrument that captures Low, Full and High Speed USB 2.0 traffic between a host and a device, and can also emulate devices itself. It pairs Packetry for analysis with Facedancer for emulation, at a fraction of the price of commercial USB protocol analysers.",
+    "honest_take": "The value proposition is straightforward and real: commercial High-Speed USB protocol analysers start in the low thousands, and this does the core job for around $200 with open gateware you can modify. The limit to be clear about is that it is USB 2.0 only - Low, Full and High Speed. It does not capture SuperSpeed (USB 3.x), so a USB 3 device negotiating SuperSpeed will fall back or be invisible; Great Scott Gadgets has a separate 'LUNA SuperSpeed' project in development for that. Also budget for cables, because none are in the box and you need three connections to use it properly.",
+    "best_for": ["Capturing and analysing USB 2.0 traffic without paying for a commercial analyser", "Reverse engineering USB devices and their protocols", "USB device emulation and host fuzzing via Facedancer", "Man-in-the-middle between a USB host and device"],
+    "not_for": ["USB 3.x SuperSpeed capture - it does not support it", "USB-C power delivery or alt-mode analysis", "Anyone unwilling to buy several USB cables separately", "Non-USB protocols - use Glasgow or Tigard"],
+
+    "hardware": {
+      "mcu_primary": "Lattice ECP5 LFE5U-12F",
+      "mcu_primary_note": "The FPGA runs the LUNA gateware that does the actual USB capture and emulation. Part number from secondary coverage rather than the vendor page.",
+      "mcu_secondary": "Apollo debug controller",
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["Multiple USB ports for control, target host side and target device side"],
+      "gpio": "USER Pmod inputs and outputs, plus a user button and LEDs accessible from Facedancer",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Milled aluminium enclosure (optional; bare board sold cheaper)",
+      "notable_physical": ["Pass-through USB ports allowing in-line capture between a real host and a real device", "Fully open, user-replaceable FPGA gateware", "No cables included"]
+    },
+
+    "capabilities": {
+      "packet_capture":   {"v": "yes", "note": "Low, Full and High Speed USB 2.0 capture between host and device, analysed in the open-source Packetry software."},
+      "usb_hid_inject":   {"v": "yes", "note": "Via Facedancer - it can present itself as an arbitrary USB device including an HID keyboard."},
+      "usb_mass_storage": {"v": "yes", "note": "Via Facedancer's device emulation."},
+      "usb_ethernet_attack": {"v": "partial", "note": "Facedancer can emulate USB network device classes, but a packaged attack workflow like a Bash Bunny's is not what this ships with."},
+      "usb_exfil":        {"v": "partial", "note": "Technically possible through emulation, but this is an analysis instrument, not a packaged exfiltration tool."},
+      "logic_analyzer":   {"v": "no",  "note": "It analyses USB specifically, not arbitrary digital buses."},
+      "scriptable":       {"v": "yes", "note": "Python via Facedancer, plus Amaranth HDL if you want to change the gateware itself."},
+      "standalone_untethered": {"v": "no", "note": "Host-tethered; capture streams to the analysis machine."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A bench instrument with no radio, legal to own and use everywhere. The legally significant capability is USB device emulation: presenting a crafted USB device to a computer you do not own or are not authorised to test is unauthorised access under computer-misuse law (CFAA in the US, Computer Misuse Act in the UK), and USB attacks are treated seriously because they typically bypass network controls entirely. Reverse engineering a device's USB protocol may also engage anti-circumvention law depending on jurisdiction and purpose. Use on your own systems or with written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["LUNA", "Cynthion USB multitool", "Great Scott Gadgets Cynthion"],
+    "sources": [
+      {"url": "https://greatscottgadgets.com/cynthion/", "what": "official description: Low/Full/High Speed USB 2.0 only (no SuperSpeed), FPGA-based, protocol analysis, USB R&D, device emulation, works with Packetry, LUNA gateware and Facedancer"},
+      {"url": "https://greatscottgadgets.com/2024/09-16-cynthion-is-here/", "what": "release date 16 September 2024, aluminium enclosure optional, positioned against expensive commercial High Speed analysers"},
+      {"url": "https://www.adafruit.com/product/6005", "what": "price $209.95, out of stock, explicit warning that no cables are included"},
+      {"url": "https://greatscottgadgets.com/", "what": "'LUNA SuperSpeed' listed as a current project, i.e. SuperSpeed is not this product"}
+    ],
+    "research_gaps": [
+      "The exact ECP5 part number (LFE5U-12F) comes from secondary technical coverage of the Crowd Supply campaign, not from a vendor spec page I could open.",
+      "Could not confirm the exact port count and role labelling from the hardware documentation."
+    ]
+  },
+
+  {
+    "id": "facedancer",
+    "hardware_id": "facedancer",
+    "name": "Facedancer",
+    "firmware": "n/a (host software library)",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/greatscottgadgets/facedancer",
+    "firmware_note": "Facedancer is Python software, not a board. It drives a remote-controlled USB controller on hardware you already own.",
+    "vendor": "Great Scott Gadgets (maintainer)",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://github.com/greatscottgadgets/facedancer",
+    "category": "hardware-debug",
+    "subcategory": "usb-emulation-framework",
+    "status": "available",
+    "released": "2012",
+
+    "price_usd": 0,
+    "price_note": "The software is free and BSD-3-Clause licensed. You need supported hardware to run it: a Cynthion (~$150-210) or a GreatFET One ($90) are the current mainstream options. The original dedicated 'Facedancer21' boards are legacy.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+
+    "skill_level": "expert",
+    "skill_note": "You write Python that implements a USB device class by hand - descriptors, endpoints, control transfers. It assumes you understand the USB specification.",
+    "build_effort": "flash-only",
+    "build_note": "pip install the library and point it at supported hardware. No soldering, but real programming.",
+
+    "stealth": "overt",
+    "form_factor": "board",
+
+    "summary": "A Python framework for emulating USB devices in software, using a piece of supported hardware as the remote-controlled USB controller. It is the standard tool for USB host fuzzing, protocol man-in-the-middle, and building a fake USB device to see how a host reacts.",
+    "honest_take": "The confusion worth clearing up is that 'Facedancer' names three things: the original dedicated boards from Travis Goodspeed's GoodFET lineage, the modern Python library, and loosely the whole technique. What you install today is the library, and the hardware you run it on is almost always a Cynthion or a GreatFET One. It is genuinely powerful - being able to write a USB device in Python and watch a host's driver fall over is a rare capability - but it is a framework, not a tool. There is no menu, no payload library and no GUI. If you want a USB attack device that just works, this is not it; if you want to write one, this is what you build it on.",
+    "best_for": ["Fuzzing USB host stacks and drivers", "Emulating a USB device that does not exist, to test how a host behaves", "USB man-in-the-middle between a real host and a real device (replacing the old USBProxy)", "Research where you need full control over descriptors and transfers"],
+    "not_for": ["Anyone wanting a ready-made USB attack tool - look at a Rubber Ducky or Bash Bunny instead", "People who do not want to write Python", "USB traffic capture on its own - that is Packetry with a Cynthion"],
+
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No hardware of its own. Supported controllers: Cynthion, GreatFET One, NXP LPC4330 Xplorer, CCCamp 2015 rad1o badge, GoodFET-based Facedancers including Facedancer21, Raspberry Pi + MAX3241 'Raspdancer' boards, and HydraDancer/HydraUSB3.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Depends on the host hardware.",
+      "charging": null,
+      "pmic": null,
+      "storage": "None",
+      "connectivity": ["Depends on the host hardware"],
+      "gpio": "Depends on the host hardware",
+      "sensors": ["none"],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": ["Not a physical product - a Python library for supported USB controllers"]
+    },
+
+    "capabilities": {
+      "usb_hid_inject":      {"v": "yes", "note": "You can emulate an HID keyboard, but you write the descriptors and the report logic yourself - there is no payload language."},
+      "usb_mass_storage":    {"v": "yes", "note": "Mass-storage emulation is a supported and commonly used device class."},
+      "usb_ethernet_attack": {"v": "partial", "note": "USB network device classes can be emulated, but Facedancer gives you the primitives, not a packaged attack."},
+      "usb_payload_lang":    {"v": "no",  "note": "There is no DuckyScript-style payload language. You write Python against the USB spec."},
+      "usb_exfil":           {"v": "partial", "note": "Achievable by emulating a storage or network device, but you build the whole workflow yourself."},
+      "packet_capture":      {"v": "partial", "note": "MITM mode lets you observe traffic passing through the emulated device (this replaced the separate USBProxy project), but dedicated capture is Packetry's job."},
+      "scriptable":          {"v": "yes", "note": "It is a Python library - scripting is the only way to use it."},
+      "standalone_untethered": {"v": "no", "note": "Runs on a host computer driving the USB controller hardware."}
+    },
+
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The software is free and legal to possess and study. What it produces is a USB device that lies about what it is, and connecting such a device to a computer you do not own or are not authorised to test is unauthorised access under computer-misuse law in most countries (CFAA in the US, Computer Misuse Act in the UK) - USB attacks are prosecuted seriously because they bypass network defences entirely. A handful of jurisdictions have 'hacking tool' provisions (for example Germany's StGB 202c) that have historically created uncertainty around distributing dual-use tools, though academic and professional use is normal. Use it on your own systems or under written authorisation."
+    },
+
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+
+    "aliases": ["Facedancer21", "GoodFET Facedancer", "USBProxy (predecessor)"],
+    "sources": [
+      {"url": "https://github.com/greatscottgadgets/facedancer", "what": "supported hardware list (Cynthion, GreatFET One, LPC4330 Xplorer, rad1o badge, GoodFET-based Facedancers, Raspdancer, HydraDancer/HydraUSB3), BSD-3-Clause, Facedancer 3.0 rewrite, MITM replacing USBProxy, active development"},
+      {"url": "https://greatscottgadgets.com/greatfet/one/", "what": "GreatFET One's official Facedancer support"},
+      {"url": "https://greatscottgadgets.com/cynthion/", "what": "Cynthion's official Facedancer support, described as usable without HDL or FPGA experience"}
+    ],
+    "research_gaps": [
+      "Could not confirm the exact release date of the latest Facedancer 3.x version."
+    ]
+  }
+]

@@ -61,7 +61,7 @@ document.getElementById("foot").innerHTML = footerBar();
 /* ---- KPI strip ---- */
 (function(){
   const hw = uniq(DB.map(d=>d.hardware_id)).length;
-  const prices = DB.map(priceNum).filter(n=>isFinite(n));
+  const prices = DB.map(priceNum).filter(n=>isFinite(n) && n>0);
   const free = DB.filter(d=>priceNum(d)<=25).length;
   document.getElementById("kpis").innerHTML = `
     <div class="kpi"><b>${DB.length}</b><span>builds listed</span></div>

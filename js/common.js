@@ -49,6 +49,7 @@ function capsByGroup(dev){
 /* ---------- display ---------- */
 function priceStr(d){
   if (d.price_usd == null) return '<span class="dim">unknown</span>';
+  if (Number(d.price_usd) === 0) return '<span style="color:var(--cyn)">Free</span>';
   const p = "$" + Number(d.price_usd).toLocaleString();
   return d.price_is_estimate ? "~" + p : p;
 }

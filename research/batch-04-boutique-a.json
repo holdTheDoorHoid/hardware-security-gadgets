@@ -1,0 +1,2471 @@
+[
+  {
+    "id": "nyanbox-stock",
+    "hardware_id": "nyanbox",
+    "name": "nyanBOX",
+    "firmware": "nyanBOX (Nyan Devices)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/jbohack/nyanBOX",
+    "firmware_note": "A fork of the open-source cifertech/nRFBox project with a large pile of ESP32 Wi-Fi and BLE tools bolted on; current builds are binary-only and the repo publishes just a tarball of legacy source.",
+    "vendor": "Nyan Devices",
+    "vendor_url": "https://nyandevices.com",
+    "product_url": "https://shop.nyandevices.com/products/nyanbox",
+    "category": "detection-defense",
+    "subcategory": "24ghz-scanner",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 220,
+    "price_note": "USD 220.00 / AUD 330.03 for the Complete Kit - assembled, cased, with battery. Australian vendor. The shop states fulfilment of '4+ weeks' and adds that in practice it is 'often running closer to a few months given current order volume'. The bill of materials - an ESP32-WROOM-32U, three nRF24L01+ modules, a 0.96in OLED, a NeoPixel and a 2500mAh cell - is roughly 25-35 USD in parts, and the legacy source publishes the exact pin map, so the same firmware binary runs on a self-wired board.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Menu-driven on a 128x64 OLED with five buttons; no commands, no config files, no SD card to manage.",
+    "build_effort": "flash-only",
+    "build_note": "Ships assembled but unflashed - you run the vendor's ESP Web Tools flasher in Chrome once, which takes a few minutes.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A 2.4 GHz-only scanner and spammer: an ESP32-WROOM-32U doing all the Wi-Fi and BLE work, plus three nRF24L01+ radios that do coarse energy sweeps of the band and can emit constant-carrier noise. The long feature list is mostly BLE and Wi-Fi signature matching wrapped in a friendly menu with an XP and levelling system. It has no sub-GHz radio, no NFC, no RFID, no infrared and no storage.",
+    "honest_take": "Almost every headline detector is a few lines of string comparison on a BLE advertisement, and the published source proves it: the Axon detector keeps only devices whose MAC begins 00:25:df and throws away everything else; the skimmer detector matches the literal names 'HC-03', 'HC-05' and 'HC-06'; the Pineapple detector just looks for ':13:37:' in a BSSID. The three nRF24s cannot demodulate Wi-Fi or BLE at all - they give a one-bit above-or-below -64 dBm reading per 1 MHz channel, so the 'spectrum analyzer' is a coarse activity sweep, and the hidden SigKill jammer is three unmodulated carriers, not broadband jamming. Worst of all the current firmware is closed: the repo now ships binaries plus a tarball of old source, so you cannot audit the newer detectors or maintain the thing yourself if the two-person team walks away.",
+    "best_for": [
+      "Seeing what is advertising around you on BLE without learning a CLI",
+      "Cheap classroom demos of BLE advertising, beacon spam and captive portals",
+      "Casual hunting for Bluetooth trackers you did not put in your own bag"
+    ],
+    "not_for": [
+      "Sub-GHz, NFC, RFID, iButton or infrared - none of that hardware is on the board",
+      "Any kind of real jamming or broadband denial of service",
+      "Reliable surveillance-camera detection, which is a moving target this firmware chases with stale signatures",
+      "Capturing handshakes or logging a wardrive - there is no SD card"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-WROOM-32U",
+      "mcu_primary_note": "Dual-core Xtensa LX6 @240MHz with 2.4GHz Wi-Fi 4 and Bluetooth Classic/LE. The -U suffix means a u.FL connector for an external antenna instead of the PCB trace antenna. It has no USB peripheral at all, so USB HID is impossible.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-WROOM-32U",
+          "role": "wifi",
+          "note": "2.4GHz 802.11b/g/n only. No 5GHz. Promiscuous capture and raw frame TX give deauth, beacon spam and the evil portal."
+        },
+        {
+          "ic": "ESP32-WROOM-32U",
+          "role": "bluetooth",
+          "note": "BLE 4.2 plus Bluetooth Classic in silicon. Every detector in this device except the drone and Flock tools is a BLE advertisement scan."
+        },
+        {
+          "ic": "nRF24L01+ (3x, vendor calls them 'GTmini' modules)",
+          "role": "2.4ghz-proprietary",
+          "note": "Three on separate CE/CSN pins (GPIO 5/17, 16/4, 15/2). 126 x 1MHz channels across 2400-2525MHz, GFSK. Used for exactly two things: reading the one-bit RPD register to sweep band activity, and startConstCarrier() to emit unmodulated tones. They cannot receive or decode Wi-Fi, BLE or Zigbee."
+        }
+      ],
+      "display": {
+        "type": "Monochrome OLED (SSD1306, I2C)",
+        "size_in": 0.96,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2500,
+      "battery_note": "Li-Po. The vendor claims up to a full day of typical use; continuous scanning is much shorter.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "None - no microSD slot. Settings and XP live in ESP32 EEPROM emulation.",
+      "connectivity": [
+        "USB-C",
+        "UART debug"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic enclosure included; colour varies by availability",
+      "notable_physical": [
+        "5-button pad",
+        "WS2812 NeoPixel on GPIO14",
+        "External antenna connector on the ESP32 module",
+        "Three separate nRF24 modules"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "802.11 scan with per-AP client listing and a channel congestion bar chart"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "The ESP32-WROOM-32U is a 2.4GHz-only radio. There is no 5GHz path in this hardware."
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "esp_wifi_set_promiscuous with channel hopping across channels 1-13"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "The standard ESP32 approach - override ieee80211_raw_frame_sanity_check, then esp_wifi_80211_tx. Targets a chosen AP or individual clients."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "No 5GHz radio"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Random names, a supplied list, or cloned nearby SSIDs"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Evil Portal with Google, Facebook, Apple, Microsoft and Xfinity credential-harvest templates, auto-cloning a nearby SSID"
+      },
+      "wifi_evil_twin": {
+        "v": "partial",
+        "note": "Rogue AP plus captive portal only. There is no upstream bridging, so a victim gets no internet - obvious to anyone paying attention."
+      },
+      "wifi_handshake_capture": {
+        "v": "partial",
+        "note": "The firmware adds a passive Packet Monitor with CSV export over USB serial. There is no SD card and no PCAP output, so this is not a practical handshake-capture workflow."
+      },
+      "wifi_pmkid": {
+        "v": "no",
+        "note": "Not implemented"
+      },
+      "wifi_wardriving": {
+        "v": "no",
+        "note": "No GPS and no storage to log to"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used by the Evil Portal"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "General BLE scan plus a BLE Inspector that dumps service UUIDs, manufacturer data, TX power and raw payload"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Used by every spoofer and spam mode"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Sour Apple - Apple proximity-pairing popups. Derived from ECTO-1A/AppleJuice and RapierXbox/ESP32-Sour-Apple."
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Sour Droid - a Google Fast Pair and Samsung EasySetup notification flood"
+      },
+      "ble_spam_samsung": {
+        "v": "yes",
+        "note": "Part of Sour Droid"
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Fake Microsoft Swift Pair advertisements"
+      },
+      "ble_hid": {
+        "v": "no",
+        "note": "No HID keyboard or mouse emulation in the firmware"
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "The silicon supports Bluetooth Classic but the firmware only ever uses the BLE GAP scanner. This is what breaks the skimmer detector - see detect_skimmer."
+      },
+      "ble_sniff": {
+        "v": "no",
+        "note": "Advertising-channel scanning only. It cannot follow a connection or capture a BLE data channel."
+      },
+      "ble_tracker_detect": {
+        "v": "yes",
+        "note": "AirTag, Tile (service UUID 0xFEED/0xFEEC), Samsung SmartTag (0xFD5A), plus a Device Scout mode that ranks devices by how persistently they follow you"
+      },
+      "ble_tracker_spoof": {
+        "v": "yes",
+        "note": "The AirTag Spoofer clones and rebroadcasts a detected tag's advertisement, singly or in bulk"
+      },
+      "findmy_track": {
+        "v": "partial",
+        "note": "The vendor describes a FindMy Beeper that triggers the speaker on nearby FindMy accessories. It cannot locate a tag on Apple's network - there is no network access."
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Sweeps 128 x 1MHz channels reading the nRF24 RPD register, which is a single bit meaning 'received power above roughly -64 dBm'. Three radios sweep in parallel to speed it up. It is an energy detector, not a demodulator - it cannot tell you what a signal is."
+      },
+      "nrf24_jam": {
+        "v": "partial",
+        "note": "The SigKill tool, hidden behind a 'dangerous actions' toggle in Settings. It calls RF24 startConstCarrier() at maximum PA on three channels at a time from short per-protocol lists (BLE advertising 2/26/80, 'Wi-Fi' 1-12, Zigbee 11/15/20/25 and so on). That is three unmodulated tones about 1MHz wide, not wideband jamming. It can plausibly disrupt BLE advertising and discovery; against a 20MHz Wi-Fi channel it is mostly noise floor."
+      },
+      "mousejack": {
+        "v": "no",
+        "note": "Not implemented. There is no pseudo-promiscuous nRF24 address-length trick and no keystroke injection code anywhere in the firmware, despite three nRF24 radios being present."
+      },
+      "ble_jam": {
+        "v": "partial",
+        "note": "The same SigKill constant carrier, pointed at nRF24 channels 2/26/80 - which are BLE advertising channels 37, 38 and 39. It denies discovery and advertising in a small radius; it does not reliably break an established connection."
+      },
+      "zigbee": {
+        "v": "no",
+        "note": "SigKill has a 'Zigbee' carrier preset but there is no 802.15.4 radio and no ability to receive or decode Zigbee"
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. Fixed-function transceivers with a one-bit power flag."
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio at all. This is the single biggest difference from a Flipper Zero."
+      },
+      "ir_tx": {
+        "v": "no",
+        "note": "No IR hardware"
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC hardware"
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No RFID hardware"
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "The ESP32-WROOM-32U has no USB peripheral - USB-C goes to a CP210x serial bridge"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No microSD slot"
+      },
+      "gps": {
+        "v": "no",
+        "note": "None"
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Fixed menu. No scripting, no plugin system, and the current firmware source is not published."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "None"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Web flasher only"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered; everything runs on the OLED"
+      },
+      "detect_flipper": {
+        "v": "yes",
+        "note": "Matches BLE 16-bit service UUIDs 0x3081, 0x3082 and 0x3083 - Flipper black, white and transparent. Real and correct, but it only finds a Flipper with Bluetooth on and stock advertising; custom firmware or BT off makes it invisible."
+      },
+      "detect_airtag": {
+        "v": "partial",
+        "note": "Matches Apple manufacturer-data patterns 1E FF 4C 00 and 4C 00 12 19 in the advertisement. The 0x12/0x19 pattern is the genuine FindMy offline-finding type, but the first pattern matches any 30-byte Apple manufacturer advertisement, so iPhones and AirPods can show up as AirTags."
+      },
+      "detect_tile": {
+        "v": "yes",
+        "note": "BLE 16-bit service UUID 0xFEED or 0xFEEC"
+      },
+      "detect_skimmer": {
+        "v": "partial",
+        "note": "An exact string match on BLE device names 'HC-03', 'HC-05' and 'HC-06'. Two problems: HC-05 and HC-06 are Bluetooth Classic SPP modules while the code uses the BLE GAP scanner, so a genuine HC-05 skimmer does not advertise where this is looking; and a real skimmer builder can rename the module with one AT command. Treat a negative result as meaningless."
+      },
+      "detect_pineapple": {
+        "v": "partial",
+        "note": "Checks whether bytes 2 and 3 of a BSSID are 13 and 37 - a MAC containing ':13:37:'. That is the Hak5 default only; changing the MAC defeats it, and any unrelated device with that MAC pattern is a false positive."
+      },
+      "detect_pwnagotchi": {
+        "v": "yes",
+        "note": "Pwnagotchi advertises its identity in beacon frames on the Pwngrid, and matching that is straightforward and correct"
+      },
+      "detect_drone": {
+        "v": "yes",
+        "note": "Genuinely real: it parses ASTM F3411 / Open Drone ID Remote ID broadcasts over both Wi-Fi and BLE, giving drone ID, GPS position, altitude, speed and operator ID. This works because Remote ID is broadcast in the clear by regulation. It finds only Remote-ID-compliant drones - it cannot see a drone that does not broadcast."
+      },
+      "detect_meshtastic": {
+        "v": "yes",
+        "note": "An exact 128-bit BLE service UUID match. Correct method. It finds a Meshtastic node's BLE interface, not its LoRa traffic - there is no LoRa radio here."
+      },
+      "detect_surveillance_cam": {
+        "v": "partial",
+        "note": "Two separate things. First, a generic Wi-Fi camera detector matching MAC OUIs and frame heuristics for Ring, Nest, Arlo, Wyze, Hikvision and others - reasonable, and it can be paired with a deauther. Second, the Flock Detector for Flock Safety ALPR cameras, which is the shakiest claim in the device. The published source matches SSID substrings ('flock', 'FS Ext Battery', 'Penguin', 'Pigvision'), a 20-entry MAC OUI list and BLE device names. Per the upstream flock-you research this signature set is largely stale: Flock deactivated the camera management access point around December 2025 and the BLE method stopped working in spring 2026, so current detection depends on wildcard probe-request timing plus 802.11 information-element fingerprinting. It is also North America only, and one OUI in the shipped list, cc:cc:cc, is a locally-administered prefix that will generate false hits."
+      },
+      "detect_generic_ble": {
+        "v": "yes",
+        "note": "BLE Scan plus BLE Inspector"
+      },
+      "detect_generic_wifi": {
+        "v": "yes",
+        "note": "Wi-Fi scan, channel analyser, and a deauth-frame scanner that shows the attacker's MAC and RSSI"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning it is legal in most places. Using several of its built-in tools is not. In the United States the FCC treats deliberate jamming as prohibited under 47 U.S.C. 333 and has fined companies for Wi-Fi deauthentication specifically, so the SigKill carrier tool and the deauther are the kind of feature you should assume is illegal to point at anything you do not own. The Evil Portal templates capture other people's passwords. The Drone Spoofer broadcasts falsified Remote ID, which is regulated aircraft identification in the US and EU. Check your local law before transmitting anything."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "nyan BOX",
+      "Nyan Box",
+      "nyanBOX Complete Kit"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/jbohack/nyanBOX",
+        "what": "official firmware repo - feature list, hardware table and credits; note the repo now contains only binaries plus a legacy source tarball"
+      },
+      {
+        "url": "https://github.com/jbohack/nyanBOX/raw/main/firmware-files/legacy-src.tar.xz",
+        "what": "legacy PlatformIO source, read directly for the detector matching logic, the pin map and the SigKill implementation"
+      },
+      {
+        "url": "https://api.github.com/repos/jbohack/nyanBOX",
+        "what": "GitHub API confirming this is a fork of cifertech/nRFBox; last pushed 2026-08-23"
+      },
+      {
+        "url": "https://github.com/cifertech/nRFBox",
+        "what": "the MIT-licensed upstream project the nyanBOX is built from - the same ESP32 plus three nRF24 architecture, free to build yourself"
+      },
+      {
+        "url": "https://github.com/colonelpanichacks/flock-you",
+        "what": "upstream Flock detection research documenting that the Flock management AP was disabled around December 2025 and BLE detection stopped working in spring 2026"
+      },
+      {
+        "url": "https://shop.nyandevices.com/products/nyanbox.json?currency=USD",
+        "what": "price USD 220.00, Australian vendor, Complete Kit variants"
+      },
+      {
+        "url": "https://github.com/nRF24/RF24",
+        "what": "the RF24 library whose startConstCarrier() and RPD register access are what the jammer and scanner actually use"
+      },
+      {
+        "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c5/api-guides/wifi-driver/wifi-vendor-features.html",
+        "what": "ESP-IDF: esp_wifi_80211_tx permits beacon, probe and action frames plus non-QoS data only, which is why deauth needs the sanity-check override"
+      }
+    ],
+    "research_gaps": [
+      "The current firmware source is not published, so the newer features listed in the README (Camera Detector and Deauther, LE Gear Detector, KARR Detector, iBeacon tools, Packet Monitor, Jam Detector, FindMy Beeper) could not be read - they are described from the vendor README only",
+      "No independent teardown found; the three nRF24 modules are called 'GTmini' by the vendor but the exact module part, and whether it includes a PA/LNA and therefore what the actual TX power is, is unconfirmed",
+      "No dimensions or weight published",
+      "Real-world battery life could not be verified, nor whether the 'up to a full day' figure is with the radios active"
+    ]
+  },
+  {
+    "id": "kiisu-v4b-kiisu-firmware",
+    "hardware_id": "kiisu-v4b",
+    "name": "KIISU V4B",
+    "firmware": "Kiisu Firmware",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/kiisu-io/kiisu-firmware",
+    "firmware_note": "A genuine GPL-3.0 fork of Flipper Zero official firmware adapted to this board; a second Apache-2.0 firmware on the STM32G4 auxiliary MCU provides the compatibility shim so unmodified Flipper firmwares also run.",
+    "vendor": "Rainwalker OU (KIISU)",
+    "vendor_url": "https://kiisu.io",
+    "product_url": "https://store.rainwalker.ee/products/kiisu-v4b",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "preorder",
+    "released": "2025",
+    "price_usd": 145,
+    "price_note": "USD 145 from Rabbit Labs, the official US reseller, tariffs and fees included, currently listed as available on backorder. RainWalker in Estonia sells it direct at roughly EUR 77 before VAT and shipping but has disabled direct shipping to the US over tariffs; that listing is a pre-order with a stated 3-5 week lead time. Case, SMA connector, antenna and microSD card are all extra.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The software is Flipper firmware, so it is familiar - but this ships as a bare board with a coin cell, you supply and format the microSD, and adding an external antenna means soldering an SMA connector and moving a 0805 capacitor.",
+    "build_effort": "assembly",
+    "build_note": "Arrives assembled and preflashed, but you must supply and load a FAT32 microSD with the firmware resource pack before anything works. A 3D-printed case is a separate purchase or print. The external antenna and the LSM303AGR and BME680 sensors are user-soldered.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A credit-card-sized open-hardware board that reimplements the Flipper Zero's peripheral set - CC1101 sub-GHz, ST25R3916 NFC, 125 kHz RFID, infrared, iButton, Flipper-pin-compatible GPIO - around the same STM32WB55 MCU, with a second STM32G4 handling power and Flipper compatibility. It runs real Flipper firmware including Momentum and Unleashed builds, and the schematics are published under CERN-OHL-S. The vendor calls it a development board rather than a consumer product, and means it.",
+    "honest_take": "This is the real thing rather than a re-skinned ESP32, and it is the only device in this group that touches sub-GHz, NFC, RFID and infrared at all - but it is not a drop-in Flipper. It lacks Flipper Zero's secret keys, so U2F and some sub-GHz protocols will not work under official firmware; the tiny LIR2032 coin cell gives you a fraction of a Flipper's runtime, and putting an ordinary CR2032 in it is a fire hazard; and the built-in 433 MHz ceramic antenna is much worse than a Flipper's, with better range gated behind soldering an SMA connector yourself. You are trading polish, battery and range for a wallet-sized form factor, open schematics and about a third off the price.",
+    "best_for": [
+      "Someone who wants Flipper capability in a card that lives in a wallet",
+      "Learning the hardware, because full schematics and both firmwares are published under open licences",
+      "Owners in places where buying a Flipper is awkward but a development board is not"
+    ],
+    "not_for": [
+      "Anyone expecting Flipper polish, battery life or antenna performance",
+      "U2F and the sub-GHz protocols that depend on Flipper's secret keys",
+      "Complete beginners - it is a bare board that needs an SD card prepared before first boot",
+      "Wi-Fi work, which needs an external ESP32 module on the GPIO header exactly like a Flipper"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32WB55RGV6",
+      "mcu_primary_note": "Cortex-M4 at up to 80MHz for the application plus a Cortex-M0+ radio core running the BLE stack, 1MB flash, 256KB RAM, integrated RTC. The same family as the Flipper Zero's STM32WB55RG.",
+      "mcu_secondary": "STM32G431CBU6",
+      "mcu_secondary_note": "Cortex-M4 at up to 170MHz. It handles power sequencing, battery status and the compatibility shim that lets unmodified Flipper Zero firmware run on this board, with its own firmware repo and its own DFU and SWD path.",
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "The same transceiver family as the Flipper Zero. An internal ceramic 433MHz antenna as shipped; an SMA footprint (J301) exists but requires soldering the connector and moving capacitor C315 to C314 to switch antennas."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56MHz reader and emulator with a built-in antenna - the same NFC front end as the Flipper Zero"
+        },
+        {
+          "ic": "STM32WB55RGV6",
+          "role": "bluetooth",
+          "note": "Bluetooth LE via the integrated M0+ radio core. No Wi-Fi and no Bluetooth Classic."
+        }
+      ],
+      "display": {
+        "type": "Monochrome OLED (SSD1306-compatible, SPI)",
+        "size_in": null,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 40,
+      "battery_note": "A LIR2032 rechargeable coin cell, typically 35-45mAh. A CR2032 physically fits but must never be used - charging one over USB risks fire, which the manual warns about explicitly. There is also an unpopulated footprint for an external Li-ion pack. Runtime is a small fraction of a Flipper Zero's 2100mAh.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD slot (FAT32; the firmware resource pack must be loaded before first use)",
+      "connectivity": [
+        "USB-C",
+        "Bluetooth LE",
+        "Flipper-compatible GPIO header",
+        "SWD1 and SWD2 debug headers (1x6, 1mm pitch)"
+      ],
+      "gpio": "GPIO pins electrically and physically compatible with the Flipper Zero header, so Flipper GPIO add-ons including the ESP32 Wi-Fi dev board work",
+      "sensors": [
+        "GXHTC3C temperature and humidity",
+        "Ambient light sensor",
+        "LSM303AGR accelerometer and magnetometer (fitted on some revisions only, otherwise user-solderable)",
+        "BME680 gas/VOC (user-solderable option)",
+        "VL53xx range sensor (user-solderable option on the V4BR)"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None supplied - 3D-print files on Printables and MakerWorld, or buy a printed case separately",
+      "notable_physical": [
+        "Credit-card footprint",
+        "5-way pad plus OK, Back and Power",
+        "iButton/1-Wire contact pins",
+        "Built-in 125kHz RFID coil",
+        "Built-in NFC antenna",
+        "SMA footprint for an external sub-GHz antenna"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "CC1101, the same chip family as the Flipper. The internal antenna is a ceramic 433MHz part and the vendor states plainly that 'antennas performance may vary'."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "CC1101 TX. Range with the internal antenna is well below a Flipper Zero's."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Standard Flipper firmware sub-GHz read, save and emulate"
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "The vendor states the board lacks Flipper Zero's secret keys, so some sub-GHz protocols will not work under official firmware. Community builds such as Unleashed and Kiisu-Momentum cover more, as they do on a Flipper."
+      },
+      "subghz_bruteforce": {
+        "v": "yes",
+        "note": "Via the same community firmware apps a Flipper uses"
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "Needs an SMA board-edge connector soldered to J301 and the 0805 capacitor C315 moved to C314. RainWalker sells the soldering as a service and the antennas separately."
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "RFID reader and emulator with a built-in antenna"
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "Via Flipper firmware, same as a Flipper - and with the same limit that only writable blanks such as T5577 can be written"
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Built-in coil"
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ST25R3916 with a built-in antenna"
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Via Flipper firmware"
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "The ST25R3916 supports card emulation, as on the Flipper"
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "Inherited from Flipper firmware. Performance depends on the firmware build, not the board."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Via Flipper firmware"
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "The ST25R3916 supports it and Flipper firmware exposes it"
+      },
+      "emv_read": {
+        "v": "yes",
+        "note": "Via Flipper firmware's EMV app"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "Infrared transmitter on board"
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "Infrared receiver on board"
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Flipper firmware IR learn and replay"
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Flipper universal remote databases work from the microSD"
+      },
+      "ibutton_1wire": {
+        "v": "yes",
+        "note": "Dedicated iButton reader and emulator pins"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "STM32WB55 BLE, exposed by Flipper firmware"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "The same BLE stack the Flipper uses"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Available in community Flipper firmware builds such as Momentum and Unleashed, not in the vendor's stock build"
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "Flipper firmware's Bluetooth Remote and BadBLE apps"
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB via the STM32WB55's USB device peripheral, running Flipper DuckyScript payloads from the microSD"
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckyScript, as on a Flipper"
+      },
+      "wifi_scan_24": {
+        "v": "addon",
+        "note": "No Wi-Fi radio on board. It needs an ESP32 module on the Flipper-compatible GPIO header, exactly like a Flipper Zero."
+      },
+      "wifi_deauth_24": {
+        "v": "addon",
+        "note": "Same - it requires an external ESP32 Wi-Fi dev board"
+      },
+      "uart": {
+        "v": "yes",
+        "note": "On the Flipper-compatible GPIO header"
+      },
+      "spi_flash_dump": {
+        "v": "yes",
+        "note": "Via Flipper GPIO apps"
+      },
+      "i2c": {
+        "v": "yes",
+        "note": "On the GPIO header, and used internally for the sensors"
+      },
+      "jtag_swd": {
+        "v": "partial",
+        "note": "The board exposes SWD1 and SWD2 headers for programming itself. Using it as a debugger against other targets depends on Flipper community apps, as on a Flipper."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD, required for firmware resources"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "The Flipper app ecosystem plus DuckyScript"
+      },
+      "app_store": {
+        "v": "partial",
+        "note": "Flipper community apps largely work, but this board is not in Flipper's official app catalogue and some apps assume Flipper-specific hardware or keys"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "It runs on the LIR2032 coin cell, but runtime is short enough that most people will keep it on USB or fit an external Li-ion pack"
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 is a fixed-function narrowband transceiver."
+      },
+      "gps": {
+        "v": "no",
+        "note": "None on board"
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "United States (indirect) - RainWalker has disabled direct shipping to the US over tariffs; the official route is the Rabbit Labs reseller"
+      ],
+      "risk_level": "medium",
+      "notes": "Owning it is legal in most places, and being an open-hardware development board rather than a branded consumer gadget has so far kept it clear of the import trouble the Flipper Zero has run into. That is not a guarantee: what it does is what a Flipper does, so transmitting on sub-GHz without a licence, cloning access credentials you do not own, and BadUSB against machines you do not control are all separate offences in most countries. Rainwalker OU states it is not affiliated with Flipper Zero Devices. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-05",
+      "app_store": "No dedicated store - it uses Flipper community apps, with caveats",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Kiisu",
+      "Kiisu V4",
+      "KIISU V4BR",
+      "Kiisu Development Board v4b"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/kiisu-io/kiisu4",
+        "what": "official hardware repo - schematics, manual and 3D models under CERN-OHL-S v2"
+      },
+      {
+        "url": "https://kiisu.io/wp-content/uploads/2025/10/kiisu-v4b-manual-and-quick-start.pdf",
+        "what": "V4B user manual - full board callout list, the 'Limitations of compatibility' section, the LIR2032 versus CR2032 warning, and the SMA antenna procedure"
+      },
+      {
+        "url": "https://github.com/kiisu-io/kiisu-firmware",
+        "what": "GPL-3.0 fork of flipperdevices/flipperzero-firmware; latest release 1.4.3-2K on 2026-05-21"
+      },
+      {
+        "url": "https://github.com/kiisu-io/kiisu4-companion-fw",
+        "what": "Apache-2.0 STM32G4 auxiliary-MCU firmware providing Flipper compatibility"
+      },
+      {
+        "url": "https://rabbit-labs.com/product/kiisu-development-board-v4b/",
+        "what": "official US reseller - USD 145 inclusive of tariffs, available on backorder"
+      },
+      {
+        "url": "https://store.rainwalker.ee/products/kiisu-v4b",
+        "what": "vendor store - pre-order with a 3-5 week lead time, and the note that direct US shipping is disabled due to tariffs"
+      },
+      {
+        "url": "https://github.com/twoelw/enhanced-kiisu4-fw",
+        "what": "third-party enhanced auxiliary firmware and Kiisu-Momentum builds, last updated 2026-07"
+      }
+    ],
+    "research_gaps": [
+      "Exact dimensions and weight are not published beyond 'credit-card sized'",
+      "Which specific sub-GHz protocols fail without Flipper's secret keys is not enumerated by the vendor",
+      "Whether the LSM303AGR is fitted is revision-dependent and not stated per SKU",
+      "No independent teardown or RF range measurement found comparing the internal ceramic antenna to a Flipper Zero's",
+      "V4B versus V4BR differences are not documented; the store now sells a single listing titled V4BR with the SKU 'Kiisu V4b2'"
+    ]
+  },
+  {
+    "id": "bleshark-nano-stock",
+    "hardware_id": "bleshark-nano",
+    "name": "BLEShark Nano",
+    "firmware": "InfiShark stock",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Closed source. The public repo is archived and its last firmware release was v0.8 in February 2025, while shipping units run v1.1 and later; updates now come over the air from the vendor's own servers.",
+    "vendor": "InfiShark Technologies Inc.",
+    "vendor_url": "https://infishark.com",
+    "product_url": "https://infishark.com/products/bleshark-nano",
+    "category": "multitool",
+    "subcategory": "wifi-ble-ir-handheld",
+    "status": "available",
+    "released": "2024",
+    "price_usd": 50,
+    "price_note": "USD 49.99 (list 54.99), in stock in both black and clear, assembled and shipped from Vaughan, Ontario, Canada. The sheet's 40 USD is out of date. CAD 71, EUR 52.95, GBP 46. An older Tindie 'prototype' listing is retired.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "beginner",
+    "skill_note": "Three buttons and a tiny OLED menu; there is also a documented Rust CLI and SDK if you want to drive it from a computer.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in a 3D-printed case with firmware installed; updates are over the air.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A 50-dollar pocket toy built on a Seeed XIAO ESP32-C3 module with a 0.66in 64x48 OLED, a 500mAh cell and an infrared transmitter and receiver. It does 2.4 GHz Wi-Fi recon and attacks, BLE advertisement spam, IR remote work, a handful of arcade games, and an ESP-NOW mesh mode that links up to sixteen units into one coordinated rig. No sub-GHz, no NFC, no nRF24, no microSD.",
+    "honest_take": "It is honestly what it says it is at the price, but two claims need correcting. It has no USB HID and physically cannot: the ESP32-C3's USB block is a fixed-function serial/JTAG controller with no OTG, and InfiShark's own documentation concedes the device 'only ever acts as a device, never as a host'. What it calls Bad-BT is a Bluetooth keyboard that the target has to pair with first, which is a far weaker attack than plugging in a rubber ducky. Second, the firmware is closed and the public GitHub repo is archived with nothing in it - so the archived v0.8 binary from early 2025 is the last thing anyone outside the vendor has been able to look at, while shipping units are years past it. If you are in the EU you are also buying a different product: EU firmware ships with deauthentication removed to satisfy the Radio Equipment Directive, and there are community guides devoted to VPNing around the geo-locked update server.",
+    "best_for": [
+      "A cheap, well-certified first device for learning 2.4 GHz Wi-Fi and BLE behaviour",
+      "IR remote capture and replay in a pocket-sized package",
+      "Multi-unit recon - the Shiver mesh linking up to 16 Nanos is genuinely unusual at this price"
+    ],
+    "not_for": [
+      "USB rubber-ducky style keystroke injection - it is BLE HID and needs pairing",
+      "5 GHz networks, which the vendor states plainly are not supported",
+      "Sub-GHz, NFC or RFID - none of that hardware exists",
+      "Buyers in the EU who want the deauther, which is removed from EU firmware"
+    ],
+    "hardware": {
+      "mcu_primary": "Seeed Studio XIAO ESP32C3 module",
+      "mcu_primary_note": "ESP32-C3: single-core RISC-V up to 160MHz, 4MB flash, 400KB SRAM, 2.4GHz Wi-Fi 4 and BLE 5, u.FL external antenna connector. Its USB peripheral is a fixed-function Serial/JTAG controller - there is no USB-OTG, so USB HID is impossible on this silicon.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-C3",
+          "role": "wifi",
+          "note": "2.4GHz only, channels 1-14 (13 and 14 restricted in some regions). The vendor documents that 5GHz networks are not supported."
+        },
+        {
+          "ic": "ESP32-C3",
+          "role": "bluetooth",
+          "note": "BLE 5, used for advertisement spam, scanning, and the Bad-BT keyboard"
+        }
+      ],
+      "display": {
+        "type": "Monochrome OLED (SSD1306)",
+        "size_in": 0.66,
+        "resolution": "64x48",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 500,
+      "battery_note": "Li-ion. Vendor now quotes about 7 hours; earlier vendor material said 10 hours and the Tindie prototype listing said '4+ hours while spamming' - the estimate has been revised downward over time.",
+      "charging": "USB-C (charging and serial only - it is not a USB host and does not enumerate as anything but a serial port)",
+      "pmic": null,
+      "storage": "SPIFFS on the module's 4MB flash. No microSD.",
+      "connectivity": [
+        "USB-C (serial)",
+        "Wi-Fi 2.4GHz",
+        "Bluetooth LE",
+        "ESP-NOW mesh"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "65 x 42.5 x 15",
+      "weight_g": 50,
+      "case": "3D-printed, four M3x12 screws",
+      "notable_physical": [
+        "3 navigation buttons",
+        "IR receiver (TSOP4838) and IR emitter (TSAL6200)",
+        "u.FL external antenna connector on the XIAO module"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Channels 1-14"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "ESP32-C3 is a 2.4GHz-only radio; the vendor documentation states 5GHz networks are not supported"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "Promiscuous capture used by the handshake and PMKID tools"
+      },
+      "wifi_deauth_24": {
+        "v": "partial",
+        "note": "Present in the standard firmware, but REMOVED from EU firmware. The vendor cites new Radio Equipment Directive rules from 1 August 2025; the OTA server geo-selects which build you receive, and two separate community repos exist purely to work around that."
+      },
+      "wifi_deauth_5": {
+        "v": "no",
+        "note": "No 5GHz radio"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "WPA 4-way EAPOL capture with per-AP, per-SSID and rotating all-APs sweeps, exported as a PCAP zip. 2.4GHz only."
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Listed by the vendor and exposed through the SDK"
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Separate Captive Portal and Evil Portal apps"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "Credential-capture portal"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Hundreds of fake SSIDs"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used by the portals"
+      },
+      "wifi_wardriving": {
+        "v": "no",
+        "note": "No GPS and no microSD"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Standard BLE scanning"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Used by all spam modes"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "iOS proximity-pairing popups"
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Android Fast Pair"
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Windows Swift Pair"
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "This is the 'Bad-BT' feature - a Bluetooth keyboard emulator that runs DuckyScript. The target must pair with it over Bluetooth first and must support BLE HID, which is a much higher bar than a USB attack. Confusingly the upload button in the vendor's file portal is still labelled 'BadUSB Script'."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Impossible on this silicon. The ESP32-C3 has only a fixed-function USB Serial/JTAG controller with no OTG mode, which Espressif documents explicitly, and InfiShark's own docs say the Nano 'only ever acts as a device, never as a host'. The 'Wi-Fi adapter' feature works around this by tunnelling IP over the serial port with SLIP, Linux and root only."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckyScript, delivered over Bluetooth rather than USB"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "TSAL6200 emitter. TV-B-Gone, universal remote and raw transmit apps."
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP4838 receiver"
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Capture and replay"
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Built-in remote app"
+      },
+      "detect_flipper": {
+        "v": "unknown",
+        "note": "Not in the published feature list"
+      },
+      "detect_airtag": {
+        "v": "partial",
+        "note": "The vendor publishes a separate open-source tool, infishark/airhorn, that triggers AirTag sounds; on-device tracker detection is not in the main feature list"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio. Confirmed absent from the feature list, the docs tree, the prototype BOM and the SDK command map."
+      },
+      "nrf24_scan": {
+        "v": "no",
+        "note": "No nRF24 hardware"
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC hardware"
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No RFID hardware"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No microSD - captures live in SPIFFS on the module's 4MB flash and are pulled off over USB"
+      },
+      "gps": {
+        "v": "no",
+        "note": "None"
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "There is a real, GPL-3.0 Rust SDK and CLI (infishark/infishark, actively developed) for driving the device from a computer. The device firmware itself is closed and not scriptable on-device."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "None"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with an on-device menu"
+      },
+      "web_ui": {
+        "v": "partial",
+        "note": "A file transfer portal for uploading payloads and pulling captures"
+      }
+    },
+    "legal": {
+      "import_restricted": [
+        "European Union - not blocked, but EU units ship firmware with the deauthentication feature removed, which the vendor attributes to Radio Equipment Directive rules effective 1 August 2025"
+      ],
+      "risk_level": "medium",
+      "notes": "This is one of the very few devices in this class with a proper compliance paper trail: FCC Grant of Equipment Authorization and SDoC, Canadian ICES-003, CE RED/EMC/RoHS, UKCA plus a UK PSTI statement, Australian/NZ RCM, and a published security-support commitment through 30 September 2027. Owning it is legal. Using the deauther against networks you do not own is a separate offence in most countries, which is precisely why the EU build ships without it. Channels 13 and 14 are restricted in some regions."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025-02",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "BLEShark",
+      "BLE Shark Nano",
+      "BLS-N-001"
+    ],
+    "sources": [
+      {
+        "url": "https://infishark.com/products/bleshark-nano",
+        "what": "vendor product page - price USD 49.99, in stock, dimensions, IR, 500mAh"
+      },
+      {
+        "url": "https://github.com/infishark/nano-docs",
+        "what": "official documentation - full feature list, the statement that 5GHz is not supported, and the Bad-BT page describing Bluetooth keyboard emulation"
+      },
+      {
+        "url": "https://github.com/infishark/nano-docs/blob/main/docs/pentesting/wi-fi-adapter.md",
+        "what": "vendor admitting the device has no USB OTG and 'only ever acts as a device, never as a host'"
+      },
+      {
+        "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/api-guides/usb-serial-jtag-console.html",
+        "what": "Espressif: the ESP32-C3 USB Serial/JTAG controller is fixed-function hardware and cannot be reconfigured, unlike the USB OTG controllers in other ESP chips"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/espressif/esp-idf/master/components/soc/esp32c3/include/soc/soc_caps.h",
+        "what": "ESP-IDF SoC capability header - esp32c3 defines SOC_USB_SERIAL_JTAG_SUPPORTED and no SOC_USB_OTG_SUPPORTED"
+      },
+      {
+        "url": "https://github.com/grdashark/BLEShark",
+        "what": "the archived official repo - README states 'Firmware is closed-source at this time', last release v0.8 published 2025-02-20"
+      },
+      {
+        "url": "https://github.com/infishark/infishark",
+        "what": "GPL-3.0 Rust SDK and CLI, actively developed; the only genuinely open-source code in the project"
+      },
+      {
+        "url": "https://github.com/infishark/compliance",
+        "what": "FCC, ICES-003, CE RED, UKCA/PSTI and RCM documentation plus a security-support window to 2027-09-30"
+      },
+      {
+        "url": "https://github.com/IkerGarcia/bleshark-nano-eu-firmware-guide",
+        "what": "community guide documenting that EU firmware ships without the deauth option under the Radio Equipment Directive"
+      },
+      {
+        "url": "https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/",
+        "what": "XIAO ESP32C3 module specification - 4MB flash, 400KB SRAM, u.FL antenna"
+      }
+    ],
+    "research_gaps": [
+      "Whether the firmware borrows from ESP32 Marauder, Bruce or Ghost ESP cannot be determined - there is no source to compare, and Marauder ships no ESP32-C3 build at all while Ghost ESP's C3 build has not been updated since March 2025. The feature set (ESP-NOW mesh, arcade games, IR suite, Rust SDK) has no obvious counterpart in any of them.",
+      "A third-party Ghidra analysis of the old v0.8 binary (domseguna/BLEShark-Firmware-Analysis) claims no OTA signature verification and a hardcoded fake Google login page. It is one person's unreviewed work against a firmware version that predates the current OTA mechanism - unverified, and not treated as fact here.",
+      "No independent teardown or written review found; Hackaday.io coverage is vendor-authored",
+      "Real battery life under load is unverified and the vendor's own estimate has been revised down over time"
+    ]
+  },
+  {
+    "id": "monstatek-m1-stock",
+    "hardware_id": "monstatek-m1",
+    "name": "Monstatek M1",
+    "firmware": "M1 firmware (official)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/Monstatek/M1",
+    "firmware_note": "GPL-3.0 and genuinely original - an STM32CubeIDE project on STM32H5 HAL, FreeRTOS and u8g2, not a port of Flipper Zero firmware and not related to any ESP32 project.",
+    "vendor": "MonstaTek",
+    "vendor_url": "https://www.monstatek.com/",
+    "product_url": "https://monstatek.pledgemanager.com/projects/m1-compact-multitool/",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "preorder",
+    "released": "2026",
+    "price_usd": 180,
+    "price_note": "There is no official store and no official price - monstatek.com has no cart or buy button, and fulfilment runs through a pledge manager for the Kickstarter, which raised 1,364,457 USD from 11,189 backers. The sheet's 165 USD could not be sourced to anything. Observed secondary-market prices are 180-225 USD on eBay for units in hand. Only the M1 Range Enhancer accessory has a retail listing, at 50.99 USD. Delivery has been very slow: at least one backer reports pledging in February 2024 and receiving a unit in February 2026.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Feature set and menus are Flipper-like and approachable, but this is an early-production device with reported per-unit hardware faults and no retail support channel.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled. Firmware is built with STM32CubeIDE or CMake and flashed over USB DFU or ST-Link.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A Flipper-shaped multitool built on an STM32H573 - a Cortex-M33 with TrustZone, hardware crypto and PSA Certified Level 3 security, which is a genuinely serious MCU for this class - carrying an Si4463 sub-GHz transceiver, an ST25R3916 NFC front end, a 125 kHz RFID coil, infrared with a bundled database, microSD and USB. It has no radio of its own for Wi-Fi or Bluetooth; an ESP32-C6 co-processor on an SPI link provides those. The firmware is GPL-3.0 and written from scratch.",
+    "honest_take": "The Si4463 is the one place where this genuinely beats a Flipper Zero: it tunes continuously rather than in three bands and puts out around +20 dBm against the CC1101's +12, though the M1's own firmware only claims 315-915 MHz, which is roughly Flipper territory anyway. Everything else is a warning. The vendor's website is stale enough to be misleading - it advertises Bluetooth 4.2 BR/EDR when the shipping co-processor is an ESP32-C6 that has no Bluetooth Classic at all, and it says 'microSDHC up to 256GB' when microSDHC by definition stops at 32 GB. The GPIO is 5V-capable on the Kickstarter and 3.3V CMOS on the website. There is no shop, no price and no support channel, delivery has run two years behind for some backers, and firmware development has been quiet since June 2026 while the community picks up the slack with an app SDK and desktop companion. The hardware is real and the firmware is honestly open; the operation around it is not a retail business yet.",
+    "best_for": [
+      "Sub-GHz work where the Si4463's continuous tuning and higher TX power matter",
+      "Someone who wants a Flipper-class device on an open GPL-3.0 STM32 codebase they can actually build",
+      "Tolerant early adopters who already backed it"
+    ],
+    "not_for": [
+      "Anyone who wants to just buy one - there is no store",
+      "Buyers who need working support or a warranty",
+      "5 GHz Wi-Fi, which the ESP32-C6 cannot do"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32H573VIT6",
+      "mcu_primary_note": "Arm Cortex-M33 with TrustZone at up to 250MHz, 2MB flash, 640KB RAM, LQFP100. Unusually strong security silicon for this class: DPA-resistant AES with a hardware unique key, PKA, HASH, TRNG, on-the-fly OSPI decryption, active tamper detection, PSA Certified Level 3 and SESIP3. It contains no radio of any kind.",
+      "mcu_secondary": "ESP32-C6",
+      "mcu_secondary_note": "Wireless co-processor running Espressif's esp-hosted-mcu network adapter over SPI. Gives 2.4GHz Wi-Fi 6 and BLE 5 - and, importantly, no Bluetooth Classic, contradicting the vendor website's 'Bluetooth 4.2 BR/EDR' claim.",
+      "radios": [
+        {
+          "ic": "Si4463",
+          "role": "sub-ghz",
+          "note": "Silicon Labs EZRadioPRO. Datasheet range is 142-1050MHz continuous, up to +20dBm, -124dBm sensitivity, with OOK, 2-FSK, GFSK and CW. The M1's own firmware README scopes the device to 315-915MHz, which is what the antenna and matching network actually support. Note the sheet's '119-1050MHz' is the range of other Si446x parts, not the Si4463."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56MHz reader/writer, the same front end the Flipper Zero uses, driven through ST's RFAL library"
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125kHz coil for EM-4100 and HID Prox. No dedicated IC is named in the source."
+        },
+        {
+          "ic": "ESP32-C6",
+          "role": "wifi",
+          "note": "2.4GHz only. No 5GHz."
+        },
+        {
+          "ic": "ESP32-C6",
+          "role": "bluetooth",
+          "note": "BLE 5 only - scan, advertise and GATT"
+        }
+      ],
+      "display": {
+        "type": "Monochrome LCD (ST7586S, ERC240160 panel)",
+        "size_in": 1.54,
+        "resolution": "240x160",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 2100,
+      "battery_note": "TI BQ27421 fuel gauge (the firmware carries its golden image). Vendor claims 14+ days.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD. The vendor says 'up to 256GB (32GB recommended)' while also calling the slot microSDHC, which by definition tops out at 32GB - the two claims cannot both be true.",
+      "connectivity": [
+        "USB-C (CDC + mass storage)",
+        "Wi-Fi 2.4GHz",
+        "Bluetooth LE",
+        "GPIO"
+      ],
+      "gpio": "12 pins. The Kickstarter says each handles 5V; the website says 3.3V CMOS. These contradict each other - do not assume 5V tolerance.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "125kHz RFID antenna",
+        "13.56MHz NFC antenna",
+        "IR transmitter and 38kHz receiver",
+        "microSD slot"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Si4463. Firmware claims 315-915MHz; the silicon can do 142-1050MHz but the antenna path is what limits it."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Up to +20dBm at the chip, against the Flipper Zero's +12dBm CC1101 - a genuine advantage if the matching network supports it"
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Capture, decode/encode and replay are all in the Sub_Ghz component"
+      },
+      "subghz_bruteforce": {
+        "v": "unknown",
+        "note": "Not documented as a distinct feature"
+      },
+      "subghz_rolling_code": {
+        "v": "unknown",
+        "note": "Encoder/decoder code exists but the protocol list is not published"
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "MonstaTek sells an 'M1 Range Enhancer' accessory at USD 50.99"
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "EM-4100 and HID Prox per the vendor"
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "A dedicated lfrfid component with file storage"
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ST25R3916 with ST's RFAL stack - NFC-A/B/F/V, ISO-DEP, ST25TB, ST25xV"
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "The RFAL card-emulation modules are present; the firmware's exposed feature set is not fully documented"
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "rfal_nfcv is compiled in"
+      },
+      "felica": {
+        "v": "yes",
+        "note": "rfal_nfcf is compiled in"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "38kHz IR with a bundled database of TV, audio, air-conditioner and projector codes, released as its own tagged asset"
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "Built on the irmp/irsnd decoder library"
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Capture and replay"
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Bundled IR database"
+      },
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "AP scanning through the ESP32-C6 over SPI"
+      },
+      "wifi_scan_5": {
+        "v": "no",
+        "note": "The ESP32-C6 is 2.4GHz only"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Station and AP modes via the co-processor"
+      },
+      "wifi_deauth_24": {
+        "v": "unknown",
+        "note": "Not in the official firmware's documented feature set. The SPI AT link exposes standard network-adapter functions rather than raw frame injection."
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "Via the ESP32-C6"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Scan, advertise and GATT are all listed"
+      },
+      "bt_classic": {
+        "v": "no",
+        "note": "The vendor website advertises 'Bluetooth 4.2 BR/EDR and BLE'. The shipping co-processor is an ESP32-C6, which has no Bluetooth Classic at all. The website spec appears to describe an earlier design."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "BadUSB HID alongside USB CDC and mass storage, using the STM32H5's own USB peripheral"
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "The microSD can be mounted over USB"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "FatFs on microSD"
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "Not in the official firmware. The community has built an app runtime (M1OS) and an SDK for external .m1app applications."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No official catalogue; community SDK only"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with an on-device UI"
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Desktop and mobile companion apps exist, both community-built"
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The Si4463 is a fixed-function narrowband transceiver."
+      },
+      "gps": {
+        "v": "no",
+        "note": "None"
+      },
+      "ibutton_1wire": {
+        "v": "unknown",
+        "note": "Not mentioned in the firmware or vendor specification"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning it is legal in most places. Transmitting on sub-GHz without a licence, cloning access credentials you do not own, and BadUSB against machines you do not control are separate offences in most countries. The Si4463's higher output power and continuous tuning make it easier to stray outside a legal band than a Flipper's banded CC1101 does. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-07",
+      "app_store": "No official store; a community SDK and app runtime exist",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "M1",
+      "MonstaTek M1",
+      "M1 Multitool"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/Monstatek/M1",
+        "what": "official GPL-3.0 firmware - README listing NFC, LF RFID, sub-GHz 315-915MHz, IR, and Wi-Fi/BLE via ESP32 co-processor; last commit 2026-06-05, last release 2026-07-08"
+      },
+      {
+        "url": "https://github.com/Monstatek/M1/blob/main/HARDWARE.md",
+        "what": "MCU confirmed as STM32H573VIT6, 2MB flash, 100LQFP, hardware revision 2.x"
+      },
+      {
+        "url": "https://github.com/Monstatek/M1/tree/main/Sub_Ghz",
+        "what": "si446x_cmd.h and m1_sub_ghz_si4463_patch.h confirming the Si4463, with OOK/FSK/GFSK/CW modulation constants"
+      },
+      {
+        "url": "https://github.com/Monstatek/M1/tree/main/Drivers/BSP/Components/ST25R3916",
+        "what": "ST25R3916 driver and ST RFAL stack confirming the NFC front end"
+      },
+      {
+        "url": "https://github.com/Monstatek/M1/blob/main/documentation/ESP32/M1%20FW%20-%20ESP32%20instructions.txt",
+        "what": "build instructions for the ESP32-C6 running esp-hosted-mcu over SPI - the definitive identification of the wireless co-processor"
+      },
+      {
+        "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32h573vi.html",
+        "what": "STM32H573VI: Cortex-M33 with TrustZone, 250MHz, 2MB flash, 640KB RAM, PSA Certified Level 3"
+      },
+      {
+        "url": "https://www.silabs.com/wireless/proprietary/ezradiopro-sub-ghz-ics/device.si4463",
+        "what": "Si4463 specification: 142-1050MHz, +20dBm, -124dBm sensitivity"
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "CC1101 comparison point: 300-348/387-464/779-928MHz, +12dBm max"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/monstatek/the-m1-a-compact-multitool-for-technophiles-and-hackers",
+        "what": "1,364,457 USD from 11,189 backers; the source of the 5V GPIO and 142-1050MHz claims"
+      },
+      {
+        "url": "https://www.monstatek.com/",
+        "what": "vendor spec page - no price, and the stale 'Bluetooth 4.2 BR/EDR' and 'microSDHC up to 256GB' claims"
+      },
+      {
+        "url": "https://github.com/bedge117/m1-sdk",
+        "what": "community SDK for external .m1app applications, showing where the ecosystem work is actually happening"
+      }
+    ],
+    "research_gaps": [
+      "No official retail price or store exists; the 180 USD figure is the low end of observed eBay resale, not a vendor price",
+      "Dimensions, weight and case material are not published",
+      "The 1.54 inch display size is a vendor claim; the firmware names an ERC240160 240x160 panel, and that diagonal looks doubtful for that resolution",
+      "Whether the official firmware exposes any Wi-Fi attack capability, as opposed to plain scanning and station/AP modes, is undocumented",
+      "Reports of units arriving with a dead IR transmitter, faulty Bluetooth or a defective sub-GHz stage come from Reddit summaries that could not be read directly - unverified, but worth knowing about",
+      "Firmware development has been quiet since June 2026 while units are still being fulfilled"
+    ]
+  },
+  {
+    "id": "kode-dot-kodeos",
+    "hardware_id": "kode-dot",
+    "name": "Kode Dot",
+    "firmware": "kodeOS",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "The product firmware is not published anywhere - the vendor's GitHub org holds only example sketches and small driver shims, and not one of its repositories carries a licence file.",
+    "vendor": "KODE DIY SL",
+    "vendor_url": "https://kode.diy",
+    "product_url": "https://kode.diy/product/kode-dot",
+    "category": "multitool",
+    "subcategory": "maker-handheld",
+    "status": "preorder",
+    "released": "2026",
+    "price_usd": 199,
+    "price_note": "199 USD on the vendor storefront, not the 169 in the sheet - that was a campaign-era 'planned retail' figure. Sold against a January 2027 production batch; an April 2027 batch is not open. Kickstarter closed in December 2025 having raised 1,751,547 USD from 8,646 backers, and no independent confirmation of a delivered unit could be found. Accessories are extra: the sub-GHz 'F*CK Module' is 59 USD, Mesh module 59, camera 29, silicone case 12, 32GB microSD 15.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The workflow is Arduino IDE, PlatformIO or ESP-IDF - write code, compile, upload. There is no ready-made menu of attacks the way a Flipper or a Marauder build gives you.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled. Apps are installed by taking the microSD to a computer and copying files into category folders; the advertised wireless app marketplace does not exist yet.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A pocket handheld built around an ESP32-P4 application processor with an ESP32-C5 radio co-processor, a 2.13in 502x410 AMOLED with capacitive touch, a 9-axis IMU, NFC, 125 kHz RFID, infrared, haptics, audio and a 20-pin expansion header. The vendor markets it to makers and pentesters, but the security-relevant radio hardware - sub-GHz in particular - lives entirely in optional plug-on modules. In practice it is a very well-specified ESP32 developer handheld rather than a pentest tool.",
+    "honest_take": "Two things a buyer needs to know before the spec sheet seduces them. First, the device that was crowdfunded is not the device being sold: the campaign design was an ESP32-S3 and the shipping design is an ESP32-P4 plus ESP32-C5, with a different fuel gauge and a different IMU - and the vendor's own documentation site still describes the S3. Second, it is not a security tool out of the box. There is no sub-GHz radio on the mainboard at all; that is the 59-dollar F*CK module, which is gated behind the same January 2027 batch. Add that every repository in the vendor's GitHub org has no licence file at all despite 'open source' branding, that the actual OS is unpublished, that the product page claims 16,000 backers against a public record of 8,646, and that the gen-2 spec grid lists battery capacity as 'TBD' on a 199-dollar product, and the picture is a genuinely impressive bill of materials wrapped in claims that do not survive checking.",
+    "best_for": [
+      "ESP32 development with a real screen, battery, IMU and expansion header",
+      "Makers who want to write their own firmware rather than run someone else's",
+      "People who want an AMOLED handheld platform and are patient about delivery"
+    ],
+    "not_for": [
+      "Sub-GHz work without buying the separate 59-dollar module",
+      "Anyone who needs a device this year - the current batch is January 2027",
+      "Buyers expecting an app store, which is advertised but does not exist",
+      "Anyone who needs the firmware to be auditable or open source"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-P4",
+      "mcu_primary_note": "Dual-core RISC-V up to 400MHz with USB-OTG and MIPI-DSI, no radio of its own. 32MB PSRAM and 32MB flash. Note: the crowdfunded design was an ESP32-S3 with 32MB octal flash and 8MB octal PSRAM - that version was cancelled and the vendor says the prototype 'is not going to be sold nor received by any buyer'.",
+      "mcu_secondary": "ESP32-C5",
+      "mcu_secondary_note": "Wireless co-processor: dual-band 2.4 and 5GHz Wi-Fi 6, BLE 5, and an 802.15.4 radio for Zigbee/Thread",
+      "radios": [
+        {
+          "ic": "ESP32-C5",
+          "role": "wifi",
+          "note": "Dual-band Wi-Fi 6. Whether the shipping firmware exposes 5GHz scanning or any attack tooling is unknown - kodeOS is not published."
+        },
+        {
+          "ic": "ESP32-C5",
+          "role": "bluetooth",
+          "note": "BLE 5"
+        },
+        {
+          "ic": "ST25R3916B",
+          "role": "nfc",
+          "note": "13.56MHz read, write and card emulation. Added in the shipping revision; the crowdfunded ESP32-S3 design had no NFC at all."
+        },
+        {
+          "ic": null,
+          "role": "lf-rfid",
+          "note": "125kHz read and emulate via a discrete analog front end. No part number is published."
+        }
+      ],
+      "display": {
+        "type": "AMOLED (CO5300 controller over MIPI-DSI)",
+        "size_in": 2.13,
+        "resolution": "502x410",
+        "color": true,
+        "touch": true
+      },
+      "battery_mah": null,
+      "battery_note": "The crowdfunded ESP32-S3 version used a 500mAh Li-Po. For the shipping revision the vendor's own specification grid lists capacity as 'TBD'.",
+      "charging": "USB-C with JTAG and OTG; TI BQ25896 PMIC with power path and OTG, CW2217 fuel gauge",
+      "pmic": "TI BQ25896",
+      "storage": "microSD",
+      "connectivity": [
+        "USB-C (OTG + JTAG)",
+        "Wi-Fi 2.4/5GHz",
+        "Bluetooth LE",
+        "802.15.4",
+        "20-pin expansion header",
+        "4-pin magnetic pogo connector"
+      ],
+      "gpio": "20-pin header with 14 programmable GPIO plus 5V and 3.3V rails rated to 2A; 4-pin magnetic rear pogo carrying charge-in, power-out and 2 GPIO",
+      "sensors": [
+        "LSM6DSV 6-axis IMU",
+        "LIS2MDL magnetometer",
+        "Digital MEMS microphone (part not published)",
+        "Battery-backed RTC (part not published)"
+      ],
+      "dimensions_mm": "73 x 43 x 15",
+      "weight_g": 50,
+      "case": null,
+      "notable_physical": [
+        "2.13in AMOLED with capacitive touch (CST820)",
+        "AW86233 LRA haptic driver",
+        "ES8311 codec with NS4150B class-D amp",
+        "IR transceiver",
+        "KTD2026 RGB LED",
+        "D-pad plus two buttons"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "claimed",
+        "note": "The ESP32-C5 silicon supports it; kodeOS is not published so nothing can be confirmed"
+      },
+      "wifi_scan_5": {
+        "v": "claimed",
+        "note": "The C5 is genuinely dual-band, but there is no published firmware or source demonstrating 5GHz scanning on this device"
+      },
+      "wifi_deauth_24": {
+        "v": "unknown",
+        "note": "No vendor security firmware and no port of Bruce, ESP32 Marauder or Ghost ESP exists for this board. The only thing close is a solo community sketch, Incipiens/Kode-Dot-Examples/MarauderClone, doing scan/deauth/portal in a single main.cpp."
+      },
+      "wifi_deauth_5": {
+        "v": "unknown",
+        "note": "Nothing published either way"
+      },
+      "ble_scan": {
+        "v": "claimed",
+        "note": "Silicon supports it; firmware unpublished"
+      },
+      "hf_1356_read": {
+        "v": "claimed",
+        "note": "ST25R3916B is on the shipping board and the vendor's BSP reference has an NFC group, but the documentation site still describes the older ESP32-S3 design and several BSP pages 404"
+      },
+      "hf_1356_emulate": {
+        "v": "claimed",
+        "note": "Vendor lists read/write/emulate; unverified"
+      },
+      "lf_125khz_read": {
+        "v": "claimed",
+        "note": "Vendor lists 125kHz read and emulate on the shipping revision; no part number, schematic or independent confirmation"
+      },
+      "ir_tx": {
+        "v": "claimed",
+        "note": "An IR transceiver is listed on the shipping revision"
+      },
+      "ir_rx": {
+        "v": "claimed",
+        "note": "Same"
+      },
+      "subghz_rx": {
+        "v": "addon",
+        "note": "Nothing on the mainboard. The 59-dollar F*CK module carries a TI CC1101 (300-928MHz), a Nordic nRF54L15, another ESP32-C5 and a Quectel LC76G GNSS with two SMA antennas. It is gated behind the same January 2027 batch, so sub-GHz is not purchasable today at any price."
+      },
+      "subghz_tx": {
+        "v": "addon",
+        "note": "Same module"
+      },
+      "subghz_external_antenna": {
+        "v": "addon",
+        "note": "Two external SMA antennas on the F*CK module"
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Quectel LC76G on the F*CK module, or a u-blox MAX-M10S on the Mesh/Radio module"
+      },
+      "usb_hid_inject": {
+        "v": "unknown",
+        "note": "The ESP32-P4 has USB-OTG so it is physically possible, but no BadUSB implementation is published"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Arduino IDE, PlatformIO and ESP-IDF are all supported; the vendor publishes example sketches"
+      },
+      "app_store": {
+        "v": "no",
+        "note": "The product FAQ advertises an app marketplace. The vendor's own documentation says sharing and downloading apps is a future feature and that today you copy files onto the microSD by hand."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with a touch UI"
+      },
+      "zigbee": {
+        "v": "claimed",
+        "note": "The C5 has an 802.15.4 radio; no firmware support is documented"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "As sold this is a developer handheld and carries no more legal weight than any other ESP32 board. That changes the moment you add the sub-GHz module and start transmitting, or write firmware that deauthenticates networks - transmitting on licensed bands and interfering with networks you do not own are separate offences in most countries. Check your local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "poor",
+      "last_release": "none",
+      "app_store": "Advertised but does not exist",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "KodeDot",
+      "Kode.",
+      "Kode Dot v2"
+    ],
+    "sources": [
+      {
+        "url": "https://kode.diy/",
+        "what": "vendor site - shipping revision component grid (ESP32-P4 + C5, ST25R3916B, 125kHz RFID, IR, CW2217, LSM6DSV, battery 'TBD'), and the statement that the Kickstarter prototype 'is not going to be sold nor received by any buyer'"
+      },
+      {
+        "url": "https://kode.diy/shop",
+        "what": "current pricing - Kode Dot 199 USD, F*CK Module 59 USD, Mesh Module 59 USD"
+      },
+      {
+        "url": "https://kode.diy/product/fck-module",
+        "what": "the sub-GHz add-on: CC1101, nRF54L15, ESP32-C5, Quectel LC76G, two SMA antennas"
+      },
+      {
+        "url": "https://www.kicktraq.com/projects/kode/kode-dot-the-all-in-one-pocket-size-maker-device/",
+        "what": "Kickstarter record: 1,751,547 USD from 8,646 backers, closed 2025-12-23 - against the product page's claim of 16,000 backers"
+      },
+      {
+        "url": "https://api.github.com/orgs/kodediy/repos",
+        "what": "every repository in the vendor org reports licence NONE and no releases; kodeOS itself is absent"
+      },
+      {
+        "url": "https://docs.kode.diy/en/kodeOS/apps",
+        "what": "vendor documentation stating apps are copied onto the microSD by hand and that sharing or downloading from a store is a future feature"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kodediy/kodedot_examples/main/AirMouse/lib/kodedot_bsp/include/kodedot/pin_config.h",
+        "what": "vendor BSP header for the cancelled ESP32-S3 design - CO5300 display over QSPI, CST820 touch, TCA9555 expander, BQ25896"
+      },
+      {
+        "url": "https://www.notebookcheck.net/Kode-Dot-A-handheld-for-hobbyists-comes-with-a-touchscreen-and-wireless-connectivity.1157846.0.html",
+        "what": "independent spec coverage - 73 x 43 x 15mm, ~50g, and the observation that the maker targets hobbyists rather than end users"
+      }
+    ],
+    "research_gaps": [
+      "The ICS-43434 microphone in the sheet could not be confirmed - vendor documentation says only 'a digital MEMS microphone', and a code search across the vendor's GitHub org returns nothing for that part. Do not treat it as fact.",
+      "The MAX31329 RTC is strongly implied (the vendor ships MAX31329 driver libraries and the BSP has an RTC at I2C address 0xD0) but is never stated in vendor prose",
+      "Shipping-revision battery capacity is listed by the vendor as 'TBD'",
+      "No schematics are published for any revision",
+      "No hands-on review or teardown found anywhere; all coverage is campaign announcement or spec-sheet reprinting",
+      "Whether the F*CK and Mesh modules are electrically compatible with the cancelled ESP32-S3 design is unknown",
+      "No independent confirmation that any backer has received a unit"
+    ]
+  },
+  {
+    "id": "high-boy-tentacleos",
+    "hardware_id": "high-boy",
+    "name": "High Boy",
+    "firmware": "TentacleOS",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/HighCodeh/TentacleOS",
+    "firmware_note": "The vendor's own GPL-3.0 firmware, written from scratch on ESP-IDF with FreeRTOS and LVGL rather than forked from Marauder or Bruce; the repo labels it beta and incomplete, and ships a Linux simulator so you can try the UI before buying.",
+    "vendor": "High Code",
+    "vendor_url": "https://www.high-code.com/",
+    "product_url": "https://www.indiegogo.com/en/projects/highboy/high-boy",
+    "category": "multitool",
+    "subcategory": "rf-multitool",
+    "status": "preorder",
+    "released": "2026",
+    "price_usd": 160,
+    "price_note": "160 USD is the vendor's stated retail price; crowdfunding tiers ran 92, 100, 120 and 140 USD. Kickstarter closed successfully on 1 January 2026 with 606,237 USD from 4,551 backers against a 7,000 USD goal, and the campaign has since moved to Indiegogo, where the live price could not be read because the page sits behind a Cloudflare challenge. NOT SHIPPING: the last campaign status update, dated May 2026, says 'finishing up our first factory prototypes' and 'preparing for official hardware tests and the beta version of the device' - over three months stale as of today, with no evidence any unit has reached a backer.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "The on-device UI is menu-driven and approachable, but this is beta firmware on a dual-MCU board where at least one headline feature is documented as not actually driving its radio yet.",
+    "build_effort": "assembled",
+    "build_note": "Intended to ship assembled with a case, screws not glue, and 3D-print files published. Firmware updates go over microSD, USB or Wi-Fi, and the C5 co-processor is flashed by the main MCU through a built-in flasher component.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A Brazilian open-source handheld built on an unusual split: an ESP32-P4 application processor, which has no radio at all, driving a 2in colour LCD and USB, paired over SPI with an ESP32-C5 that provides dual-band 2.4 and 5 GHz Wi-Fi 6 and BLE. On top of that sit a CC1101 sub-GHz transceiver with a real .sub file stack, an SX1262 LoRa radio, an ST25R3916 NFC front end, 125 kHz RFID, infrared, microSD, haptics, a speaker and microphone, and a Game Boy emulator. The firmware and per-component documentation are published; the schematics are one revision behind.",
+    "honest_take": "Of everything in this group this is the most serious piece of engineering - forty-odd documented components, a Linux UI simulator, CI, and a genuine dual-band Wi-Fi implementation whose sniffer really does hop 5 GHz channels 36 to 48 and 149 to 165 rather than just 2.4. It is also the most honest about its own faults, which is how you learn that NFC does not work: the vendor's own documentation says the ST25R3916 shares an SPI bus whose MISO line is tied to LCD reset by a board jumper and cannot be read reliably, so every NFC screen runs a simulation model rather than the radio - while the marketing comparison table on the same company's website ticks NFC as native read, write and emulate. Similarly the site claims 125 kHz read/write/emulate when the shipping driver is a read-only serial reader module. Add that the firmware calls itself beta, that the only published schematics are for an older ESP32-S3 prototype the vendor labels an MVP, and that after 600,000 dollars raised nothing appears to have shipped, and this is a promising project rather than a product.",
+    "best_for": [
+      "Someone who wants to read and modify the firmware of the device they bought",
+      "Dual-band Wi-Fi work, where the 5 GHz support is genuinely implemented rather than implied",
+      "Sub-GHz capture and replay with Flipper-style .sub files",
+      "Tinkerers happy to live with beta software and a long wait"
+    ],
+    "not_for": [
+      "NFC - the shipping UI is a simulation, by the vendor's own documentation",
+      "Anyone who needs a finished, supported product; nothing has shipped yet",
+      "Anyone taking the 'ESP-CLAW AI' and 'MCP AI Assistant' branding at face value - no silicon or source corroborates either"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-P4",
+      "mcu_primary_note": "Dual-core RISC-V up to 400MHz with USB 2.0 OTG high-speed and up to 32MB PSRAM. It has no Wi-Fi and no Bluetooth of its own - every radio function is proxied over an SPI bridge to the C5. The USB-OTG is what makes real USB HID BadUSB possible here.",
+      "mcu_secondary": "ESP32-C5",
+      "mcu_secondary_note": "Single-core RISC-V @240MHz acting purely as the radio co-processor: dual-band 2.4 and 5GHz Wi-Fi 6 plus BLE 5. Flashed by the P4 through the firmware's own flasher component. Note the sheet's 'ESP32-S3 + ESP32-C5' describes the mid-campaign spec; the S3 was replaced by the P4.",
+      "radios": [
+        {
+          "ic": "ESP32-C5",
+          "role": "wifi",
+          "note": "Dual band, ~20dBm. The firmware calls esp_wifi_set_band_mode(WIFI_BAND_MODE_AUTO) at init and its promiscuous channel hopper walks 1-13 plus 36/40/44/48 and 149/153/157/161/165, so 5GHz capture is real. DFS channels 52-144 are deliberately skipped."
+        },
+        {
+          "ic": "ESP32-C5",
+          "role": "bluetooth",
+          "note": "BLE 5.3 via the Apache NimBLE stack, with scanning, advertising and random address support, ~10dBm"
+        },
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "315, 433, 868 and 915MHz ISM bands (driver supports 300-348, 387-464, 779-899 and 900-928MHz) with OOK/ASK and 2-FSK presets, ~10dBm, 26MHz crystal. A PE613050 antenna switch selects the RF path. Driven through the ESP32 RMT peripheral at 1us resolution for pulse-accurate capture and replay."
+        },
+        {
+          "ic": "SX1262",
+          "role": "lora",
+          "note": "Semtech LoRa transceiver at 868/915MHz, ~14-20dBm, on the shared SPI bus with its own CS, BUSY and DIO1 lines. Unlocked as a 450,000 USD campaign stretch goal. RESET, TXEN and RXEN are not wired."
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "13.56MHz front end with a complete driver and protocol stack compiled in - but the shipping UI does not call it. The vendor documents that MISO on the shared SPI3 bus is tied to the LCD reset line by a board jumper and cannot be read reliably, so the NFC screens run a simulation instead. Note the earlier published PCB revision used a PN7150 instead; the NFC chip changed between revisions."
+        }
+      ],
+      "display": {
+        "type": "Colour TFT LCD (ST7789, SPI)",
+        "size_in": 2.0,
+        "resolution": "320x240",
+        "color": true,
+        "touch": false
+      },
+      "battery_mah": 2500,
+      "battery_note": "2500mAh single-cell Li-Po with protection and charging circuit. The vendor's own page also quotes 2450mAh in one place and 2500mAh in another.",
+      "charging": "USB-C with OTG; TI BQ25896 charger and PMIC with a TS3USB221 D+/D- multiplexer",
+      "pmic": "TI BQ25896",
+      "storage": "microSD over 4-bit SDMMC with card detect, plus internal flash. The vendor spec says up to 32GB; SDMMC itself has no such limit.",
+      "connectivity": [
+        "USB-C (OTG)",
+        "Bluetooth LE",
+        "Wi-Fi 2.4/5GHz",
+        "LoRa",
+        "Flipper Zero-compatible GPIO",
+        "CP2105 dual USB-UART console"
+      ],
+      "gpio": "Advertised as compatible with Flipper Zero accessories",
+      "sensors": [
+        "QMI8658 6-axis IMU",
+        "PDM MEMS microphone (MSM261)"
+      ],
+      "dimensions_mm": "~120 x 70 x 25 (vendor marks this a target, not final)",
+      "weight_g": 180,
+      "case": "ABS+PC 70/30 blend, screwed rather than glued; 3D-printable STLs also published",
+      "notable_physical": [
+        "6 buttons, with BACK+LEFT wired to a hardware reset path",
+        "AW8623 haptic driver",
+        "I2S speaker amplifier (NS4168)",
+        "4-LED infrared matrix plus receiver",
+        "Sub-GHz antenna switch",
+        "RGB LED (LP5816, I2C driven)"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Active scan proxied to the C5 over the SPI bridge"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "Genuinely real. esp_wifi_set_band_mode(WIFI_BAND_MODE_AUTO) is set at init, so a channel-0 active scan covers both bands, and the changelog records 'scan and channel-hop 5GHz bands on the C5'. This is the thing most C5 devices claim and few implement."
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "Promiscuous capture with a background hopper over channels 1-13, 36-48 and 149-165 at 250ms dwell. Note the firmware's own docs still describe a 2.4GHz-only hopper - the docs are stale relative to the code."
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Implemented in both firmwares using the usual ieee80211_raw_frame_sanity_check override plus esp_wifi_80211_tx"
+      },
+      "wifi_deauth_5": {
+        "v": "unknown",
+        "note": "Attempted but unproven. The deauther sets the channel from the scan record's primary channel, so a 5GHz target will be tuned - but stock ESP-IDF's esp_wifi_80211_tx permits only beacon, probe request/response, action and non-QoS data frames on any band. The one community project that specifically studied C5 5GHz deauthentication ships a binary-patched libnet80211.a, because the plain symbol override cannot send management frames with a spoofed source address on the C5's 5GHz radio. TentacleOS ships no such patched blob. Treat any '5GHz deauth' claim as unverified."
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Dedicated handshake and PMKID capture screens with microSD storage"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Present in the sniffer and its UI"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "In the Wi-Fi attack UI"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "AP mode plus bundled DNS and HTTP server components"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "APSTA mode is the default"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Packet screens with per-type counters"
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "CC1101 into the RMT receiver at 1us resolution, with a protocol registry, frequency hopping and a histogram analyser"
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Raw and encoded transmission through an RMT TX queue worker"
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Serialises to .sub files on the microSD - the same format the Flipper uses"
+      },
+      "subghz_bruteforce": {
+        "v": "unknown",
+        "note": "Not documented as a distinct feature"
+      },
+      "subghz_rolling_code": {
+        "v": "unknown",
+        "note": "A protocol registry exists but its contents are not enumerated"
+      },
+      "subghz_external_antenna": {
+        "v": "partial",
+        "note": "A PE613050 RF switch sits on the sub-GHz path, implying selectable antennas, but no external connector is documented"
+      },
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "Unlocked as a 100,000 USD stretch goal. The shipping driver is a YS-RFID2 serial reader module that parses ASCII card-number frames over UART at 9600 baud; a discrete 125kHz carrier/data/modulation/coil front end also appears in the pin map."
+      },
+      "lf_125khz_emulate": {
+        "v": "unknown",
+        "note": "The vendor's comparison table claims read, write AND emulate. The shipped driver is a read-only serial reader - write and emulate are not evidenced anywhere in the firmware."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "The ST25R3916 driver and a full protocol stack are compiled in, but the vendor's own documentation says the shipping NFC UI runs a simulation model instead of driving the radio, because the shared SPI3 MISO line is tied to LCD reset by a board jumper. Their marketing table nonetheless ticks NFC as native read/write/emulate. Treat NFC as non-functional until that is fixed."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "Same - the emulation screens are part of the simulation"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "A 4-LED infrared matrix with an IR service component and UI"
+      },
+      "ir_rx": {
+        "v": "yes",
+        "note": "TSOP receiver"
+      },
+      "ir_learn": {
+        "v": "yes",
+        "note": "Transmit and receive service with on-device screens"
+      },
+      "ir_universal_remote": {
+        "v": "yes",
+        "note": "Vendor claims a built-in universal remote database"
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Real USB HID over TinyUSB using the ESP32-P4's USB-OTG peripheral - keyboard and mouse, with a DuckyScript parser and pluggable keyboard layouts"
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckyScript"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "NimBLE scanning with random address support"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "NimBLE advertising"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "4-bit SDMMC with a storage VFS and asset layer"
+      },
+      "scriptable": {
+        "v": "partial",
+        "note": "A scripts screen and an on-device console with commands exist; there is no documented third-party app format"
+      },
+      "web_ui": {
+        "v": "partial",
+        "note": "An HTTP server component with HTML assets including a file manager, plus a host-link protocol for desktop and mobile companion apps"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with a full on-device UI"
+      },
+      "app_store": {
+        "v": "no",
+        "note": "None"
+      },
+      "gps": {
+        "v": "no",
+        "note": "None on board"
+      },
+      "sdr_rx": {
+        "v": "no",
+        "note": "Not an SDR. The CC1101 and SX1262 are fixed-function narrowband transceivers."
+      },
+      "zigbee": {
+        "v": "no",
+        "note": "The ESP32-C5 has an 802.15.4 radio but the firmware does not expose Zigbee or Thread"
+      },
+      "detect_generic_wifi": {
+        "v": "yes",
+        "note": "Includes a deauth-frame detector screen"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning it would be legal in most places. The deauther, the captive portal and sub-GHz transmission are the parts that carry risk: deauthenticating networks you do not own and transmitting on licensed sub-GHz bands are separate offences in most countries, and in the United States the FCC has fined businesses specifically for Wi-Fi deauthentication. LoRa and sub-GHz band allocations differ sharply by region - 868MHz in Europe and 915MHz in the Americas are not interchangeable. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "HighBoy",
+      "High Boy V2",
+      "TentacleOS device"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/HighCodeh/TentacleOS",
+        "what": "GPL-3.0 firmware source and per-component documentation; v1.5.0 released 2026-08-20, last push 2026-09-02, 446 stars. README states the firmware is in beta and still incomplete."
+      },
+      {
+        "url": "https://github.com/HighCodeh/TentacleOS/blob/main/docs/pins/README.md",
+        "what": "definitive board pin map - CC1101, ST25R3916, SX1262, QMI8658, ST7789, 125kHz RFID, IR, SDMMC and the P4-to-C5 SPI bridge"
+      },
+      {
+        "url": "https://github.com/HighCodeh/TentacleOS/blob/main/docs/nfc/README.md",
+        "what": "the vendor stating that the shipping NFC UI is a simulation because of the SPI3 MISO / LCD-RST jumper conflict"
+      },
+      {
+        "url": "https://github.com/HighCodeh/TentacleOS/blob/main/docs/ys_rfid2/README.md",
+        "what": "the 125kHz path is a YS-RFID2 UART reader module that parses card-number frames - read-only, contradicting the 'read/write/emulate' marketing claim"
+      },
+      {
+        "url": "https://github.com/HighCodeh/TentacleOS/blob/main/docs/bad_usb/README.md",
+        "what": "USB HID BadUSB over TinyUSB with a DuckyScript parser"
+      },
+      {
+        "url": "https://www.high-code.com/",
+        "what": "official technical specification - ESP32-P4 + ESP32-C5, 2500mAh, ST7789 320x240 2in, CC1101 315/433/868/915MHz, SX1262 LoRa, ST25R3916, dimensions and weight marked as targets"
+      },
+      {
+        "url": "https://github.com/HighCodeh/Highboy_PCB",
+        "what": "open hardware repo - schematics for REV 2.2 with ESP32-S3, CC1101 and PN7150 NFC, described as an MVP prototype and explicitly 'not the final production version'; last pushed 2025-12-13"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/1502651892/high-boy-for-hackers-makers-and-the-curious",
+        "what": "606,237 USD from 4,551 backers, funded 2026-01-01; status BETA with the May 2026 milestone still 'finishing up our first factory prototypes'"
+      },
+      {
+        "url": "https://github.com/maxbrito500/esp32-c5-deauth",
+        "what": "the reference point for C5 5GHz deauthentication: it ships a binary-patched libnet80211.a because the plain sanity-check override cannot send spoofed-source management frames on the C5's 5GHz radio"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/espressif/esp-idf/master/components/soc/esp32p4/include/soc/soc_caps.h",
+        "what": "ESP-IDF confirming the ESP32-P4 has USB-OTG and no Wi-Fi or Bluetooth of its own"
+      }
+    ],
+    "research_gaps": [
+      "The live Indiegogo price and campaign status could not be read - the page is behind a Cloudflare bot challenge - so the 160 USD retail figure comes from the vendor's stated ladder as reported by press, not from a live listing",
+      "No evidence any unit has reached a backer; the last public campaign milestone dates from May 2026",
+      "Schematics for the shipping ESP32-P4 + ESP32-C5 + ST25R3916 revision are not published - only the older ESP32-S3 + PN7150 MVP",
+      "Dimensions and weight are marked by the vendor as targets pending final mechanical design",
+      "The 'ESP-CLAW' AI acceleration and 'MCP AI Assistant' features have no corroborating silicon or source anywhere",
+      "Whether 5GHz deauthentication actually succeeds is untested on hardware",
+      "No independent teardown or review found"
+    ]
+  },
+  {
+    "id": "poom-stock",
+    "hardware_id": "poom",
+    "name": "POOM",
+    "firmware": "POOM firmware",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/The-POOM/the_poom",
+    "firmware_note": "Original ESP-IDF v6.1 firmware with its own kernel/module/application architecture - not a fork of Bruce, ESP32 Marauder or Ghost ESP. Very actively developed, but no releases have ever been cut and the repository carries no licence file.",
+    "vendor": "Stellar IoT",
+    "vendor_url": "https://poom.stellar-iot.com",
+    "product_url": "https://www.kickstarter.com/projects/thepoom/poom-pentest-play-create",
+    "category": "multitool",
+    "subcategory": "wireless-and-maker-handheld",
+    "status": "preorder",
+    "released": "2026",
+    "price_usd": 140,
+    "price_note": "USD 140 is the implied retail price - both single-unit Kickstarter tiers advertise their discount against it (79 USD super early bird, 99 USD early bird). Careful: the 140 USD figure on the campaign is also the price of a two-unit bundle, which is probably where the sheet's number came from. Kickstarter ran 14 January to 13 February 2026, raising 62,537 USD from 591 backers against a 10,000 USD goal. As of late August 2026 the campaign status is BETA with the first batch shipping and the second batch pending. You cannot buy one: the vendor site has no cart, only an availability waitlist.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "Four very different modes on one small mono OLED, plus a Lua scripting layer and a CLI. Approachable to poke at, deep to actually use.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled; there is a web flasher and the firmware builds from source with ESP-IDF v6.1.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A small ESP32-C5 handheld with a 1.3in monochrome OLED, a D-pad and A/B buttons, a Qwiic connector, microSD, an IMU, an IR transmitter and an NFC front end. It splits into four personalities: a maker mode with an I2C scanner and sensor streaming into Home Assistant or Edge Impulse, a motion-to-MIDI performance mode, a genuine wireless security toolkit covering Wi-Fi, BLE, Zigbee and Thread with PCAP export, and an Arduboy-compatible games machine that runs the whole Arduboy library.",
+    "honest_take": "The security half is more real than the price suggests - the firmware carries a working PicoPass/iCLASS reader with loclass key recovery and Wiegand decoding, MIFARE Classic key discovery, an 802.15.4 sniffer that writes PCAP, Open Drone ID capture and spoofing, and Lua scripting. That is a serious amount of engineering for a 140-dollar gadget. But three things do not line up. The site says MIT licence while the actual repository has no licence file at all, which legally means all rights reserved. The Kickstarter says the default NFC chip is a PN532 with the far more capable ST25R3916 only as a stretch goal, while the firmware's entire NFC stack is written against the ST25R3916 - so which chip is in a shipped unit is genuinely unclear. And the repo's own default build target is the ESP32-C6, which is 2.4 GHz only, even though the whole product is marketed on the C5's 5 GHz. There is also no sub-GHz radio at all, no published battery capacity, and no way to actually order one.",
+    "best_for": [
+      "Zigbee, Thread and 802.15.4 reconnaissance with PCAP export, which almost nothing else at this price does",
+      "PicoPass/iCLASS and MIFARE Classic work on a budget",
+      "Makers who want an I2C/Qwiic sensor handheld that also plays the Arduboy library",
+      "Motion-to-MIDI performance, which is a genuinely unusual feature"
+    ],
+    "not_for": [
+      "Sub-GHz - there is no CC1101, Si446x or any other sub-GHz radio",
+      "Anyone who needs to buy one today; it is waitlist-only",
+      "Buyers who need a licence they can rely on - the firmware has none",
+      "Anyone assuming 5 GHz just works, given the repo builds for the 2.4GHz-only C6 by default"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C5",
+      "mcu_primary_note": "Single-core RISC-V @240MHz with dual-band 2.4 and 5GHz Wi-Fi 6, BLE 5 and an 802.15.4 radio. 8MB flash. Caveat: the firmware repository's README lists esp32c5 and esp32c6 as targets and states the current default target is esp32c6, which is 2.4GHz only.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-C5",
+          "role": "wifi",
+          "note": "Dual-band 2.4 and 5GHz Wi-Fi 6"
+        },
+        {
+          "ic": "ESP32-C5",
+          "role": "bluetooth",
+          "note": "BLE 5 on the Bluedroid stack, with 4.2 feature set enabled in the default config"
+        },
+        {
+          "ic": "ESP32-C5",
+          "role": "802.15.4",
+          "note": "IEEE 802.15.4 enabled with Zigbee and OpenThread build configurations, feeding a sniffer that writes PCAP"
+        },
+        {
+          "ic": "ST25R3916",
+          "role": "nfc",
+          "note": "The firmware's NFC stack (the 'nfcal' component) is built on ST's RFAL against the ST25R3916 over I2C. But the Kickstarter states the DEFAULT chip is a PN532, with ST25R3916/3917 as a stretch goal - so which part is in a given unit is unclear."
+        }
+      ],
+      "display": {
+        "type": "Monochrome OLED (SSD1306-class I2C)",
+        "size_in": 1.3,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery capacity is published anywhere - not on the site, not on the Kickstarter, not in the firmware.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD plus 8MB internal flash",
+      "connectivity": [
+        "USB-C",
+        "Wi-Fi 2.4/5GHz",
+        "Bluetooth LE",
+        "802.15.4 (Zigbee/Thread)",
+        "Qwiic/STEMMA I2C connector"
+      ],
+      "gpio": "Qwiic I2C connector for plug-in sensors",
+      "sensors": [
+        "LSM6DS3 6-axis IMU"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "D-pad plus A and B buttons (touch buttons in the final revision)",
+        "WS2812 RGB LEDs",
+        "Buzzer",
+        "IR transmitter",
+        "Qwiic connector"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Dedicated scanner module"
+      },
+      "wifi_scan_5": {
+        "v": "partial",
+        "note": "The C5 supports it and ESP-IDF exposes esp_wifi_set_band_mode, but the repository's default build target is the 2.4GHz-only ESP32-C6, so whether a shipped unit does 5GHz depends on which silicon and which build it has"
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "Promiscuous capture feeding a PCAP writer"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "A dedicated deauth module using the standard link-time override of ieee80211_raw_frame_sanity_check, which the module's own README documents openly"
+      },
+      "wifi_deauth_5": {
+        "v": "unknown",
+        "note": "Unproven. Stock ESP-IDF's esp_wifi_80211_tx permits only beacon, probe request/response, action and non-QoS data frames on any band. The community project that studied C5 5GHz deauth specifically (maxbrito500/esp32-c5-deauth) ships a binary-patched libnet80211.a because the plain symbol override is not enough to send management frames with a spoofed source address on the C5's 5GHz radio. This firmware ships no such patched blob."
+      },
+      "wifi_evil_twin": {
+        "v": "yes",
+        "note": "Captive portal plus Karma"
+      },
+      "wifi_captive_portal": {
+        "v": "yes",
+        "note": "With a bundled DNS server"
+      },
+      "wifi_karma": {
+        "v": "yes",
+        "note": "Responds to probe requests"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "SSID spammer"
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "Advertised as handshake capture with forensic logging - SHA-256 hashes, UTC timestamps and optional GPS metadata (no GPS module is included)"
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Used for the portal and the web file manager"
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "A PCAP module plus a host-transport sniffer, so captures open in Wireshark"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "GATT client and server modules plus a scanner"
+      },
+      "ble_advertise": {
+        "v": "yes",
+        "note": "Dynamic GATT advertising"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "In the BLE spam module"
+      },
+      "ble_hid": {
+        "v": "yes",
+        "note": "BLE HID and a BLE keyboard module, plus a gamepad mode"
+      },
+      "ble_tracker_detect": {
+        "v": "yes",
+        "note": "A tag scanner that estimates proximity to a tracker"
+      },
+      "zigbee": {
+        "v": "partial",
+        "note": "Genuine 802.15.4 sniffing to PCAP with Zigbee and OpenThread build configs and an esp-zigbee-console component. This is capture and reconnaissance, not a Zigbee attack toolkit."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "The firmware has a real NFC application - NFC-A classification, ISO14443-4 and ISO15693, MIFARE Classic key discovery and block access, PicoPass/iCLASS reading with loclass key recovery and Wiegand decoding, and antenna tuning. Marked partial only because the shipped front end may be a PN532 rather than the ST25R3916 the stack is written for."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Local emulator control exists in the NFC component; hardware dependency is the same caveat"
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "Key discovery, authentication, block read/write and dump export"
+      },
+      "ir_tx": {
+        "v": "yes",
+        "note": "An IR driver is present in the tree, though the campaign barely mentions it"
+      },
+      "detect_drone": {
+        "v": "yes",
+        "note": "Open Drone ID capture, plus a separate drone spoofing/emulation module. Real, because Remote ID is broadcast in the clear."
+      },
+      "detect_generic_wifi": {
+        "v": "yes",
+        "note": "Includes a deauth detector"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "There is no sub-GHz radio. No CC1101, no Si446x, nothing in the driver tree."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No 125kHz hardware"
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Neither the ESP32-C5 nor the C6 has USB-OTG - both have only a fixed-function USB Serial/JTAG controller. HID here is Bluetooth."
+      },
+      "gps": {
+        "v": "no",
+        "note": "Not included. Forensic logging can carry GPS metadata if you supply a module."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD with an on-device browser and an AP-mode web file manager"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "A Lua module is built in, alongside a CLI console. Arduboy library compatibility means the whole Arduboy game catalogue runs."
+      },
+      "app_store": {
+        "v": "partial",
+        "note": "A web games flasher and a firmware 'bin store' on the vendor site rather than an on-device catalogue"
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "AP mode with a web file manager for the SD card"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery powered with its own screen and controls"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning it is legal in most places. The deauther, the captive portal and drone spoofing are the risky parts: deauthenticating networks you do not own is a separate offence in most countries, a credential portal captures other people's passwords, and broadcasting falsified Remote ID is regulated aircraft identification in the US and EU. Reading iCLASS and MIFARE credentials you do not own is its own problem. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "none",
+      "app_store": "Web flasher and games catalogue on the vendor site",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "The POOM",
+      "POOM multitool",
+      "Stellar IoT POOM"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/The-POOM/the_poom",
+        "what": "firmware source - ESP-IDF v6.1, targets esp32c5 and esp32c6 with esp32c6 as the stated default, full module and application list; last commit 2026-09-06, no releases, no licence file"
+      },
+      {
+        "url": "https://github.com/The-POOM/nfcal",
+        "what": "the NFC component: 'NFC component for ESP32 based on RFAL (ST) with ST25R3916 as the RF frontend'"
+      },
+      {
+        "url": "https://github.com/The-POOM/poom_nfc",
+        "what": "GPL-3.0 NFC application - MIFARE Classic key discovery, ISO14443-4, ISO15693, local emulation, antenna tuning"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/thepoom/poom-pentest-play-create",
+        "what": "591 backers, 62,537 USD; pledge tiers implying a 140 USD retail price; status BETA with the first batch shipping; and the statement 'Default NFC chip: PN532 - Stretch Goal: NFC chip change to ST25R3916/7'"
+      },
+      {
+        "url": "https://poom.stellar-iot.com/",
+        "what": "vendor site - hardware callouts (USB-C, A/B buttons, microSD, D-pad, ESP32-C5, 1.3-inch display, Qwiic, NFC, LEDs), an MIT licence claim, and an availability waitlist rather than a cart"
+      },
+      {
+        "url": "https://github.com/maxbrito500/esp32-c5-deauth",
+        "what": "the reference point for C5 5GHz deauthentication: ships a binary-patched libnet80211.a because the plain sanity-check override cannot send spoofed-source management frames on the C5's 5GHz radio"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/espressif/esp-idf/master/components/soc/esp32c5/include/soc/soc_caps.h",
+        "what": "ESP-IDF confirming SOC_WIFI_SUPPORT_5G and SOC_WIFI_HE_SUPPORT on the C5, and that it has only USB Serial/JTAG with no USB-OTG"
+      }
+    ],
+    "research_gaps": [
+      "Which NFC front end actually ships - PN532 (the stated default) or ST25R3916 (what the firmware is written for) - is unresolved and matters a great deal for what the device can do",
+      "Battery capacity is published nowhere",
+      "Dimensions, weight and case material are unknown",
+      "The vendor site claims an MIT licence but the main firmware repository has no licence file, so as published it is all rights reserved",
+      "The repository's default build target is the 2.4GHz-only ESP32-C6, which sits awkwardly against marketing built on the C5's 5GHz support",
+      "No independent review or teardown found",
+      "Whether second-batch units differ from first-batch units is not documented"
+    ]
+  },
+  {
+    "id": "biscuit-pro-stock",
+    "hardware_id": "biscuit-pro",
+    "name": "Biscuit Pro",
+    "firmware": "Biscuit (stock)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Closed source - there is no firmware repository anywhere. The MIT-licensed flasher on GitHub only downloads prebuilt binaries from the vendor's server; current version is v1.5.5, dated 2026-08-31.",
+    "vendor": "The Biscuit Shop",
+    "vendor_url": "https://biscuitshop.us",
+    "product_url": "https://biscuitshop.us/products/biscuit-pro",
+    "category": "wifi",
+    "subcategory": "dual-band-wifi-recon",
+    "status": "out-of-stock",
+    "released": "2026",
+    "price_usd": 125,
+    "price_note": "USD 125, currently SOLD OUT, and the vendor explicitly refuses pre-orders: stock appears as periodic drops with early access for Patreon supporters. Made and shipped from the USA, next-day processing when in stock, 60-day warranty and a 7-day return window. The larger Biscuit Ultra (microSD, 3200mAh, external antennas) is USD 160 and also sold out. The only thing purchasable today is apparel.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-06",
+    "skill_level": "intermediate",
+    "skill_note": "There is no screen and no buttons - everything happens in a phone app over Bluetooth, so you need the app working before the device does anything at all.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in a 3D-printed case. Both MCUs update over the air, or you can reflash from a Python script that pulls signed builds from the vendor's server.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "A headless, deck-of-cards-sized Wi-Fi and BLE recon box with two radios doing two jobs: an ESP32-C5-WROOM-1 handles all dual-band 2.4 and 5 GHz scanning and attacking, while a separate ESP32-WROOM-32E holds the Bluetooth link to your phone and stores Evil Portal pages. You drive it entirely from a phone app. It genuinely reaches 5 GHz for scanning, raw PCAP capture and EAPOL/PMKID collection - which most devices claiming a C5 do not.",
+    "honest_take": "The dual-MCU split is real engineering rather than a spec-sheet flourish: because one chip never has to stop scanning to talk to your phone, captures do not drop while you use the app. And the 5 GHz support is documented in the vendor's own wiki rather than only on the sales page, which puts it ahead of most of this category. But three claims do not survive checking. 'Dual-band scanning 2.4 and 5 GHz simultaneously' is not possible - the C5 has one radio, and the vendor's own wiki describes it hopping channels one second at a time. 'BLE 5.0 + Classic' is wrong for the ESP32-WROOM-32E, which Espressif's datasheet puts at Bluetooth 4.2. And where 5 GHz stops is quietly undocumented: Evil Portal is restricted to channels 1, 6 and 11, the deauth-plus-EAPOL combo is documented as 2.4 GHz only, and plain 5 GHz deauthentication is neither claimed nor denied anywhere. The firmware is closed, there is no screen, no SD card, no GPS, no IR, no sub-GHz and no NFC - and you cannot buy one today.",
+    "best_for": [
+      "5 GHz Wi-Fi recon, where very little else in this price bracket can even see the band",
+      "Handshake and PMKID collection across both bands with PCAP export",
+      "Wardriving with a phone doing the GPS and the uploading",
+      "Running several units as a distributed sensor rig"
+    ],
+    "not_for": [
+      "Anyone who wants a self-contained device - there is no screen and it does nothing without the phone app",
+      "Sub-GHz, NFC, RFID or infrared, none of which exist here",
+      "On-board storage or GPS - that is the 160-dollar Ultra and your phone respectively",
+      "Buying today, since it is sold out and the vendor does not take pre-orders"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C5-WROOM-1-N8R8",
+      "mcu_primary_note": "Single-core RISC-V @240MHz with 8MB flash and 8MB PSRAM. Dual-band 2.4 and 5GHz Wi-Fi 6, BLE 5, and an 802.15.4 radio. This chip does all the scanning and all the attacks. Note it has no USB-OTG.",
+      "mcu_secondary": "ESP32-WROOM-32E-N8",
+      "mcu_secondary_note": "Dual-core Xtensa with 8MB flash. Holds the BLE GATT link to the phone app, runs system and Node-manager tasks, and stores Evil Portal HTML on its external flash. The two MCUs talk over an internal UART at 115200 baud.",
+      "radios": [
+        {
+          "ic": "ESP32-C5-WROOM-1",
+          "role": "wifi",
+          "note": "Genuinely dual-band. 2.4GHz channels 1-14 and 5GHz channels, with a band filter in the app. One radio, so bands are covered by hopping, not concurrently."
+        },
+        {
+          "ic": "ESP32-C5-WROOM-1",
+          "role": "bluetooth",
+          "note": "BLE scanning and advertisement attacks"
+        },
+        {
+          "ic": "ESP32-WROOM-32E",
+          "role": "bluetooth",
+          "note": "BLE GATT link to the phone app, plus Bluetooth Classic. The vendor's spec table says 'BLE 5.0 + Classic' but Espressif's ESP32 datasheet specifies Bluetooth v4.2 BR/EDR and LE - so no LE 2M or Coded PHY and no extended advertising."
+        }
+      ],
+      "display": {
+        "type": "None",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Roughly 1000mAh. This figure appears in a customer review rather than the vendor spec table, and is consistent with the wiki saying the Ultra's 3200mAh gives 'three times the battery life compared to the Pro' - but it is not officially stated. An I2C fuel gauge is fitted.",
+      "charging": "USB-C via a USB-UART bridge (the flasher requires CH340 or CP210x drivers, so neither MCU presents native USB)",
+      "pmic": null,
+      "storage": "8MB external SPI flash. No microSD - that is the Ultra's reason to exist.",
+      "connectivity": [
+        "USB-C (serial)",
+        "Wi-Fi 2.4/5GHz",
+        "Bluetooth LE + Classic",
+        "802.15.4"
+      ],
+      "gpio": null,
+      "sensors": [
+        "I2C battery fuel gauge"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed ABS-GF, roughly deck-of-cards size",
+      "notable_physical": [
+        "No screen and no buttons - phone app only",
+        "RGB NeoPixel status LED, can be switched off",
+        "Internal antennas only (external antennas are Ultra-only)"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "AP, station and combined scanning on channels 1-14"
+      },
+      "wifi_scan_5": {
+        "v": "yes",
+        "note": "Real, and documented in the vendor's own wiki with a band filter in the app. Not simultaneous with 2.4GHz - the C5 has one radio and hops channels."
+      },
+      "wifi_monitor_mode": {
+        "v": "yes",
+        "note": "Raw PCAP capture in promiscuous mode across both bands, one second per channel"
+      },
+      "wifi_deauth_24": {
+        "v": "yes",
+        "note": "Basic and targeted deauthentication"
+      },
+      "wifi_deauth_5": {
+        "v": "unknown",
+        "note": "The vendor documents a band for none of the attacks, and explicitly says the deauth-plus-EAPOL combination 'works on 2.4GHz networks'. Whether plain deauth reaches 5GHz is neither claimed nor denied. It is technically possible on a C5 - ESP32 Marauder v1.15.1 ships C5 builds that hop a 51-entry dual-band channel table and deauth on 5GHz channels using the standard ieee80211_raw_frame_sanity_check override - but nothing confirms this firmware does it."
+      },
+      "wifi_handshake_capture": {
+        "v": "yes",
+        "note": "EAPOL and PMKID capture documented as working on both 2.4 and 5GHz WPA/WPA2 networks, with all-channel, single-channel and custom channel-list modes"
+      },
+      "wifi_pmkid": {
+        "v": "yes",
+        "note": "Same tool, both bands"
+      },
+      "wifi_evil_twin": {
+        "v": "partial",
+        "note": "Evil Portal with a Karma mode, but the manual channel picker offers only 1, 6 and 11 - the rogue AP is 2.4GHz only"
+      },
+      "wifi_captive_portal": {
+        "v": "partial",
+        "note": "Portal pages are stored on the WROOM-32E's flash; 2.4GHz only"
+      },
+      "wifi_beacon_spam": {
+        "v": "yes",
+        "note": "Beacon spam plus RickRoll, probe attack, bad-message and sleep attacks"
+      },
+      "wifi_karma": {
+        "v": "yes",
+        "note": "Karma mode in the Evil Portal"
+      },
+      "wifi_probe_sniff": {
+        "v": "yes",
+        "note": "Probe and beacon sniffing with dedicated views"
+      },
+      "wifi_wardriving": {
+        "v": "partial",
+        "note": "Full wardriving with WiGLE and WDGWars upload - but the GPS is your phone's, not the device's, so it only logs while paired"
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "On the C5"
+      },
+      "ble_spam_apple": {
+        "v": "yes",
+        "note": "Sour Apple"
+      },
+      "ble_spam_android": {
+        "v": "yes",
+        "note": "Google Fast Pair"
+      },
+      "ble_spam_samsung": {
+        "v": "yes",
+        "note": "Samsung pairing spam"
+      },
+      "ble_spam_swift_pair": {
+        "v": "yes",
+        "note": "Swift Pair"
+      },
+      "ble_tracker_detect": {
+        "v": "yes",
+        "note": "AirTag and Find My detection"
+      },
+      "ble_tracker_spoof": {
+        "v": "yes",
+        "note": "AirTag cloning and spoofing"
+      },
+      "zigbee": {
+        "v": "partial",
+        "note": "A 'mesh recon' feature covering Zigbee, Thread and Matter using the C5's 802.15.4 radio. This is detection and reconnaissance, not a Zigbee attack toolkit."
+      },
+      "detect_flipper": {
+        "v": "yes",
+        "note": "Almost certainly the same BLE service UUID match every device in this class uses"
+      },
+      "detect_airtag": {
+        "v": "yes",
+        "note": "Apple Find My advertisement matching"
+      },
+      "detect_skimmer": {
+        "v": "partial",
+        "note": "Matches HC-05 and HC-06 Bluetooth module names, the same weak heuristic used everywhere: those are Bluetooth Classic SPP modules whose names a builder can change with one AT command"
+      },
+      "detect_pineapple": {
+        "v": "yes",
+        "note": "Wi-Fi Pineapple detection"
+      },
+      "detect_pwnagotchi": {
+        "v": "yes",
+        "note": "Pwnagotchi detection"
+      },
+      "detect_drone": {
+        "v": "yes",
+        "note": "Drone detection, presumably Remote ID"
+      },
+      "detect_surveillance_cam": {
+        "v": "partial",
+        "note": "A Flock camera detector. Like every implementation of this, it depends on signature lists that Flock has repeatedly invalidated - the camera management access point was disabled around December 2025 and BLE-based detection stopped working in spring 2026. North America only."
+      },
+      "detect_generic_wifi": {
+        "v": "yes",
+        "note": "Includes detection of Espressif-based devices and a channel analyser"
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "'Node' rigs coordinate up to 6 encrypted or 20 unencrypted distributed scanners; the coordination is local, not cloud"
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio"
+      },
+      "ir_tx": {
+        "v": "no",
+        "note": "No infrared"
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC"
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No RFID"
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Neither MCU presents native USB - the board uses a USB-UART bridge"
+      },
+      "gps": {
+        "v": "no",
+        "note": "None on board; wardriving uses the phone's GPS"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "8MB internal flash only. The Biscuit Ultra adds a microSD wired to the C5."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Control is through a phone app over BLE GATT"
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "It runs on battery, but with no screen and no buttons it needs the phone app to do anything"
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Closed firmware, no scripting or plugin format"
+      },
+      "app_store": {
+        "v": "no",
+        "note": "None"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning it is legal in most places. Deauthentication, the Evil Portal and AirTag spoofing are the risky parts - deauthenticating networks you do not own is a separate offence in most countries and the US FCC has fined businesses for exactly that, and a credential-harvesting portal captures other people's passwords. No formal RF certification documentation was found for this product, unlike some competitors. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Biscuit",
+      "The Biscuit Shop Biscuit Pro"
+    ],
+    "sources": [
+      {
+        "url": "https://biscuitshop.us/products.json?limit=50",
+        "what": "live pricing and stock - Biscuit Pro USD 125.00, available false; Biscuit Ultra USD 160.00, available false"
+      },
+      {
+        "url": "https://codehedge.github.io/Biscuit-Wiki/devices/pro.html",
+        "what": "official wiki - ESP32-C5-WROOM-1-N8R8 and ESP32-WROOM-32E-N8, the division of labour between them, and the 115200 baud internal UART"
+      },
+      {
+        "url": "https://codehedge.github.io/Biscuit-Wiki/features/wifi-capture.html",
+        "what": "EAPOL/PMKID capture documented as working on both 2.4GHz and 5GHz, with channel modes"
+      },
+      {
+        "url": "https://codehedge.github.io/Biscuit-Wiki/features/evil-portal.html",
+        "what": "Evil Portal manual channel picker offering only 1, 6 or 11 - i.e. 2.4GHz only"
+      },
+      {
+        "url": "https://codehedge.github.io/Biscuit-Wiki/features/wifi-attacks.html",
+        "what": "the deauth-plus-EAPOL toggle documented as 'works on 2.4GHz networks'"
+      },
+      {
+        "url": "https://github.com/CodeHedge/biscuit_flasher",
+        "what": "the flasher - three files, no firmware source; pulls prebuilt binaries from firmware.biscuitshop.us, current manifest v1.5.5 dated 2026-08-31"
+      },
+      {
+        "url": "https://documentation.espressif.com/esp32_datasheet_en.pdf",
+        "what": "ESP32 datasheet specifying Bluetooth v4.2 BR/EDR and LE - contradicting the vendor's 'BLE 5.0 + Classic' claim for the WROOM-32E"
+      },
+      {
+        "url": "https://www.espressif.com/en/products/socs/esp32-c5",
+        "what": "ESP32-C5: single-core RISC-V @240MHz, dual-band Wi-Fi 6 on 2.4 and 5GHz, BLE 5, 802.15.4"
+      },
+      {
+        "url": "https://github.com/justcallmekoko/ESP32Marauder",
+        "what": "ESP32 Marauder v1.15.1 (2026-08-24) ships four ESP32-C5 builds with a '5GHz support' section and a 51-entry dual-band channel table - the reference point for what a C5 can actually be made to do"
+      },
+      {
+        "url": "https://biscuitshop.us/pages/diy-biscuits",
+        "what": "free DIY firmware for several off-the-shelf ESP32-C5 boards, described as the Pro/Ultra firmware merged onto a single MCU - free of charge, not open source"
+      }
+    ],
+    "research_gaps": [
+      "Battery capacity is not in any vendor specification; ~1000mAh comes from a customer review",
+      "Whether the closed firmware derives from ESP32 Marauder cannot be established without source. Circumstantially the vendor maintains his own Marauder fork and a mirror of the C5 dual-band wardriver, and the feature vocabulary tracks Marauder's closely.",
+      "Whether plain deauthentication works on 5GHz is undocumented in either direction",
+      "No independent written review or teardown found; a YouTube teardown short exists but its independence could not be verified",
+      "No FCC/CE certification documentation located for this product",
+      "Physical dimensions and weight are not published"
+    ]
+  }
+]
