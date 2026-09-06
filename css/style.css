@@ -13,7 +13,7 @@
   --tx:#c7d5e0;
   --tx-hi:#eaf2f8;
   --tx-mute:#7b8e9e;
-  --tx-dim:#546575;
+  --tx-dim:#8b9dad;
 
   --grn:#3fe08f;
   --grn-dim:#1d6b45;
@@ -55,6 +55,7 @@ hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
 .narrow{max-width:900px}
 
 /* ---------- top bar ---------- */
+#nav{position:sticky;top:0;z-index:100}
 .topbar{
   position:sticky;top:0;z-index:100;
   background:rgba(8,11,15,.93);backdrop-filter:blur(12px);
@@ -104,6 +105,8 @@ select,input[type=number]{
   background:var(--bg-2);border:1px solid var(--line-2);color:var(--tx);
   font-family:var(--mono);font-size:.82rem;padding:7px 9px;border-radius:var(--r);
 }
+select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible{
+  outline:2px solid var(--grn);outline-offset:2px;border-radius:3px}
 select:focus,input:focus{outline:none;border-color:var(--grn)}
 .btn{
   display:inline-block;font-family:var(--mono);font-size:.82rem;cursor:pointer;

@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Find my gadget — Sec Gadget Index</title>
+<meta name="description" content="Six questions and you get at most three hardware security tools that actually suit your budget, skill level and what you want to do. With the caveats spelled out.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sec Gadget Index">
+<meta property="og:title" content="Find my gadget — Sec Gadget Index">
+<meta property="og:description" content="Six questions and you get at most three hardware security tools that actually suit your budget, skill level and what you want to do. With the caveats spelled out.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Find my gadget — Sec Gadget Index">
+<meta name="twitter:description" content="Six questions and you get at most three hardware security tools that actually suit your budget, skill level and what you want to do. With the caveats spelled out.">
+<meta name="theme-color" content="#080b0f">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -11,16 +22,25 @@
 <div class="wrap" style="padding-top:38px;padding-bottom:60px">
   <div class="quiz" id="quiz"></div>
 </div>
-<div id="foot"></div>
+<footer><div class="wrap">
+    <p><b>Own it legally, use it legally.</b> Owning most of these devices is lawful in
+    most countries. Using their transmit and attack features against systems you do not
+    own or have written permission to test is a criminal offence in nearly all of them.
+    Per-device legal notes flag known import restrictions, but they are a starting point
+    for your own research, not legal advice.</p>
+    <p class="tiny dim">Independent, non-commercial, no affiliate links. Prices are
+    manufacturer direct in USD and carry the date they were checked. Capability data is
+    sourced and marked with a confidence level; "Claimed" means the seller says so and we
+    could not confirm it.</p>
+  </div></footer>
 
 <script src="data/taxonomy.js"></script>
-<script src="data/devices.js"></script>
+<script src="data/devices.js?v=2026-09-06"></script>
 <script src="js/common.js"></script>
 <script src="js/quiz-data.js"></script>
 <script src="js/quiz-engine.js"></script>
 <script>
 document.getElementById("nav").innerHTML  = navBar("quiz");
-document.getElementById("foot").innerHTML = footerBar();
 
 const ans = { goals:new Set(), budget:null, skill:null, build:null, stealth:null, support:null };
 let step = 0;

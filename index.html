@@ -4,7 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sec Gadget Index — hardware security tools, compared honestly</title>
-<meta name="description" content="An independent, sourced comparison of hardware security and pentest gadgets. Real capabilities, no marketing.">
+<meta name="description" content="An independent, sourced comparison of 176 hardware security and pentest gadgets. Real capabilities, confidence-rated, with the marketing stripped out.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sec Gadget Index">
+<meta property="og:title" content="Hardware security gadgets, compared honestly — Sec Gadget Index">
+<meta property="og:description" content="An independent, sourced comparison of 176 hardware security and pentest gadgets. Real capabilities, confidence-rated, with the marketing stripped out.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hardware security gadgets, compared honestly — Sec Gadget Index">
+<meta name="twitter:description" content="An independent, sourced comparison of 176 hardware security and pentest gadgets. Real capabilities, confidence-rated, with the marketing stripped out.">
+<meta name="theme-color" content="#080b0f">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -28,7 +38,7 @@
 
 <div class="wrap"><div class="cols">
   <aside class="side">
-    <input class="search" id="q" type="search" placeholder="search: nfc, deauth, badusb, cc1101…" autocomplete="off">
+    <input class="search" id="q" type="search" aria-label="Search devices and capabilities" placeholder="search: nfc, deauth, badusb, cc1101…" autocomplete="off">
     <div class="row mt1 tiny dim"><span id="count"></span><a href="#" id="reset" style="margin-left:auto">reset</a></div>
     <div class="mt2" id="filters"></div>
   </aside>
@@ -37,7 +47,7 @@
       <div class="tiny dim mono" id="sum"></div>
       <div class="row">
         <label class="tiny dim mono">sort</label>
-        <select id="sort">
+        <select id="sort" aria-label="Sort results">
           <option value="rel">relevance</option>
           <option value="price-asc">price: low to high</option>
           <option value="price-desc">price: high to low</option>
@@ -51,14 +61,23 @@
   </main>
 </div></div>
 
-<div id="foot"></div>
+<footer><div class="wrap">
+    <p><b>Own it legally, use it legally.</b> Owning most of these devices is lawful in
+    most countries. Using their transmit and attack features against systems you do not
+    own or have written permission to test is a criminal offence in nearly all of them.
+    Per-device legal notes flag known import restrictions, but they are a starting point
+    for your own research, not legal advice.</p>
+    <p class="tiny dim">Independent, non-commercial, no affiliate links. Prices are
+    manufacturer direct in USD and carry the date they were checked. Capability data is
+    sourced and marked with a confidence level; "Claimed" means the seller says so and we
+    could not confirm it.</p>
+  </div></footer>
 
 <script src="data/taxonomy.js"></script>
-<script src="data/devices.js"></script>
+<script src="data/devices.js?v=2026-09-06"></script>
 <script src="js/common.js"></script>
 <script>
 document.getElementById("nav").innerHTML  = navBar("browse");
-document.getElementById("foot").innerHTML = footerBar();
 
 /* ---- KPI strip ---- */
 (function(){
@@ -137,9 +156,9 @@ function chk(group,val,label,note){
 function buildFilters(){
   let h = "";
   h += `<div class="fgroup"><h4>Price (USD)</h4><div class="row">
-    <input type="number" id="pmin" placeholder="min" style="width:80px">
+    <input type="number" id="pmin" aria-label="Minimum price in US dollars" placeholder="min" style="width:80px">
     <span class="dim">—</span>
-    <input type="number" id="pmax" placeholder="max" style="width:80px"></div></div>`;
+    <input type="number" id="pmax" aria-label="Maximum price in US dollars" placeholder="max" style="width:80px"></div></div>`;
 
   h += `<div class="fgroup"><h4>Category</h4>` +
        CATS.map(c=>chk("cat",c,CAT_LABEL[c]||c,DB.filter(d=>d.category===c).length)).join("") + `</div>`;
@@ -178,7 +197,8 @@ document.getElementById("filters").addEventListener("change", e=>{
   if (el.id==="pmax") state.pmax = el.value===""?null:+el.value;
   render();
 });
-document.getElementById("q").addEventListener("input", e=>{ state.q=e.target.value; render(); });
+let _qt; document.getElementById("q").addEventListener("input", e=>{
+  state.q=e.target.value; clearTimeout(_qt); _qt=setTimeout(render,120); });
 document.getElementById("sort").addEventListener("change", e=>{ state.sort=e.target.value; render(); });
 document.getElementById("reset").addEventListener("click", e=>{
   e.preventDefault();

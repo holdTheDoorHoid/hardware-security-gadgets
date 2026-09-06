@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>About & method — Sec Gadget Index</title>
+<meta name="description" content="How this index is researched: confidence levels instead of ticks, the honest-take field, and why firmware is listed separately from hardware.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sec Gadget Index">
+<meta property="og:title" content="About and method — Sec Gadget Index">
+<meta property="og:description" content="How this index is researched: confidence levels instead of ticks, the honest-take field, and why firmware is listed separately from hardware.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="About and method — Sec Gadget Index">
+<meta name="twitter:description" content="How this index is researched: confidence levels instead of ticks, the honest-take field, and why firmware is listed separately from hardware.">
+<meta name="theme-color" content="#080b0f">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -72,14 +83,22 @@
   If something here is wrong, it is wrong in a way that is easy to fix, and being told is genuinely
   welcome. Fields marked "what we could not confirm" on each device page are open questions.</p>
 </div>
-<div id="foot"></div>
+<footer><div class="wrap">
+    <p><b>Own it legally, use it legally.</b> Owning most of these devices is lawful in
+    most countries. Using their transmit and attack features against systems you do not
+    own or have written permission to test is a criminal offence in nearly all of them.
+    Per-device legal notes flag known import restrictions, but they are a starting point
+    for your own research, not legal advice.</p>
+    <p class="tiny dim">Independent, non-commercial, no affiliate links. Prices are
+    manufacturer direct in USD and carry the date they were checked. Capability data is
+    sourced and marked with a confidence level; "Claimed" means the seller says so and we
+    could not confirm it.</p>
+  </div></footer>
 
 <script src="data/taxonomy.js"></script>
-<script src="data/devices.js"></script>
 <script src="js/common.js"></script>
 <script>
 document.getElementById("nav").innerHTML  = navBar("about");
-document.getElementById("foot").innerHTML = footerBar();
 document.getElementById("vals").innerHTML = Object.entries(T.values)
   .map(([k,v])=>`<dt class="${v.cls}">${esc(v.label)}</dt><dd>${esc(v.plain)}</dd>`).join("");
 </script>

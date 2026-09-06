@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Glossary — Sec Gadget Index</title>
+<meta name="description" content="Every tracked capability explained twice, once in ordinary English and once technically, with reality checks where the marketing oversells.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sec Gadget Index">
+<meta property="og:title" content="Plain-language glossary — Sec Gadget Index">
+<meta property="og:description" content="Every tracked capability explained twice, once in ordinary English and once technically, with reality checks where the marketing oversells.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Plain-language glossary — Sec Gadget Index">
+<meta name="twitter:description" content="Every tracked capability explained twice, once in ordinary English and once technically, with reality checks where the marketing oversells.">
+<meta name="theme-color" content="#080b0f">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,17 +26,26 @@
   reality check. Terms marked <span class="tag tag-red tiny">restricted</span> are ones where simply
   using the feature is a criminal offence in most countries, regardless of who owns the device.</p>
 
-  <input class="search mt2" id="gq" placeholder="filter terms…" style="max-width:420px">
+  <input class="search mt2" id="gq" aria-label="Filter glossary terms" placeholder="filter terms…" style="max-width:420px">
   <div id="body" class="mt2"></div>
 </div>
-<div id="foot"></div>
+<footer><div class="wrap">
+    <p><b>Own it legally, use it legally.</b> Owning most of these devices is lawful in
+    most countries. Using their transmit and attack features against systems you do not
+    own or have written permission to test is a criminal offence in nearly all of them.
+    Per-device legal notes flag known import restrictions, but they are a starting point
+    for your own research, not legal advice.</p>
+    <p class="tiny dim">Independent, non-commercial, no affiliate links. Prices are
+    manufacturer direct in USD and carry the date they were checked. Capability data is
+    sourced and marked with a confidence level; "Claimed" means the seller says so and we
+    could not confirm it.</p>
+  </div></footer>
 
 <script src="data/taxonomy.js"></script>
-<script src="data/devices.js"></script>
+<script src="data/devices.js?v=2026-09-06"></script>
 <script src="js/common.js"></script>
 <script>
 document.getElementById("nav").innerHTML  = navBar("glossary");
-document.getElementById("foot").innerHTML = footerBar();
 
 function render(q){
   q = (q||"").toLowerCase();
