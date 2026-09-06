@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://holdthedoorhoid.github.io/hardware-security-gadgets/sitemap.xml

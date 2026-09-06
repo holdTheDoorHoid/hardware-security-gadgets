@@ -6,6 +6,7 @@
 <title>About & method — Sec Gadget Index</title>
 <meta name="description" content="How this index is researched: confidence levels instead of ticks, the honest-take field, and why firmware is listed separately from hardware.">
 
+<meta property="og:url" content="https://holdthedoorhoid.github.io/hardware-security-gadgets/about.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sec Gadget Index">
 <meta property="og:title" content="About and method — Sec Gadget Index">
@@ -13,12 +14,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About and method — Sec Gadget Index">
 <meta name="twitter:description" content="How this index is researched: confidence levels instead of ticks, the honest-take field, and why firmware is listed separately from hardware.">
-<meta property="og:image" content="assets/og.png">
+<meta property="og:image" content="https://holdthedoorhoid.github.io/hardware-security-gadgets/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Sec Gadget Index: 176 builds, 161 devices, 118 capabilities, 947 sources.">
 <meta name="theme-color" content="#080b0f">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://holdthedoorhoid.github.io/hardware-security-gadgets/about.html">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -81,6 +83,21 @@
   <h2 class="mt3">What is deliberately not here</h2>
   <p>Monitor-mode Wi-Fi adapters as standalone products, automotive and CAN bus tools, drone
   hardware, and physical entry tools. Each is a large field that deserves better than a footnote.</p>
+
+  <h2 class="mt3">How this was researched</h2>
+  <p>Openly, so you can judge it for yourself: the underlying research was carried out by AI
+  research agents working to a written brief, then merged, validated and cross-checked. The brief
+  they were given is published in this repository as
+  <span class="mono">research/AGENT_BRIEF.md</span>, and so is every batch of raw research output
+  they produced. Nothing about the method is hidden.</p>
+  <p>That is stated plainly because the method is not what makes the data trustworthy. The
+  <b>947 citations</b> are. Every non-obvious claim on this site points at a schematic, a source
+  file, a datasheet or a vendor page that you can open and check yourself, and anything that could
+  not be confirmed is marked rather than quietly smoothed over. Judge the sources, not the author.</p>
+  <p>Where agents disagreed, the disagreement was kept rather than resolved by picking a winner. One
+  example is live on the site: two agents reached different conclusions about when a particular
+  camera-detection method stopped working, so the entry records only the part that could be proven
+  from the firmware source, and the disputed claim is absent.</p>
 
   <h2 class="mt3">Corrections</h2>
   <p>The data lives in one file, <span class="mono">data/devices.js</span>, with a documented schema.
