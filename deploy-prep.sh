@@ -57,6 +57,8 @@ if 'rel="canonical"' not in s:
 if 'og:url' not in s:
     s = s.replace('<meta property="og:type"',
                   f'<meta property="og:url" content="{canon}">\n<meta property="og:type"', 1)
+# scrapers reject relative og:image - make it absolute
+s = s.replace('content="assets/og.png"', f'content="{site}/assets/og.png"')
 open(path, "w").write(s)
 PY
 done

@@ -4,7 +4,7 @@ import json, os, re, zipfile, sys
 import xml.etree.ElementTree as ET
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-XLSX = os.environ.get("ORIG_XLSX", "/home/hoid/Downloads/sec tools.xlsx")
+XLSX = os.environ.get("ORIG_XLSX", "sec tools.xlsx")
 NS   = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 
 def original_names():

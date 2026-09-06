@@ -162,11 +162,17 @@ function linkTerms(html){
   const done = new Set();
   for (const k of keys){
     if (done.has(k.toLowerCase())) continue;
-    const re = new RegExp(`(?<![\\w>])(${k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w<])`,"i");
-    if (re.test(out)){
-      out = out.replace(re, `<span class="term" data-term="${esc(k)}">$1</span>`);
-      done.add(k.toLowerCase());
-    }
+    /* Capture-and-restore instead of a lookbehind: lookbehind throws a syntax
+       error in Safari before 16.4, which blanked the whole device page. */
+    const esc_k = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    try {
+      const re = new RegExp(`(^|[^\\w>])(${esc_k})($|[^\\w<])`, "i");
+      if (re.test(out)){
+        out = out.replace(re, (m, pre, term, post) =>
+          `${pre}<span class="term" data-term="${esc(k)}">${term}</span>${post}`);
+        done.add(k.toLowerCase());
+      }
+    } catch (e) { /* term linking is decorative - never let it kill the page */ }
   }
   return out;
 }
