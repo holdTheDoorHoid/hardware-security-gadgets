@@ -1,0 +1,1717 @@
+[
+  {
+    "id": "lockedusb-charge-only-adapter",
+    "hardware_id": "lockedusb-charge-only-adapter",
+    "name": "LockedUSB Charge Only Adapter",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "LockedUSB",
+    "vendor_url": null,
+    "product_url": "https://hackerwarehouse.com/product/lockedusb-charge-only-adapter/",
+    "category": "accessory",
+    "subcategory": "usb-data-blocker",
+    "status": "out-of-stock",
+    "released": null,
+    "price_usd": 20.0,
+    "price_note": "Listed price at Hacker Warehouse; item shown out of stock at time of check.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug in between a cable and a charger/port. No configuration of any kind.",
+    "build_effort": "assembled",
+    "build_note": "Fixed-function molded adapter, nothing to assemble or flash.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A small USB-A male-to-female pass-through adapter that physically omits or disconnects the D+/D- data pins so a phone or laptop plugged in through it can only draw power, not exchange data. It is a defensive accessory for using untrusted public USB charging ports (airports, hotels, conference kiosks), not an attack tool.",
+    "honest_take": "It does exactly one boring thing and does it fine, but it solves a narrower problem than people think: it protects you from a malicious wall socket or charging kiosk reading your device over the data pins ('juice jacking'), not from a malicious cable. If the cable itself is the implant - like an O.MG Cable - the compromise already happened at the cable, upstream of where this adapter sits, and the blocker does nothing. There's also no chip disclosed, so 'DCP charging mode support' just means it fakes the resistor/voltage handshake phones expect on a dumb charger; some phones will still only trickle-charge through it.",
+    "best_for": [
+      "Charging a phone from an unknown public USB port or kiosk",
+      "Handing to non-technical people as a cheap, foolproof precaution"
+    ],
+    "not_for": [
+      "Protecting against a malicious cable (the threat has to be in the wall/port, not the cable)",
+      "Fast charging on some phones that require data-pin negotiation for higher wattage"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU disclosed. Vendor copy describes a charge-detect front end (DCP mode signalling, output short-circuit 'hiccup' protection, ~2.3A limit) implemented with analog/small ASIC parts, not a programmable chip.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB-A pass-through (device draws power from whatever port it's plugged into)",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB-A male",
+        "USB-A female"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "50.8 x 25.4 x 25.4",
+      "weight_g": 227,
+      "case": "Plastic",
+      "notable_physical": [
+        "USB-A male to USB-A female in-line adapter, no cable"
+      ]
+    },
+    "capabilities": {},
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Fully legal to own and use everywhere; it is a passive protective accessory with no offensive function."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "USB data blocker",
+      "USB condom"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/lockedusb-charge-only-adapter/",
+        "what": "product listing, price, and technical spec copy (DCP modes, current limit, dimensions)"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in this schema covers a passive defensive USB data-line blocker; none were applied.",
+      "Could not find the manufacturer's own site or confirm any internal chip part number.",
+      "Could not confirm whether it degrades fast-charging (USB-PD/QC) negotiation on modern phones."
+    ]
+  },
+  {
+    "id": "vidar-attiny85-badusb",
+    "hardware_id": "vidar-attiny85-badusb",
+    "name": "Vidar ATtiny85-based BadUSB",
+    "firmware": "Stock demo payload (V-USB HID keyboard)",
+    "firmware_kind": "diy",
+    "firmware_repo": null,
+    "firmware_note": "Ships pre-loaded with a demo payload that opens a Windows command prompt and launches a browser to the setup page. User-editable via the Arduino IDE / Digispark-style ATtiny85 toolchain; ships with no on-device way to store or switch between multiple payloads.",
+    "vendor": "rot13labs",
+    "vendor_url": "https://rot13labs.com",
+    "product_url": "https://www.tindie.com/products/rot13labs/vidar-attiny85-based-badusb/",
+    "category": "usb-hid",
+    "subcategory": "badusb-stick",
+    "status": "out-of-stock",
+    "released": null,
+    "price_usd": 20.0,
+    "price_note": "$20 single unit, $15/unit at 3+. Seller listed as 'on break' at time of check - not currently orderable.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug-and-run for the stock demo payload; editing the payload requires installing the Arduino IDE and an ATtiny85/Digispark board profile.",
+    "build_effort": "assembled",
+    "build_note": "Sold pre-built. Ships programmed; no soldering to use it, only to reflash a new payload over USB (Micronucleus-style bootloader, typical of ATtiny85 boards of this kind).",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "A minimal, very small ATtiny85-based BadUSB stick that enumerates as a USB keyboard and fires a pre-programmed keystroke payload on plug-in. Functionally the same class of device as a Digispark BadUSB or the low end of the Evil Crow Cable line, built by a different one-person hardware shop (rot13labs, Gainesville FL).",
+    "honest_take": "This is a Digispark-class ATtiny85 keystroke injector in tiny packaging, nothing more. The ATtiny85 has no native USB peripheral, so it almost certainly relies on V-USB (bit-banged software USB), which caps HID reliability and speed well below a real USB-HID microcontroller like the ATmega32U4 in a Rubber Ducky. There's no storage for multiple payloads and no way to trigger a different script without physically re-flashing it from a computer - you get exactly one script running until you reprogram it. At $20 for a fixed single-payload stick, it is priced like a novelty, not a tool; a $5 Digispark clone running the same class of open-source ATtiny85 BadUSB sketch does the identical job.",
+    "best_for": [
+      "One-off, pre-set keystroke-injection demos",
+      "Learning how V-USB/ATtiny85 HID BadUSB sticks work"
+    ],
+    "not_for": [
+      "Field engagements needing multiple switchable payloads",
+      "Fast or complex HID injection (V-USB timing is a real bottleneck)"
+    ],
+    "hardware": {
+      "mcu_primary": "ATtiny85",
+      "mcu_primary_note": "8-bit AVR, no native USB peripheral - USB HID is almost certainly implemented in software via the V-USB library, as on Digispark boards of the same class. Not independently confirmed by a public schematic.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB-A (bus powered)",
+      "pmic": null,
+      "storage": "None - payload is compiled into the flashed firmware image",
+      "connectivity": [
+        "USB-A"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, described by the maker as 'as small as my PCB builder could make'",
+      "notable_physical": [
+        "No enclosure - bare PCB on a USB-A plug"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Enumerates as a USB keyboard and types a fixed pre-loaded payload on plug-in."
+      },
+      "usb_payload_lang": {
+        "v": "claimed",
+        "note": "Arduino-sketch based (Digispark/V-USB style keyboard library), not a runtime-interpreted script language. Changing the payload means recompiling and reflashing from a PC, not editing a text file on the device."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open payload, user-editable via Arduino IDE; requires the ATtiny85/Digispark board package and a flashing session to change."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and building the device is legal essentially everywhere. Plugging it into a computer you don't own or don't have authorization to test is unauthorized computer access in most jurisdictions, regardless of how trivial the payload is."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "Vidar BadUSB"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/rot13labs/vidar-attiny85-based-badusb/",
+        "what": "product listing: price, MCU, stock payload behaviour, seller status"
+      }
+    ],
+    "research_gaps": [
+      "No public schematic or firmware repo found; ATtiny85/V-USB architecture is inferred from the product description and the wider category of ATtiny85 BadUSB sticks, not independently confirmed for this specific product.",
+      "Exact dimensions and flashing procedure (bootloader vs ISP programmer) not published."
+    ]
+  },
+  {
+    "id": "evil-crow-cable",
+    "hardware_id": "evil-crow-cable",
+    "name": "Evil Crow Cable",
+    "firmware": "BadUSB-Cable (ATtiny85)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/joelsernamoreno/BadUSB-Cable",
+    "firmware_note": "Fixed keystroke-injection firmware for the ATtiny85; scripts are uploaded and reflashed from a host over USB, no on-cable script storage or remote control.",
+    "vendor": "AprilBrother (manufacturing/PCB); design by Joel Serna and Ernesto Sanchez",
+    "vendor_url": "https://github.com/joelsernamoreno/BadUSB-Cable",
+    "product_url": "https://www.tindie.com/products/aprbrother/evil-crow-cable/",
+    "category": "usb-hid",
+    "subcategory": "badusb-cable",
+    "status": "out-of-stock",
+    "released": null,
+    "price_usd": 12.5,
+    "price_note": "Listed out of stock since 2025-12-06 at time of check.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Simple keystroke-injection cable; editing the payload needs the Arduino ATtiny85 toolchain.",
+    "build_effort": "assembled",
+    "build_note": "Sold pre-built as a working cable; payload changes are uploaded over USB in seconds per user reports.",
+    "stealth": "covert",
+    "form_factor": "cable",
+    "summary": "The base model in AprilBrother's Evil Crow Cable line: an ATtiny85-based BadUSB built into a working USB cable, with the data lines enabled and no wireless hardware. It is the entry-level, fixed-payload sibling of the ESP32-S3/Wi-Fi-equipped Evil Crow Cable Wind, which is already in this database as a separate, more capable product.",
+    "honest_take": "Checked against Evil Crow Cable Wind (already tracked here): this is genuinely different hardware, not a rebrand - Wind runs an ESP32-S3 or similar with Wi-Fi and a web control panel for remote-triggered, in-field payload swapping; this base Cable is a plain ATtiny85 with no wireless and no on-device script storage, at roughly half Wind's price. That's a fair trade if you only need to drop one fixed payload and retrieve the cable later, but if you need to change the payload or trigger it without physically pulling the cable, you need Wind (or something like it), not this.",
+    "best_for": [
+      "One-shot, fixed-payload cable drops where you'll retrieve the cable",
+      "Cheapest working example of a cable-form BadUSB"
+    ],
+    "not_for": [
+      "Remote/wireless payload triggering (no radio at all)",
+      "Multiple payloads without reflashing"
+    ],
+    "hardware": {
+      "mcu_primary": "ATtiny85",
+      "mcu_primary_note": "No native USB peripheral; USB HID almost certainly implemented via V-USB, matching the wider ATtiny85 BadUSB cable family this design descends from.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB (bus powered)",
+      "pmic": null,
+      "storage": "None - payload compiled into firmware",
+      "connectivity": [
+        "USB-A/USB-C cable, data lines active"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Molded cable connector housing",
+      "notable_physical": [
+        "Looks and functions as an ordinary charge/data cable"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Fixed pre-loaded keystroke payload fires on plug-in, ATtiny85 emulating a USB keyboard."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Custom scripts uploaded via USB per the vendor listing; based on the linked repo's ATtiny85 firmware, not a runtime-interpreted DuckyScript engine."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open source firmware (joelsernamoreno/BadUSB-Cable), user-editable and reflashable."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and building it is legal. Using it on a device or network you're not authorized to test is unauthorized access law in most countries - the cable's innocuous look doesn't change that."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "EvilCrowCable (base, non-Wind)"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/aprbrother/evil-crow-cable/",
+        "what": "product listing: price, MCU, no-WiFi confirmation, stock status, creators"
+      },
+      {
+        "url": "https://github.com/joelsernamoreno/BadUSB-Cable",
+        "what": "firmware repo; confirms this base Cable is ATtiny85/Atmega32U4/RP2040-class hardware distinct from the ESP32-based Wind line"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm from the repo alone whether this specific SKU is the ATtiny85 revision or the later Atmega32U4/RP2040 'Pro' revision of the base Cable line; Tindie listing text explicitly names ATtiny85 and this was used."
+    ]
+  },
+  {
+    "id": "evilduck-sd",
+    "hardware_id": "evilduck-sd",
+    "name": "EvilDuck SD",
+    "firmware": "EvilDuck (SD/Arduino Micro generation)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/cifertech/EvilDuck",
+    "firmware_note": "Rubber Ducky-style scripting engine (STRING/DELAY/keypress commands) that reads script.txt off a microSD card and executes it as keyboard input on power-up. First-generation hardware in the EvilDuck line, superseded by EvilDuck S3.",
+    "vendor": "cifertech (open source; no assembled unit sold)",
+    "vendor_url": "https://github.com/cifertech",
+    "product_url": "https://github.com/cifertech/EvilDuck",
+    "category": "usb-hid",
+    "subcategory": "badusb-sd",
+    "status": "diy-only",
+    "released": null,
+    "price_usd": 10,
+    "price_note": "Estimated bill of materials only: an Arduino Micro (ATmega32U4) clone board plus a microSD breakout, no assembled unit is sold.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Requires wiring an SD breakout to specific Arduino Micro pins and flashing the sketch yourself; no vendor-assembled option.",
+    "build_effort": "soldering",
+    "build_note": "Arduino Micro + SD card module wired point-to-point (CS/MOSI/MISO/SCK plus a status LED); no PCB sold, breadboard or perfboard build.",
+    "stealth": "covert",
+    "form_factor": "board",
+    "summary": "The original EvilDuck: an Arduino Micro (ATmega32U4) running a Rubber Ducky-style script interpreter that reads a script.txt file off a microSD card and types it as a real, hardware-native USB keyboard on plug-in, with hot-swap detection for changing the SD card between drops. Open source, DIY-only, no vendor sells an assembled unit.",
+    "honest_take": "Because the ATmega32U4 has real USB hardware (unlike the ATtiny85 sticks/cables in this same batch), this one gets a genuinely native, low-latency USB HID stack rather than a bit-banged V-USB implementation - a real technical edge over cheaper ATtiny85 BadUSB devices, and functionally very close to the original USB Rubber Ducky's approach (SD card holds the script, no wireless). The catch is it is DIY-only: there's no case, no vendor support, and you're sourcing and wiring an Arduino Micro clone and SD breakout yourself. If you want this exact capability pre-built, pico-ducky and the original Rubber Ducky (both already tracked here) get you there without a soldering iron.",
+    "best_for": [
+      "Learning how SD-card-scripted BadUSB devices work end to end",
+      "Cheap, native-USB keystroke injection without buying a commercial Ducky"
+    ],
+    "not_for": [
+      "Buyers wanting a pre-built, no-solder device",
+      "Wireless or remote payload control (see EvilDuck S3 for that)"
+    ],
+    "hardware": {
+      "mcu_primary": "ATmega32U4",
+      "mcu_primary_note": "Arduino Micro-class board; has native USB device hardware (not V-USB), giving real hardware-speed USB HID.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB (bus powered)",
+      "pmic": null,
+      "storage": "microSD (FAT16/32), holds script.txt",
+      "connectivity": [
+        "USB",
+        "microSD"
+      ],
+      "gpio": "SD wired to CS pin 4, MOSI pin 11, MISO pin 12, SCK pin 13; status LED on pin 9",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None - bare board/breadboard build",
+      "notable_physical": [
+        "microSD card slot",
+        "hot-swap SD detection"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "ATmega32U4 native-USB keyboard emulation, script executed automatically on power-up."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "Rubber Ducky-style text commands (STRING, DELAY, special keys) parsed from script.txt on the SD card."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open source; script and firmware both user-editable."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs its payload from SD on power-up with no host software required."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Building and owning it is legal. Using it against systems you're not authorized to test is unauthorized-access law in most jurisdictions."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-06",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "EvilDuck (Gen 1)",
+      "EvilDuck classic"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/cifertech/EvilDuck",
+        "what": "README: SD vs S3 hardware split, wiring, script format, 355 stars/40 forks, MIT license"
+      },
+      {
+        "url": "https://cifertech.net/evilduck-diy-usb-rubber-ducky-for-ethical-hacking/",
+        "what": "maker's own writeup of the SD generation"
+      }
+    ],
+    "research_gaps": [
+      "Exact last-commit date for the SD-generation code path specifically (repo now centers on S3) not confirmed."
+    ]
+  },
+  {
+    "id": "evilduck-s3",
+    "hardware_id": "evilduck-s3",
+    "name": "EvilDuck S3",
+    "firmware": "EvilDuck S3 (ESP32-S3 generation)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/cifertech/EvilDuck",
+    "firmware_note": "Full DuckScript-style interpreter running on ESP32-S3, adds a browser-based web control panel for uploading, storing and remotely triggering payloads, and autorun-on-plug-in. Second/current generation, replacing the Arduino Micro-based EvilDuck SD.",
+    "vendor": "cifertech (open source; no assembled unit sold)",
+    "vendor_url": "https://github.com/cifertech",
+    "product_url": "https://github.com/cifertech/EvilDuck",
+    "category": "usb-hid",
+    "subcategory": "badusb-wifi",
+    "status": "diy-only",
+    "released": "2026-06",
+    "price_usd": 10,
+    "price_note": "Estimated bill of materials: a generic ESP32-S3 USB dev board (~$6-10) plus passives; no assembled unit sold.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Flash-only if using a stock ESP32-S3 dev board; some builds add a WS2812 LED and voltage regulator that need soldering.",
+    "build_effort": "flash-only",
+    "build_note": "Runs on a generic ESP32-S3 USB dev board; flash the EvilDuck S3 firmware and use the web UI, no custom PCB required for the basic build.",
+    "stealth": "covert",
+    "form_factor": "usb-stick",
+    "summary": "The current-generation EvilDuck: an ESP32-S3 doing both native USB HID and Wi-Fi on one chip, with a browser-based control panel for uploading, storing, and remotely triggering DuckyScript-style payloads. Same open-source project as EvilDuck SD, but a different board and a materially different feature set (wireless, multi-payload, remote trigger vs SD-only, single active script).",
+    "honest_take": "This is 'ESP32-S3 doing the real work' in the same vein as WiFi Duck and the ESP32-S3 side of Evil Crow Cable Wind - a single cheap SoC handling both HID and Wi-Fi, with a web UI on top. If you already own any ESP32-S3 dev board, the marginal cost of this capability is just flashing new firmware; the value here is entirely the open-source software (payload storage, remote trigger, autorun) rather than unique hardware. Compare directly against commercial devices like the O.MG Cable or Evil Crow Cable Wind before buying dedicated hardware for this - the silicon doing the work is the same class of chip.",
+    "best_for": [
+      "Free/cheap DIY alternative to commercial Wi-Fi-controlled BadUSB sticks",
+      "Learning how ESP32-S3 HID+WiFi BadUSB firmware is built"
+    ],
+    "not_for": [
+      "Buyers wanting a finished, cased product with support",
+      "Covert form factors - stock ESP32-S3 dev boards look nothing like a normal accessory"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3",
+      "mcu_primary_note": "Single chip handles native USB HID and 802.11 b/g/n Wi-Fi.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP32-S3 integrated",
+          "role": "wifi-24",
+          "note": "Used for the web control panel and remote payload trigger"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB (bus powered)",
+      "pmic": "LM1117 linear regulator (per project BOM)",
+      "storage": "Internal SPIFFS, with optional microSD support",
+      "connectivity": [
+        "USB",
+        "Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None - bare ESP32-S3 dev board",
+      "notable_physical": [
+        "WS2812 addressable status LED"
+      ]
+    },
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "ESP32-S3 native USB HID keyboard emulation, full DuckScript interpreter."
+      },
+      "usb_payload_lang": {
+        "v": "yes",
+        "note": "DuckScript-compatible interpreter, uploaded via web UI, internal storage, or microSD."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Browser-based control panel for payload management and remote/autorun triggering."
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Payloads can be triggered remotely over the device's own Wi-Fi from the web control panel."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open source (MIT licensed)."
+      },
+      "wifi_ap_mode": {
+        "v": "claimed",
+        "note": "Web control panel implies an onboard AP or STA-join mode for configuration; exact networking mode not confirmed from available documentation."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Building and owning it is legal. Using it against systems you're not authorized to test is unauthorized-access law in most jurisdictions."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-06-08",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "EvilDuck (Gen 2/3)"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/cifertech/EvilDuck",
+        "what": "README: ESP32-S3 hardware, web control panel, DuckScript interpreter, 355 stars/40 forks, MIT license"
+      },
+      {
+        "url": "https://cifertech.net/evilduck-s3-the-rubberducky-i-always-wanted-to-build/",
+        "what": "maker's writeup dated June 2026 describing S3 as the third/current hardware revision"
+      }
+    ],
+    "research_gaps": [
+      "Exact Wi-Fi mode (AP-only vs joins an existing network) and whether payload trigger requires the operator to be on the same network, not confirmed."
+    ]
+  },
+  {
+    "id": "usbvalve",
+    "hardware_id": "usbvalve",
+    "name": "USBvalve",
+    "firmware": "USBvalve 1.0.x",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/cecio/USBvalve",
+    "firmware_note": "Version 1.0.0 was a full rewrite onto the Pi Pico SDK (from Arduino IDE) and removed BOOTSEL-button polling to make BadUSB detection more reliable, at the cost of needing a soldered reset button or serial commands to reset. From v0.8.0 it added USB host-mode sniffing to catch HID-injection devices, not just mass-storage access.",
+    "vendor": "cecio (open source; no assembled unit sold)",
+    "vendor_url": "https://github.com/cecio",
+    "product_url": "https://github.com/cecio/USBvalve",
+    "category": "detection-defense",
+    "subcategory": "usb-threat-detector",
+    "status": "diy-only",
+    "released": null,
+    "price_usd": 6,
+    "price_note": "Estimated BOM: a Raspberry Pi Pico (RP2040) plus a small I2C OLED, no vendor sells a finished unit.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Flashing the pre-built .uf2 is trivial (drag-and-drop bootloader); building the hardware (Pico + OLED, optional custom PCB or 3D-printed spacer) takes basic soldering or careful breadboarding.",
+    "build_effort": "soldering",
+    "build_note": "Official pre-built firmware ships as .uf2 for drag-and-drop flashing; hardware assembly (Pico + SSD1306 OLED, optional custom PCB/3D-printed spacer) needs light soldering, though a breadboard build needs none.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A Raspberry Pi Pico (RP2040) inline USB inspection tool: in device mode it presents a fake filesystem and shows on an OLED whether a connected host is reading or writing files (catching mass-storage-based exfiltration or drops); from v0.8.0 it can also run in USB host mode to detect a plugged-in device behaving like a keyboard (catching HID-injection BadUSB before you trust it). It is the defensive counterpart to the various BadUSB sticks and cables tracked elsewhere in this database.",
+    "honest_take": "USBvalve only sees what happens on the USB link it's actually sitting on - it flags file reads/writes to its fake filesystem, or a newly-plugged device announcing itself as a keyboard, and nothing else. It offers no protection against a device that behaves normally at the USB protocol level but is malicious in its payload (e.g., a legitimate-looking flash drive with a booby-trapped file you open yourself), and it has no shielding, so it is explicitly not a tool for safely testing USB Killer-style devices. It's a genuinely well-regarded open-source project (1.3k GitHub stars) with an unusually direct answer to 'is this random USB stick doing something to my computer right now,' which most of the flashier commercial BadUSB-detector gadgets don't actually provide as clearly.",
+    "best_for": [
+      "Sanity-checking an unknown USB drive or cable before trusting it",
+      "Teaching how mass-storage exfiltration and HID-injection BadUSB attacks actually look at the USB protocol level"
+    ],
+    "not_for": [
+      "USB Killer / voltage-attack testing (no isolation or protection circuitry)",
+      "Detecting malicious file content on an otherwise well-behaved drive"
+    ],
+    "hardware": {
+      "mcu_primary": "RP2040",
+      "mcu_primary_note": "Raspberry Pi Pico (1 or 2) or other RP2040 boards; uses the RP2040's PIO blocks for low-level USB signal handling via the Pico SDK.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {
+        "type": "I2C OLED (SSD1306)",
+        "size_in": null,
+        "resolution": "128x64 or 128x32",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "A community fork (TryBreakFixAgain/USBvalve-tbfa-Mod) adds a LiPo and SD logger; not part of the base project.",
+      "charging": "USB (bus powered)",
+      "pmic": null,
+      "storage": "None in the base project (fake filesystem is emulated in RAM/flash, not a real data store)",
+      "connectivity": [
+        "USB (device mode)",
+        "USB (host mode, v0.8.0+, needs a second port)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Optional custom PCB or 3D-printed spacer; base build is bare board/breadboard",
+      "notable_physical": [
+        "Sits inline between a USB drive/device and the host"
+      ]
+    },
+    "capabilities": {
+      "usb_mass_storage": {
+        "v": "partial",
+        "note": "Presents a fake filesystem to the host purely to observe and display read/write access attempts - it is a detector, not a functional storage device."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open source, MIT licensed."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs and displays results on its own OLED with no host software required."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Purely defensive/diagnostic tool; legal to build, own, and use everywhere."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-08-19",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/cecio/USBvalve",
+        "what": "README: dual device/host-mode operation, 1.3k stars, RP2040 PIO USB approach, v1.0.0 rewrite notes"
+      },
+      {
+        "url": "https://github.com/cecio/USBvalve/blob/main/README.md",
+        "what": "detailed mechanism description (fake filesystem, host-mode BadUSB detection from v0.8.0)"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in this schema directly covers 'inline USB threat/activity detector'; usb_mass_storage was used loosely as the closest fit and flagged here.",
+      "Exact commit date of the most recent release could not be pinned beyond the 2026-08-19 date carried over from the first-pass listing."
+    ]
+  },
+  {
+    "id": "multifunction-network-box",
+    "hardware_id": "multifunction-network-box",
+    "name": "Multifunction Network Box",
+    "firmware": "Custom Linux build",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": null,
+    "firmware_note": "Vendor states it 'can run linux and be configured to suit various needs'; no distro, kernel, or software stack disclosed.",
+    "vendor": "Hacker Warehouse (custom build; underlying hardware OEM not disclosed)",
+    "vendor_url": "https://hackerwarehouse.com",
+    "product_url": "https://hackerwarehouse.com/product/multifunction-network-box/",
+    "category": "network-implant",
+    "subcategory": "engagement-router",
+    "status": "available",
+    "released": null,
+    "price_usd": 1500.0,
+    "price_note": "Model 100 (dual-core Atom 1.6GHz, 2GB RAM, 8x GbE standard/8 max) is $1,500. Model 1000 (Core i5 2.8GHz, 16GB RAM, 8x GbE standard/16 max) is $3,000. Both share the 80GB SSD spec. Custom build, 4-7 week lead time.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "It's a bare Linux appliance you configure yourself for traffic logging and selective blocking during an engagement; there's no turnkey point-and-click workflow documented.",
+    "build_effort": "assembled",
+    "build_note": "Ships as a finished custom-built appliance; a 4-7 week lead time implies it is built to order rather than stocked.",
+    "stealth": "overt",
+    "form_factor": "box",
+    "summary": "A custom-built, LCD-equipped Linux network appliance with 8-16 Gigabit Ethernet ports, sold by Hacker Warehouse as an all-in-one alternative to running a separate network tap plus a separate logging/blocking host during an engagement. It is positioned as combining traffic logging with active selective blocking, which a passive tap alone cannot do.",
+    "honest_take": "Strip away the case and LCD and the two tiers are, respectively, a dual-core Atom mini-PC with 2GB of RAM and a Core i5 box with 16GB - ordinary small-form-factor PC hardware with several Ethernet ports, running unspecified Linux software, for $1,500 and $3,000. There is no published detail on the actual blocking mechanism (iptables-style rules? a real inline proxy?), whether the box fails open or closed if it crashes or loses power, or whether it can defeat or merely sits behind things like 802.1X - none of that is documented anywhere in the listing. You are paying almost entirely for Hacker Warehouse's integration and the 'one box for a multi-person engagement' framing; a comparably specced mini-PC with a few USB/PCIe NIC cards and open-source bridging + tcpdump/nftables software would cost a small fraction of this if you're willing to build and validate the software stack yourself.",
+    "best_for": [
+      "Teams that want one physical box handling both logging and selective traffic blocking on an engagement without assembling their own"
+    ],
+    "not_for": [
+      "Budget-conscious buyers - the premium here is integration, not exotic hardware",
+      "Anyone needing documented fail-open/fail-closed behavior for a production network"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Model 100: dual-core Intel Atom @1.6GHz. Model 1000: Intel Core i5 @2.8GHz. Exact SoC/CPU part numbers not published.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {
+        "type": "LCD",
+        "size_in": null,
+        "resolution": null,
+        "color": null,
+        "touch": null
+      },
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": "80GB SSD (both models)",
+      "connectivity": [
+        "8x GbE standard (Model 100 and 1000)",
+        "up to 16x GbE (Model 1000 max)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Unspecified, custom build",
+      "notable_physical": [
+        "Front LCD for system/network status"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "claimed",
+        "note": "Vendor states it logs traffic during engagements; capture format, storage limits, and export method not documented."
+      },
+      "ethernet_mitm": {
+        "v": "partial",
+        "note": "Described as able to selectively block IPs/services in-path, which is active in-line traffic control; no documentation of ARP spoofing, injection, or other classic MITM techniques beyond blocking."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "This is an active Linux bridge/router appliance, not a passive electrical tap; it requires its own power and there's no documented fail-open bypass."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Onboard 80GB SSD and its own compute - doesn't need an external capture host."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Legal to own. Deploying it on a network segment you don't have written authorization to monitor and block traffic on is a serious legal exposure (wiretapping and computer-crime statutes), independent of how the device itself works."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "poor",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Model 100",
+      "Model 1000"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/multifunction-network-box/",
+        "what": "only public source found: pricing, per-model CPU/RAM/port counts, storage, lead time"
+      }
+    ],
+    "research_gaps": [
+      "No manufacturer/OEM name, CPU part numbers, OS distribution, blocking mechanism, or power-loss/bypass behavior documented anywhere public.",
+      "Could not determine whether it can defeat or merely passes through 802.1X - not documented.",
+      "Considered emitting separate records for Model 100 and Model 1000 but the public spec sheet is too thin to responsibly differentiate their capabilities beyond raw CPU/RAM, so they are documented as one record with the tier difference in price_note/hardware."
+    ]
+  },
+  {
+    "id": "pikvm-v4-plus",
+    "hardware_id": "pikvm-v4-plus",
+    "name": "PiKVM V4 Plus",
+    "firmware": "kvmd (PiKVM software stack)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/pikvm/pikvm",
+    "firmware_note": "Open-source KVM-over-IP software (kvmd) running on a Debian/Arch-based image on the Compute Module 4; regularly updated by the upstream PiKVM project.",
+    "vendor": "PiKVM / HiPi Industries (hardware); resold by lab401 and others",
+    "vendor_url": "https://pikvm.org",
+    "product_url": "https://lab401.com/collections/pentesting-network",
+    "category": "network-implant",
+    "subcategory": "kvm-over-ip",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 387.72,
+    "price_note": "Price as listed by lab401 (EUR converted). Official/other resellers (pishop.us, welectron, Pimoroni) price the same hardware lower, roughly $329-355; lab401's framing (see honest_take) is the outlier, not the price.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Legitimate use is straightforward web-UI remote administration; using it as a covert drop device requires real operational security and physical access planning that the product itself doesn't provide.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled turnkey unit: power supply, USB and Ethernet cables, and PCI brackets included.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "PiKVM V4 Plus is a legitimate, well-regarded open-source KVM-over-IP appliance built around a Raspberry Pi Compute Module 4: it captures a target machine's video (up to 1080p60), emulates a USB keyboard/mouse and a virtual mass-storage drive for OS reinstalls, and controls ATX power - giving BIOS-level remote access over Ethernet, Wi-Fi, or an optional cellular modem card. lab401 resells this exact hardware with 'undetectable hardware RAT for red-team engagements' marketing that is entirely the reseller's framing, not the PiKVM project's.",
+    "honest_take": "PiKVM is genuinely good, actively maintained open-source engineering, used widely by homelabbers and datacenter admins for exactly what it says: remote BIOS-level access to a machine you own or administer. The 'undetectable' framing is 100% lab401's marketing copy - the official PiKVM site describes it purely as sysadmin/datacenter equipment and never mentions covert or red-team use. What the marketing also glosses over: this is not a drop-in-five-seconds implant like a cable-swap device - you need physical access to plug in HDMI, USB, and power on the target machine, which is a much bigger physical-access requirement than something like an O.MG Cable or Screen Crab. The optional cellular modem (sold as a separate mPCIe card, not built in) does let an operator reach the unit over an out-of-band channel that bypasses the target network's own monitoring, which is the one part of the pitch that's technically accurate.",
+    "best_for": [
+      "Legitimate out-of-band remote server/workstation administration",
+      "Red-team engagements with a signed physical-access scope, where an out-of-band cellular channel is explicitly wanted"
+    ],
+    "not_for": [
+      "Fast, low-physical-access-requirement drops (needs HDMI+USB+power wired in)",
+      "Anyone expecting the LTE modem to come installed - it's a separate mPCIe card purchase"
+    ],
+    "hardware": {
+      "mcu_primary": "Raspberry Pi Compute Module 4 (BCM2711, quad-core Cortex-A72)",
+      "mcu_primary_note": "Exact CM4 RAM/eMMC variant used in the 'Plus' SKU not confirmed from available sources.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wifi-24",
+          "note": "Wi-Fi with optional external antenna; chip not disclosed"
+        },
+        {
+          "ic": null,
+          "role": "cellular",
+          "note": "mPCIe slot with USB lines and a SIM slot for an optional 3G/4G/5G modem card, sold separately, not built in"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No internal battery; powered via 5.5x2.1mm DC barrel connector, 8-24V input.",
+      "charging": "DC barrel jack, 8-24V",
+      "pmic": null,
+      "storage": "Internal storage for the OS plus an internal USB 3.0 slot for a flash drive used as virtual mass storage for the target",
+      "connectivity": [
+        "Ethernet",
+        "Wi-Fi (optional external antenna)",
+        "Cellular (optional mPCIe modem card + SIM)",
+        "HDMI capture in, two HDMI passthrough outs",
+        "USB (to target, for HID/mass-storage emulation)",
+        "ATX power control header"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosed unit with PCI bracket mounting option",
+      "notable_physical": [
+        "Two extra HDMI passthrough outputs",
+        "PCI brackets included"
+      ]
+    },
+    "capabilities": {
+      "hdmi_capture": {
+        "v": "yes",
+        "note": "1920x1080@60Hz and 1920x1200@60Hz capture, for BIOS/UEFI-level video access."
+      },
+      "usb_hid_inject": {
+        "v": "yes",
+        "note": "Emulates a USB keyboard and mouse to the target for legitimate remote KVM control; the same primitive that makes this dual-use if operated without authorization."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Emulates a virtual USB drive from an operator-supplied ISO/IMG for OS reinstall or bootable-media emulation on the target."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "kvmd web interface for remote video/KB/mouse/power control."
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "Reachable by the operator over its own network path (Ethernet/Wi-Fi/optional cellular), independent of the target's own network monitoring if the cellular option is fitted - functionally an out-of-band channel, though this is remote-administration software, not a dedicated C2 protocol."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs independently once wired to the target's video/USB/power and given network reachability."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning and using PiKVM on your own equipment is completely legal. Installing one on a machine or network you don't have explicit authorization to access is unauthorized computer access / CFAA-class crime in most jurisdictions - the physical-access requirement doesn't reduce that risk."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://pikvm.org/products/",
+        "what": "official spec description: CM4 base, mPCIe LTE/5G slot, SIM slot, intended IT/datacenter use case"
+      },
+      {
+        "url": "https://pikvm.org/buy/",
+        "what": "reseller price comparison confirming ~$329-522 range across official retailers"
+      },
+      {
+        "url": "https://lab401.com/collections/pentesting-network",
+        "what": "lab401 listing: price (EUR 359 / $387.72 converted) and 'undetectable hardware RAT' marketing language"
+      },
+      {
+        "url": "https://github.com/pikvm/pikvm",
+        "what": "official open-source firmware/software repository"
+      }
+    ],
+    "research_gaps": [
+      "Exact CM4 RAM/eMMC configuration in the 'Plus' SKU and HDMI-capture IC part number not confirmed.",
+      "PoE support not confirmed either way."
+    ]
+  },
+  {
+    "id": "dualcomm-etap-2003-gigabit-tap",
+    "hardware_id": "dualcomm-etap-2003-gigabit-tap",
+    "name": "Dualcomm ETAP-2003 Gigabit Ethernet Tap",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Dualcomm",
+    "vendor_url": "https://www.dualcomm.com",
+    "product_url": "https://hackerwarehouse.com/product/gigabit-ethernet-tap/",
+    "category": "network-implant",
+    "subcategory": "ethernet-tap",
+    "status": "available",
+    "released": null,
+    "price_usd": 210.0,
+    "price_note": "Hacker Warehouse listing (their SKU labeled DC-2003); Dualcomm's own current line names this model family ETAP-2003/ETAP-2003R as the successor to the discontinued DCGS-2005.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Plug-and-use hardware, but interpreting captured traffic needs a separate analyzer on the monitor port and real 802.11/Ethernet knowledge.",
+    "build_effort": "assembled",
+    "build_note": "Fixed-function hardware tap in a metal case, USB-powered.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "A single inline-port, USB-powered 10/100/1000BASE-T copper Ethernet tap with PoE pass-through, in a small metal case. It presents a mirrored copy of both directions of traffic on a monitor port for an external analyzer; unlike the 5-port switch-based tap in this same batch, it is built specifically as a dedicated tap rather than a repurposed switch.",
+    "honest_take": "Reseller copy for this device family claims 'no power needed' and 'lossless' Gigabit monitoring, but that claim needs scrutiny: full-duplex 1000BASE-T uses all four copper pairs bidirectionally, so a Gigabit tap generally cannot just electrically split the line onto a passive monitor port the way a true zero-power 10/100 tap (like the Throwing Star LAN Tap, already tracked here) can - most designs in this class need active circuitry to aggregate both directions onto a single monitor port, and that circuitry needs power even if the inline link itself might keep passing traffic unpowered. Dualcomm's own site doesn't spell out which parts of this device are truly passive versus USB-powered, so treat any 'can't be detected, no power needed' claim as something to verify yourself with a bench test, not something to take on faith.",
+    "best_for": [
+      "Gigabit-speed passive monitoring where the 10/100-only taps already in this database aren't fast enough"
+    ],
+    "not_for": [
+      "Assuming zero-power, guaranteed-invisible operation without testing it yourself",
+      "Standalone capture - always needs a separate analyzer on the monitor port"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No chipset disclosed by the vendor.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB (power only, from host or any USB power source)",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "2x inline RJ45 (10/100/1000Base-T)",
+        "Monitor/SPAN RJ45 port(s)",
+        "USB-A (power only)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "127 x 127 x 38",
+      "weight_g": 680,
+      "case": "Metal",
+      "notable_physical": [
+        "Small portable metal enclosure"
+      ]
+    },
+    "capabilities": {
+      "ethernet_tap_passive": {
+        "v": "claimed",
+        "note": "Vendor/reseller copy describes it as needing no power for the inline path ('lossless...no power needed'), but the device is USB-powered and the split between a genuinely passive splitting stage and active monitor-port aggregation is not documented - not independently confirmed."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Presents mirrored traffic on a monitor port; requires an external analyzer/host, has no capture storage of its own."
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "Pure tap; no injection or in-path modification capability."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Legal to own. Tapping a network segment you don't have authorization to monitor is wiretap-law territory (e.g. ECPA in the US) regardless of how the tap works electrically."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Gigabit Ethernet Tap (Hacker Warehouse listing name)",
+      "DC-2003",
+      "ETAP-2003"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/gigabit-ethernet-tap/",
+        "what": "listing: price, PoE pass-through, dimensions, DC-2003 model number"
+      },
+      {
+        "url": "https://www.dualcomm.com/products/gigabit-copper-network-tap",
+        "what": "Dualcomm's current Gigabit tap product page, naming ETAP-2003/ETAP-2003R as successors to the DCGS-2005 this family descends from"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm from Dualcomm's own documentation whether the inline pass-through path truly stays up with zero power, or whether the whole device (including pass-through) requires USB power to function - this materially affects its 'fail open' behavior and was not resolved."
+    ]
+  },
+  {
+    "id": "dualcomm-dc-1005pt-faste-switch-tap",
+    "hardware_id": "dualcomm-dc-1005pt-faste-switch-tap",
+    "name": "10/100 FastE Switch Tap",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Dualcomm",
+    "vendor_url": "https://www.dualcomm.com",
+    "product_url": "https://hackerwarehouse.com/product/10-100-faste-switch-tap/",
+    "category": "network-implant",
+    "subcategory": "mirroring-switch",
+    "status": "available",
+    "released": null,
+    "price_usd": 130.0,
+    "price_note": "Hacker Warehouse listing, Dualcomm model DC-1005PT.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug in the network path through ports 1-4 and connect an analyzer to the mirrored port 5.",
+    "build_effort": "assembled",
+    "build_note": "Fixed-function 5-port switch with mirroring; no assembly needed.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "A USB/5VDC-powered 5-port 10/100 Ethernet switch (Dualcomm DC-1005PT) with port-mirroring from Port 1 to Port 5, marketed as a network tap. It is mechanically a real active switch with switching/mirroring logic, not an electrically passive splitter like the Gigabit tap and other true taps in this database.",
+    "honest_take": "Despite the 'tap' name, this is an ordinary 5-port unmanaged Ethernet switch with SPAN-style port mirroring - genuinely different from a real passive tap, and worse for covert or high-integrity monitoring in two specific ways: a switch's mirror port can silently drop frames under load the way a true passive tap never does, and being a full switch it fails closed (the link goes down, not through) if it loses power, since there is no physical bypass path. At $130 it also sits close to a genuinely passive Gigabit tap's price ($210, also in this database) while offering weaker guarantees. Worth it only if you specifically want several simultaneous 10/100 drops off one mirrored segment; not a stealthier or more reliable alternative to a real passive tap.",
+    "best_for": [
+      "Multiple analysts tapping the same 10/100 segment simultaneously"
+    ],
+    "not_for": [
+      "High-integrity capture where dropped mirrored frames matter",
+      "Fail-open/covert deployments - it goes down, not through, on power loss"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Unmanaged switch ASIC, part number not disclosed.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "5VDC input or USB host power",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "5x RJ45, 10/100Mbps, Auto-MDI/MDIX",
+        "Port 1 mirrors to Port 5"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "152 x 102 x 51",
+      "weight_g": 454,
+      "case": "Plastic/metal enclosure",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "This is an active 5-port switch with port mirroring, not an electrically passive splitter - it needs power to pass any traffic at all and fails closed on power loss."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Mirrored traffic available on Port 5; requires an external analyzer, no onboard storage."
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "Passive mirroring only; no documented injection capability."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Legal to own. Monitoring traffic on a network you don't have authorization for is wiretap-law territory in most jurisdictions."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "DC-1005PT"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/10-100-faste-switch-tap/",
+        "what": "listing: price, DC-1005PT model, port mirroring config, PoE pass-through, dimensions"
+      }
+    ],
+    "research_gaps": [
+      "Exact switch ASIC and buffer size (which determine how much frame loss occurs under mirrored-port saturation) not published."
+    ]
+  },
+  {
+    "id": "firewalla-red",
+    "hardware_id": "firewalla-red",
+    "name": "Firewalla (Red)",
+    "firmware": "Firewalla firmware",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/firewalla/firewalla",
+    "firmware_note": "Firewalla publishes source for parts of its stack on GitHub; the exact split between open and closed components (cloud/app backend vs on-device agent) was not verified in depth for this record.",
+    "vendor": "Firewalla LLC",
+    "vendor_url": "https://firewalla.com",
+    "product_url": "https://www.tindie.com/products/firewallallc/firewalla-smart-internet-security-for-your-home/",
+    "category": "detection-defense",
+    "subcategory": "home-network-security-appliance",
+    "status": "out-of-stock",
+    "released": null,
+    "price_usd": 109.0,
+    "price_note": "This is Firewalla's original/base model (specs match the discontinued 'Firewalla Red': quad-core ~1GHz ARM, 512MB RAM, ~100Mbps software packet processing). Firewalla's current lineup (Blue, Purple, Gold) starts higher and handles full Gigabit; this specific $109 SKU is listed as on a break/not actively selling.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Managed entirely through a mobile app; no CLI or manual configuration required for stock features.",
+    "build_effort": "assembled",
+    "build_note": "Plug into your router/LAN and pair with the mobile app.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "A small ARM-based network appliance that sits on a home LAN (originally sold as 'Firewalla Red') and passively monitors connected devices, flags anomalous behavior, blocks ads/malicious content and adult content by category, and offers a VPN server and DDNS - a consumer home-security and parental-control box, not a penetration-testing tool.",
+    "honest_take": "This is the weakest fit of anything assigned in this batch: it is a consumer defensive home-network appliance aimed at protecting a household, with none of the offensive or RF-attack capability that most of the devices in this database have. It's included here because it's a real hardware security product with independently verifiable specs, but if you're shopping this database for pentest gear, skip it - it belongs next to a home router or a parental-control app, not next to a Wi-Fi Pineapple. At $109 for a ~100Mbps-capable box (per the specs on this specific SKU), it's also well behind Firewalla's current Gigabit-capable models (Blue/Purple/Gold) in raw throughput, which matters directly for whether it can actually inspect traffic on a modern home internet connection without becoming the bottleneck.",
+    "best_for": [
+      "Non-technical home users wanting app-based network visibility and parental controls"
+    ],
+    "not_for": [
+      "Any offensive security or pentest use case",
+      "Gigabit home connections - this specific model tops out around 100Mbps of packet processing"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Quad-core ARM SoC, ~1.0GHz, part number not disclosed.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB power adapter (included)",
+      "pmic": null,
+      "storage": "16GB microSD",
+      "connectivity": [
+        "Ethernet (bridge/span to router)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Plastic",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "partial",
+        "note": "Performs flow-level monitoring and DPI for its own IDS/parental-control features, not general-purpose pcap export for third-party analysis."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Fully legal defensive consumer product for use on a network you own."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "Yes - iOS/Android companion app",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Firewalla Red"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/firewallallc/firewalla-smart-internet-security-for-your-home/",
+        "what": "listing: price, CPU/RAM, 100Mbps processing figure, feature list, GitHub link"
+      },
+      {
+        "url": "https://help.firewalla.com/hc/en-us/articles/360010465893-Guide-How-to-Choose-between-Different-Firewalla-Products",
+        "what": "confirms Red as the original/base model versus current Blue/Purple/Gold lineup"
+      }
+    ],
+    "research_gaps": [
+      "Could not confirm the exact split between open-source and closed-source components of the Firewalla stack.",
+      "No capability keys in this schema cover home-network IDS/parental-control/ad-blocking; only the closest-fitting one (packet_capture) was used, flagged here rather than force-fitting others."
+    ]
+  },
+  {
+    "id": "glytch-gps-module-pineapple-pager",
+    "hardware_id": "glytch-gps-module-pineapple-pager",
+    "name": "Glytch GPS Module for Pineapple Pager",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Glytch, in collaboration with Hak5",
+    "vendor_url": "https://shop.hak5.org",
+    "product_url": "https://shop.hak5.org/products/glytch-gps-mod-for-pager",
+    "category": "accessory",
+    "subcategory": "wardriving-addon",
+    "status": "available",
+    "released": null,
+    "price_usd": 79.0,
+    "price_note": "Hak5's own shop does not display a fixed USD price (JS-rendered page). lab401 resells it for EUR 79 (~$85.32 converted); $79 used here as the more conservative figure between the two.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Snaps onto a WiFi Pineapple Pager; no configuration beyond the Pager's own software.",
+    "build_effort": "assembly",
+    "build_note": "Hand-assembled 3D-printed add-on module, attaches without soldering.",
+    "stealth": "discreet",
+    "form_factor": "accessory",
+    "summary": "A GPS add-on module for the WiFi Pineapple Pager built around a Quectel LC86 multi-constellation GNSS chipset, adding location tagging to the Pager's wardriving/recon sessions so captured networks and clients can be geo-correlated (WiGLE-compatible).",
+    "honest_take": "This only makes sense if you already own a WiFi Pineapple Pager - it has no standalone function. You're paying Hak5/Glytch prices for a small breakout of a GNSS chip (the Quectel LC86 is a commodity part used across many drone/wardriving projects, typically a few dollars to a low double digits on its own) fitted with a connector and case to match the Pager, plus the fitted 3D-printed housing. If you're building your own wardriving rig on a Flipper Zero, ESP32 board, or similar, a generic NEO-6M/LC86-class GPS breakout will do the same geotagging job for a fraction of this price - you're buying fit and finish, not unique capability.",
+    "best_for": [
+      "Existing WiFi Pineapple Pager owners who want geotagged wardriving logs"
+    ],
+    "not_for": [
+      "Anyone without a Pineapple Pager already - no standalone use",
+      "Budget wardriving builds - a generic GNSS breakout is much cheaper"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": null,
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "Quectel LC86",
+          "role": "gnss",
+          "note": "Multi-constellation GNSS chipset"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Physical mount/connector to WiFi Pineapple Pager"
+      ],
+      "gpio": null,
+      "sensors": [
+        "GNSS"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D printed, hand-assembled",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "gps": {
+        "v": "yes",
+        "note": "Quectel LC86 multi-constellation GNSS."
+      },
+      "gps_wardrive_log": {
+        "v": "yes",
+        "note": "Geo-tags WiFi Pineapple Pager recon/capture sessions, described as WiGLE-compatible."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "GPS reception hardware is legal everywhere to own and use; legality of the underlying wardriving/capture activity follows the host Pineapple Pager's own legal considerations."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Glytch GPS Mod for Pager"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/glytch-gps-mod-for-pager",
+        "what": "GNSS chip (Quectel LC86), hand-assembled 3D printed construction"
+      },
+      {
+        "url": "https://lab401.com/collections/pentesting-network",
+        "what": "EUR pricing (79.00) and stock status (sold out at time of check)"
+      }
+    ],
+    "research_gaps": [
+      "Exact USD list price on Hak5's own shop could not be read (client-rendered price placeholder); used lab401's EUR-converted figure instead.",
+      "No category vocabulary value exists for 'wardriving addon module' specifically; used 'accessory' as the closest fit."
+    ]
+  },
+  {
+    "id": "littlepcap-network-tap",
+    "hardware_id": "littlepcap-network-tap",
+    "name": "LittlePcap Network Tap",
+    "firmware": "LittlePcap firmware (v2: NanoPi R3S platform)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": null,
+    "firmware_note": "Firmware is vendor-provided and pre-programmed onto the board's eMMC/SD; no public source repository found. Version 2 documentation points to the underlying NanoPi R3S single-board-computer platform, not a project-specific repo.",
+    "vendor": "Little Things",
+    "vendor_url": "https://www.tindie.com/stores/littlethings/",
+    "product_url": "https://www.tindie.com/products/littlethings/littlepcap-network-tappacket-capture-to-usb-drive/",
+    "category": "network-implant",
+    "subcategory": "standalone-capture-tap",
+    "status": "available",
+    "released": null,
+    "price_usd": 80.0,
+    "price_note": "Version 1 price. A version 2 exists (USB 3.0 port, eMMC storage instead of SD, added HDMI port on the NanoPi R3S platform) with pricing not confirmed.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug inline, attach a USB drive, power it on; captures start automatically after roughly a 16-second boot.",
+    "build_effort": "assembled",
+    "build_note": "Fixed-function board in a small case, ships ready to use.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "An inline dual-Gigabit-Ethernet capture appliance that writes traffic straight to PCAP files on an attached USB drive, with no host computer needed and no IP address of its own on the monitored network. USB-C powered (5V/2A), roughly 16-second boot, and rated to pass a full 1Gbps of traffic - unlike the 10/100-limited passive taps in this database, it is built on an actual small ARM Linux board (NanoPi R3S in v2) rather than a passive electrical splitter.",
+    "honest_take": "The 'invisible network tap - no IP address' claim is about being unaddressable at layer 3, not about being electrically passive - this is a small ARM Linux single-board computer bridging two Ethernet ports and copying frames to a local file, and it says so itself: no automatic bypass, network connectivity only exists while it's powered on. That means an unplanned reboot or power loss on this box takes the monitored link down with it - something a true zero-power passive tap (like the Throwing Star LAN Tap already in this database) never does. Where it genuinely wins is standalone capture: no laptop needed, just plug in a USB drive and walk away, and it explicitly passes 802.1X traffic through untouched rather than trying to defeat it.",
+    "best_for": [
+      "Solo standalone PCAP capture without carrying a laptop",
+      "Drop-and-retrieve captures on segments where brief link interruption on power-cycle is acceptable"
+    ],
+    "not_for": [
+      "Critical paths needing guaranteed fail-open behavior on power loss",
+      "Defeating 802.1X - it passes EAPOL/NAC traffic through unmodified, it does not bypass authentication"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Version 2 runs on the FriendlyElec NanoPi R3S SBC platform; SoC not independently confirmed for the specific LittlePcap build (NanoPi R3S is typically Rockchip RK3328-class).",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "USB-C, 5V/2A",
+      "pmic": null,
+      "storage": "USB 3.0 port for an attached USB flash drive (exFAT/NTFS/FAT32); ~8MB onboard buffer for captures. V2: eMMC replaces SD for onboard OS storage.",
+      "connectivity": [
+        "2x Gigabit Ethernet (10/100/1000Base-T, auto-crossover)",
+        "USB 3.0 (capture drive)",
+        "USB-C (power)",
+        "HDMI (v2 only)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D printed",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "Active ARM Linux bridge, not an electrically passive splitter; no automatic bypass, so the monitored link goes down if the tap loses power."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Writes PCAP directly to an attached USB drive."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Captures to its own attached USB drive; no host computer required."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Legal to own. Capturing traffic on a network segment you don't have authorization to monitor is wiretap-law territory in most jurisdictions regardless of the device's design."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/littlethings/littlepcap-network-tappacket-capture-to-usb-drive/",
+        "what": "product listing: price, ports, power behavior ('no automatic bypass'), 802.1X passthrough claim, boot time, v2 NanoPi R3S platform link"
+      }
+    ],
+    "research_gaps": [
+      "No public firmware source repository found; software stack beyond 'runs on NanoPi R3S' (v2) is not documented.",
+      "Version 2 pricing not confirmed."
+    ]
+  },
+  {
+    "id": "glytch-ethernet-module-pineapple-pager",
+    "hardware_id": "glytch-ethernet-module-pineapple-pager",
+    "name": "Glytch Ethernet Module for Pineapple Pager",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Glytch, in collaboration with Hak5",
+    "vendor_url": "https://shop.hak5.org",
+    "product_url": "https://shop.hak5.org/products/glytch-ethernet-mod-for-pager",
+    "category": "accessory",
+    "subcategory": "wired-network-addon",
+    "status": "available",
+    "released": null,
+    "price_usd": 40.0,
+    "price_note": "Hak5's own shop price. lab401 resells the same product for EUR 59-63.72 (~$64-69 converted) - this batch's first pass had listed the lab401 resale ('Glytch Ethernet Module for Pineapple Pager') and the Hak5 direct listing ('Glytch Ethernet Mod for Pager') as two separate entries; they are the same product from the same maker (RTL8152B chip, 3D-printed housing, 'designed by Glytch in collaboration with Hak5' on both listings) and have been merged into this single record.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Snaps onto a WiFi Pineapple Pager; no configuration beyond the Pager's own software.",
+    "build_effort": "assembly",
+    "build_note": "3D printed and hand assembled; vendor notes minor cosmetic variations between units are normal for the handcrafted finish.",
+    "stealth": "discreet",
+    "form_factor": "accessory",
+    "summary": "A 3D-printed, hand-assembled add-on for the WiFi Pineapple Pager built around a Realtek RTL8152B USB-to-Ethernet controller, giving the otherwise Wi-Fi-only Pager a wired RJ45 port for LAN-based payload deployment - functionally similar in role to plugging in a LAN Turtle, but as an accessory to the Pager rather than a standalone device.",
+    "honest_take": "The RTL8152B is a completely generic USB-Ethernet controller chip, the same one found in countless no-name $10 USB-to-Ethernet dongles - there is no tap, capture, or security-specific circuitry of any kind in this module. You are paying Hak5/Glytch prices almost entirely for the fitted 3D-printed case that clips onto the Pager and the brand, not for anything the chip itself couldn't do in a five-dollar dongle. It only has value if you already own a Pineapple Pager and specifically want wired-LAN payload delivery from it.",
+    "best_for": [
+      "Existing WiFi Pineapple Pager owners who want a wired LAN path for payload deployment"
+    ],
+    "not_for": [
+      "Anyone without a Pineapple Pager already - no standalone use",
+      "Anyone hoping for tap/capture hardware - it's a stock USB-Ethernet chip, nothing more"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": null,
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "RJ45 Ethernet (10/100, via RTL8152B)",
+        "Physical mount/connector to WiFi Pineapple Pager"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D printed, hand-assembled",
+      "notable_physical": [
+        "Clip-on fit to WiFi Pineapple Pager"
+      ]
+    },
+    "capabilities": {
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "Stock RTL8152B USB-Ethernet controller providing a wired NIC to the host Pager; any attack capability comes from the Pager's own software, not this module."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "The module itself is a plain network interface adapter and legal everywhere; legal risk depends entirely on how the host WiFi Pineapple Pager is used."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Glytch Ethernet Mod for Pager"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/glytch-ethernet-mod-for-pager",
+        "what": "chip (RTL8152B), 3D printed/hand-assembled construction, direct Hak5 price ($40)"
+      },
+      {
+        "url": "https://lab401.com/collections/pentesting-network",
+        "what": "lab401 resale listing of the same product at EUR 59-63.72"
+      }
+    ],
+    "research_gaps": [
+      "Confirmed as a duplicate pair within this batch's first pass (lab401 resale vs Hak5 direct listing) and merged into one record rather than written twice."
+    ]
+  },
+  {
+    "id": "netgotchi-pro",
+    "hardware_id": "netgotchi-pro",
+    "name": "Netgotchi Pro",
+    "firmware": "Netgotchi",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/MXZZ/Netgotchi/",
+    "firmware_note": "Same open-source codebase as the base Negotchi; user-flashable via the Arduino IDE.",
+    "vendor": "OlleStore",
+    "vendor_url": "https://www.tindie.com/stores/ollestore/",
+    "product_url": "https://www.tindie.com/products/ollestore/netgotchi-pro-portable-network-security-scanner/",
+    "category": "detection-defense",
+    "subcategory": "network-honeypot-scanner",
+    "status": "available",
+    "released": null,
+    "price_usd": 59.0,
+    "price_note": "Only 2 units in stock at time of check.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Configured entirely through an on-device AutoConnectAP web portal; no coding needed to use it, only to modify it.",
+    "build_effort": "assembled",
+    "build_note": "Sold pre-assembled and tested; open-source firmware is user-reflashable via Arduino IDE.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A pocket-portable ESP8266 + OLED network security scanner: it periodically scans the local Wi-Fi network for hosts, reports newly connected devices, and runs a honeypot service that triggers an on-screen visual alert (and, from v2, a sound alert) if touched. Despite 'battery-powered' in some marketing copy, the product page itself specifies it is USB-powered from an external power bank (not included), not from a built-in cell.",
+    "honest_take": "This is a Pwnagotchi-style novelty display wrapped around a very simple ESP8266 network scanner and single honeypot port - the personality/crying-on-alert framing is cosmetic, the actual security function is a periodic host sweep plus one exposed decoy service, and the open-source code (MXZZ/Netgotchi on GitHub) is identical to what runs on the cheaper Negotchi. You're paying the $15 premium over the base Negotchi for portability and a nicer case, not for different detection capability. It also only watches the one Wi-Fi network it's joined to - it has no ability to detect attacker RF hardware like a Pineapple or a Flipper (that's a different category of device entirely).",
+    "best_for": [
+      "Cheap, visible on-your-desk indicator that something new joined your home/office Wi-Fi",
+      "Learning how a basic ESP8266 honeypot/scanner works"
+    ],
+    "not_for": [
+      "Detecting Wi-Fi/BLE attacker hardware (Pineapples, Flippers, etc.) - it only scans hosts on its own joined network",
+      "Any network larger than a home/small-office LAN"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP8266",
+      "mcu_primary_note": null,
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP8266 integrated",
+          "role": "wifi-24",
+          "note": "2.4GHz only"
+        }
+      ],
+      "display": {
+        "type": "OLED",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No internal battery confirmed on the product page; runs from an external USB power bank (not included) despite 'battery-powered' phrasing elsewhere in the listing.",
+      "charging": "USB (from external power bank or wall adapter, not included)",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Wi-Fi 2.4GHz",
+        "USB (power)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosed, black with red buttons",
+      "notable_physical": [
+        "Pocket-sized enclosure"
+      ]
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Periodic scan of the local 2.4GHz network for connected hosts."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open source (MXZZ/Netgotchi), Arduino-IDE flashable."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs its scan/honeypot loop independently once configured, needs only USB power."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Initial Wi-Fi credential setup via an AutoConnectAP captive portal / on-screen IP web page."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Purely defensive; legal to build, own, and run on a network you control."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/ollestore/netgotchi-pro-portable-network-security-scanner/",
+        "what": "listing: price, MCU, display, power source, honeypot/alarm behavior, GitHub link, relation to base Negotchi"
+      },
+      {
+        "url": "https://github.com/MXZZ/Netgotchi/",
+        "what": "open-source firmware repository shared with the base Negotchi"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in this schema covers 'local-network host-scanning honeypot IDS'; wifi_scan_24 was used as the closest fit and the honeypot/alarm behavior is described only in the summary/honest_take.",
+      "Battery vs power-bank power source is ambiguous between the listing's marketing copy ('battery-powered') and its stated included items (no battery listed) - documented as power-bank powered per the more specific spec text."
+    ]
+  },
+  {
+    "id": "negotchi",
+    "hardware_id": "negotchi",
+    "name": "Negotchi - Network Security Scanner",
+    "firmware": "Netgotchi",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/MXZZ/Netgotchi/",
+    "firmware_note": "Same open-source codebase as Netgotchi Pro; user-flashable via the Arduino IDE.",
+    "vendor": "OlleStore",
+    "vendor_url": "https://www.tindie.com/stores/ollestore/",
+    "product_url": "https://www.tindie.com/products/ollestore/negotchi-network-security-scanner/",
+    "category": "detection-defense",
+    "subcategory": "network-honeypot-scanner",
+    "status": "available",
+    "released": null,
+    "price_usd": 44.0,
+    "price_note": null,
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Configured entirely through an on-device AutoConnectAP web portal; no coding needed to use it, only to modify it.",
+    "build_effort": "assembled",
+    "build_note": "Sold pre-assembled and tested with a Micro USB cable included; open-source firmware is user-reflashable via Arduino IDE.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "The base model in the Netgotchi line: an ESP8266 + small OLED board that periodically scans the local 2.4GHz Wi-Fi network for hosts and runs a honeypot service, sounding an on-screen alarm (the on-screen character 'crying') if the honeypot is touched. Same firmware as Netgotchi Pro, in a smaller/cheaper non-portable form.",
+    "honest_take": "Identical function to the pricier Netgotchi Pro - same open-source code (MXZZ/Netgotchi), same ESP8266 scan-and-honeypot behavior, same 2.4GHz-only limitation, same complete blindness to actual attacker RF hardware (Pineapples, Flippers, rogue APs) since it only watches hosts on the one network it joins. At $15 less than the Pro, this is the better buy for anyone who doesn't specifically need the Pro's pocket-portable case, since the detection capability is the same either way.",
+    "best_for": [
+      "Cheapest way into this exact firmware/detection behavior",
+      "A fixed desk/shelf placement rather than portable use"
+    ],
+    "not_for": [
+      "Detecting Wi-Fi/BLE attacker hardware - it only scans hosts on its own joined network",
+      "Portable/pocket use (see Netgotchi Pro for that)"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP8266",
+      "mcu_primary_note": null,
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ESP8266 integrated",
+          "role": "wifi-24",
+          "note": "2.4GHz only"
+        }
+      ],
+      "display": {
+        "type": "OLED",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No internal battery; USB powered from an external power bank or wall adapter (not included).",
+      "charging": "USB (from external power bank or wall adapter, not included)",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Wi-Fi 2.4GHz",
+        "USB (power)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Basic enclosure",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "wifi_scan_24": {
+        "v": "yes",
+        "note": "Periodic ping-sweep of the local 2.4GHz network to report new/active hosts."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open source (MXZZ/Netgotchi), Arduino-IDE flashable."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs its scan/honeypot loop independently once configured, needs only USB power."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Initial Wi-Fi credential setup via an AutoConnectAP captive portal."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Purely defensive; legal to build, own, and run on a network you control."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Netgotchi (base)"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/ollestore/negotchi-network-security-scanner/",
+        "what": "listing: price, MCU, display, power source, scanning/honeypot behavior, GitHub link"
+      },
+      {
+        "url": "https://github.com/MXZZ/Netgotchi/",
+        "what": "open-source firmware repository shared with Netgotchi Pro"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in this schema covers 'local-network host-scanning honeypot IDS'; wifi_scan_24 was used as the closest fit and the honeypot/alarm behavior is described only in the summary/honest_take."
+    ]
+  }
+]
