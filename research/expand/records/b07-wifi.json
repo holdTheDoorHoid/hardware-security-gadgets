@@ -1,0 +1,2390 @@
+[
+ {
+  "id": "wifi-deauther-maltronics",
+  "hardware_id": "maltronics-wifi-deauther",
+  "name": "WiFi Deauther",
+  "firmware": "Deauther V2 (Maltronics fork of SpacehuhnTech esp8266_deauther)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/maltronics/esp8266_deauther",
+  "firmware_note": "Maltronics' own public fork of Stefan Kremser's (Spacehuhn) open-source ESP8266 Deauther v2 firmware, pre-flashed onto a sealed ESP8266 board. The README does not document any functional changes from upstream beyond branding; the same firmware compiles for free onto any ~$3-6 NodeMCU or Wemos D1 Mini.",
+  "vendor": "Maltronics",
+  "vendor_url": "https://maltronics.com",
+  "product_url": "https://maltronics.com/products/wifi-deauther",
+  "category": "wifi",
+  "subcategory": "wifi-deauther",
+  "status": "available",
+  "released": null,
+  "price_usd": 50.17,
+  "price_note": "Listed at GBP 37.00 on the vendor site; converted at the GBP/USD rate on 2026-09-10 (~1.356). Price buys a case, an RGB LED, and dual USB-A/USB-C wiring on top of a bare ESP8266 module.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Pre-flashed, controlled entirely through a phone or laptop browser hitting the device's own web UI; no coding needed for stock use.",
+  "build_effort": "assembled",
+  "build_note": "Ready to use out of the box. The case is sealed with no accessible GPIO, so there is nothing to extend or reflash without opening it.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A sealed, pre-flashed ESP8266 board in a small metallic USB-stick case running Maltronics' fork of the open-source Spacehuhn ESP8266 Deauther v2 firmware. It scans nearby Wi-Fi networks and clients, then sends 802.11 deauthentication frames to disconnect them, plus beacon-frame and probe-request spam, all driven from a phone or laptop browser hitting its built-in web UI.",
+  "honest_take": "This is a $3-6 ESP8266 dev board running firmware that Spacehuhn/SpacehuhnTech gives away free on GitHub; Maltronics' fork adds nothing beyond the case, an RGB LED, and USB-A/USB-C wiring, so most of the ~$45 premium over a bare board buys convenience and cosmetics, not capability. It is not a jammer - it sends spoofed management frames, and those only work against networks that don't enforce 802.11w/PMF, which WPA3 makes mandatory, so it increasingly does nothing against modern APs. The case is sealed with no exposed GPIO, so unlike a bare dev board you can't repurpose it for anything else once you're done deauthing.",
+  "best_for": [
+   "Learning how 802.11 management-frame deauth attacks work",
+   "Quick demonstrations of weaknesses in open (non-PMF) Wi-Fi networks"
+  ],
+  "not_for": [
+   "Attacking WPA3 or any 802.11w/PMF-protected network",
+   "Actual RF jamming - it sends frames, not noise",
+   "Anything beyond 2.4GHz Wi-Fi - no sub-GHz, NFC, or BLE hardware"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP8266EX",
+   "mcu_primary_note": "Tensilica L106 32-bit core @80/160MHz with integrated 2.4GHz 802.11b/g/n radio. The exact module package (ESP-12F, ESP-07S, etc.) inside the current sealed case is not published; earlier, now-discontinued Maltronics deauther SKUs used ESP-12 (4MB flash) and ESP-07 (1MB flash) variants.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP8266EX",
+     "role": "wifi",
+     "note": "Integrated 2.4GHz 802.11b/g/n radio and baseband; no separate radio IC"
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No internal battery. Runs continuously off whatever USB-A or USB-C source it's plugged into (PC, phone, power bank).",
+   "charging": null,
+   "pmic": null,
+   "storage": "Onboard SPI flash typical of ESP8266 modules (1-4MB); exact size not published for this SKU",
+   "connectivity": [
+    "USB-A",
+    "USB-C",
+    "WiFi 2.4GHz"
+   ],
+   "gpio": "None exposed - sealed enclosure",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Metallic silver enclosure, USB-stick sized",
+   "notable_physical": [
+    "Dual USB-A and USB-C connectors for power",
+    "RGB LED (toggleable via web UI)"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Scans nearby APs and associated stations, shown in the web UI"
+   },
+   "wifi_injection": {
+    "v": "yes",
+    "note": "Raw 802.11 management-frame TX via the ESP8266 SDK's freedom-mode send, used for deauth/beacon/probe attacks"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Classic Spacehuhn deauther attack, broadcast or targeted. Defeated by 802.11w/PMF, which WPA3 requires"
+   },
+   "wifi_deauth_5": {
+    "v": "no",
+    "note": "ESP8266 radio is 2.4GHz only"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Floods fake SSIDs (random or list-based) to clutter nearby Wi-Fi scan lists"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Probe-request spam to confuse nearby trackers/scanners"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Serves its own configuration Wi-Fi AP and web UI"
+   },
+   "wifi_evil_twin": {
+    "v": "no",
+    "note": "Not a feature of the Spacehuhn Deauther v2 codebase this fork is based on"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Primary control interface, browser-based"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "No battery - needs continuous USB power from something, but doesn't need a paired app or PC once powered"
+   },
+   "rgb_backlight": {
+    "v": "yes",
+    "note": "Single RGB LED, toggled/colored via the web UI"
+   },
+   "packet_capture": {
+    "v": "no",
+    "note": "No pcap export or on-device storage; this firmware doesn't do full promiscuous capture to file"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning an ESP8266 board is legal virtually everywhere. Sending deauthentication frames at networks you don't own or lack permission to test is illegal in the US and most other countries under unauthorized-access/communications-interference laws; treat this as a lab/authorized-testing tool only. Check your local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2022-12",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Maltronics Deauther"
+  ],
+  "sources": [
+   {
+    "url": "https://maltronics.com/products/wifi-deauther",
+    "what": "product page: price (GBP 37), features, USB-A+C, RGB, case description"
+   },
+   {
+    "url": "https://maltronics.com/pages/deauther-help",
+    "what": "confirms 'Deauther V2 firmware pre-flashed' and links upstream spacehuhn repo"
+   },
+   {
+    "url": "https://github.com/maltronics/esp8266_deauther",
+    "what": "confirms this is a public fork of SpacehuhnTech/esp8266_deauther"
+   },
+   {
+    "url": "https://github.com/SpacehuhnTech/esp8266_deauther",
+    "what": "upstream open-source project, v3 branch commit history (last real commit ~Dec 2022)"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP8266 module and flash size inside the current sealed case not published anywhere",
+   "Could not confirm whether the Maltronics fork differs functionally from upstream SpacehuhnTech v2 - README doesn't detail changes",
+   "GBP/USD conversion is a snapshot for 2026-09-10 and will drift"
+  ]
+ },
+ {
+  "id": "wifi-deauther-plugplay-esp8266",
+  "hardware_id": "nodemcu-esp8266-deauther-plugplay",
+  "name": "Wifi Deauther PLUG PLAY ESP8266 v2.0",
+  "firmware": "Spacehuhn ESP8266 Deauther v2 (unmodified)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/SpacehuhnTech/esp8266_deauther",
+  "firmware_note": "Stock, unmodified Spacehuhn/SpacehuhnTech open-source Deauther v2 firmware pre-flashed onto a generic NodeMCU ESP8266 board. Identical firmware anyone can flash for free onto a ~$3-6 NodeMCU.",
+  "vendor": "ez sellers (Tindie)",
+  "vendor_url": "https://www.tindie.com/stores/technicians/",
+  "product_url": "https://www.tindie.com/products/technicians/wifi-deauther-plug-play-deauther-esp8266-v20/",
+  "category": "wifi",
+  "subcategory": "wifi-deauther",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 29.76,
+  "price_note": "Seller's Tindie shop is currently marked 'On A Break' / unavailable as of 2026-09-10; $29.76 was the last listed price and no shipping estimate is shown.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Pre-flashed and pre-configured; connect to its 'deauther' Wi-Fi AP (default password 'deauther') and open 192.168.4.1.",
+  "build_effort": "assembled",
+  "build_note": "Bare NodeMCU board, no case - nothing to assemble, but also nothing protecting the PCB.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A bare NodeMCU ESP8266 development board (CH340G USB-serial chip) pre-flashed with the free, open-source Spacehuhn ESP8266 Deauther v2 firmware and shipped ready to use - connect to its 'deauther' Wi-Fi AP, browse to 192.168.4.1, and you get SSID spoofing, probe-request spam, and deauthentication.",
+  "honest_take": "This is exactly a stock NodeMCU dev board - the kind sold for $3-6 on AliExpress or Amazon - running firmware that is free and open source on GitHub (SpacehuhnTech/esp8266_deauther). The seller's entire value-add is flashing it and mailing it to you; there is no custom hardware or code here. At $29.76 that's roughly a 5-8x markup over the bare board purely for skipping a 10-minute Arduino IDE flash. As of this check the seller's shop shows 'On A Break' with no stock. The underlying firmware is also showing its age - the actively developed v3 branch hasn't had a real commit since late 2022.",
+  "best_for": [
+   "People who want the Spacehuhn Deauther running without doing the flashing themselves",
+   "Cheap classroom/workshop demo units"
+  ],
+  "not_for": [
+   "Anyone comfortable with the Arduino IDE - flashing this yourself onto a $5 board takes ~10 minutes and costs a fraction of the price",
+   "WPA3/PMF-protected networks",
+   "Anyone who needs a case or ruggedness - it's a bare, unprotected PCB"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP8266EX",
+   "mcu_primary_note": "NodeMCU ESP-12E module, Tensilica L106 32-bit @80MHz, integrated 2.4GHz 802.11b/g/n radio, 4MB flash (standard NodeMCU spec). A CH340G USB-to-serial chip handles programming and power, not part of the wireless MCU.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP8266EX",
+     "role": "wifi",
+     "note": "Integrated 2.4GHz 802.11b/g/n radio and baseband"
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "None; powered via micro-USB from any 5V source",
+   "charging": null,
+   "pmic": null,
+   "storage": "4MB SPI flash (standard NodeMCU ESP-12E)",
+   "connectivity": [
+    "Micro-USB",
+    "WiFi 2.4GHz"
+   ],
+   "gpio": "Full NodeMCU pin header exposed (unused by the stock deauther firmware, but usable if reflashed)",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None - bare PCB",
+   "notable_physical": [
+    "Onboard LED",
+    "Reset/Flash buttons",
+    "PCB antenna trace",
+    "Exposed GPIO header"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Scans nearby APs and stations via the web UI"
+   },
+   "wifi_injection": {
+    "v": "yes",
+    "note": "Raw 802.11 management-frame TX, used for deauth/beacon/probe attacks"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Classic Spacehuhn deauther attack. Defeated by 802.11w/PMF, which WPA3 requires"
+   },
+   "wifi_deauth_5": {
+    "v": "no",
+    "note": "ESP8266 radio is 2.4GHz only"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Clones scanned SSIDs or floods a custom list"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Probe-request spam / logging"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Serves its own 'deauther' Wi-Fi AP and web UI at 192.168.4.1"
+   },
+   "wifi_evil_twin": {
+    "v": "no",
+    "note": "Not part of the stock Spacehuhn Deauther v2 codebase"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Primary control interface, browser-based"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "No battery - needs continuous USB power, but no paired app or PC required beyond that"
+   },
+   "packet_capture": {
+    "v": "no",
+    "note": "No pcap export or on-device storage"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Standard Arduino-programmable ESP8266 board; fully exposed GPIO means it can be reflashed with any other ESP8266 firmware"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning an ESP8266 board is legal virtually everywhere. Deauthing networks you don't own or lack authorization to test is illegal in most jurisdictions under unauthorized-access/interference laws. Check your local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2022-12",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "ez sellers Deauther",
+   "NodeMCU Deauther v2.0"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/technicians/wifi-deauther-plug-play-deauther-esp8266-v20/",
+    "what": "listing: price, hardware (NodeMCU/CH340G), firmware description, default AP credentials, current 'On A Break' stock status"
+   },
+   {
+    "url": "https://github.com/SpacehuhnTech/esp8266_deauther",
+    "what": "upstream open-source firmware this board is flashed with"
+   },
+   {
+    "url": "https://docs.spacehuhn.com/deauther/",
+    "what": "official firmware documentation referenced by the listing"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact current availability beyond the 'On A Break' status shown on 2026-09-10",
+   "Exact NodeMCU board manufacturer/revision not specified by the seller",
+   "No confirmation of whether this is v2.0 stable (2.6.0) or a later nightly build of the firmware"
+  ]
+ },
+ {
+  "id": "tplink-tl-mr3020-minipwner",
+  "hardware_id": "tplink-tl-mr3020",
+  "name": "TP-Link TL-MR3020 (MiniPwner/OpenWrt SKU)",
+  "firmware": "Stock TP-Link firmware, as shipped",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Ships with unmodified TP-Link stock firmware. Hacker Warehouse's own product copy says 'OpenWRT and MiniPwner compatible' but the listing does not flash or bundle either - both are entirely the buyer's own install after purchase.",
+  "vendor": "TP-Link (sold by Hacker Warehouse)",
+  "vendor_url": "https://hackerwarehouse.com",
+  "product_url": "https://hackerwarehouse.com/product/tp-link-tl-mr3020-mini-wireless-router/",
+  "category": "network-implant",
+  "subcategory": "travel-router-dropbox",
+  "status": "available",
+  "released": null,
+  "price_usd": 50.0,
+  "price_note": "Confirmed in stock ('instock' schema.org data) at $50.00 direct from Hacker Warehouse on 2026-09-10. This SKU is bare stock TP-Link hardware, not a MiniPwner-preloaded unit; the same router sells for roughly $15-25 elsewhere.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Buying it is trivial; turning it into a MiniPwner or OpenWrt dropbox means flashing OpenWrt yourself and is meaningfully harder today because the 4MB/32MB hardware no longer fits current OpenWrt releases.",
+  "build_effort": "flash-only",
+  "build_note": "Nothing is pre-flashed. You must manually flash OpenWrt (an old release - current OpenWrt no longer fits 4MB flash/32MB RAM) and then layer the MiniPwner overlay/scripts on top yourself.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "A tiny 802.11n travel router built around a Qualcomm Atheros AR9331 SoC, sold here at a markup specifically because the reflashing community (OpenWrt, MiniPwner) validated years ago that this model works as a pocket-sized pentest dropbox. The unit itself ships with stock TP-Link firmware - it is not preloaded with OpenWrt or MiniPwner.",
+  "honest_take": "This SKU is bare, unmodified TP-Link firmware - Hacker Warehouse is charging $50 for a router that sells for $15-25 elsewhere, and the entire premium is 'we know this specific model works for MiniPwner,' not anything they've done to the hardware. Worse, OpenWrt itself now actively discourages this device: its 4MB flash/32MB RAM is officially flagged as too small for any OpenWrt release newer than 19.07 (last built 2022), so a buyer chasing a modern, patched OpenWrt dropbox will not get one on this hardware - you're building on a permanently frozen, unpatched base. MiniPwner itself is a real, well-documented project dating to 2012 (Kevin Bong and Michael Vieau), not a marketing name, but its guides and package set (Aircrack-ng, Kismet, Nmap, Reaver, etc.) predate modern Wi-Fi security and haven't seen meaningful updates in years.",
+  "best_for": [
+   "Learning OpenWrt/embedded-Linux flashing on cheap, disposable hardware",
+   "Historical/educational recreation of the classic MiniPwner dropbox build"
+  ],
+  "not_for": [
+   "Any deployment needing current OpenWrt security patches",
+   "Fast Wi-Fi - single-stream 802.11n, ~150Mbps PHY rate only",
+   "Out-of-box covert use - requires real Linux/networking skill to set up from stock firmware"
+  ],
+  "hardware": {
+   "mcu_primary": "Atheros AR9331",
+   "mcu_primary_note": "MIPS 24K-class Wi-Fi SoC @400MHz with an integrated single-stream 802.11b/g/n radio and a 10/100 Ethernet MAC/PHY. A later v3.0 hardware revision of this model uses a MediaTek MT7628NN instead; Hacker Warehouse's listing doesn't state which revision currently ships.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "AR9331",
+     "role": "wifi",
+     "note": "Single-stream 2.4GHz 802.11b/g/n, ~150Mbps PHY rate, internal antenna only, no external antenna connector"
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "None; powered via USB (5V) from a laptop, wall adapter, or power bank - central to the MiniPwner drop-box use case",
+   "charging": null,
+   "pmic": null,
+   "storage": "4MB SPI flash / 32MB RAM",
+   "connectivity": [
+    "1x USB 2.0 Type-A",
+    "1x 10/100 Mbps Ethernet",
+    "WiFi 2.4GHz",
+    "Micro/Mini-USB power input"
+   ],
+   "gpio": "Unpopulated UART console pads on the PCB (solder required)",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Plastic, TP-Link stock enclosure",
+   "notable_physical": [
+    "USB port intended for a 3G/4G modem, repurposable for storage or attack peripherals under OpenWrt",
+    "3-position mode switch (3G/AP/router)",
+    "Internal antenna, no external connector"
+   ]
+  },
+  "capabilities": {
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Stock firmware default - it's a router out of the box"
+   },
+   "wifi_scan_24": {
+    "v": "addon",
+    "note": "Not present in stock firmware; available after installing OpenWrt + site-survey packages"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "AR9331 is a single-stream, single-band 2.4GHz-only SoC - no 5GHz radio exists on this hardware regardless of firmware"
+   },
+   "wifi_monitor_mode": {
+    "v": "addon",
+    "note": "The AR9331's ath9k driver is well-regarded for monitor mode once OpenWrt is installed; not present in stock TP-Link firmware"
+   },
+   "wifi_injection": {
+    "v": "addon",
+    "note": "ath9k is one of the historically best-supported chipsets for aircrack-ng frame injection under OpenWrt/Linux, but requires the buyer's own OpenWrt flash plus aircrack-ng packages - nothing on stock firmware"
+   },
+   "packet_capture": {
+    "v": "addon",
+    "note": "tcpdump installable via opkg after an OpenWrt flash; 4MB flash leaves very little room for extra packages"
+   },
+   "ethernet_mitm": {
+    "v": "addon",
+    "note": "Classic MiniPwner setup makes it a dropbox that phones home over its own uplink, not an inline Ethernet tap"
+   },
+   "vpn_exfil": {
+    "v": "addon",
+    "note": "Classic MiniPwner package list includes OpenVPN/SSH reverse tunnels for remote access once planted"
+   },
+   "usb_mass_storage": {
+    "v": "addon",
+    "note": "The single USB-A port (designed for a 3G modem) can be repurposed for a USB flash drive with OpenWrt's block-mount packages, extending the 4MB internal flash"
+   },
+   "uart": {
+    "v": "yes",
+    "note": "Unpopulated solder pads for a serial console, documented on the OpenWrt wiki"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Runs headless off USB power once configured; no host needed for MiniPwner-style operation"
+   },
+   "scriptable": {
+    "v": "addon",
+    "note": "Full Linux shell once reflashed to OpenWrt; nothing scriptable on stock TP-Link firmware"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Owning or importing this router is unrestricted almost everywhere - it's a generic consumer travel router. Using it as a covert network-access device on a network you don't own or lack authorization to test is unauthorized-access law in essentially every jurisdiction; treat this as a lab/authorized-engagement tool only. Check your local law."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "sparse",
+   "last_release": "2019",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "TL-MR3020 MiniPwner",
+   "MiniPwner (TL-MR3020 build)"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/tp-link-tl-mr3020-mini-wireless-router/",
+    "what": "listing: price $50, in-stock status, 'OpenWRT and MiniPwner compatible' marketing line"
+   },
+   {
+    "url": "https://openwrt.org/toh/tp-link/tl-mr3020",
+    "what": "hardware table: AR9331 SoC (v1.0-v1.9), MT7628NN (v3.0), 4MB flash/32MB RAM, OpenWrt 19.07 as last well-supported release, '4/32 warning'"
+   },
+   {
+    "url": "https://wiki.securityweekly.com/MiniPwner_How-To_(Kevin_Bong)",
+    "what": "confirms MiniPwner as a real 2012-era project by Kevin Bong and Michael Vieau, not a vendor-invented name"
+   },
+   {
+    "url": "https://github.com/JarathLoki/MiniPwner-fixed",
+    "what": "community documentation/fork of the MiniPwner build process, corroborating original credited authors"
+   }
+  ],
+  "research_gaps": [
+   "Exact hardware revision (v1.x AR9331 vs v3.0 MT7628NN) currently shipped by Hacker Warehouse is not stated on the listing",
+   "Original release year of the TL-MR3020 model not independently confirmed",
+   "Package/device physical dimensions not confirmed from an independent source"
+  ]
+ },
+ {
+  "id": "esp32-network-toolbox",
+  "hardware_id": "esp32-network-toolbox-klhnikov",
+  "name": "ESP32 Network Toolbox",
+  "firmware": "Closed/proprietary ESP32 firmware (control scripts and Android app are separately published)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": null,
+  "firmware_note": "The on-device ESP32 firmware itself is not published. Only PC-side Python control scripts (ESP32_sniffer.py, ESP32_deauther.py, ESP32_blt_scanner.py, ESP32_ota.py, ESP32_wifi_connect.py) and an Android companion app are public. Buyers flash/update the device through the Android app, but cannot inspect or rebuild the firmware it installs.",
+  "vendor": "Klhnikov's",
+  "vendor_url": "https://www.tindie.com/stores/klhnikov/",
+  "product_url": "https://www.tindie.com/products/klhnikov/esp32-network-toolbox/",
+  "category": "wifi",
+  "subcategory": "wifi-bluetooth-multitool",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 50.0,
+  "price_note": "Last listed at $50.00 with free shipping. Page explicitly reads 'Out of Stock' / 'Sold out since Aug 14, 2023' and still shows no inventory as of 2026-09-10 - over three years continuously out of stock, with only a restock-notification signup offered.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Needs either the Android app or a PC running Python3 with the published control scripts; there's no on-device screen or buttons.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled in a 3D-printed case with a cable; no soldering, but setup requires installing the Android app or the Python scripts.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An ESP32 board in a 3D-printed case, sold with an Android app and PC Python scripts for Wi-Fi scanning/sniffing, deauthentication, an evil-twin captive portal, network mapping, and Bluetooth scanning, exporting results as PCAP/CSV/JSON. It has been listed as out of stock on Tindie continuously since August 2023.",
+  "honest_take": "Everything this claims to do - Wi-Fi promiscuous sniffing, deauth, evil twin, BLE scanning - is within reach of any ESP32 dev board running one of several free, open-source projects (e.g. risinek/esp32-wifi-penetration-tool for the deauth/evil-twin side). The $50 here mostly buys the 3D-printed case, a cable, and the maker's own closed firmware plus his Android app - and unlike the open projects it resembles, you can't audit or rebuild that firmware, since only the PC control scripts (not the on-device firmware) are public. That trade-off is moot for new buyers anyway: the listing has been sold out for more than three years with no confirmed restock, longer than most single-maker Tindie listings survive before quietly dying. The exact ESP32 variant inside was never published, so claims can't be checked against known chip capabilities.",
+  "best_for": [
+   "Buyers who specifically want the maker's bundled Android app workflow, if and when it restocks"
+  ],
+  "not_for": [
+   "Anyone who wants open, auditable firmware - build your own ESP32 tool from a published open-source project instead",
+   "Buying today - it has been out of stock since August 2023"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The listing and the published control-script repo both just say 'ESP32'; the exact module (WROOM-32, WROVER, S3, etc.) is not stated anywhere public.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi",
+     "note": "Integrated ESP32 2.4GHz 802.11b/g/n; exact silicon variant unconfirmed"
+    },
+    {
+     "ic": null,
+     "role": "bluetooth",
+     "note": "Integrated ESP32 Bluetooth, used for the Bluetooth scanner feature; whether Classic, BLE, or both is not specified"
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Not specified; the listing shows a cable-connected board, implying host/USB power rather than an onboard battery",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (cable included, connector type unspecified)",
+    "WiFi 2.4GHz",
+    "Bluetooth"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed case, cable included",
+   "notable_physical": [
+    "3D-printed enclosure",
+    "Included USB cable"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "claimed",
+    "note": "Vendor lists a WiFi scanner; on-device firmware is closed so this isn't independently verifiable"
+   },
+   "wifi_monitor_mode": {
+    "v": "claimed",
+    "note": "Listed as 'Sniffer (promiscuous mode)'"
+   },
+   "wifi_injection": {
+    "v": "claimed",
+    "note": "Implied by the deauth feature"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "Listed feature: 'deauthenticate any STA from any network'"
+   },
+   "wifi_evil_twin": {
+    "v": "claimed",
+    "note": "Listed 'EvilTwin' captive-portal feature to 'discover who is willing to compromise your network'"
+   },
+   "wifi_captive_portal": {
+    "v": "claimed",
+    "note": "Same EvilTwin feature as above"
+   },
+   "wifi_handshake_capture": {
+    "v": "claimed",
+    "note": "Listing claims ability to 'capture WiFi authentication keys'"
+   },
+   "packet_capture": {
+    "v": "claimed",
+    "note": "PCAP export claimed via 'real-time USB transfer'; also CSV/JSON export"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "Listed Bluetooth scanner feature"
+   },
+   "bt_classic": {
+    "v": "unknown",
+    "note": "Listing says 'Bluetooth Scanner' without specifying Classic vs BLE"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "PC-side Python control scripts are open source (EParisot/ESP32_Network_Toolbox_Scripts); the device firmware itself is not"
+   },
+   "app_store": {
+    "v": "yes",
+    "note": "Official Android app 'ESP32NetworkToolbox' on Google Play, showing updates as recently as January 2026; no iOS version"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a paired Android phone or a PC running Python3; no on-device screen or controls"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "The board itself is unrestricted. Deauth, evil-twin credential capture, and Wi-Fi handshake capture against networks you don't own or aren't authorized to test are illegal in most jurisdictions - check your local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": "2026-01",
+   "app_store": "Yes - official Android app only, no iOS",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/klhnikov/esp32-network-toolbox/",
+    "what": "listing: price $50, feature list, 3D-printed case, 'Out of Stock'/'Sold out since Aug 14, 2023' status confirmed live on 2026-09-10"
+   },
+   {
+    "url": "https://github.com/EParisot/ESP32_Network_Toolbox_Scripts",
+    "what": "confirms only PC control scripts are open source, not the on-device firmware; links back to the Tindie listing as the hardware source"
+   },
+   {
+    "url": "https://play.google.com/store/apps/details?id=com.esp32_network_toolbox.esp32_network_toolbox_app",
+    "what": "Android companion app listing, corroborated via AppBrain mirror showing a January 2026 update"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 module/variant never published by the vendor",
+   "On-device firmware source is not public - could not verify any capability independently beyond the vendor's own listing text",
+   "Original release date of the product not found",
+   "Whether Bluetooth scanning covers Classic BT, BLE, or both is not stated"
+  ]
+ },
+ {
+  "id": "esp32-marauder-flipper-hackerwarehouse",
+  "hardware_id": "flipper-marauder-electroniccats",
+  "name": "WiFi ESP32 Marauder for Flipper Zero",
+  "firmware": "ESP32 Marauder",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "Same upstream MIT-licensed Marauder firmware used on all ~25 supported targets. This board buys a Flipper-shaped GPIO form factor, not extra features.",
+  "vendor": "Hacker Warehouse",
+  "vendor_url": "https://hackerwarehouse.com",
+  "product_url": "https://hackerwarehouse.com/product/wifi-esp32-marauder-for-flipper-zero/",
+  "category": "wifi",
+  "subcategory": "wifi-bluetooth-audit",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 50.0,
+  "price_note": "This is Electronic Cats' own 'Flipper Add-On: Marauder' board resold at a $10 markup over their direct price of $40. Confirmed by the product's own SKU (EC-WMFZ = Electronic Cats - WiFi Marauder For Zero) and by identical ESP32-S3 spec and near-identical description wording between the two listings.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Ships pre-flashed and just plugs onto the Flipper's GPIO header, but the Flipper itself must be running Momentum, Unleashed, Xtreme or RogueMaster firmware (stock firmware has no WiFi Marauder app) before this does anything.",
+  "build_effort": "assembly",
+  "build_note": "No soldering - the board mounts directly on the Flipper Zero's 18-pin GPIO header.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An ESP32-S3 GPIO add-on that puts the free, open-source ESP32 Marauder WiFi/Bluetooth firmware behind the Flipper Zero's screen and buttons. Hacker Warehouse does not appear to manufacture this board themselves; the SKU, description text and specs match Electronic Cats' own 'Flipper Add-On: Marauder' board exactly.",
+  "honest_take": "There is no evidence Hacker Warehouse designed or builds this - the SKU (EC-WMFZ), the ESP32-S3 spec, and the product description text all match Electronic Cats' own $40 Marauder add-on word for word, and Hacker Warehouse is charging $10 more for the identical board. Unless you specifically want it bundled with Hacker Warehouse's other gear or shipping, buy direct from Electronic Cats and save $10. Beyond that, this is the same story as every Marauder board: it's a WiFi/BLE scanner and spammer, not a Flipper-native capability, deauth dies against any WPA3/PMF network, and it has no screen, battery, GPS or confirmed onboard SD of its own - it is entirely dependent on the Flipper for power, display and storage.",
+  "best_for": [
+   "Flipper owners who already want WiFi/BLE Marauder features and don't mind paying a small premium for convenience",
+   "Learning 802.11 management-frame behavior via a touchscreen menu"
+  ],
+  "not_for": [
+   "Buyers who could just order the identical board from Electronic Cats for $10 less",
+   "5GHz work, sub-GHz, NFC/RFID or GPS wardriving - none of that hardware is present",
+   "Standalone use - it has no screen or battery and cannot function without a Flipper Zero"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Xtensa dual-core 32-bit LX7 up to 240MHz, 384KB ROM, 512KB SRAM. Exact module part number (e.g. WROOM-1 vs mini) not published by either vendor.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi",
+     "note": "Single-band 2.4GHz 802.11b/g/n only - no 5GHz. Dual-band Marauder support only exists on the separate ESP32-C5 targets."
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "bluetooth",
+     "note": "Bluetooth 5 LE only, no Bluetooth Classic/BR-EDR - not present in S3 silicon."
+    }
+   ],
+   "display": {
+    "type": "None - uses the Flipper Zero's own screen",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery of its own; powered from the Flipper Zero's battery through the GPIO header.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Not confirmed. Hacker Warehouse sells a MicroSD Card as a $20 related/upsell item, which implies an onboard slot, but neither vendor's copy explicitly documents one.",
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header (UART)",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE"
+   ],
+   "gpio": "Mounts directly on the Flipper Zero's 18-pin GPIO header",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure",
+   "notable_physical": [
+    "Sits on the Flipper Zero GPIO header",
+    "No confirmed onboard screen, battery, GPS or antenna connector"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "AP/station/probe scanning via the Marauder firmware's WiFiScan module"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Notable absence - ESP32-S3 is 2.4GHz-only silicon, unlike the newer ESP32-C5 Marauder boards"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "ESP-IDF promiscuous mode capture"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Raw 802.11 management-frame TX (deauth, beacon, CSA) via esp_wifi_80211_tx; not general-purpose injection like a monitor-mode-capable Atheros/Realtek adapter"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Broadcast/targeted/manual deauth. Only works against unprotected management frames - 802.11w/PMF (mandatory under WPA3) defeats it"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Clones a scanned SSID and serves a captive portal"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "EvilPortal module logs submitted credentials"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Passive/active EAPOL capture; cracking happens off-device"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "Could not confirm a dedicated PMKID capture mode distinct from EAPOL capture"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Random/list-based/rickroll beacon spam"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Logs probe requests and SSIDs clients are searching for"
+   },
+   "wifi_wardriving": {
+    "v": "no",
+    "note": "Notable absence - no onboard GPS, unlike JustCallMeKoko's Dev Board Pro (with optional GPS expansion) or the Marauder v8"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Standard Marauder hotspot mode"
+   },
+   "packet_capture": {
+    "v": "addon",
+    "note": "Needs a microSD card in the board's own slot (not confirmed present, sold separately) to log pcaps; otherwise capture is streamed live over UART to the Flipper's app"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "NimBLE-based scan/analyzer"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Backs the spam/spoof modes"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "Sour Apple / Apple Juice modes; effectiveness varies by iOS version since Apple hardened against this"
+   },
+   "ble_spam_android": {
+    "v": "yes",
+    "note": "Fast Pair advertisement spam"
+   },
+   "ble_spam_samsung": {
+    "v": "yes",
+    "note": "Samsung Easy Setup spam"
+   },
+   "ble_spam_swift_pair": {
+    "v": "yes",
+    "note": "Windows Swift Pair popup spam"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Notable absence - ESP32-S3 is BLE-only, no BR/EDR"
+   },
+   "ble_sniff": {
+    "v": "partial",
+    "note": "Observes advertisements only; cannot follow an active connection's channel hopping like a dedicated sniffer"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "Matches Apple Find My advertisement payloads (AirTag)"
+   },
+   "ble_tracker_spoof": {
+    "v": "yes",
+    "note": "Broadcasts fake Find My advertisements"
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "Matches Flipper Zero's BLE advertisement pattern; trivially defeated by renaming the Flipper"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Matches known BLE-skimmer module names/patterns, not skimmers generically"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "Flags one BSSID broadcasting many SSIDs (PineAP/KARMA signature)"
+   },
+   "detect_pwnagotchi": {
+    "v": "yes",
+    "note": "Matches the pwnagotchi beacon signature"
+   },
+   "gps": {
+    "v": "no",
+    "note": "Notable absence - no GPS hardware"
+   },
+   "sd_logging": {
+    "v": "addon",
+    "note": "Same caveat as packet_capture - needs a separately-sold microSD card"
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Serial/CLI interface, drivable from the Flipper app, a PC, or Android; no on-device scripting language"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Notable absence - no screen or battery of its own; entirely dependent on the Flipper Zero as host"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio on this board (the Flipper's own CC1101 is separate hardware, unrelated to this add-on)"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware on this board"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware on this board"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter on this board"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Marauder firmware implements no BadUSB/HID function"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and using it to scan/log is legal in most places. Transmitting deauth frames against networks you don't own, and the captive-portal feature's credential harvesting, are where casual use turns into a computer-misuse offence fastest. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-05",
+   "app_store": "No single app store - Electronic Cats provides a browser-based 'Marauder UI Pro' dashboard for the underlying hardware; Hacker Warehouse provides no unique docs or software of its own",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Hacker Warehouse Flipper Marauder",
+   "EC-WMFZ"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/wifi-esp32-marauder-for-flipper-zero/",
+    "what": "price $50, ESP32-S3 spec, SKU EC-WMFZ, in-stock, description text"
+   },
+   {
+    "url": "https://electroniccats.com/store/flipper-add-on-marauder/",
+    "what": "Electronic Cats' own identical board at $40, same ESP32-S3 spec, in stock"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "upstream Marauder firmware repo, MIT license"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/flipper-zero",
+    "what": "confirms Flipper custom-firmware requirement (Momentum/Unleashed/Xtreme/RogueMaster), no onboard screen, SD attaches to the ESP32 board not the Flipper"
+   },
+   {
+    "url": "https://www.wi-fi.org/discover-wi-fi/security",
+    "what": "WPA3 requires Protected Management Frames, which defeats deauth"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm whether the board has its own microSD slot (only that Hacker Warehouse upsells a microSD card)",
+   "Could not find an explicit statement from either vendor acknowledging Hacker Warehouse resells Electronic Cats' design - this is inferred from matching SKU prefix, spec and description text, not vendor admission",
+   "Released date (2024) is estimated from the Hacker Warehouse listing's page-publish date (2024-09-30), not a confirmed original release date"
+  ]
+ },
+ {
+  "id": "flipper-marauder-spoof-electroniccats",
+  "hardware_id": "flipper-marauder-spoof-electroniccats",
+  "name": "Flipper Add-On: Marauder_Spoof",
+  "firmware": "ESP32 Marauder + Electronic Cats MagSpoof",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/ElectronicCats/flipper-addons",
+  "firmware_note": "Runs upstream ESP32 Marauder (justcallmekoko) for WiFi/BLE, plus Electronic Cats' own MagSpoof firmware/driver for the magnetic-stripe emulator on the same board.",
+  "vendor": "Electronic Cats",
+  "vendor_url": "https://electroniccats.com",
+  "product_url": "https://electroniccats.com/store/flipper-add-on-marauder_spoof/",
+  "category": "wifi",
+  "subcategory": "wifi-bluetooth-audit",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 50.0,
+  "price_note": "$10 more than Electronic Cats' plain 'Marauder' add-on ($40) for the added onboard MagSpoof magnetic-stripe emulator hardware.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Ships pre-flashed; plugs onto the Flipper GPIO header. Flipper must run Unleashed/Momentum/Xtreme/RogueMaster, not stock firmware.",
+  "build_effort": "assembly",
+  "build_note": "No soldering to use it - mounts on the Flipper's GPIO header. Open hardware (CERN-OHL-1.2) if you want to build your own instead.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "Electronic Cats' plain ESP32-S3 Marauder WiFi/BLE add-on with their separate MagSpoof magnetic-stripe emulator (an open design descended from Samy Kamkar's MagSpoof, sold standalone by Electronic Cats for a similar price) built onto the same PCB. It is two existing Electronic Cats products combined, not a beefed-up or 'more powerful' version of Marauder itself.",
+  "honest_take": "The name invites you to assume 'Spoof' means stronger jamming, amplified TX, or extra antennas added to Marauder - it doesn't. It means Electronic Cats put their separate MagSpoof magnetic-stripe-card emulator (an electromagnet coil and driver chip that reproduces a swipe without a physical card, based on Samy Kamkar's open-source design) on the same board as their plain Marauder. The WiFi/BLE side is byte-for-byte identical to the cheaper $40 'Marauder' add-on (device flipper-marauder-electroniccats below) - same ESP32-S3, same firmware, same deauth-dies-against-WPA3 caveat. If you don't specifically want magstripe emulation, you're paying $10 for a feature you won't use; if you do want it, this is $10 cheaper than buying the standalone MagSpoof add-on ($40-ish) plus the Marauder add-on ($40) separately.",
+  "best_for": [
+   "Buyers who want both WiFi/BLE Marauder features and magnetic-stripe-card emulation on one Flipper add-on",
+   "Physical-security testing of magstripe readers alongside WiFi/BLE assessments"
+  ],
+  "not_for": [
+   "Buyers who only want WiFi/BLE - the plain $40 Marauder add-on does the identical radio work for $10 less",
+   "Reading or cloning real magstripe cards - this only emulates/replays, it does not read a physical card itself",
+   "5GHz, sub-GHz, NFC or GPS wardriving work - none of that hardware is present"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Xtensa dual-core 32-bit LX7 up to 240MHz, 384KB ROM, 512KB SRAM. Exact module part number not published.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi",
+     "note": "Single-band 2.4GHz 802.11b/g/n only"
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "bluetooth",
+     "note": "Bluetooth 5 LE only, no BR/EDR"
+    }
+   ],
+   "display": {
+    "type": "None - uses the Flipper Zero's own screen",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery of its own; powered from the Flipper Zero.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Not explicitly confirmed as present on this variant either",
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header (UART)",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE"
+   ],
+   "gpio": "Mounts on the Flipper Zero's 18-pin GPIO header",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure",
+   "notable_physical": [
+    "Electromagnet coil and driver circuitry for MagSpoof, described by the vendor as using a TC4424 driver chip (not independently verified against the raw KiCad schematic)",
+    "Selectable 3.3V/5V power switch mentioned in vendor copy"
+   ]
+  },
+  "capabilities": {
+   "magspoof": {
+    "v": "yes",
+    "note": "Onboard electromagnet + driver reproduces Samy Kamkar's MagSpoof design: emulates ISO 7811 tracks 1 and 2 simultaneously against a stationary magstripe reader, no physical card present. Confirmed via the vendor's own separate standalone MagSpoof product and the GitHub repo's MARAUDER_SPOOF hardware folder; exact driver IC (vendor states TC4424) not independently confirmed from the raw schematic."
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Identical WiFi capability to the plain Marauder add-on"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Notable absence - 2.4GHz-only S3 silicon"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "ESP-IDF promiscuous capture"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Defeated by 802.11w/PMF, mandatory under WPA3"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Clones a scanned SSID plus captive portal"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "EvilPortal credential logging"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture; cracking is off-device"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Standard beacon spam modes"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Logs client probe requests"
+   },
+   "wifi_wardriving": {
+    "v": "no",
+    "note": "No onboard GPS"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hotspot mode"
+   },
+   "packet_capture": {
+    "v": "addon",
+    "note": "Needs a microSD card, not confirmed to have a dedicated onboard slot"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "NimBLE scan/analyzer"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Backs spam/spoof modes"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "Effectiveness varies by iOS version"
+   },
+   "ble_spam_android": {
+    "v": "yes",
+    "note": "Fast Pair spam"
+   },
+   "ble_spam_samsung": {
+    "v": "yes",
+    "note": "Samsung Easy Setup spam"
+   },
+   "ble_spam_swift_pair": {
+    "v": "yes",
+    "note": "Swift Pair popup spam"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Notable absence - S3 is BLE-only"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "AirTag/Find My advertisement matching"
+   },
+   "ble_tracker_spoof": {
+    "v": "yes",
+    "note": "Fake Find My advertisements"
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "BLE advertisement pattern match"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Matches known BLE-skimmer patterns"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "PineAP/KARMA signature detection"
+   },
+   "detect_pwnagotchi": {
+    "v": "yes",
+    "note": "Pwnagotchi beacon match"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS hardware"
+   },
+   "sd_logging": {
+    "v": "addon",
+    "note": "Same microSD caveat as packet_capture"
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Serial/CLI, no on-device scripting language"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs the Flipper Zero for power, display and input"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio on this board"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF RFID hardware - note this is distinct from the magstripe emulation above"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No BadUSB/HID function"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and testing your own hardware is legal in most places. Emulating someone else's magstripe card, or deauthing/portal-phishing a network you don't control, moves into fraud or computer-misuse law depending on jurisdiction. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-05",
+   "app_store": "No - single firmware plus Electronic Cats' browser-based 'Marauder UI Pro' dashboard",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Marauder_Spoof",
+   "Marauder Spoof",
+   "Flipper Add-On: Marauder + MagSpoof"
+  ],
+  "sources": [
+   {
+    "url": "https://electroniccats.com/store/flipper-add-on-marauder_spoof/",
+    "what": "price $50, in stock, ESP32-S3 spec, MagSpoof combination described"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons/tree/main/MARAUDER_SPOOF",
+    "what": "KiCad hardware source confirms a real dedicated PCB design exists for this variant"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons",
+    "what": "repo overview: 128 stars/14 forks, CERN-OHL-1.2 hardware license, Electronic Cats trademark notice"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons/releases",
+    "what": "release history through Marauder_v2.2 (GPS-related note, May), used for last_release"
+   },
+   {
+    "url": "https://electroniccats.com/store/flipper-add-on-magspoof/",
+    "what": "Electronic Cats' standalone MagSpoof product, confirms the same underlying design is sold separately"
+   }
+  ],
+  "research_gaps": [
+   "Could not independently verify the TC4424 driver IC claim against the raw KiCad schematic (binary/S-expression format, not text-readable via available tools) - only against vendor product copy",
+   "A GitHub release tagged 'v2.0_Marauder' claims a change from ESP32-S3 to ESP32-C5 for the plain Marauder board; unclear if/when that change reaches the Marauder_Spoof variant specifically - the live store page still describes ESP32-S3 as of check date",
+   "Released date (2024) is an estimate, not confirmed from a dated source",
+   "Could not confirm presence/absence of an onboard microSD slot"
+  ]
+ },
+ {
+  "id": "flipper-marauder-electroniccats",
+  "hardware_id": "flipper-marauder-electroniccats",
+  "name": "Flipper Add-On: Marauder",
+  "firmware": "ESP32 Marauder",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "Upstream MIT-licensed Marauder firmware, unmodified beyond standard board config for this target.",
+  "vendor": "Electronic Cats",
+  "vendor_url": "https://electroniccats.com",
+  "product_url": "https://electroniccats.com/store/flipper-add-on-marauder/",
+  "category": "wifi",
+  "subcategory": "wifi-bluetooth-audit",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 40.0,
+  "price_note": "$10 cheaper than Electronic Cats' own 'Marauder_Spoof' variant, which adds an onboard MagSpoof magnetic-stripe emulator; also $10 cheaper than Hacker Warehouse's resale of this identical board at $50 (SKU EC-WMFZ).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Pre-flashed, plugs onto the GPIO header, driven by a touchscreen-style menu once the Flipper is running custom firmware (Momentum/Unleashed/Xtreme/RogueMaster).",
+  "build_effort": "assembly",
+  "build_note": "No soldering to use it. Open hardware under CERN-OHL-1.2, so it can be built from the published KiCad files instead of bought.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "Electronic Cats' base ESP32-S3 Marauder add-on for the Flipper Zero GPIO header - the same free, MIT-licensed ESP32 Marauder firmware used on roughly 25 other targets (including a $20 M5StickC Plus2), packaged for the Flipper. No MagSpoof, no GPS, no SD or screen of its own confirmed.",
+  "honest_take": "This is the plainest, cheapest way into Marauder-on-Flipper from a named, open-hardware vendor, but it is the same firmware you'd get on a $20 M5StickC Plus2 - you're paying for the GPIO form factor and Electronic Cats' companion 'Marauder UI Pro' dashboard, not unique capability. Skip the $10-more Marauder_Spoof unless you specifically want magstripe-card emulation bundled in; skip Hacker Warehouse's $50 resale of this exact board (SKU EC-WMFZ matches this listing) since it's $10 more for nothing extra. A GitHub release note from Electronic Cats claims a hardware revision moved this board from ESP32-S3 to ESP32-C5 (which would add 5GHz support), but the live store listing still describes ESP32-S3 as of this check - verify the current chip before buying if dual-band matters to you.",
+  "best_for": [
+   "Cheapest legitimate entry into Marauder-on-Flipper from an open-hardware vendor with published schematics",
+   "Learning WiFi/BLE frame-level behavior via the Flipper's UI"
+  ],
+  "not_for": [
+   "Anyone who could instead flash the identical free firmware onto a $20 M5StickC Plus2 and skip the Flipper GPIO premium entirely",
+   "Magstripe emulation - that's the $50 Marauder_Spoof variant",
+   "5GHz, sub-GHz, NFC or GPS-tagged wardriving - none of that hardware is present on this board"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Xtensa dual-core 32-bit LX7 up to 240MHz, 384KB ROM, 512KB SRAM, as stated on the current live product page. A GitHub release note ('v2.0_Marauder') claims a later hardware revision switched to ESP32-C5, which is not reflected on the store listing - flagged as a research gap below.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi",
+     "note": "Single-band 2.4GHz 802.11b/g/n, per the current live product page"
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "bluetooth",
+     "note": "Bluetooth 5 LE only, no BR/EDR"
+    }
+   ],
+   "display": {
+    "type": "None - uses the Flipper Zero's own screen",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery of its own; powered from the Flipper Zero.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Not explicitly confirmed as present",
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header (UART)",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE"
+   ],
+   "gpio": "Mounts on the Flipper Zero's 18-pin GPIO header",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure",
+   "notable_physical": [
+    "Sits on the Flipper Zero GPIO header",
+    "Open hardware - KiCad schematic/PCB files published under CERN-OHL-1.2"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "AP/station/probe scanning"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Notable absence per the current S3-based listing"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "ESP-IDF promiscuous capture"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Management-frame TX only (deauth, beacon, CSA), not general packet injection"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Defeated by 802.11w/PMF, mandatory under WPA3"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "SSID clone + captive portal"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "EvilPortal credential logging"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture; cracking is off-device"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Standard beacon spam modes"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Logs client probe requests"
+   },
+   "wifi_wardriving": {
+    "v": "no",
+    "note": "No onboard GPS"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hotspot mode"
+   },
+   "packet_capture": {
+    "v": "addon",
+    "note": "Needs a microSD card; onboard slot not confirmed"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "NimBLE scan/analyzer"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Backs spam/spoof modes"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "Effectiveness varies by iOS version"
+   },
+   "ble_spam_android": {
+    "v": "yes",
+    "note": "Fast Pair spam"
+   },
+   "ble_spam_samsung": {
+    "v": "yes",
+    "note": "Samsung Easy Setup spam"
+   },
+   "ble_spam_swift_pair": {
+    "v": "yes",
+    "note": "Swift Pair popup spam"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Notable absence - S3 is BLE-only"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "AirTag/Find My advertisement matching"
+   },
+   "ble_tracker_spoof": {
+    "v": "yes",
+    "note": "Fake Find My advertisements"
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "BLE advertisement pattern match"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Matches known BLE-skimmer patterns"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "PineAP/KARMA signature detection"
+   },
+   "detect_pwnagotchi": {
+    "v": "yes",
+    "note": "Pwnagotchi beacon match"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS hardware"
+   },
+   "sd_logging": {
+    "v": "addon",
+    "note": "Same microSD caveat as packet_capture"
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Serial/CLI, no on-device scripting language"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs the Flipper Zero for power, display and input"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio on this board"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No BadUSB/HID function"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and using it to scan/log is legal in most places. Deauth against networks you don't own and captive-portal credential harvesting are the two features most likely to turn casual use into a computer-misuse offence. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-05",
+   "app_store": "No - single firmware plus Electronic Cats' browser-based 'Marauder UI Pro' dashboard",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Flipper Add-On: Marauder",
+   "ESP32 Marauder Add-On for Flipper Zero"
+  ],
+  "sources": [
+   {
+    "url": "https://electroniccats.com/store/flipper-add-on-marauder/",
+    "what": "price $40, in stock, ESP32-S3 spec confirmed via page HTML"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons",
+    "what": "repo overview, hardware license CERN-OHL-1.2, firmware wrapper AGPL-3.0"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons/releases/tag/v2.0_Marauder",
+    "what": "release note claiming 'Change ESP32-S3 Module to ESP32-C5' - conflicts with the live store page, flagged as a gap"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "upstream firmware repo, MIT license, confirms this is the same firmware as every other Marauder target"
+   },
+   {
+    "url": "https://hackerwarehouse.com/product/wifi-esp32-marauder-for-flipper-zero/",
+    "what": "cross-check confirming Hacker Warehouse resells this exact board (matching SKU/spec/description) at $50"
+   }
+  ],
+  "research_gaps": [
+   "A GitHub release ('v2.0_Marauder') claims the board changed from ESP32-S3 to ESP32-C5; the live product page still states ESP32-S3. Could not resolve which chip currently ships - worth re-checking before publishing if 5GHz capability is a comparison point users care about",
+   "Could not confirm presence/absence of an onboard microSD slot",
+   "Released date (2024) is estimated, not confirmed from a dated source"
+  ]
+ },
+ {
+  "id": "flipper-devboard-pro-gps-expansion",
+  "hardware_id": "flipper-devboard-pro-gps-expansion",
+  "name": "Flipper Zero Dev Board Pro GPS Expansion",
+  "firmware": "ESP32 Marauder",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "This SKU adds no firmware of its own - it's a GPS receiver, antenna and wiring kit that lets the host Dev Board Pro's existing Marauder firmware talk to a GPS module over UART for GPS-tagged wardriving.",
+  "vendor": "JustCallMeKoko LLC",
+  "vendor_url": "https://justcallmekokollc.com",
+  "product_url": "https://justcallmekokollc.com/products/flipper-zero-dev-board-pro-gps-expansion",
+  "category": "wifi",
+  "subcategory": "gps-wardriving-accessory",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 21.0,
+  "price_note": "Requires JustCallMeKoko's own 'Flipper Zero WiFi Dev Board Pro' ($40) to function at all - it is not a standalone product. At the time of this check, both this $21 GPS expansion AND the $40 Dev Board Pro it depends on were sold out on the vendor's own store (available:false, 'Sold out' confirmed on both product pages), making the combination currently unbuyable regardless of price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Unlike the plug-in Flipper GPIO boards in this database, this specifically requires hand soldering.",
+  "build_effort": "soldering",
+  "build_note": "Official installation wiki specifies stripping and soldering four 30AWG wires (3V3, GND, TX-to-GPIO21, RX-to-GPIO17) between the GPS expansion board and the Dev Board Pro's pads, then reassembling under a replacement faceplate with a routed antenna channel.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A small GPS receiver + ceramic antenna + replacement faceplate kit that solders onto JustCallMeKoko's own 'Flipper Zero WiFi Dev Board Pro' (an ESP32-WROOM-based Marauder board, sold separately) to unlock Marauder's GPS-tagged wardriving mode. On its own this SKU does nothing; it is meaningless without the host board, which was also out of stock at time of check.",
+  "honest_take": "Read the name literally: this is an expansion FOR the Dev Board Pro, not a product in its own right - buying just this $21 kit with no Dev Board Pro gets you an antenna and some wire. Both halves of the combination were simultaneously out of stock on JustCallMeKoko's own store when checked, which is a real availability problem, not a hypothetical one. It also requires actual soldering (four 30AWG wires), unlike every plug-and-play Flipper GPIO board elsewhere in this database - factor that into skill level and time before assuming it's a quick add-on. Note that the 'medium' abandonment risk here is about the hardware, not the code: the underlying ESP32 Marauder firmware project is very healthy (12k+ stars, MIT, commits within the last week), but the Dev Board Pro and this accessory are both one-person-LLC Shopify SKUs from the same maintainer, and a two-part product with both halves out of stock at once is exactly the supply-continuity risk you don't get buying from Electronic Cats or Flipper Devices themselves.",
+  "best_for": [
+   "Existing Dev Board Pro owners who already want GPS-tagged Wigle-format wardriving and are comfortable soldering four wires",
+   "Understanding that Marauder's wardriving feature needs a physical GPS module - it is not built into every Marauder board by default"
+  ],
+  "not_for": [
+   "Anyone without the Dev Board Pro already, or unwilling/unable to source one while it's out of stock",
+   "Solder-free installation - unlike most other add-ons in this database, this one requires it",
+   "Buyers who want an assured-available product today - both halves were out of stock at time of check"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "This SKU has no MCU of its own - it's a GPS module/antenna/wiring accessory. The GPS UART is read by the host Dev Board Pro's own MCU, which JustCallMeKoko's product page lists as an 'ESP32-WROOM with Bluetooth' (i.e. an original ESP32, not the ESP32-S3 used on Electronic Cats' Flipper add-ons - the original ESP32 supports Bluetooth Classic as well as BLE, unlike S2/S3/C5 parts).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "gps",
+     "note": "GPS receiver module of unstated model, bundled with an 18x18mm ceramic patch antenna, wired via UART to the Dev Board Pro's GPIO21 (TX) / GPIO17 (RX)"
+    }
+   ],
+   "display": {
+    "type": "None",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Powered from the host Dev Board Pro / Flipper Zero; no battery of its own",
+   "charging": null,
+   "pmic": null,
+   "storage": "Relies on the Dev Board Pro's own onboard microSD slot (confirmed present on that board's product page), not part of this accessory",
+   "connectivity": [
+    "UART to Dev Board Pro GPIO21 (TX) / GPIO17 (RX)"
+   ],
+   "gpio": "Wired into 4 pads on the Dev Board Pro (3V3, GND, TX, RX) - hand soldered, not a plug connector",
+   "sensors": [
+    "GPS (module and chip model not published by vendor)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Replacement Dev Board Pro faceplate with a routed channel for the antenna, included in the kit",
+   "notable_physical": [
+    "18x18mm ceramic GPS antenna",
+    "4x pre-cut 30AWG wires requiring soldering",
+    "4x M2x12mm countersunk torx screws",
+    "Firmware confirms attachment via a 'GPS Attached Successfully' message on boot, per the official installation wiki"
+   ]
+  },
+  "capabilities": {
+   "gps": {
+    "v": "yes",
+    "note": "Adds a GPS receiver over UART to the Dev Board Pro; official installation wiki documents a boot-time 'GPS Attached Successfully' confirmation message"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "Unlocks ESP32 Marauder's Wigle-compatible GPS-tagged wardrive logging on the host Dev Board Pro, per the official JCMK/ESP32Marauder wiki - requires the separately-sold, currently out-of-stock Dev Board Pro"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Same caveat - this is the host board's Marauder firmware feature, unlocked by this accessory's GPS"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Via the Dev Board Pro's own confirmed onboard microSD slot, not part of this accessory itself"
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard Marauder feature of the host Dev Board Pro; this SKU adds nothing here"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Dev Board Pro's ESP32-WROOM is 2.4GHz-only"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Standard Marauder promiscuous-mode capture on the host board"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Host board's standard Marauder feature; defeated by 802.11w/PMF (mandatory under WPA3)"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "Host board's EvilPortal module"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture on the host board; cracking off-device"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "To the Dev Board Pro's own microSD slot"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Host board's standard Marauder BLE scan"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "Host board feature; effectiveness varies by iOS version"
+   },
+   "ble_spam_android": {
+    "v": "yes",
+    "note": "Host board feature"
+   },
+   "ble_spam_samsung": {
+    "v": "yes",
+    "note": "Host board feature"
+   },
+   "ble_spam_swift_pair": {
+    "v": "yes",
+    "note": "Host board feature"
+   },
+   "bt_classic": {
+    "v": "unknown",
+    "note": "The Dev Board Pro's ESP32-WROOM-32 silicon supports Bluetooth Classic, but could not confirm whether Marauder's firmware build for this specific board target exposes Classic scanning - Marauder generally only implements Classic on ESP32-PICO targets even though other classic-ESP32 chips support it at the silicon level"
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "Host board's standard BLE signature match"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Host board's standard BLE pattern match"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "Host board's standard WiFi signature match"
+   },
+   "detect_pwnagotchi": {
+    "v": "yes",
+    "note": "Host board's standard beacon match"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs the Flipper Zero (and the Dev Board Pro it plugs into) for power, display and input"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz hardware on the Dev Board Pro or this accessory"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No BadUSB/HID function in Marauder firmware"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "The GPS expansion itself is passive receive-only hardware - no transmit, no privacy-invasive capability of its own beyond logging your own location while wardriving. The host Dev Board Pro's WiFi/BLE deauth and captive-portal features carry the same legal caveats as every other Marauder board (network you don't own, credential harvesting). Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-08",
+   "app_store": "No - relies on the same single-firmware ESP32 Marauder project used by every other board in this family",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Dev Board Pro GPS Expansion",
+   "WiFi Dev Board Pro GPS Mod",
+   "SD GPS Expansion Board"
+  ],
+  "sources": [
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-dev-board-pro-gps-expansion",
+    "what": "price $21, sold out (available:false confirmed in page JSON), kit contents"
+   },
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-wifi-dev-board-pro",
+    "what": "host board specs (ESP32-WROOM with Bluetooth, microSD slot, WS2812 RGB LED, JTAG), price $40, also sold out"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/Dev-Board-Pro-GPS-Expansion-Installation",
+    "what": "wiring pins (GPIO21/17), confirms soldering is required, antenna spec, 'GPS Attached Successfully' boot message"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "upstream firmware repo used to source firmware ecosystem/activity facts (12k+ stars, MIT, last commit within days)"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm the specific GPS chip/module model - vendor only specifies the 18x18mm ceramic antenna",
+   "Could not confirm original release date for this SKU",
+   "Could not confirm whether Marauder firmware exposes Bluetooth Classic scanning on this specific board target despite the underlying ESP32-WROOM silicon supporting it",
+   "The 'medium' abandoned_risk reflects hardware supply (one-person LLC, both halves of this two-part product out of stock simultaneously), not the health of the ESP32 Marauder firmware project, which is very active - reasoning folded into honest_take since the schema's abandoned_risk vocabulary alone can't carry it"
+  ]
+ },
+ {
+  "id": "alfa-awus036acm",
+  "hardware_id": "alfa-awus036acm",
+  "name": "ALFA AWUS036ACM",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No user-facing firmware. The MT7612U loads a small radio firmware blob from the host's linux-firmware package at driver init (mt76x2u.bin) - not something you version or flash yourself.",
+  "vendor": "ALFA Network",
+  "vendor_url": "https://www.alfa.com.tw",
+  "product_url": "https://justcallmekokollc.com/products/alfa-awus036acm",
+  "category": "wifi",
+  "subcategory": "usb-wifi-adapter",
+  "status": "available",
+  "released": "2018",
+  "price_usd": 46.97,
+  "price_note": "JCMK's own listing shows sold out at time of check, but the identical adapter is in stock at the same $46.97 at Rokland and listed on ALFA's own site - this is standard ALFA MSRP, not a reseller markup, and the device is not hard to find despite this one listing being out.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug into any Linux/Kali box and it just works - in-kernel driver, no compiling, no DKMS.",
+  "build_effort": "assembled",
+  "build_note": "Nothing to build or flash - it's a finished USB peripheral.",
+  "stealth": "overt",
+  "form_factor": "usb-stick",
+  "summary": "A dual-band 802.11ac USB 3.0 Wi-Fi adapter built around MediaTek's MT7612U chipset, with two detachable RP-SMA dipole antennas. It has been the de facto reference monitor-mode/injection adapter in the Kali/aircrack-ng community since around 2018 because its Linux driver (mt76x2u) has been mainlined since kernel 4.19 - no DKMS, no out-of-tree driver drama. It is a pure USB radio peripheral: no MCU, no screen, no battery, nothing standalone.",
+  "honest_take": "This is the boring, safe choice, and that is exactly why it is still recommended in 2026 even though the silicon is nearly a decade old: mt76x2u's monitor-mode and injection support, including 'active monitor mode' (which hcxdumptool needs for PMKID capture), is mature and well-tested - unlike the two MT7921AU(N) adapters in this same comparison, where active monitor mode is documented as broken (openwrt/mt76 issue #839) and plain frame injection is reported unreliable (morrownr/USB-WiFi issue #387). Of the three Wi-Fi adapters in this batch, this is the better buy for anyone whose actual job is reliable Wi-Fi auditing today - you're trading Wi-Fi 6E and Bluetooth for a driver stack that's had eight years to become boring and stable. It does zero Bluetooth (MT7612U is Wi-Fi-only silicon), and its deauth/injection is subject to the same 802.11w/PMF limitation as literally every other Wi-Fi adapter on the market: a network enforcing Protected Management Frames (increasingly the default under WPA3) is unaffected by deauth regardless of which adapter drives the attack. The $46.97 price is standard ALFA MSRP across resellers, not case/brand markup - you're paying for the antenna hardware and USB3 shielding, not a name.",
+  "best_for": [
+   "Reliable monitor-mode/injection on Kali Linux with zero driver compiling",
+   "PMKID capture via hcxdumptool's active monitor mode - documented broken on the MT7921U adapters below",
+   "Wardriving and site surveys from a laptop or Raspberry Pi 4 (in-kernel since 4.19, works on Pi 4/5 ARM)"
+  ],
+  "not_for": [
+   "Anything standalone - it's a USB peripheral, not a device, and does nothing without a host computer",
+   "Bluetooth work of any kind - no BT radio on this chipset",
+   "6GHz Wi-Fi 6E networks or clients - MT7612U tops out at 802.11ac"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No general-purpose MCU. It's a USB radio peripheral - the MT7612U does its own 802.11 baseband/MAC processing and the host PC's CPU runs all attack tooling (aircrack-ng, hcxdumptool, Kismet).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7612U",
+     "role": "wifi",
+     "note": "USB 3.0, dual-band 802.11a/b/g/n/ac, 2x2:2 MIMO, up to 867Mbps on 5GHz / 300Mbps on 2.4GHz. TX power 20dBm(ac)/23dBm(b,g)/21dBm(n). In-kernel mt76x2u driver since Linux 4.19 - no Bluetooth on this chip."
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "None - USB bus-powered only.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB 3.0 Type-A (USB2 backward compatible)",
+    "Wi-Fi 2.4/5GHz"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "ABS plastic housing",
+   "notable_physical": [
+    "2x detachable RP-SMA dual-band dipole antennas (5dBi)",
+    "USB 3.0 Type-A connector on a rigid body",
+    "LED activity indicator"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard iw/airodump-ng scanning via mt76x2u"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Dual-band 2.4/5GHz"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "mt76x2u driver, in-kernel since Linux 4.19; the community-standard reference adapter for this"
+   },
+   "wifi_injection": {
+    "v": "yes",
+    "note": "Long-established aircrack-ng/Kali reference adapter for 802.11 frame injection"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Standard airodump-ng/hcxdumptool 4-way handshake capture"
+   },
+   "wifi_pmkid": {
+    "v": "yes",
+    "note": "openwrt/mt76 issue #839 confirms active monitor mode (which hcxdumptool needs for PMKID capture) works on mt76x2u/mt76x0u chips, unlike mt7921u where it's currently broken"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "MT7612U supports master/AP mode via mt76x2u"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "No onboard GPS - pairs with host laptop running Kismet/Wigle-compatible tooling"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Standard pcap capture via tcpdump/Wireshark in monitor mode"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "MT7612U is Wi-Fi-only silicon; no Bluetooth radio on this chip at all"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Pure USB peripheral - does nothing without a host computer"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Owning and importing this adapter is legal essentially everywhere - it's sold as a normal consumer Wi-Fi peripheral. Using its monitor-mode/injection capability against networks or clients you don't own or have written authorization to test is illegal in most countries (e.g. the US Computer Fraud and Abuse Act, UK Computer Misuse Act). Check your local law before using deauth or handshake-capture features."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "N/A - it's a Wi-Fi radio peripheral, not an app platform. Driven entirely by host-side Linux tools (aircrack-ng suite, Kismet, Wireshark).",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "AWUS036ACM",
+   "ALFA ACM"
+  ],
+  "sources": [
+   {
+    "url": "https://justcallmekokollc.com/products/alfa-awus036acm",
+    "what": "price, stock status at this reseller"
+   },
+   {
+    "url": "https://www.alfa.com.tw/products/awus036acm_1",
+    "what": "official vendor product page"
+   },
+   {
+    "url": "https://store.rokland.com/products/alfa-awus036acm-802-11ac-dual-band-2-4-5-ghz-wifi-usb-adapter",
+    "what": "in-stock confirmation, TX power, antenna gain, receive sensitivity specs"
+   },
+   {
+    "url": "https://github.com/openwrt/mt76/issues/839",
+    "what": "confirms active monitor mode works on mt76x2u (MT7612U family) but is broken on mt7921u"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/blob/main/home/Recommended_Adapters_for_Kali_Linux.md",
+    "what": "community reference comparing MT7612U driver maturity to MT7921AU issues"
+   },
+   {
+    "url": "https://blog.alfa.com.tw/2018/09/17/awus036acm-alternative-linux-driver-information/",
+    "what": "evidence the adapter was already on the market by September 2018"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact physical dimensions/weight from an official spec sheet."
+  ]
+ },
+ {
+  "id": "ac1200-usb-c-wifi-card-mt7921aun",
+  "hardware_id": "ac1200-usb-c-wifi-card-mt7921aun",
+  "name": "AC1200 USB-C WiFi Card (MT7921AUN, for uConsole)",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No user-facing firmware. Like the MT7612U above, the MT7921AUN loads a driver firmware blob from the host (mt7921u firmware files) at init time - not user-versioned.",
+  "vendor": "Hacker Gadgets",
+  "vendor_url": "https://hackergadgets.com",
+  "product_url": "https://hackergadgets.com/products/ac1200-usb-c-wifi-card",
+  "category": "wifi",
+  "subcategory": "internal-wifi-module",
+  "status": "preorder",
+  "released": null,
+  "price_usd": 45.0,
+  "price_note": "Listed as pre-order with an estimated ship date of 2026-09-11 (the day after this check). The identical 48x20x3.5mm MT7921AUN board is also sold as the 'VAYIKE AC1200 USB-C WiFi Card for uConsole' on AliExpress and via Sapsan Store in Poland (255 PLN, roughly $63) - Hacker Gadgets' $45 is the cheapest listing found for this board.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Requires opening the uConsole case and connecting to an internal USB-C port on the AIO V2 board - this is a case-open internal install, not a plug-and-play dongle.",
+  "build_effort": "assembly",
+  "build_note": "No soldering. Mounts inside the uConsole case and connects to an internal USB-C header on the AIO V2 board; case disassembly required.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small MT7921AUN-based Wi-Fi 6E + Bluetooth 5.2 module sized and wired specifically to mount inside a ClockworkPi uConsole case. Despite the M.2-like card shape and naming, it connects to the AIO V2 board's internal USB-C port rather than a true M.2 Key-E edge-connector slot (confirmed via the Sapsan Store listing, which describes it as installing via an 'internal USB-C port'). It only works inside this one specific host.",
+  "honest_take": "The single most important thing to know: this is NOT a USB dongle like the other two Wi-Fi adapters in this comparison, and despite looking card-shaped it is not a generic M.2 Key-E card you could drop into a laptop either - it plugs into an internal USB-C header that exists only on the uConsole's AIO V2 board. If you don't own that specific device, this card is useless to you. On the chipset: MT7921AUN is the same MT7921-series silicon family as the 'MT7921AU' dongle below, and the mt76/mt7921u Linux driver's monitor-mode support has documented reliability problems - morrownr/USB-WiFi issue #387 reports frame injection failing or falling back to 1-6Mbps rates on this exact chipset family, and openwrt/mt76 issue #839 documents active monitor mode (needed for PMKID attacks via hcxdumptool) being broken on mt7921u entirely. So 'supports monitor mode' on the product page should be read as 'claimed, with known open bugs' rather than a guarantee of ALFA-adapter-grade reliability. Whether 'MT7921AUN' is meaningfully different silicon from the 'MT7921AU' in device 3, or the same die in a different SKU/package, could not be confirmed - MediaTek doesn't publish public consumer datasheets, and even the morrownr/USB-WiFi maintainers have an open, unresolved GitHub thread about exactly this (issue #481, discussion #480). What is confirmed: this board exposes 4 antenna pads (2 Wi-Fi + 2 Bluetooth) versus the MT7921AU dongle's 2 Wi-Fi-only antennas, which is at least circumstantial evidence the 'N' suffix denotes the Bluetooth-combo variant. Of the two MT7921 boards in this batch, this is the worse buy for anyone who doesn't already own a uConsole (zero standalone use); if you do own one, it's your only real internal option.",
+  "best_for": [
+   "uConsole owners who want internal Wi-Fi 6E + Bluetooth without an external dongle hanging off a USB port",
+   "Casual monitor-mode experimentation where occasional injection failures are tolerable"
+  ],
+  "not_for": [
+   "Any host other than a ClockworkPi uConsole with the AIO V2 board - it has no other use",
+   "Reliable/production packet injection - use the MT7612U ALFA adapter instead",
+   "Anyone wanting a swappable, portable adapter - this is a permanent internal install"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No general-purpose MCU exposed to the host. MT7921AUN is a combo Wi-Fi/BT radio IC, not a computer in its own right.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7921AUN",
+     "role": "wifi",
+     "note": "Tri-band 802.11a/b/g/n/ac/ax (WiFi 6E): 2.4GHz up to 600Mbps, 5GHz and 6GHz up to 1200Mbps each. USB 3.2 Gen1 host interface, max 2.7W power draw."
+    },
+    {
+     "ic": "MediaTek MT7921AUN",
+     "role": "bluetooth",
+     "note": "Bluetooth 5.2, broken out via 2 dedicated U.FL antenna pads separate from the 2 Wi-Fi U.FL pads. Vendor markets it for 'high-quality wireless audio', implying BR/EDR classic profile support (A2DP) - not independently confirmed."
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Powered entirely by the host uConsole; no battery of its own.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Internal USB-C 3.2 Gen1 (host-side, not user-accessible externally)",
+    "4x IPEX U.FL antenna pads (2 Wi-Fi + 2 Bluetooth)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "48 x 20 x 3.5",
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure - mounts inside the uConsole case",
+   "notable_physical": [
+    "Sized and shaped to fit alongside the uConsole AIO V2 board",
+    "4 IPEX U.FL antenna connectors",
+    "Small USB-C connector for the internal data link - despite the M.2-like card shape, this is not a standard M.2 Key-E edge connector"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard scanning via mt7921u driver"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Tri-band 2.4/5/6GHz"
+   },
+   "wifi_monitor_mode": {
+    "v": "claimed",
+    "note": "Vendor claims full monitor-mode support; independent Linux community sources report the mt7921u driver's monitor mode has open bugs (see wifi_injection/wifi_pmkid notes)"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "morrownr/USB-WiFi issue #387 documents frame injection on this chipset family failing or falling back to 1/6Mbps data rates rather than working reliably"
+   },
+   "wifi_handshake_capture": {
+    "v": "partial",
+    "note": "Passive EAPOL capture likely works via monitor mode; active capture depends on active monitor mode, which is documented broken (see wifi_pmkid)"
+   },
+   "wifi_pmkid": {
+    "v": "no",
+    "note": "openwrt/mt76 issue #839: active monitor mode, which hcxdumptool needs for PMKID capture, is documented broken on mt7921u"
+   },
+   "wifi_ap_mode": {
+    "v": "claimed",
+    "note": "Not independently verified for this specific board"
+   },
+   "packet_capture": {
+    "v": "partial",
+    "note": "Depends on the same monitor-mode reliability issues documented for the mt7921u driver family"
+   },
+   "wifi_wardriving": {
+    "v": "unknown",
+    "note": "No onboard GPS and it's a permanent internal install, not a swappable adapter, so host-software-driven wardriving from inside the uConsole was not independently confirmed as a documented use case"
+   },
+   "bt_classic": {
+    "v": "claimed",
+    "note": "Vendor markets 'high-quality wireless audio' implying BR/EDR A2DP support on the Bluetooth 5.2 side; not independently confirmed"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "BLE hardware is present on the MT7921AUN combo chip; no independent confirmation the uConsole Linux stack exposes BLE scanning tools by default"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires the uConsole host; not usable in any other device"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Owning and importing this module is legal essentially everywhere - it's a standard Wi-Fi/Bluetooth radio component. Using monitor-mode/injection capability against networks or clients you don't own or have written authorization to test is illegal in most countries. Check your local law before using any capture/injection feature."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "N/A - it's a Wi-Fi/BT radio module, not an app platform",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "VAYIKE AC1200 USB-C WiFi Card",
+   "MT7921AUN uConsole WiFi card"
+  ],
+  "sources": [
+   {
+    "url": "https://hackergadgets.com/products/ac1200-usb-c-wifi-card",
+    "what": "primary listing: price, chipset, pre-order status, specs"
+   },
+   {
+    "url": "https://sapsan-sklep.pl/en/products/ac1200-usb-c-wifi-card",
+    "what": "confirms internal-USB-C-port installation detail, antenna count, alternate price"
+   },
+   {
+    "url": "https://www.aliexpress.us/item/3256812037190924.html",
+    "what": "same board sold under the VAYIKE brand"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/issues/387",
+    "what": "documented frame injection failure/fallback rates on mt7921au/mt7921u chipset"
+   },
+   {
+    "url": "https://github.com/openwrt/mt76/issues/839",
+    "what": "active monitor mode documented broken on mt7921u"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/discussions/480",
+    "what": "community discussion on mt7921au chipset variants"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/issues/481",
+    "what": "unresolved question on MT7921AU vs MTK7921AU/MT7921AUN naming"
+   },
+   {
+    "url": "https://www.lcsc.com/product-detail/C45354772.html",
+    "what": "confirms MT7921AUN as a distributor-listed MediaTek part number"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm the exact silicon-level difference between MediaTek's 'MT7921AU' and 'MT7921AUN' part numbers - MediaTek does not publish public consumer datasheets, and the Linux community itself (morrownr/USB-WiFi issue #481, discussion #480) has an open, unresolved thread on whether these are the same die in different packages or genuinely distinct SKUs.",
+   "Could not confirm the original release date of this specific board SKU.",
+   "Could not independently confirm the PCB manufacturer/OEM behind this card - it appears to be a generic design also sold as 'VAYIKE' on AliExpress, suggesting Hacker Gadgets is reselling/repackaging a third-party board rather than a proprietary in-house design."
+  ]
+ },
+ {
+  "id": "dual-band-wifi-mt7921au",
+  "hardware_id": "dual-band-wifi-mt7921au",
+  "name": "Dual Band WiFi MT7921AU USB Adapter",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No user-facing firmware. Loads an mt7921u driver firmware blob from the host at init time, same as the other two adapters in this batch.",
+  "vendor": "Generic (MediaTek MT7921AU)",
+  "vendor_url": null,
+  "product_url": "https://hackerwarehouse.com/product/dual-band-wifi-mt7921au/",
+  "category": "wifi",
+  "subcategory": "usb-wifi-adapter",
+  "status": "available",
+  "released": null,
+  "price_usd": 40.0,
+  "price_note": "In stock at Hacker Warehouse at time of check. No manufacturer brand is named on the listing, and Hacker Warehouse's own product photo disclaimer ('you might get a device that looks different from the picture') suggests this is a white-label/generic import rather than a tracked product line, so no cross-reseller price comparison is possible.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug-and-play USB dongle; relies on the same in-kernel mt7921u driver as device 2 above.",
+  "build_effort": "assembled",
+  "build_note": "Nothing to build or flash - finished USB peripheral with two detachable external antennas.",
+  "stealth": "overt",
+  "form_factor": "usb-stick",
+  "summary": "A dual-band, Wi-Fi 6-capable USB adapter built on MediaTek's MT7921AU chipset, sold by Hacker Warehouse as an unbranded/generic listing (no manufacturer named). Physically it's a small USB dongle body with two detachable external omni-directional antennas, using the same mt76/mt7921u Linux driver family as the internal uConsole card (device 2 in this batch). The listing claims monitor mode and packet injection support across 802.11 a/g/n/ac.",
+  "honest_take": "This is a generic, likely white-label board - Hacker Warehouse doesn't name a manufacturer, and the listing's own disclaimer that you might receive a device that looks different from the picture is a real red flag for a security tool where you want to know exactly what silicon you're plugging in. Chipset-wise it's the same MT7921-series family as the uConsole card above, sharing the same mt7921u driver and the same open reliability problems: morrownr/USB-WiFi issue #387 documents frame injection failing or falling back to 1/6Mbps on this exact chipset, and openwrt/mt76 issue #839 documents active monitor mode (needed for PMKID capture) being broken on mt7921u. Whether 'MT7921AU' here is the identical die to the 'MT7921AUN' in device 2, or a genuinely distinct SKU, could not be confirmed from public sources - even the morrownr/USB-WiFi maintainers have an open, unresolved GitHub thread about it. Of the three Wi-Fi adapters in this batch, this is the one to skip: it costs almost the same as the ALFA AWUS036ACM ($40 vs $46.97), comes with no verifiable brand accountability, and inherits the same unresolved mt7921u injection bugs as the uConsole card - without that card's one real advantage of fitting a specific niche host. If you specifically want a WiFi 6/6E-class adapter for its own sake, this at least gives you a standalone dongle (unlike device 2), but for reliable monitor-mode/injection work, the MT7612U-based ALFA adapter remains the better buy at a similar price.",
+  "best_for": [
+   "Basic Wi-Fi 6 client connectivity where monitor mode is a nice-to-have, not a requirement",
+   "Budget experimentation with the mt7921u driver stack on Linux"
+  ],
+  "not_for": [
+   "Any workflow where reliable packet injection matters - use the MT7612U ALFA adapter instead",
+   "Anyone who wants to know exactly what hardware/manufacturer they're buying"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No general-purpose MCU. Pure USB Wi-Fi radio peripheral; the MT7921AU does its own baseband/MAC processing and the host PC runs all attack tooling.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7921AU",
+     "role": "wifi",
+     "note": "Dual-band 802.11a/b/g/n/ac plus WiFi 6 (802.11ax) per the listing. mt76/mt7921u Linux driver, in-kernel since roughly kernel 5.18."
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "None - USB bus-powered only.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB Type-A",
+    "2x detachable omni-directional antennas"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Plastic dongle housing",
+   "notable_physical": [
+    "2x detachable external omni-directional antennas",
+    "USB Type-A plug"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard scanning via mt7921u driver"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Dual-band 2.4/5GHz, WiFi 6 (ax) capable"
+   },
+   "wifi_monitor_mode": {
+    "v": "claimed",
+    "note": "Vendor states monitor mode and injection support; independent community sources report open bugs in the underlying mt7921u driver (see wifi_injection/wifi_pmkid)"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "morrownr/USB-WiFi issue #387 documents frame injection on this chipset family failing or falling back to 1/6Mbps data rates"
+   },
+   "wifi_handshake_capture": {
+    "v": "partial",
+    "note": "Passive capture likely functional in monitor mode; active-mode-dependent capture (PMKID) is documented broken"
+   },
+   "wifi_pmkid": {
+    "v": "no",
+    "note": "openwrt/mt76 issue #839: active monitor mode required for hcxdumptool PMKID capture is documented broken on mt7921u"
+   },
+   "wifi_ap_mode": {
+    "v": "claimed",
+    "note": "Not independently verified for this specific board"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Host-driven via Kismet/airodump-ng; no onboard GPS"
+   },
+   "packet_capture": {
+    "v": "partial",
+    "note": "Passive pcap capture should work; reliability tied to the same open monitor-mode issues noted above"
+   },
+   "bt_classic": {
+    "v": "unknown",
+    "note": "No Bluetooth mentioned anywhere on this listing, unlike the MT7921AUN card in this batch which explicitly lists Bluetooth antenna pads - could not confirm whether this specific chip variant includes BT hardware at all"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Pure USB peripheral - does nothing without a host computer"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Owning and importing this adapter is legal essentially everywhere - it's sold as a consumer Wi-Fi peripheral. Using monitor-mode/injection capability against networks or clients you don't own or have written authorization to test is illegal in most countries. Check your local law before using capture/injection features."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "N/A - it's a Wi-Fi radio peripheral, not an app platform",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "MT7921AU USB WiFi adapter"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/dual-band-wifi-mt7921au/",
+    "what": "primary listing: price, stock, chipset, form factor, driver"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/issues/387",
+    "what": "documented frame injection failure/fallback rates on mt7921au/mt7921u chipset"
+   },
+   {
+    "url": "https://github.com/openwrt/mt76/issues/839",
+    "what": "active monitor mode documented broken on mt7921u"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/discussions/480",
+    "what": "community discussion on mt7921au chipset variants and naming"
+   }
+  ],
+  "research_gaps": [
+   "No manufacturer/brand name could be found for this specific listing - Hacker Warehouse markets it purely by chipset name.",
+   "Could not confirm original release date of this product.",
+   "Could not confirm exact physical dimensions - the listing's '5 x 3 x 1.5 in' figure looks like shipping-package size rather than the adapter itself, so it was omitted rather than reported as the device's real size.",
+   "Could not confirm whether this chip includes Bluetooth hardware - unlike the MT7921AUN card in this batch (which explicitly lists 2 Bluetooth antenna pads), this listing makes no mention of Bluetooth at all."
+  ]
+ },
+ {
+  "id": "esp32-mdk-portapack-h4m",
+  "hardware_id": "esp32-mdk-portapack-h4m",
+  "name": "ESP32-MDK for PortaPack H4M",
+  "firmware": "htotoo/ESP32-Portapack (community) or the official mayhem-mdk demo firmware",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/htotoo/ESP32-Portapack",
+  "firmware_note": "Ships with nothing pre-loaded (per the listing). You flash one of two things onto the onboard ESP32-S3 yourself: the minimal official 'mayhem-mdk' reference firmware (portapack-mayhem/mayhem-mdk), whose only documented app is a UART passthrough viewer for pin 14, or htotoo's more feature-complete third-party ESP32-Portapack firmware, which adds a Wi-Fi SSID-spam/spoofer app, an experimental IR receiver, a Meshtastic-related bridge, and an I2C link to the PortaPack. Either way, the PortaPack side also needs a Mayhem firmware build that includes the external-module API (merged via mayhem-firmware PR #2290) for any module app to appear in the Utilities menu at all - older Mayhem builds and the original 'havoc' fork predate that API and won't show the app.",
+  "vendor": "OpenSourceSDRLab",
+  "vendor_url": "https://opensourcesdrlab.com",
+  "product_url": "https://hackerwarehouse.com/product/esp32-mdk-for-portapack-h4m/",
+  "category": "accessory",
+  "subcategory": "sdr-addon-module",
+  "status": "available",
+  "released": null,
+  "price_usd": 45.0,
+  "price_note": "In stock at Hacker Warehouse (Add to Cart shown, no out-of-stock messaging), SKU 'OSL-ESP32' - the SKU prefix and matching product name/photos strongly indicate this is OpenSourceSDRLab's board being resold. OpenSourceSDRLab sells the same 'ESP32 Extension Board... MDK for H4M' directly for $35 on sale / $55 regular price; Hacker Warehouse's $45 sits in between.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Requires already owning and running a HackRF + PortaPack H4M with a Mayhem build that has the external-module API, plus flashing separate ESP32-S3 firmware yourself via ESP-IDF - not a beginner add-on.",
+  "build_effort": "flash-only",
+  "build_note": "No soldering to assemble, but the module is functionally inert until you build and flash firmware onto its ESP32-S3 (ESP-IDF 5.3+ per the mayhem-mdk repo) and pair it with a compatible PortaPack Mayhem build.",
+  "stealth": "overt",
+  "form_factor": "hat-shield",
+  "summary": "A small ESP32-S3-based expansion board that attaches to a HackRF + PortaPack H4M rig over UART/I2C/USB, adding a second, independent Wi-Fi/BLE radio (the HackRF/PortaPack itself has no Wi-Fi) to an SDR platform that otherwise only receives/transmits via HackRF's wideband RF front end. It is an accessory for the existing 'HackRF + PortaPack H4M' device already tracked in this database, not a standalone gadget - it does nothing without that host.",
+  "honest_take": "This is fundamentally 'an ESP32 dev board in a matching case' - the interesting part is entirely in whichever firmware you flash onto it, and the two options found are not equivalent: the official 'mayhem-mdk' reference firmware from the PortaPack Mayhem project only documents a single UART-passthrough demo app, while the real Wi-Fi functionality (an SSID-spam/spoofer app, plus IR-receive and a Meshtastic-related bridge) comes from a separate, single-maintainer community project (htotoo/ESP32-Portapack) that is explicitly described by its own author as early-stage. Marketing this as 'enable[s] WiFi applications' is accurate but easy to over-read: it does not turn the HackRF into a Wi-Fi attack tool in the Marauder/Flipper sense - deauth was not found documented anywhere in either firmware's app list, only beacon/SSID spam. You also need the PortaPack side running a Mayhem build recent enough to include the external-module API (PR #2290) or the app simply won't appear in the menu, which is a real trap for anyone still on an older Mayhem build or the original havoc fork. On price: the SKU 'OSL-ESP32' and matching product description point to Hacker Warehouse reselling OpenSourceSDRLab's own board, which OpenSourceSDRLab sells directly for as little as $35 on sale - so part of the $45 here is Hacker Warehouse's convenience/bundling markup, not unique hardware.",
+  "best_for": [
+   "Existing HackRF + PortaPack H4M owners who want an on-device Wi-Fi/BLE scratch radio without carrying a laptop",
+   "Tinkerers comfortable building/flashing ESP-IDF firmware and tracking two separate GitHub projects"
+  ],
+  "not_for": [
+   "Anyone without an existing HackRF + PortaPack H4M - it is a pure accessory and has zero standalone function",
+   "Wi-Fi deauth or injection work - no evidence either firmware option implements this; only SSID/beacon spam was documented",
+   "Beginners - requires ESP-IDF firmware builds plus a PortaPack Mayhem build new enough to support external modules"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Dual-core Xtensa LX7 up to 240MHz, integrated 2.4GHz Wi-Fi 4 (802.11b/g/n) and Bluetooth 5 LE. No 5GHz Wi-Fi and no Bluetooth Classic/BR-EDR on this part.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi",
+     "note": "2.4GHz 802.11b/g/n only - no 5GHz, no Wi-Fi 6"
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "bluetooth",
+     "note": "Bluetooth 5 LE only; no BR/EDR classic Bluetooth on this chip"
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Powered from the PortaPack/HackRF host via the module connector; no battery of its own.",
+   "charging": null,
+   "pmic": "Onboard DC-DC power conversion per the mayhem-mdk hardware design",
+   "storage": null,
+   "connectivity": [
+    "I2C (PortaPack/PortaRF interface)",
+    "UART",
+    "USB (for flashing the ESP32-S3 itself)",
+    "GPIO header"
+   ],
+   "gpio": "Exposed GPIO per the mayhem-mdk board; pin 14 specifically documented for the reference UART app",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": "~136 (0.3 lbs per listing)",
+   "case": "Small PCB module, no separate enclosure - mounts as an external add-on board",
+   "notable_physical": [
+    "Open-hardware PCB (design files distributed for JLCPCB manufacture via the mayhem-mdk repo)",
+    "Different pinout from other ESP32-Portapack hardware variants - requires MDK-specific firmware builds"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "claimed",
+    "note": "ESP32-S3 hardware supports 2.4GHz scanning; not confirmed as an exposed app in either firmware's documented feature list"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-S3 silicon is 2.4GHz-only; no 5GHz radio present regardless of firmware"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Not documented in either firmware's app list - only SSID/beacon spam was found, despite the listing's loose 'WiFi applications' marketing language"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "htotoo/ESP32-Portapack's 'WiFi SSID spoofer' app broadcasts spoofed/spammed SSID beacons - documented on the project wiki"
+   },
+   "ir_rx": {
+    "v": "partial",
+    "note": "htotoo/ESP32-Portapack describes IR functionality as 'now only experimental RX' - no IR transmit found documented"
+   },
+   "uart": {
+    "v": "yes",
+    "note": "Official mayhem-mdk demo firmware's one documented app displays any UART signal present on pin 14"
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "The module connects to the PortaPack/PortaRF over I2C per both the mayhem-mdk and htotoo project descriptions"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "ESP32-S3 has BLE 5 hardware; no independent confirmation either firmware exposes a BLE scanning app"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Notable absence given the chip is marketed loosely as 'Wi-Fi Bluetooth' - ESP32-S3 has BLE 5 only, no BR/EDR classic Bluetooth radio"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Non-functional without a PortaPack H4M + HackRF host; this is strictly an add-on module"
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No on-device scripting language; behavior is fixed by whichever compiled ESP-IDF firmware you flash"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "The ESP32-S3 module itself only transmits standard consumer Wi-Fi/BLE, which is legal to own and use like any other Wi-Fi device in most countries. The HackRF + PortaPack H4M host it plugs into is a general-purpose SDR with much broader transmit capability and its own separate legal profile, already covered under that device's own database entry - this module doesn't add to or change that. SSID-spam/beacon-spam behaviour against networks/devices you don't own may be restricted in some jurisdictions similarly to other Wi-Fi spam tools; check your local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No formal app store - each app is a firmware build you flash yourself; a Utilities-menu app only appears once the PortaPack side is running the external-module-API version of Mayhem",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "OpenSourceSDRLab ESP32 MDK",
+   "Mayhem MDK",
+   "ESP32-Portapack module"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/esp32-mdk-for-portapack-h4m/",
+    "what": "primary listing: price, stock, SKU, description, weight/dimensions"
+   },
+   {
+    "url": "https://opensourcesdrlab.com/products/esp32-mdk",
+    "what": "likely original manufacturer's own listing and pricing for comparison"
+   },
+   {
+    "url": "https://github.com/portapack-mayhem/mayhem-mdk",
+    "what": "official MDK hardware/firmware repo - ESP32-S3, I2C/UART/GPIO, JLCPCB design files, reference UART app"
+   },
+   {
+    "url": "https://github.com/portapack-mayhem/mayhem-firmware/pull/2290",
+    "what": "external module API PR that lets module apps appear in the PortaPack Utilities menu"
+   },
+   {
+    "url": "https://github.com/htotoo/ESP32-Portapack",
+    "what": "third-party firmware: WiFi SSID spoofer, experimental IR RX, Meshtastic-related bridge, I2C interface, MDK-specific pinout note"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm Hacker Warehouse's board is manufactured by OpenSourceSDRLab with certainty beyond the matching SKU prefix ('OSL') and product naming/photos - could not access an explicit statement of the manufacturing relationship.",
+   "Could not find a capability key in the schema for the Meshtastic-related bridge feature mentioned on the htotoo/ESP32-Portapack project page - flagging per PHASE2 instructions rather than inventing a key.",
+   "Could not confirm the exact release date of either the hardware or the firmware projects, or pull the GitHub releases page (returned 404 on fetch).",
+   "Could not confirm whether the htotoo firmware's WiFi SSID spoofer app also performs deauthentication in addition to SSID/beacon spam - only beacon-spam behavior was documented in the sources found."
+  ]
+ }
+]

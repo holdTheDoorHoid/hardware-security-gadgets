@@ -1,0 +1,314 @@
+[
+ {
+  "name": "Flipper Add-On: CANBus",
+  "first_pass_price": 35.0,
+  "seller_url": "https://electroniccats.com/store/flipper-add-on-canbus/",
+  "src": "specialty"
+ },
+ {
+  "name": "PAW Protector",
+  "first_pass_price": 20.0,
+  "seller_url": "https://electroniccats.com/store/paw-protector/",
+  "src": "specialty"
+ },
+ {
+  "name": "Paw Detector \u2013 Malicious USB cables detector",
+  "first_pass_price": 18.0,
+  "seller_url": "https://electroniccats.com/store/paw-detector/",
+  "src": "specialty"
+ },
+ {
+  "name": "MACOBOX - Hardware Pentest Platform",
+  "first_pass_price": 11000.0,
+  "seller_url": "https://lab401.com",
+  "src": "lab401"
+ },
+ {
+  "name": "ChipWhisperer - HuskyPlus",
+  "first_pass_price": 1250.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "FlatSat \u2013 DEFCON 34",
+  "first_pass_price": 100.0,
+  "seller_url": "https://electroniccats.com/store/flatsat-defcon-34/",
+  "src": "specialty"
+ },
+ {
+  "name": "DigiLab for FlipperZero",
+  "first_pass_price": 64.0,
+  "seller_url": "https://lab401.com/collections/flipper-zero",
+  "src": "lab401"
+ },
+ {
+  "name": "I2CDriver",
+  "first_pass_price": 35.0,
+  "seller_url": "https://lab401.com/collections/hardware-audit",
+  "src": "lab401"
+ },
+ {
+  "name": "TermDriver 2",
+  "first_pass_price": 29.95,
+  "seller_url": "https://lab401.com/collections/hardware-audit",
+  "src": "lab401"
+ },
+ {
+  "name": "Feberis Pro",
+  "first_pass_price": 119.0,
+  "seller_url": "https://lab401.com/products/feberis-pro",
+  "src": "lab401"
+ },
+ {
+  "name": "Minino: IoT Multitool",
+  "first_pass_price": 65.0,
+  "seller_url": "https://lab401.com/collections/rf-tools",
+  "src": "lab401"
+ },
+ {
+  "name": "Flipper Add-On: Ethernet",
+  "first_pass_price": 25.0,
+  "seller_url": "https://electroniccats.com/store/flipper-zero-add-on-ethernet/",
+  "src": "specialty"
+ },
+ {
+  "name": "PiKVM v4 Plus - Hardware RAT",
+  "first_pass_price": 540.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "Kronos Electric Pick",
+  "first_pass_price": 279.0,
+  "seller_url": "https://lab401.com/collections/physical-audit-tools",
+  "src": "lab401"
+ },
+ {
+  "name": "MastaBlasta - IR Blaster",
+  "first_pass_price": 50.0,
+  "seller_url": "https://lab401.com/collections/flipper-zero",
+  "src": "lab401"
+ },
+ {
+  "name": "IR Blaster",
+  "first_pass_price": 45.0,
+  "seller_url": "https://lab401.com/products/ir-blaster",
+  "src": "lab401"
+ },
+ {
+  "name": "Flipper Add-On: Modbus",
+  "first_pass_price": 20.0,
+  "seller_url": "https://electroniccats.com/store/",
+  "src": "specialty"
+ },
+ {
+  "name": "UHFKill",
+  "first_pass_price": 1750.0,
+  "seller_url": "https://lab401.com/products/uhfkill",
+  "src": "lab401"
+ },
+ {
+  "name": "Industrial Handheld UHF Reader",
+  "first_pass_price": 1263.0,
+  "seller_url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+  "src": "lab401"
+ },
+ {
+  "name": "Long-range iCLASS RFID Capture System",
+  "first_pass_price": 895.0,
+  "seller_url": "https://lab401.com/products/ppe-iclass-longrange-rfid-capture-system",
+  "src": "lab401"
+ },
+ {
+  "name": "Long-range MaxiProx 5375 125KHz Capture System",
+  "first_pass_price": 825.0,
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "src": "lab401"
+ },
+ {
+  "name": "Dual Mode Paxton Long Range / Stealth Decoy Reader",
+  "first_pass_price": 475.0,
+  "seller_url": "https://lab401.com/products/dual-mode-paxton-long-range-stealth-decoy-reader",
+  "src": "lab401"
+ },
+ {
+  "name": "iCS Decoder for iCLASS SE / SEOS Decoder",
+  "first_pass_price": 445.0,
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "src": "lab401"
+ },
+ {
+  "name": "Long Range RFID Reader/Writer DL533N XL",
+  "first_pass_price": 168.0,
+  "seller_url": "https://lab401.com/products/long-range-rfid-reader-writer-dl533n-xl",
+  "src": "lab401"
+ },
+ {
+  "name": "Proxmark 3 RDV4 - BlueShark Standalone Module",
+  "first_pass_price": 129.0,
+  "seller_url": "https://lab401.com/products/proxmark-3-rdv4-standalone-kit",
+  "src": "lab401"
+ },
+ {
+  "name": "Stealth Decoy Reader",
+  "first_pass_price": 125.0,
+  "seller_url": "https://lab401.com/products/stealth-decoy-reader",
+  "src": "lab401"
+ },
+ {
+  "name": "Proxmark 5 - Wireless + Battery Module",
+  "first_pass_price": 110.0,
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "src": "lab401"
+ },
+ {
+  "name": "13.56MHz RFID Field Strength Meter",
+  "first_pass_price": 95.0,
+  "seller_url": "https://lab401.com/collections/rfid-badges-detection-diagnostics",
+  "src": "lab401"
+ },
+ {
+  "name": "Chameleon Lite",
+  "first_pass_price": 77.0,
+  "seller_url": "https://lab401.com/products/chameleon-lite",
+  "src": "lab401"
+ },
+ {
+  "name": "USB RFID Reader/Writer DL533N",
+  "first_pass_price": 65.0,
+  "seller_url": "https://lab401.com/products/usb-rfid-reader-writer-dl533n",
+  "src": "lab401"
+ },
+ {
+  "name": "RFID Field Detector Ultra - LF/HF/UHF",
+  "first_pass_price": 33.0,
+  "seller_url": "https://lab401.com/products/rfid-field-detector-ultra",
+  "src": "lab401"
+ },
+ {
+  "name": "Flipper Add-On: MagSpoof",
+  "first_pass_price": 28.0,
+  "seller_url": "https://electroniccats.com/store/",
+  "src": "specialty"
+ },
+ {
+  "name": "Proxmark 3 RDV4 - SIM/SAM Extension",
+  "first_pass_price": 26.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "ARD RFID Blocker (Pack of 2) - NFC Blocker",
+  "first_pass_price": 22.0,
+  "seller_url": "https://lab401.com/products/rfid-blocker-nfc-jammer",
+  "src": "lab401"
+ },
+ {
+  "name": "HiLetgo PN532 NFC NXP RFID Module V3 Kit",
+  "first_pass_price": 8.99,
+  "seller_url": "https://www.amazon.com/s?k=PN532+NFC+RFID+module+reader+writer",
+  "src": "specialty"
+ },
+ {
+  "name": "TinySA Ultra+",
+  "first_pass_price": 209.0,
+  "seller_url": "https://lab401.com/collections/sdr",
+  "src": "lab401"
+ },
+ {
+  "name": "NanoVNA-F",
+  "first_pass_price": 143.0,
+  "seller_url": "https://lab401.com/collections/sdr",
+  "src": "lab401"
+ },
+ {
+  "name": "uConsole AIO V2 (RTL-SDR/LoRa/GPS/RTC/USB Hub/USB 3.0/RJ45 Ethernet)",
+  "first_pass_price": 92.0,
+  "seller_url": "https://hackergadgets.com/products/uconsole-aio-v2",
+  "src": "specialty"
+ },
+ {
+  "name": "RTL-SDR/LoRa/GPS/RTC hat for Raspberry Pi",
+  "first_pass_price": 84.9,
+  "seller_url": "https://hackergadgets.com/products/rtl-sdr-lora-gps-rtc-hat-for-raspberry-pi",
+  "src": "specialty"
+ },
+ {
+  "name": "Mini RTL-SDR Dongle",
+  "first_pass_price": 49.5,
+  "seller_url": "https://hackergadgets.com/products/mini-rtl-sdr-dongle",
+  "src": "specialty"
+ },
+ {
+  "name": "PandwaRF Marauder",
+  "first_pass_price": 1024.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "Flipper Add-on SubGhz",
+  "first_pass_price": 35.0,
+  "seller_url": "https://electroniccats.com/store/",
+  "src": "specialty"
+ },
+ {
+  "name": "2 PCS CC1101 Module with SMA Antenna Transceiver Module (433/315/868/915MHz)",
+  "first_pass_price": 17.99,
+  "seller_url": "https://www.amazon.com/s?k=CC1101+433MHz+wireless+module+flipper",
+  "src": "specialty"
+ },
+ {
+  "name": "MalDuino W",
+  "first_pass_price": 66.35,
+  "seller_url": "https://maltronics.com/products/malduino-w",
+  "src": "specialty"
+ },
+ {
+  "name": "MalDuino 3",
+  "first_pass_price": 47.39,
+  "seller_url": "https://maltronics.com/products/malduino-3",
+  "src": "specialty"
+ },
+ {
+  "name": "O.MG Cable Programmer (USB A+C)",
+  "first_pass_price": 40.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "GhostBoard",
+  "first_pass_price": 75.0,
+  "seller_url": "https://lab401.com/collections/all",
+  "src": "specialty"
+ },
+ {
+  "name": "Pwnagotchi Hat - UPS/GPS/AC WiFi/USB HUB/RTC all in one hat",
+  "first_pass_price": 74.5,
+  "seller_url": "https://hackergadgets.com/products/pwnagotchi-hat-ups-gps-ac-wifi-usb-hub-rtc-all-in-one-hat",
+  "src": "specialty"
+ },
+ {
+  "name": "WiFi Deauther",
+  "first_pass_price": 50.1,
+  "seller_url": "https://maltronics.com/products/wifi-deauther",
+  "src": "specialty"
+ },
+ {
+  "name": "Flipper Add-On: Marauder_Spoof",
+  "first_pass_price": 50.0,
+  "seller_url": "https://electroniccats.com/store/",
+  "src": "specialty"
+ },
+ {
+  "name": "AC1200 USB-C WiFi Card (supports monitor mode)",
+  "first_pass_price": 45.0,
+  "seller_url": "https://hackergadgets.com/products/ac1200-usb-c-wifi-card",
+  "src": "specialty"
+ },
+ {
+  "name": "Flipper Add-On: Marauder",
+  "first_pass_price": 40.0,
+  "seller_url": "https://electroniccats.com/store/",
+  "src": "specialty"
+ }
+]

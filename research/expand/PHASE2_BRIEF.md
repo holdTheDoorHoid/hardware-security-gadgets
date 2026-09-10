@@ -92,3 +92,18 @@ specific fact, say which fact in the `what` field.
 
 If you have already written your file, revise it to this standard rather than
 starting over.
+
+## Currency (added mid-run)
+
+Lab401 and several specialty shops are EU-based and quote EUR, sometimes
+excluding VAT. The first pass recorded some of those figures straight into
+`price_usd` without converting, which makes them wrong by roughly 8%.
+
+If your device comes from a European seller, confirm the currency on the actual
+product page before you trust the first-pass price. Convert to USD, and say so
+in `price_note` ("EUR 249 ex-VAT, converted at 1.08"). If the vendor quotes
+ex-VAT, note that too — it is a real difference to a European buyer and an
+invisible one to an American.
+
+`research/expand/PRICE_VERIFY.json` lists the devices whose currency could not be
+confirmed from first-pass data.

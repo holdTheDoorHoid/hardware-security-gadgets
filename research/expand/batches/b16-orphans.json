@@ -1,0 +1,63 @@
+[
+ {
+  "name": "Evil-M5Project",
+  "vendor": "7h30th3r0n3",
+  "seller_url": "https://github.com/7h30th3r0n3/Evil-M5Project",
+  "price_usd": 44,
+  "one_line": "Wi-Fi pentest / evil-portal firmware with on-device UI for M5Stack Core2 (also AtomS3 and Fire): scanning, monitoring, karma and captive-portal attacks.",
+  "category_guess": "wifi",
+  "why_notable": "2623 stars, last commit 2026-09-06. The major M5Stack Wi-Fi firmware outside the Marauder/Ghost/Bruce family.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "wifi",
+  "_src": "github"
+ },
+ {
+  "name": "wardriver3000",
+  "vendor": "CiferTech",
+  "seller_url": "https://github.com/cifertech/wardriver3000",
+  "price_usd": 30,
+  "one_line": "Portable ESP32 + GPS + OLED + microSD wardriving device on a custom PCB with Wigle.net upload.",
+  "category_guess": "wifi",
+  "why_notable": "121 stars, last commit 2024-04-28.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "medium",
+  "_slice": "wifi",
+  "_src": "github"
+ },
+ {
+  "name": "ESP32 Wardriver Pro",
+  "vendor": "dkyazzentwatwa",
+  "seller_url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle",
+  "price_usd": 25,
+  "one_line": "Passive-only ESP32 + GPS + OLED + SD wardriving logger writing WiGLE CSVs; explicitly does not deauth, join networks or inject.",
+  "category_guess": "wifi",
+  "why_notable": "40 stars, last commit 2026-05-18. Deliberately legal-safe design philosophy, a contrast to the active-attack tools.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "medium",
+  "_slice": "wifi",
+  "_src": "github"
+ },
+ {
+  "name": "WiFi Dev Board GPS Expansion",
+  "vendor": "JustCallMeKoko LLC (JCMK)",
+  "seller_url": "https://justcallmekokollc.com/products/flipper-zero-dev-board-sd-gps",
+  "price_usd": 21.0,
+  "one_line": "Solder-on adapter PCB that adds a microSD slot and GPS to the official (non-JCMK) Flipper Zero WiFi Dev Board, plus UART activity LEDs, enabling Marauder's PCAP/wardriving storage on that board.",
+  "category_guess": "wifi",
+  "why_notable": "Same borderline reasoning as the Dev Board Pro GPS Expansion: a capability-adding accessory for a board already in the DB (the official Flipper Zero Wi-Fi Dev Board), not a standalone device.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "mcu": "n/a (SD/GPS breakout, no MCU of its own)",
+  "has_screen": "no",
+  "has_gps": "yes, adds GPS capability",
+  "has_battery": "no",
+  "has_ext_antenna": "via GPS module (not detailed as SMA)",
+  "stock_status": "out of stock",
+  "_src": "koko"
+ }
+]

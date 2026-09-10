@@ -60,7 +60,52 @@
         "USB-A male to USB-A female in-line adapter, no cable"
       ]
     },
-    "capabilities": {},
+    "capabilities": {
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "No MCU at all; cannot inject keystrokes. Contrast with the O.MG UnBlocker (tracked separately), a wireless implant disguised in this exact form factor."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "Passes power only; no data path exists to present storage."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No data pins connected through at all."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "No logic to log anything; purely passive."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "This is precisely the attack surface the device exists to block."
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No radio, no MCU."
+      },
+      "usb_payload_lang": {
+        "v": "no",
+        "note": "Not reprogrammable; fixed analog/charge-detect circuit only."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Fixed-function hardware, nothing to flash or script."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No connectivity beyond the pass-through power path."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No radio or network stack of any kind."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Purely a passive inline accessory; it has no autonomous function to run."
+      }
+    },
     "legal": {
       "import_restricted": [],
       "risk_level": "low",
@@ -81,6 +126,14 @@
       {
         "url": "https://hackerwarehouse.com/product/lockedusb-charge-only-adapter/",
         "what": "product listing, price, and technical spec copy (DCP modes, current limit, dimensions)"
+      },
+      {
+        "url": "https://www.fcc.gov/juice-jacking-tips-to-avoid-it",
+        "what": "official FCC consumer guidance on the juice-jacking threat model this class of device defends against"
+      },
+      {
+        "url": "https://shop.hak5.org/products/omg-unblocker",
+        "what": "contrast source: confirms the O.MG UnBlocker is a wireless offensive implant sold in this same 'data blocker' form factor, unlike this device"
       }
     ],
     "research_gaps": [
@@ -156,11 +209,55 @@
       },
       "usb_payload_lang": {
         "v": "claimed",
-        "note": "Arduino-sketch based (Digispark/V-USB style keyboard library), not a runtime-interpreted script language. Changing the payload means recompiling and reflashing from a PC, not editing a text file on the device."
+        "note": "Arduino-sketch based (Digispark/V-USB style keyboard library), not a runtime-interpreted script; changing the payload means recompiling and reflashing."
       },
       "scriptable": {
         "v": "yes",
-        "note": "Open payload, user-editable via Arduino IDE; requires the ATtiny85/Digispark board package and a flashing session to change."
+        "note": "Open payload, user-editable via Arduino IDE; requires a flashing session to change."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "No storage hardware; keyboard emulation only."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet hardware."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Injects keystrokes, does not capture them."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "No storage or radio to move captured data with."
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No wireless hardware; the payload fires immediately on physical plug-in."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No radio, no UI beyond the fixed firmware."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fires its payload autonomously on power-up; no host software needed to run it."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network connectivity of any kind."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "No Wi-Fi hardware."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app or module ecosystem."
       }
     },
     "legal": {
@@ -182,6 +279,14 @@
       {
         "url": "https://www.tindie.com/products/rot13labs/vidar-attiny85-based-badusb/",
         "what": "product listing: price, MCU, stock payload behaviour, seller status"
+      },
+      {
+        "url": "https://www.microchip.com/en-us/product/attiny85",
+        "what": "official ATtiny85 product page confirming the part has no native USB peripheral, supporting the V-USB inference"
+      },
+      {
+        "url": "https://www.obdev.at/products/vusb/index.html",
+        "what": "V-USB project page, the software-USB technique this class of ATtiny85 HID BadUSB device relies on in the absence of hardware USB"
       }
     ],
     "research_gaps": [
@@ -252,15 +357,59 @@
     "capabilities": {
       "usb_hid_inject": {
         "v": "yes",
-        "note": "Fixed pre-loaded keystroke payload fires on plug-in, ATtiny85 emulating a USB keyboard."
+        "note": "ATtiny85 fires a fixed pre-loaded keystroke payload on plug-in."
       },
       "usb_payload_lang": {
         "v": "yes",
-        "note": "Custom scripts uploaded via USB per the vendor listing; based on the linked repo's ATtiny85 firmware, not a runtime-interpreted DuckyScript engine."
+        "note": "Custom scripts uploaded via USB per the vendor listing; firmware-level, not a runtime DuckyScript engine."
       },
       "scriptable": {
         "v": "yes",
-        "note": "Open source firmware (joelsernamoreno/BadUSB-Cable), user-editable and reflashable."
+        "note": "Open source firmware (joelsernamoreno/EvilCrow-Cable / BadUSB-Cable), user-editable and reflashable."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "No storage hardware; keyboard emulation only."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet hardware."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Injects keystrokes, does not capture them."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "No storage or radio to move captured data with."
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No wireless hardware, unlike the sibling Evil Crow Cable Wind - fires immediately on plug-in only."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Explicitly not equipped with Wi-Fi/ESP32, a notable absence given the sibling Wind product has it."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No radio to host a UI on."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fires its payload autonomously on power-up."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network connectivity of any kind."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app or module ecosystem."
       }
     },
     "legal": {
@@ -286,6 +435,18 @@
       {
         "url": "https://github.com/joelsernamoreno/BadUSB-Cable",
         "what": "firmware repo; confirms this base Cable is ATtiny85/Atmega32U4/RP2040-class hardware distinct from the ESP32-based Wind line"
+      },
+      {
+        "url": "https://github.com/joelsernamoreno/EvilCrowCable-Wind",
+        "what": "official Wind repo (ESP32-S3, Wi-Fi web panel), used to confirm the base Cable genuinely lacks these features rather than duplicating them"
+      },
+      {
+        "url": "https://github.com/joelsernamoreno/EvilCrowCable-Pro",
+        "what": "confirms a third tier (RP2040-based, hardware keylogger) exists in the same product family, distinct from both this base Cable and Wind"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/evil-crow-cable/",
+        "what": "reseller listing corroborating the general Evil Crow Cable project family description"
       }
     ],
     "research_gaps": [
@@ -357,7 +518,7 @@
     "capabilities": {
       "usb_hid_inject": {
         "v": "yes",
-        "note": "ATmega32U4 native-USB keyboard emulation, script executed automatically on power-up."
+        "note": "ATmega32U4 native USB HID keyboard emulation, script executed automatically on power-up."
       },
       "usb_payload_lang": {
         "v": "yes",
@@ -370,6 +531,50 @@
       "standalone_untethered": {
         "v": "yes",
         "note": "Runs its payload from SD on power-up with no host software required."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "Presents only as a keyboard to the target host; the SD card is read locally by the Arduino Micro, not exposed as storage to the target."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet hardware."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Injects keystrokes, does not capture them."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "No wireless hardware and no path to write captured data anywhere."
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No wireless hardware, unlike the sibling EvilDuck S3 - autorun on power-up only."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No radio to host a UI on; this is the key differentiator from EvilDuck S3."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "No Wi-Fi hardware, notable given the sibling S3 generation has it."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network connectivity of any kind."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app or module ecosystem."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "SD card holds the input payload script, not an output data log."
       }
     },
     "legal": {
@@ -396,6 +601,14 @@
       {
         "url": "https://cifertech.net/evilduck-diy-usb-rubber-ducky-for-ethical-hacking/",
         "what": "maker's own writeup of the SD generation"
+      },
+      {
+        "url": "https://github.com/cifertech/EvilDuck/releases",
+        "what": "release history confirming the SD generation is the first/original hardware revision, now superseded"
+      },
+      {
+        "url": "https://www.hackster.io/CiferTech/evilduck-s3-the-rubberducky-i-always-wanted-to-build-f0ee8e",
+        "what": "maker's own comparison of the SD generation against the newer S3 generation"
       }
     ],
     "research_gaps": [
@@ -493,6 +706,42 @@
       "wifi_ap_mode": {
         "v": "claimed",
         "note": "Web control panel implies an onboard AP or STA-join mode for configuration; exact networking mode not confirmed from available documentation."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "Presents only as a keyboard to the target host."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet hardware."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Injects keystrokes, does not capture them."
+      },
+      "usb_exfil": {
+        "v": "unknown",
+        "note": "Has Wi-Fi and a web UI, so relaying captured data back to an operator is plausible, but no source documents this feature existing."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "Web UI is served locally over the device's own Wi-Fi (AP/local-network), not an internet-facing cloud channel."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "The ESP32-S3 has BLE radio hardware, but the EvilDuck firmware as documented only exposes USB HID and Wi-Fi, not BLE."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app store; control is via the on-device web UI only."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Autorun on plug-in is supported once a payload is stored on-device."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "SPIFFS/microSD used for payload storage, not output data logging."
       }
     },
     "legal": {
@@ -518,6 +767,14 @@
       {
         "url": "https://cifertech.net/evilduck-s3-the-rubberducky-i-always-wanted-to-build/",
         "what": "maker's writeup dated June 2026 describing S3 as the third/current hardware revision"
+      },
+      {
+        "url": "https://www.hackster.io/CiferTech/evilduck-s3-the-rubberducky-i-always-wanted-to-build-f0ee8e",
+        "what": "maker's own writeup: ESP32-S3 hardware, web control panel, third/current hardware revision, published June 2026"
+      },
+      {
+        "url": "https://github.com/cifertech/EvilDuck/releases",
+        "what": "release history confirming S3 as the current, actively maintained hardware line"
       }
     ],
     "research_gaps": [
@@ -594,7 +851,7 @@
     "capabilities": {
       "usb_mass_storage": {
         "v": "partial",
-        "note": "Presents a fake filesystem to the host purely to observe and display read/write access attempts - it is a detector, not a functional storage device."
+        "note": "Presents a fake filesystem to the host purely to observe and display read/write access attempts - a detector, not a functional storage device."
       },
       "scriptable": {
         "v": "yes",
@@ -603,6 +860,46 @@
       "standalone_untethered": {
         "v": "yes",
         "note": "Runs and displays results on its own OLED with no host software required."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "This is a detector, not an injector - it observes a suspect device's behaviour, it does not emulate a keyboard itself."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Not its function; it flags a plugged-in device behaving like a keyboard (BadUSB detection), it does not log keystrokes itself."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "No storage or radio of its own to move data with."
+      },
+      "usb_ethernet_attack": {
+        "v": "no",
+        "note": "No Ethernet hardware."
+      },
+      "hid_remote_trigger": {
+        "v": "no",
+        "note": "No wireless hardware."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "RP2040 has no integrated wireless radio (unlike the Pico W variant, which this project does not require)."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "RP2040 has no integrated Bluetooth radio."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Feedback is shown on the onboard OLED, not a network-served UI."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network connectivity of any kind."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app or module ecosystem."
       }
     },
     "legal": {
@@ -626,6 +923,14 @@
       {
         "url": "https://github.com/cecio/USBvalve/blob/main/README.md",
         "what": "detailed mechanism description (fake filesystem, host-mode BadUSB detection from v0.8.0)"
+      },
+      {
+        "url": "https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html",
+        "what": "official Raspberry Pi Pico/RP2040 documentation confirming the PIO-based architecture and no built-in wireless radio on the base Pico"
+      },
+      {
+        "url": "https://github.com/TryBreakFixAgain/USBvalve-tbfa-Mod",
+        "what": "community fork adding a LiPo battery and SD-card logger, confirming these are not part of the base project"
       }
     ],
     "research_gaps": [
@@ -702,7 +1007,7 @@
     "capabilities": {
       "packet_capture": {
         "v": "claimed",
-        "note": "Vendor states it logs traffic during engagements; capture format, storage limits, and export method not documented."
+        "note": "Vendor states it logs traffic during engagements; capture format, storage limits, and export method are not documented."
       },
       "ethernet_mitm": {
         "v": "partial",
@@ -715,6 +1020,38 @@
       "standalone_untethered": {
         "v": "yes",
         "note": "Onboard 80GB SSD and its own compute - doesn't need an external capture host."
+      },
+      "cloud_c2": {
+        "v": "unknown",
+        "note": "Not documented whether the appliance phones home or is purely local."
+      },
+      "vpn_exfil": {
+        "v": "unknown",
+        "note": "Not documented either way."
+      },
+      "hdmi_capture": {
+        "v": "no",
+        "note": "This is a network appliance, not a KVM/video-capture device."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "No USB HID function described or implied."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Spec sheet lists only wired GbE ports; no wireless radio is mentioned."
+      },
+      "web_ui": {
+        "v": "unknown",
+        "note": "Not documented whether configuration/monitoring is via web UI, CLI, or the front LCD alone."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app ecosystem described."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "Uses an internal 80GB SSD, not removable SD storage."
       }
     },
     "legal": {
@@ -737,6 +1074,14 @@
       {
         "url": "https://hackerwarehouse.com/product/multifunction-network-box/",
         "what": "only public source found: pricing, per-model CPU/RAM/port counts, storage, lead time"
+      },
+      {
+        "url": "https://www.garlandtechnology.com/blog/the-101-series-passive-network-taps",
+        "what": "industry-standard definition of passive vs. active/inline network devices, used to support classifying this appliance as an active inline bridge rather than a passive tap"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Network_tap",
+        "what": "general reference on network tap terminology, used only for background definitions, not device-specific claims"
       }
     ],
     "research_gaps": [
@@ -846,6 +1191,34 @@
       "standalone_untethered": {
         "v": "yes",
         "note": "Runs independently once wired to the target's video/USB/power and given network reachability."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "Not a tap of any kind - it's a video/USB/power KVM implant, not a network-traffic device."
+      },
+      "packet_capture": {
+        "v": "no",
+        "note": "Not a packet-capture tool."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Has a Wi-Fi radio for its own connectivity, but is not a Wi-Fi recon/scanning tool."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth functionality described."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS/location hardware described."
+      },
+      "app_store": {
+        "v": "unknown",
+        "note": "No mobile companion app documented; management is via the web UI."
+      },
+      "jtag_swd": {
+        "v": "no",
+        "note": "Not a hardware-debug tool; access to the target is via HDMI/USB/ATX only."
       }
     },
     "legal": {
@@ -877,6 +1250,14 @@
       {
         "url": "https://github.com/pikvm/pikvm",
         "what": "official open-source firmware/software repository"
+      },
+      {
+        "url": "https://www.hackster.io/news/maxim-devaev-launches-the-pikvm-v4-now-powered-by-a-raspberry-pi-compute-module-4-5e8166ea7349",
+        "what": "confirms CM4 as the core platform and names the creator (Maxim Devaev)"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/mdevaev/pikvm-v4",
+        "what": "Kickstarter campaign page, used for the approximate 2023 release/funding date"
       }
     ],
     "research_gaps": [
@@ -957,6 +1338,38 @@
       "ethernet_mitm": {
         "v": "no",
         "note": "Pure tap; no injection or in-path modification capability."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network stack of its own - it is a layer-1/2 tap, not an addressable device."
+      },
+      "vpn_exfil": {
+        "v": "no",
+        "note": "Not applicable; no compute or network stack."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "No USB-target functionality; the USB port is power-only."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Wired copper tap only, no wireless radio."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Needs an external analyzer/host on the monitor port; unlike the LittlePcap tap in this database, it cannot capture to its own storage."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No management interface of its own."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No onboard storage of any kind."
       }
     },
     "legal": {
@@ -984,6 +1397,18 @@
       {
         "url": "https://www.dualcomm.com/products/gigabit-copper-network-tap",
         "what": "Dualcomm's current Gigabit tap product page, naming ETAP-2003/ETAP-2003R as successors to the DCGS-2005 this family descends from"
+      },
+      {
+        "url": "https://www.tecisoft.com/products/dualcomm-etap-2003-10-100-1000base-t-gigabit-ethernet-network-etap-2003",
+        "what": "reseller copy repeating the 'no power needed / lossless' passive claim quoted and questioned in honest_take"
+      },
+      {
+        "url": "https://www.amazon.com/Dualcomm-1000Base-T-Gigabit-Ethernet-Network/dp/B004EWVFAY",
+        "what": "cross-reference listing for the ETAP-2003 model confirming naming and general spec claims"
+      },
+      {
+        "url": "https://insights.profitap.com/passive-vs-active-network-taps",
+        "what": "industry explainer on passive vs active tap design tradeoffs, cited for the general technical claim that full-duplex Gigabit copper taps typically need active circuitry"
       }
     ],
     "research_gaps": [
@@ -1060,6 +1485,38 @@
       "ethernet_mitm": {
         "v": "no",
         "note": "Passive mirroring only; no documented injection capability."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No network stack beyond basic unmanaged switching."
+      },
+      "vpn_exfil": {
+        "v": "no",
+        "note": "Not applicable; no compute or network stack."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "USB port is power-only."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Wired switch only, no wireless radio."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires an external analyzer on the mirror port; no onboard capture storage."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Unmanaged switch; no configuration interface."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No onboard storage of any kind."
       }
     },
     "legal": {
@@ -1075,12 +1532,21 @@
       "abandoned_risk": "low"
     },
     "aliases": [
-      "DC-1005PT"
+      "DC-1005PT (Hacker Warehouse listing name)",
+      "DCSW-1005PT (Dualcomm's own model number)"
     ],
     "sources": [
       {
         "url": "https://hackerwarehouse.com/product/10-100-faste-switch-tap/",
         "what": "listing: price, DC-1005PT model, port mirroring config, PoE pass-through, dimensions"
+      },
+      {
+        "url": "https://www.dualcomm.com/products/usb-powered-10-100base-t-network-tap",
+        "what": "Dualcomm's own product page for this switch-tap family, confirming the real model number is DCSW-1005PT (Hacker Warehouse lists it as 'DC-1005PT')"
+      },
+      {
+        "url": "https://www.ikeriri.ne.jp/develop/Dualcomm/DCSW-1005_User_Guide.pdf",
+        "what": "official DCSW-1005/DCSW-1005PT user's guide: port count, PoE pass-through scope, power input options, LED indicators"
       }
     ],
     "research_gaps": [
@@ -1148,6 +1614,54 @@
       "packet_capture": {
         "v": "partial",
         "note": "Performs flow-level monitoring and DPI for its own IDS/parental-control features, not general-purpose pcap export for third-party analysis."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-target device at all; it's a network appliance."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "No wireless radio on this model - it bridges onto the LAN over Ethernet only."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware documented."
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio; purely an IP-layer appliance."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "It is an active in-line bridge/router that performs blocking and filtering, not a passive electrical tap."
+      },
+      "ethernet_mitm": {
+        "v": "partial",
+        "note": "Actively intercepts and can redirect/block DNS and IP traffic for ad-blocking, parental controls, and threat blocking - a legitimate, disclosed form of in-path control, not covert MITM."
+      },
+      "cloud_c2": {
+        "v": "partial",
+        "note": "The mobile app reaches the box via Firewalla's own cloud relay service by design - a legitimate remote-management feature, not a covert channel, but worth flagging as a cloud dependency."
+      },
+      "vpn_exfil": {
+        "v": "yes",
+        "note": "Ships with a built-in VPN server intended for the owner's own legitimate remote access - the same underlying capability an attacker-controlled box would use to exfiltrate, here used defensively/for the owner."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Managed via the iOS/Android mobile app, not a browser-based web UI."
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "iOS and Android companion apps, one app can manage multiple units."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS/location hardware."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Configuration and much of its functionality depend on the mobile app and Firewalla's cloud relay."
       }
     },
     "legal": {
@@ -1173,6 +1687,14 @@
       {
         "url": "https://help.firewalla.com/hc/en-us/articles/360010465893-Guide-How-to-Choose-between-Different-Firewalla-Products",
         "what": "confirms Red as the original/base model versus current Blue/Purple/Gold lineup"
+      },
+      {
+        "url": "https://github.com/firewalla/firewalla",
+        "what": "firmware source repository referenced by the vendor as evidence of open-source components"
+      },
+      {
+        "url": "https://www.techradar.com/reviews/firewalla",
+        "what": "independent review covering the broader Firewalla product line for context on the company and lineup"
       }
     ],
     "research_gaps": [
@@ -1246,11 +1768,43 @@
     "capabilities": {
       "gps": {
         "v": "yes",
-        "note": "Quectel LC86 multi-constellation GNSS."
+        "note": "Quectel LC86 multi-constellation GNSS (GPS/GLONASS/BDS/Galileo/QZSS)."
       },
       "gps_wardrive_log": {
         "v": "yes",
         "note": "Geo-tags WiFi Pineapple Pager recon/capture sessions, described as WiGLE-compatible."
+      },
+      "wifi_wardriving": {
+        "v": "addon",
+        "note": "This module adds geotagging to the host Pineapple Pager's own wardriving capability; it does not itself scan Wi-Fi - that function lives entirely on the host device."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Has no function without a WiFi Pineapple Pager host to plug into."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No onboard storage; location data is handed to the host Pager's own logging."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No UI of its own; configuration happens through the host Pager's software."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-HID device."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC/RFID hardware; GNSS-only module."
       }
     },
     "legal": {
@@ -1276,6 +1830,10 @@
       {
         "url": "https://lab401.com/collections/pentesting-network",
         "what": "EUR pricing (79.00) and stock status (sold out at time of check)"
+      },
+      {
+        "url": "https://www.quectel.com/product/gnss-lc86-series/",
+        "what": "official Quectel LC86-series GNSS product/spec page, confirming multi-constellation support claimed for the onboard chip"
       }
     ],
     "research_gaps": [
@@ -1356,6 +1914,46 @@
       "standalone_untethered": {
         "v": "yes",
         "note": "Captures to its own attached USB drive; no host computer required."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No IP address on the monitored network by design; nothing to remotely command it over that link."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-target device; its USB port is for the capture drive only."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Wired Ethernet tap only, no wireless radio."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "ethernet_mitm": {
+        "v": "no",
+        "note": "No documented injection/modification capability; it is a capture-only bridge."
+      },
+      "web_ui": {
+        "v": "unknown",
+        "note": "Not documented on the product page whether it exposes any local configuration interface."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app."
+      },
+      "vpn_exfil": {
+        "v": "no",
+        "note": "No network stack for outbound connections; it is deliberately unaddressable on the monitored network."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "V1 uses an SD card only for the onboard OS; captures are written to the attached USB drive, not the SD card."
+      },
+      "hdmi_capture": {
+        "v": "no",
+        "note": "V2 adds an HDMI port, but as a local display/debug output, not a video-capture input."
       }
     },
     "legal": {
@@ -1375,6 +1973,14 @@
       {
         "url": "https://www.tindie.com/products/littlethings/littlepcap-network-tappacket-capture-to-usb-drive/",
         "what": "product listing: price, ports, power behavior ('no automatic bypass'), 802.1X passthrough claim, boot time, v2 NanoPi R3S platform link"
+      },
+      {
+        "url": "https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R3S",
+        "what": "official NanoPi R3S wiki referenced directly by the product listing as the v2 hardware platform"
+      },
+      {
+        "url": "https://www.garlandtechnology.com/blog/the-101-series-passive-network-taps",
+        "what": "industry-standard definition of passive/fail-open taps, used to support the honest_take's distinction between this active ARM bridge and a true zero-power passive tap"
       }
     ],
     "research_gaps": [
@@ -1446,6 +2052,46 @@
       "usb_ethernet_attack": {
         "v": "no",
         "note": "Stock RTL8152B USB-Ethernet controller providing a wired NIC to the host Pager; any attack capability comes from the Pager's own software, not this module."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Has no function without a WiFi Pineapple Pager host to plug into."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No UI of its own; configuration happens through the host Pager's software."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion app."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "This module adds wired Ethernet only; it carries no Wi-Fi hardware of its own."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth hardware."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GNSS hardware (see the separate Glytch GPS Module for that function)."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No onboard storage."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-HID device; it's a USB-to-Ethernet adapter chip."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "It's a NIC that gives the host Pager a wired link, not a tap of any kind."
+      },
+      "packet_capture": {
+        "v": "no",
+        "note": "Provides connectivity only; any capture is done by the host Pager's own software, not this module."
       }
     },
     "legal": {
@@ -1471,6 +2117,10 @@
       {
         "url": "https://lab401.com/collections/pentesting-network",
         "what": "lab401 resale listing of the same product at EUR 59-63.72"
+      },
+      {
+        "url": "https://www.realtek.com/en/products/connected-media-ics/item/rtl8152b-vb-cg",
+        "what": "official Realtek RTL8152B product page, confirming this is a generic commodity 10/100 USB-Ethernet controller with no security-specific circuitry"
       }
     ],
     "research_gaps": [
@@ -1566,6 +2216,42 @@
       "web_ui": {
         "v": "yes",
         "note": "Initial Wi-Fi credential setup via an AutoConnectAP captive portal / on-screen IP web page."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-HID device; it's a network scanner/honeypot."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP8266 has no Bluetooth hardware at all, unlike ESP32-based devices."
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS/location hardware."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion mobile app; configuration is via its own captive-portal web page."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No cloud dependency; operates entirely on the local network it joins."
+      },
+      "vpn_exfil": {
+        "v": "no",
+        "note": "No VPN functionality."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "Wi-Fi only device, no wired network interface."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC/RFID hardware."
       }
     },
     "legal": {
@@ -1589,6 +2275,10 @@
       {
         "url": "https://github.com/MXZZ/Netgotchi/",
         "what": "open-source firmware repository shared with the base Negotchi"
+      },
+      {
+        "url": "https://www.espressif.com/en/products/socs/esp8266",
+        "what": "official Espressif ESP8266 product page, confirming the chip has no Bluetooth/BLE radio, unlike ESP32-class parts"
       }
     ],
     "research_gaps": [
@@ -1683,6 +2373,42 @@
       "web_ui": {
         "v": "yes",
         "note": "Initial Wi-Fi credential setup via an AutoConnectAP captive portal."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Not a USB-HID device; it's a network scanner/honeypot."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP8266 has no Bluetooth hardware at all, unlike ESP32-based devices."
+      },
+      "subghz_rx": {
+        "v": "no",
+        "note": "No sub-GHz radio."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS/location hardware."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No companion mobile app; configuration is via its own captive-portal web page."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "No cloud dependency; operates entirely on the local network it joins."
+      },
+      "vpn_exfil": {
+        "v": "no",
+        "note": "No VPN functionality."
+      },
+      "ethernet_tap_passive": {
+        "v": "no",
+        "note": "Wi-Fi only device, no wired network interface."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC/RFID hardware."
       }
     },
     "legal": {
@@ -1708,6 +2434,10 @@
       {
         "url": "https://github.com/MXZZ/Netgotchi/",
         "what": "open-source firmware repository shared with Netgotchi Pro"
+      },
+      {
+        "url": "https://www.espressif.com/en/products/socs/esp8266",
+        "what": "official Espressif ESP8266 product page, confirming the chip has no Bluetooth/BLE radio, unlike ESP32-class parts"
       }
     ],
     "research_gaps": [
