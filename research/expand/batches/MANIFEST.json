@@ -1,0 +1,391 @@
+[
+ {
+  "batch": "b01-rfid",
+  "count": 17,
+  "categories": [
+   "rfid"
+  ],
+  "names": [
+   "UHFKill",
+   "Industrial Handheld UHF Reader",
+   "Long-range iCLASS RFID Capture System",
+   "Long-range MaxiProx 5375 125KHz Capture System",
+   "Dual Mode Paxton Long Range / Stealth Decoy Reader",
+   "iCS Decoder for iCopy-X",
+   "iCS Decoder for iCLASS SE / SEOS Decoder",
+   "HydraNFC Shield v2",
+   "Odiin: NFC Tag Emulation Toolkit",
+   "Long Range RFID Reader/Writer DL533N XL",
+   "Proxmark 3 RDV4 - BlueShark Standalone Module",
+   "Stealth Decoy Reader",
+   "Proxmark 5 - Wireless + Battery Module",
+   "Bluetooth + Battery Module for Proxmark3 RDV4",
+   "13.56MHz RFID Field Strength Meter",
+   "Chameleon Lite",
+   "RFID HF Extender Pro"
+  ]
+ },
+ {
+  "batch": "b02-rfid",
+  "count": 17,
+  "categories": [
+   "rfid"
+  ],
+  "names": [
+   "USB RFID Reader/Writer DL533N",
+   "PN532Killer",
+   "NFC Card Reader Module with ESP32-S3",
+   "GGtag",
+   "ESP-RFID-Tool v2 PRO",
+   "VICINO",
+   "RFIDler",
+   "Wiegotcha",
+   "Gatekeeper",
+   "7941W RFID Card Cloner",
+   "RFID Field Detector Ultra - LF/HF/UHF",
+   "Flipper Add-On: MagSpoof",
+   "Proxmark 3 RDV4 - SIM/SAM Extension",
+   "Cypher NFC (cypher-pn532)",
+   "RFID Detector / Diagnostic Card v2",
+   "RFID HF Field Generator",
+   "ARD RFID Blocker (Pack of 2) - NFC Blocker"
+  ]
+ },
+ {
+  "batch": "b03-hw-hacking-rfid",
+  "count": 16,
+  "categories": [
+   "hw-hacking",
+   "rfid"
+  ],
+  "names": [
+   "FPGA-NFC",
+   "RFID HF Repeater Large",
+   "Mellon",
+   "RFIDetector",
+   "simple_rfid",
+   "NFC Placard Mystery Pack",
+   "HiLetgo PN532 NFC NXP RFID Module V3 Kit",
+   "Proxmark3 Iceman Fork (RfidResearchGroup/proxmark3)",
+   "MACOBOX - Hardware Pentest Platform",
+   "ChipSHOVER",
+   "CW310 Bergen Board (Large FPGA, K410T)",
+   "ChipWhisperer - HuskyPlus",
+   "AutoProber",
+   "PhyWhisperer-USB (CW610)",
+   "NewAE Probe Set with Power Supply",
+   "CW308 UFO Board"
+  ]
+ },
+ {
+  "batch": "b04-hw-hacking",
+  "count": 16,
+  "categories": [
+   "hw-hacking"
+  ],
+  "names": [
+   "tinySniffer - USB sniffer",
+   "BugBlat miniSniffer 2",
+   "Socket Target for CW308 (STM32F-SOCKET64)",
+   "ESP32JTAG",
+   "Project Reboot: Hardware Audit Training Target",
+   "FlatSat \u2013 DEFCON 34",
+   "Open Source Portable USB Sniffer USB2.0",
+   "BRUSCHETTA Board",
+   "Pico Glitcher (fault-injection-library / Findus)",
+   "DigiLab for FlipperZero",
+   "PicoGlitcher v3",
+   "OpticSpy",
+   "Fire Weasel Board and Leash DIY Kit",
+   "hs-probe",
+   "Sword of Secrets",
+   "SAM4S CW313 Target"
+  ]
+ },
+ {
+  "batch": "b05-hw-hacking",
+  "count": 16,
+  "categories": [
+   "hw-hacking"
+  ],
+  "names": [
+   "SPIDriver",
+   "IBDAP - CMSIS-DAP JTAG/SWD Debug Adapter",
+   "I2CDriver",
+   "Lab401 Flashing Multi-tool for Proxmark & Chameleon",
+   "CW312T-RP2350",
+   "TermDriver 2",
+   "teensy4vfi",
+   "O.MG Programmer USB A+C",
+   "XDS110 Debugger",
+   "SparkFun microSD Sniffer",
+   "SD Sniffer",
+   "DirtyJTAG",
+   "CH552-DAPLink",
+   "stm32f1-picopwner",
+   "Flipper Zero SPI Adapter Board",
+   "Mini DAPLink Debug Probe"
+  ]
+ },
+ {
+  "batch": "b06-hw-hacking-wifi",
+  "count": 16,
+  "categories": [
+   "hw-hacking",
+   "wifi"
+  ],
+  "names": [
+   "Airfrog",
+   "Curious Bolt",
+   "Steppenprobe",
+   "Cypherock EMFI Board",
+   "ChipWhisperer Pro (CW1200)",
+   "CW305 Artix FPGA Target Board",
+   "GlitchCaster",
+   "EPIC Erebus",
+   "ChipJabber Unplugged",
+   "Flipper Zero Wardriving GPS enabled ESP32 Board",
+   "NetNinja Wardriving GPS Marauder",
+   "GhostBoard",
+   "Pwnagotchi Hat - UPS/GPS/AC WiFi/USB HUB/RTC all in one hat",
+   "Alfa AWUS036ACHM",
+   "wardriver.uk Rev3",
+   "ALFA AWUS036AXM"
+  ]
+ },
+ {
+  "batch": "b07-wifi",
+  "count": 16,
+  "categories": [
+   "wifi"
+  ],
+  "names": [
+   "WiFi Deauther",
+   "WiFi ESP32 Marauder for Flipper Zero",
+   "TP-LINK TL-MR3020 Mini Wireless Router",
+   "Flipper Add-On: Marauder_Spoof",
+   "ESP32 Network Toolbox",
+   "ALFA AWUS036ACM",
+   "ESP32-MDK for Portapack H4M",
+   "AC1200 USB-C WiFi Card (supports monitor mode)",
+   "Evil-M5Project",
+   "Dual Band WiFi MT7921AU",
+   "Flipper Add-On: Marauder",
+   "wardriver3000",
+   "Wifi deauther PLUG PLAY ESP8266 v2.0",
+   "ESP32 Wardriver Pro",
+   "Flipper Zero Dev Board Pro GPS Expansion",
+   "WiFi Dev Board GPS Expansion"
+  ]
+ },
+ {
+  "batch": "b08-multi-wifi",
+  "count": 16,
+  "categories": [
+   "multi",
+   "wifi"
+  ],
+  "names": [
+   "Piglet Wardriver",
+   "ESP8266 Deauther",
+   "2.4/5 GHz Deauther",
+   "HaleHound-CYD 3.5\" Complete Unit Build",
+   "Fire Weasel and Leash PRO DIY Kit",
+   "Biscuit Ultra",
+   "DIY HaleHound 3.5\" Kit",
+   "DIY 2.8\" HaleHound Kit",
+   "ESP32 Marauder Double Barrel 5G - C5 version",
+   "HacPhone - Rooted NetHunter/Kali Nexus 5X",
+   "Feberis Pro",
+   "unsurv offline",
+   "Bluetooth Nugget (ESP32S3)",
+   "ESPboy:DIY",
+   "Newsheen Hacker Smart Cat Lamp Kit (pre-assembled)",
+   "Solder Your Own Nugget Kit"
+  ]
+ },
+ {
+  "batch": "b09-multi-sdr",
+  "count": 16,
+  "categories": [
+   "multi",
+   "sdr"
+  ],
+  "names": [
+   "Minino: IoT Multitool",
+   "C5 LowKey - Flipper Zero",
+   "Cinder Ferret V2",
+   "Cinder Ferret V2.2 Double NRF",
+   "Cinder Ferret",
+   "Marauder C5 Adapter - Flipper Zero",
+   "Sneak32",
+   "Hydra-ESP",
+   "QuadRF",
+   "PortaPack H4M Pro for HackRF Pro",
+   "TinySA Ultra+",
+   "Opera Cake for HackRF",
+   "moRFeus",
+   "NanoVNA-F",
+   "RFGEN44",
+   "uConsole AIO V2 (RTL-SDR/LoRa/GPS/RTC/USB Hub/USB 3.0/RJ45 Ethernet)"
+  ]
+ },
+ {
+  "batch": "b10-sdr-subghz",
+  "count": 16,
+  "categories": [
+   "sdr",
+   "subghz"
+  ],
+  "names": [
+   "RTL-SDR/LoRa/GPS/RTC hat for Raspberry Pi",
+   "MSI.SDR 10kHz-2GHz Panadapter SDR Receiver",
+   "Mini RTL-SDR Dongle",
+   "RTL-SDR",
+   "SDR-Rx Up Converter Module",
+   "URTI (Universal Radio Test Instrument)",
+   "PandwaRF Marauder",
+   "Glytch Mesh Module for Pineapple Pager",
+   "Nibble Zero",
+   "Glytch Mesh Mod for Pager",
+   "Nibble Screen Connect",
+   "Flipper Add-on SubGhz",
+   "Daeva",
+   "LoRa Radio Backpack for USB & Bluetooth Nuggets (RFM95)",
+   "2 PCS CC1101 Module with SMA Antenna Transceiver Module (433/315/868/915MHz)",
+   "RFQuack"
+  ]
+ },
+ {
+  "batch": "b11-subghz-usb-hid",
+  "count": 16,
+  "categories": [
+   "subghz",
+   "usb-hid"
+  ],
+  "names": [
+   "cc1101-tool",
+   "Flipper Zero SubGHz Module",
+   "Open Source Meshtastic Nibble",
+   "Diabolic Parasite",
+   "Diabolic Drive",
+   "USB Nugget (ESP32S2)",
+   "MalDuino W",
+   "MalDuino 3",
+   "O.MG Cable Programmer (USB A+C)",
+   "UsbSafe2",
+   "USB Snake Box",
+   "HackyPi",
+   "BLE BadUSB (JDY-08)",
+   "Wifi BadUSB",
+   "Programmable BadUSB Payload Cable USB-A to USB-C",
+   "Mouse Jiggler"
+  ]
+ },
+ {
+  "batch": "b12-network-usb-hid",
+  "count": 16,
+  "categories": [
+   "network",
+   "usb-hid"
+  ],
+  "names": [
+   "LockedUSB Charge Only Adapter",
+   "Vidar attiny85 based BadUSB",
+   "Evil Crow Cable",
+   "EvilDuck",
+   "USBvalve",
+   "Multifunction Network Box",
+   "PiKVM v4 Plus",
+   "Gigabit Ethernet Tap",
+   "10/100 FastE Switch Tap",
+   "Firewalla",
+   "Glytch GPS Module for Pineapple Pager",
+   "LittlePcap Network Tap",
+   "Glytch Ethernet Module for Pineapple Pager",
+   "Netgotchi Pro",
+   "Negotchi - network security scanner",
+   "Glytch Ethernet Mod for Pager"
+  ]
+ },
+ {
+  "batch": "b13-forensics-network",
+  "count": 16,
+  "categories": [
+   "forensics",
+   "network"
+  ],
+  "names": [
+   "PhanTap",
+   "Flipper Add-On: Ethernet",
+   "Int3rcept0r",
+   "PoisonTap",
+   "RPi0 USB-A Addon Board",
+   "WiebeTech Forensic ComboDock v5",
+   "WiebeTech Drive eRazer",
+   "Rainbow Tables HDD",
+   "BusKill",
+   "KEYVILBOARD - Wi-Fi",
+   "Ovrdrive USB",
+   "O.MG Malicious Cable Detector",
+   "Keylogger USB Extension Cable",
+   "KeyGrabber",
+   "Masterkey - WiFi USB Keylogger",
+   "EvilCrow-Keylogger"
+  ]
+ },
+ {
+  "batch": "b14-automotive-forensics",
+  "count": 16,
+  "categories": [
+   "automotive",
+   "forensics"
+  ],
+  "names": [
+   "PAW Protector",
+   "Paw Detector \u2013 Malicious USB cables detector",
+   "USBKeylogger",
+   "okhi (Open Keylogger Hardware Implant)",
+   "HydraLink",
+   "CANtact Pro",
+   "panda",
+   "WiCAN Pro",
+   "CANtact v1.2",
+   "CANable 2.0 / CANable Pro",
+   "CAN bus for Flipper Zero",
+   "CANHack toolkit / CANPico",
+   "CANBus Module for Flipper Zero",
+   "WiCAN",
+   "Flipper Add-On: CANBus",
+   "hitager"
+  ]
+ },
+ {
+  "batch": "b15-automotive-ble-cellular-ot",
+  "count": 16,
+  "categories": [
+   "automotive",
+   "ble",
+   "cellular",
+   "other"
+  ],
+  "names": [
+   "PiCCANTE",
+   "PiKVM v4 Plus - Hardware RAT",
+   "Kronos Electric Pick",
+   "PCILeech",
+   "T-Deck Plus Kit",
+   "Glytch GPS Mod for Pager",
+   "Masta-Blasta for Flipper Zero",
+   "YubiKey NEO",
+   "MastaBlasta - IR Blaster",
+   "IR Blaster",
+   "Flipper Add-On: Modbus",
+   "EvilAppleJuice ESP32",
+   "ChimeraBLE",
+   "Bluetooth Ducky",
+   "BLE CTF",
+   "OsmocomBB"
+  ]
+ }
+]

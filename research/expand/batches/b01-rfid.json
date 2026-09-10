@@ -1,0 +1,262 @@
+[
+ {
+  "name": "UHFKill",
+  "vendor": "Lab401",
+  "seller_url": "https://lab401.com/products/uhfkill",
+  "price_usd": 1750.0,
+  "one_line": "Handheld tool that wirelessly and permanently disables UHF RFID tags embedded in clothing, shoes and retail products.",
+  "category_guess": "rfid",
+  "why_notable": "The only dedicated UHF tag-deactivation tool in the catalog, distinct from the several HF/LF-focused NFC-kill devices already tracked.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Industrial Handheld UHF Reader",
+  "vendor": "Lab401",
+  "seller_url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+  "price_usd": 1263.0,
+  "one_line": "Industrial handheld UHF RFID reader used alongside UHFKill to locate embedded tags and confirm they were deactivated, including full carton sweeps.",
+  "category_guess": "rfid",
+  "why_notable": "High-end companion reader for the UHFKill deactivation workflow, filling a tag-location/verification role no other catalog item covers.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Long-range iCLASS RFID Capture System",
+  "vendor": "Mayweather",
+  "seller_url": "https://lab401.com/products/ppe-iclass-longrange-rfid-capture-system",
+  "price_usd": 895.0,
+  "one_line": "Long-range (seller states up to ~45cm) covert HF skimmer for iCLASS badges, phone-managed with optional wireless relay to a Proxmark for cloning.",
+  "category_guess": "rfid",
+  "why_notable": "Purpose-built long-range skimmer for the iCLASS badge format, well beyond typical proximity-card read range.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Long-range MaxiProx 5375 125KHz Capture System",
+  "vendor": "Mayweather",
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "price_usd": 825.0,
+  "one_line": "Long-range (seller states up to ~60cm) covert 125kHz LF skimmer built on the HID MaxiProx 5375 reader, phone-managed with optional Proxmark relay for cloning.",
+  "category_guess": "rfid",
+  "why_notable": "Long-range LF badge skimmer offering roughly double the capture distance of typical HF long-range readers in this catalog.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Dual Mode Paxton Long Range / Stealth Decoy Reader",
+  "vendor": "Mayweather",
+  "seller_url": "https://lab401.com/products/dual-mode-paxton-long-range-stealth-decoy-reader",
+  "price_usd": 475.0,
+  "one_line": "Combined long-range skimmer and decoy reader specifically for Paxton access-control badges, phone-managed with optional Proxmark relay.",
+  "category_guess": "rfid",
+  "why_notable": "Seller states this is the first dedicated long-range skimmer/decoy built specifically for the Paxton badge ecosystem.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "iCS Decoder for iCopy-X",
+  "vendor": "Hacker Warehouse / iCopy",
+  "seller_url": "https://hackerwarehouse.com/product/ics-decoder-for-icopy-x/",
+  "price_usd": 450.0,
+  "one_line": "Hardware decoder accessory for the iCopy-X that decodes and clones iCLASS SE/SEO-S cards configured to accept legacy encoding.",
+  "category_guess": "rfid",
+  "why_notable": "Extends the already-tracked iCopy-XS to a new high-security card type; a distinct capability-adding accessory, not a passive part.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "hackerwarehouse"
+ },
+ {
+  "name": "iCS Decoder for iCLASS SE / SEOS Decoder",
+  "vendor": "ICopyX",
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "price_usd": 445.0,
+  "one_line": "Plug-in decoder module for the iCopy-X that decodes and clones iCLASS SE and iCLASS SEOS badges.",
+  "category_guess": "rfid",
+  "why_notable": "Seller states this is the only device able to clone iCLASS SE/SEOS badges, a higher-security HID format most cloners cannot touch.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "HydraNFC Shield v2",
+  "vendor": "hydrabus",
+  "seller_url": "https://github.com/hydrabus/hydranfc",
+  "price_usd": 215,
+  "one_line": "Open-source 13.56MHz shield (ST25R3916/TRF7970A) for the HydraBus that reads/writes/emulates and sniffs ISO14443A and ISO15693; needs a separate HydraBus board.",
+  "category_guess": "rfid",
+  "why_notable": "124 stars, last commit 2026-01-31. EUR199 converted; hydrabus.com/shop listed empty so price is from a cached snapshot.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "medium",
+  "_slice": "rfid",
+  "_src": "github"
+ },
+ {
+  "name": "Odiin: NFC Tag Emulation Toolkit",
+  "vendor": "cmd; wtf?",
+  "seller_url": "https://www.tindie.com/products/cmd/odiin-nfc-tag-emulation-toolkit/",
+  "price_usd": 169.0,
+  "one_line": "nRF52840 handheld with a 320x240 LCD that loads tag dump files from SD and emulates NFC-A tags (NTAG21X, partial MIFARE Classic/Ultralight) when tapped to a reader.",
+  "category_guess": "rfid",
+  "why_notable": "Dedicated NFC tag-emulation handheld, distinct from the tracked Chameleon, ACR122U and Proxmark devices.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Long Range RFID Reader/Writer DL533N XL",
+  "vendor": "D-Logic",
+  "seller_url": "https://lab401.com/products/long-range-rfid-reader-writer-dl533n-xl",
+  "price_usd": 168.0,
+  "one_line": "Long-range (up to 18cm) LibNFC-compatible USB reader/writer for ISO14443A/B (MIFARE Classic/Ultralight/DESFire/FeliCa/NTAG) cards, meant to be hidden under furniture or in a bag.",
+  "category_guess": "rfid",
+  "why_notable": "Long-range variant of the DL533N USB reader/writer, extending covert read/write/sniff range to 18cm versus a few cm on the standard model.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Proxmark 3 RDV4 - BlueShark Standalone Module",
+  "vendor": "Lab401",
+  "seller_url": "https://lab401.com/products/proxmark-3-rdv4-standalone-kit",
+  "price_usd": 129.0,
+  "one_line": "Drop-in Bluetooth + battery module that lets a Proxmark 3 RDV4 run standalone scripts without a host computer.",
+  "category_guess": "rfid",
+  "why_notable": "Adds untethered/wireless standalone operation to the Proxmark 3 RDV4, a genuine capability change rather than a passive accessory.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Stealth Decoy Reader",
+  "vendor": "Mayweather",
+  "seller_url": "https://lab401.com/products/stealth-decoy-reader",
+  "price_usd": 125.0,
+  "one_line": "Rapidly-deployed decoy RFID/PIN-pad reader that captures badge and PIN credentials to a phone app, with optional wireless relay to a Proxmark for cloning.",
+  "category_guess": "rfid",
+  "why_notable": "Purpose-built credential-harvesting decoy reader distinct from long-range skimmers, aimed specifically at capturing card+PIN combos.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Proxmark 5 - Wireless + Battery Module",
+  "vendor": "Lab401",
+  "seller_url": "https://lab401.com/collections/rfid-tools",
+  "price_usd": 110.0,
+  "one_line": "Drop-in wireless + battery module that lets a Proxmark 5 run mobile/untethered for field pentests.",
+  "category_guess": "rfid",
+  "why_notable": "Adds standalone wireless operation to the Proxmark 5, mirroring the BlueShark module's role for the Proxmark 3.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Bluetooth + Battery Module for Proxmark3 RDV4",
+  "vendor": "Proxmark (RRG/Iceman)",
+  "seller_url": "https://hackerwarehouse.com/product/proxmark3-rdv4-bluetooth-battery-module/",
+  "price_usd": 100.0,
+  "one_line": "Add-on module that gives the Proxmark3 RDV4 Bluetooth connectivity and a battery for untethered, wireless RFID operations.",
+  "category_guess": "rfid",
+  "why_notable": "Enables wireless/covert use of the already-tracked Proxmark3 RDV4, but it is an add-on module rather than a standalone device.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_src": "hackerwarehouse"
+ },
+ {
+  "name": "13.56MHz RFID Field Strength Meter",
+  "vendor": "Lab401",
+  "seller_url": "https://lab401.com/collections/rfid-badges-detection-diagnostics",
+  "price_usd": 95.0,
+  "one_line": "Passive, ISO-calibrated meter that gives a quantitative 13.56MHz RFID field-strength reading rather than a simple presence indicator.",
+  "category_guess": "rfid",
+  "why_notable": "Calibrated measurement tool (vs. simple pass/fail detectors) for verifying HF reader field strength during compliance or audit work.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "Chameleon Lite",
+  "vendor": "RRG",
+  "seller_url": "https://lab401.com/products/chameleon-lite",
+  "price_usd": 77.0,
+  "one_line": "Low-cost RFID emulator specialised in HF/MIFARE emulation, positioned below the Chameleon Ultra/Tiny in the same product family.",
+  "category_guess": "rfid",
+  "why_notable": "Entry-level Chameleon-series emulator; capability may overlap with the Chameleon Tiny already tracked, included for reviewer comparison.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_src": "lab401",
+  "_possible_dupe_of": "Chameleon Ultra",
+  "_also": [
+   "specialty"
+  ]
+ },
+ {
+  "name": "RFID HF Extender Pro",
+  "vendor": "Midwest Gadgets",
+  "seller_url": "https://hackerwarehouse.com/product/rfid-hf-extender-pro/",
+  "price_usd": 65.0,
+  "one_line": "Two coupled HF antennas linked by an IPEX cable that relay a 13.56MHz/NFC field between a reader and a remote tag to extend read range.",
+  "category_guess": "rfid",
+  "why_notable": "Borders on the 'generic antenna' exclusion, but it specifically enables RFID relay-style range extension between a card and a reader.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_src": "hackerwarehouse"
+ }
+]

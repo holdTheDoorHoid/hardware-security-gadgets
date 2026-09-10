@@ -61,3 +61,34 @@ A JSON array of complete objects, written to the single path you are given.
 Other agents are working in this directory at the same time.
 
 Validate your JSON parses before you finish: `python3 -m json.tool <yourfile>`.
+
+## Depth targets (added mid-run - the first batch came back too thin)
+
+The existing 175 records average **16 capability entries** and **5.4 sources**
+each. The first new batch averaged 3.2 and 1.6. That is not good enough, and
+here is why it matters concretely: the comparison table and the recommendation
+quiz both run on the capability matrix. A device with three filled capabilities
+cannot be compared against anything and will never be recommended, so a thin
+record is close to no record at all.
+
+**Capabilities.** Aim for 10+ per device; 15-25 is normal for anything
+multi-protocol. Include a key with `"v":"no"` whenever the absence is a thing a
+buyer would reasonably assume was present - that is the single most useful
+signal on the whole site. A Wi-Fi board that cannot do 5GHz should carry
+`wifi_scan_5: {"v":"no"}`. An RFID tool that reads but cannot write should carry
+the write keys as `"no"`. A sub-GHz device that cannot defeat rolling codes
+should say so with `subghz_rolling_code: {"v":"no"}`.
+
+A genuinely single-purpose device is allowed to be sparse - a passive field
+detector really does only do one thing - but say so in `research_gaps` so the
+sparseness reads as a finding rather than an omission. **Zero capabilities is
+never acceptable.** If nothing in the key list fits, the device either belongs
+in a different category or needs a new key named in `research_gaps`.
+
+**Sources.** 3 minimum, 5+ preferred. A vendor page alone is not enough for a
+capability claim; that is what `"claimed"` is for. Prefer schematics, source
+repos, datasheets and teardowns. Where you used a source to establish one
+specific fact, say which fact in the `what` field.
+
+If you have already written your file, revise it to this standard rather than
+starting over.
