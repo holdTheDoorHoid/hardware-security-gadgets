@@ -1,0 +1,2388 @@
+[
+  {
+    "id": "rtl-sdr-lora-gps-rtc-hat",
+    "hardware_id": "rtl-sdr-lora-gps-rtc-hat",
+    "name": "RTL-SDR/LoRa/GPS/RTC HAT for Raspberry Pi",
+    "firmware": "n/a (passive radio HAT; all processing on host Pi)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No onboard firmware layer - the HAT is a bundle of four independent radio front-ends (SDR, LoRa, GPS, RTC) that the Raspberry Pi's own OS and drivers (librtlsdr, Meshtastic, gpsd) talk to directly.",
+    "vendor": "Hacker Gadgets",
+    "vendor_url": "https://hackergadgets.com",
+    "product_url": "https://hackergadgets.com/products/rtl-sdr-lora-gps-rtc-hat-for-raspberry-pi",
+    "category": "sdr",
+    "subcategory": "multi-radio-hat",
+    "status": "preorder",
+    "released": null,
+    "price_usd": 84.9,
+    "price_note": "Preorder price at Hacker Gadgets; page listed an estimated ship date of 2026-09-20 at time of research. No independent reseller pricing found.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Four separate radio subsystems each need their own host-side setup (librtlsdr, a Meshtastic/LoRa stack, gpsd) - nothing about it is plug-and-play beyond the physical HAT connection.",
+    "build_effort": "assembled",
+    "build_note": "Assembled HAT that screws onto the Pi's 40-pin header; no soldering. Compatible with Pi 3B, 4B, 5, CM4, CM5, Zero and Zero 2W per the vendor.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A Raspberry Pi HAT bundling a receive-only RTL2832U+R860 SDR tuner, a Semtech SX1262 LoRa radio (860-960 MHz with out-of-the-box Meshtastic support), a GNSS receiver, and a PCF85063A real-time clock with rechargeable coin-cell backup, aimed at turning a Pi into a self-contained spectrum-monitoring or mesh-relay station.",
+    "honest_take": "This is four fairly ordinary radio modules sharing one PCB, not a unified 'signals platform.' The SDR side is receive-only - no DAC, no transmit path, so despite living in this batch it cannot do any of the sub-GHz transmit/replay/jamming work people associate with RF security gadgets. Its R860 tuner is functionally identical to the R820T2 found in $25 dongles (Rafael Micro simply renamed the die when R820T2 was formally discontinued) - it is not the three-port R828D used on the RTL-SDR Blog V4, and the advertised '100 kHz-28.8 MHz HF direct sampling' is the standard RTL2832U direct-sampling trick (bypassing the tuner entirely), not a dedicated HF upconverter, so expect the weaker sensitivity that comes with it. The LoRa and GPS/RTC sides are conventional and fine for a Meshtastic node. At $84.90 for four bundled radios you are paying hobbyist prices for hobbyist-grade parts; the appeal is integration and one shared enclosure, not superior performance versus buying an RTL-SDR dongle and a LoRa HAT separately.",
+    "best_for": [
+      "Building a single-board Meshtastic node with GPS timestamping and RTC-backed logging",
+      "Combining spectrum monitoring and LoRa mesh comms on one Pi without stacking multiple USB dongles"
+    ],
+    "not_for": [
+      "Any sub-GHz transmit, replay or jamming work - the SDR side cannot transmit",
+      "Serious HF listening - direct-sampling only, no dedicated upconverter",
+      "Anyone who just wants an SDR - a plain RTL-SDR dongle is cheaper and equally capable on that front"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No onboard MCU; the HAT is a passive radio front-end stack, entirely dependent on the host Raspberry Pi's own processor for baseband and application processing.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "RTL2832U + R860",
+          "role": "sdr",
+          "note": "Receive-only, 100 kHz-1.74 GHz. R860 is a relabeled R820T2 die, not the 3-port R828D used on the RTL-SDR Blog V4. Sub-28.8 MHz HF coverage is the standard RTL2832U direct-sampling mode, not a dedicated upconverter."
+        },
+        {
+          "ic": "Semtech SX1262",
+          "role": "lora",
+          "note": "860-960 MHz, up to 22 dBm, TCXO-referenced; ships with Meshtastic support out of the box."
+        },
+        {
+          "ic": null,
+          "role": "gps",
+          "note": "Vendor states GPS+BDS+GNSS support with active/passive antenna options but does not name the GNSS chip."
+        },
+        {
+          "ic": "PCF85063A",
+          "role": "rtc",
+          "note": "I2C RTC with rechargeable coin-cell backup."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery for the HAT itself; the RTC backup is a small rechargeable coin cell. Powered entirely from the Pi's 40-pin header.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "40-pin Raspberry Pi header",
+        "SMA or U.FL antenna (SDR)",
+        "SMA or U.FL antenna (LoRa)",
+        "GNSS antenna connector"
+      ],
+      "gpio": "Sits on the Pi's 40-pin GPIO header; whether remaining pins are broken out for other uses is not documented.",
+      "sensors": [
+        "GNSS receiver"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Software-controlled 5V bias tee on the SDR port",
+        "Rechargeable coin-cell RTC backup",
+        "SMA or U.FL antenna option at order time"
+      ]
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "yes",
+        "note": "100 kHz-1.74 GHz via RTL2832U+R860; HF below 28.8 MHz via direct-sampling mode, not a hardware upconverter."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "RTL2832U-based front end has no DAC and no transmit path; this cannot be changed in software."
+      },
+      "sdr_bandwidth": {
+        "v": "yes",
+        "note": "Standard RTL2832U figure of roughly 2.4 MHz practical usable bandwidth; not independently tested on this specific board."
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-928 MHz ISM range covered as part of the general RTL-SDR tuning range; rtl_433-class decoding possible on the host."
+      },
+      "subghz_tx": {
+        "v": "addon",
+        "note": "Not via the SDR chain (receive-only), but the SX1262 LoRa radio can transmit within LoRa's own protocol - not general-purpose sub-GHz replay."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Pure receiver with no protocol decoding of its own; no rolling-code capability of any kind."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Separate SMA/U.FL ports for the SDR and LoRa radios."
+      },
+      "gps": {
+        "v": "yes",
+        "note": "Vendor states GPS+BDS+GNSS support with active/passive antenna support; exact chip not disclosed."
+      },
+      "gps_wardrive_log": {
+        "v": "addon",
+        "note": "Not a built-in feature; achievable by combining GPS output with host-side logging software on the Pi."
+      },
+      "sd_logging": {
+        "v": "addon",
+        "note": "Via the Raspberry Pi's own SD card, not a feature of the HAT itself."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a Raspberry Pi to function; the HAT has no processor of its own."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Everything runs through standard host-side Linux tools (librtlsdr, Meshtastic Python API, gpsd) on the Pi."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "No Wi-Fi radio on the HAT itself (any Wi-Fi capability comes from the host Pi, not this product)."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "No Bluetooth radio on the HAT."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No NFC/RFID hardware on this HAT."
+      },
+      "packet_capture": {
+        "v": "partial",
+        "note": "Captures raw I/Q via the SDR chain; turning that into decoded packets (rtl_433, dump1090, etc.) is entirely on the host."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "No dedicated app catalog; relies on generic Linux SDR/LoRa/GPS tooling."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The SDR side is receive-only and carries the same low legal risk as any RTL-SDR (check local rules on what you are allowed to listen to, e.g. cellular interception restrictions). The LoRa radio transmits at up to 22 dBm in the 860-960 MHz ISM band; in most countries operating license-exempt in this band requires staying under specific power/duty-cycle limits (ETSI EN 300 220 in Europe, FCC Part 15 in the US) - running the SX1262 at its maximum power setting outside those limits is the one real unlicensed-transmission risk this product carries, not the SDR half."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No - relies on standard host software (librtlsdr, Meshtastic, gpsd)",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://hackergadgets.com/products/rtl-sdr-lora-gps-rtc-hat-for-raspberry-pi",
+        "what": "official specs: RTL2832U+R860 SDR (100kHz-1.74GHz), SX1262 LoRa (860-960MHz, 22dBm), GPS+BDS+GNSS, PCF85063A RTC, price $84.90, preorder status"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/the-r860-will-replace-the-r820t2-same-chip-different-name/",
+        "what": "confirms R860 is a renamed R820T2 die with identical silicon/performance, used to establish this HAT's SDR tuner is not the 3-port R828D"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/new-rtl-sdr-tuner-chip-r828d/",
+        "what": "background on the R828D 3-port tuner used in the RTL-SDR Blog V4, for comparison against this HAT's single-input R860"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/store/",
+        "what": "current RTL-SDR Blog V3/V4L pricing and TCXO/bias-tee features, used to contextualize this HAT's SDR module against the community-standard dongle"
+      }
+    ],
+    "research_gaps": [
+      "Exact GNSS chip not disclosed by vendor.",
+      "Manufacturer/OEM of the underlying HAT design not disclosed - unclear whether Hacker Gadgets designed this in-house or is rebranding a generic multi-radio HAT.",
+      "Product was in preorder status at time of research (estimated ship 2026-09-20); real-world performance unverified.",
+      "No capability key exists for an onboard RTC as a distinct feature; noted here rather than invented."
+    ]
+  },
+  {
+    "id": "msi-sdr",
+    "hardware_id": "msi-sdr",
+    "name": "MSi.SDR 10kHz-2GHz Panadapter SDR Receiver",
+    "firmware": "n/a (fixed-function Mirics receiver, enumerates as SDRplay RSP1 over USB)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "MMM999 (Tindie reseller; original manufacturer of this clone not disclosed)",
+    "vendor_url": "https://www.tindie.com/stores/mmm999/",
+    "product_url": "https://www.tindie.com/products/mmm999/sdr-simplified-version-rsp1-software-defined-radio",
+    "category": "sdr",
+    "subcategory": "rsp1-clone-receiver",
+    "status": "available",
+    "released": null,
+    "price_usd": 65.0,
+    "price_note": "Tindie listing price. Independent reviewers place this clone family around the same $65 mark on AliExpress/eBay. For comparison, SDRplay's own current entry model, the RSP1A, runs roughly $100 official.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Works with SDRplay's own software stack once installed, so the learning curve is SDRplay's, not a new one - but you are troubleshooting a clone with unofficial support if something goes wrong.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in an aluminum case; no soldering.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A receive-only 12-bit SDR in an aluminum case covering 10 kHz-2 GHz with up to 10 MHz of bandwidth, built on Mirics-family silicon - the same chip family SDRplay uses in its RSP line - and enumerating to the host as an SDRplay RSP1, so it runs SDRplay's own SDRuno/EXTIO software and anything else that speaks the RSP1 driver.",
+    "honest_take": "Call this what independent reviewers already call it: a Chinese clone of the (now-discontinued) SDRplay RSP1, not an original design - it works because it uses Mirics chips and presents itself as the real thing over USB. It is genuinely good value on HF (reviewers found it close to indistinguishable from a real RSP1/RSP1A on shortwave), but it has 'very minimal filtering' compared to SDRplay's own current RSP1A, so expect more intermodulation and image problems on crowded bands without external filtering. It is also 12-bit, not the 14-bit ADC of the current SDRplay RSP1A (~$100, still in production, official support and firmware updates) - if you can stretch the extra ~$35, the genuine article gets you two more bits of dynamic range and a vendor who will answer support requests. None of your money reaches SDRplay when you buy this clone.",
+    "best_for": [
+      "Cheap HF/shortwave listening comparable to a genuine RSP1",
+      "Learning the SDRplay software ecosystem before committing to official hardware"
+    ],
+    "not_for": [
+      "Anyone wanting official SDRplay support or firmware updates",
+      "Crowded-band work needing good input filtering",
+      "Transmitting anything - receive only"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Uses Mirics silicon (the chip family genuine SDRplay RSP1 units are built on: an MSi001 tuner and MSi2500 ADC/USB bridge) rather than the RTL2832U common to cheap dongles; the seller does not publish exact part numbers for this specific clone.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "sdr",
+          "note": "Mirics-chipset SDR enumerating as an SDRplay RSP1 to host software; 12-bit ADC, 10 kHz-2 GHz, up to 10 MHz bandwidth. Seller does not publish exact Mirics part numbers."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered, 120-175 mA.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Micro-USB 2.0",
+        "SMA female antenna"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "62 x 25 x 15",
+      "weight_g": 25,
+      "case": "Aluminum",
+      "notable_physical": [
+        "Built-in 0.5ppm TCXO"
+      ]
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "yes",
+        "note": "10 kHz-2 GHz continuous, 12-bit ADC, up to 10 MHz bandwidth."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Receive-only hardware; no DAC, no transmit path."
+      },
+      "sdr_bandwidth": {
+        "v": "yes",
+        "note": "Up to 10 MHz instantaneous - on paper matches SDRplay's own RSP1A, but the clone has much weaker input filtering per independent reviews."
+      },
+      "sdr_full_duplex": {
+        "v": "no",
+        "note": "Not applicable - receive only."
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-928 MHz ISM range falls within the general 10kHz-2GHz tuning range."
+      },
+      "subghz_tx": {
+        "v": "no",
+        "note": "No transmitter."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Pure SDR receiver with no protocol decoding onboard; all demodulation happens on the host."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "2 GHz tuning ceiling excludes Wi-Fi's 2.4-2.4835 GHz band."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "Same reason - out of the device's 2 GHz frequency ceiling."
+      },
+      "gps": {
+        "v": "partial",
+        "note": "GPS L1 at 1575 MHz is within the 2 GHz range in principle, as on any wideband SDR, but not documented or tested for this specific clone."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Works with SDRplay's SDRuno/EXTIO, HDSDR, SDR Console via the RSP1 driver/API since it enumerates as an RSP1."
+      },
+      "packet_capture": {
+        "v": "partial",
+        "note": "Captures raw I/Q only; decoding is entirely up to host software."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "USB-tethered to a host PC."
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Receive-only device; owning and listening is legal essentially everywhere, with the usual caveats about which specific traffic (e.g. cellular voice) you are allowed to decode in your jurisdiction. No transmit capability means no unlicensed-transmission risk."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "MSI.SDR",
+      "MSi SDR RSP1 clone"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/mmm999/sdr-simplified-version-rsp1-software-defined-radio",
+        "what": "seller specs: 12-bit ADC, 10kHz-2GHz, up to 10MHz bandwidth, 0.5ppm TCXO, aluminum case 62x25x15mm/25g, $65, RSP1-software compatible"
+      },
+      {
+        "url": "https://www.hackster.io/mircemk/short-review-of-chinese-clone-version-of-sdrplay-rsp1-4a8e93",
+        "what": "independent review confirming clone status, Mirics chipset, good HF performance vs genuine RSP1, minimal input filtering"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/photos-of-the-msi-sdr-dongle-a-new-sdrplay-rsp1-clone/",
+        "what": "rtl-sdr.com coverage identifying this product line as a Mirics-chip RSP1 clone"
+      },
+      {
+        "url": "https://www.sdrplay.com/announcing-the-new-rsp1a-wideband-full-featured-14-bit-sdr/",
+        "what": "used to establish the genuine SDRplay RSP1A's 14-bit ADC and current-production status for comparison"
+      }
+    ],
+    "research_gaps": [
+      "Exact Mirics part numbers (tuner/ADC) not published for this specific clone.",
+      "Release date of this specific Tindie listing not confirmed."
+    ]
+  },
+  {
+    "id": "mini-rtl-sdr-dongle-hackergadgets",
+    "hardware_id": "mini-rtl-sdr-dongle-hackergadgets",
+    "name": "Mini RTL-SDR Dongle",
+    "firmware": "n/a (fixed-function RTL2832U USB device)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Hacker Gadgets",
+    "vendor_url": "https://hackergadgets.com",
+    "product_url": "https://hackergadgets.com/products/mini-rtl-sdr-dongle",
+    "category": "sdr",
+    "subcategory": "rx-only-dongle",
+    "status": "available",
+    "released": null,
+    "price_usd": 49.5,
+    "price_note": "Hacker Gadgets direct price. A TCXO-equipped RTL-SDR Blog V3 runs $34.95-$39.95 with equivalent core receive performance; the extra cost here buys USB-C and a CNC aluminum case, not better reception.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug in, install SDR++ or SDR#, and you are receiving within minutes; no way to transmit and therefore no way to break the law with the hardware itself.",
+    "build_effort": "assembled",
+    "build_note": "USB-C dongle, no soldering.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A compact receive-only RTL2832U+R860 SDR dongle in a CNC aluminum case with USB-C, a 1 PPM TCXO, an SMA connector and a software-switchable 5V bias tee, covering 100 kHz-1.74 GHz (HF below 28.8 MHz via direct sampling).",
+    "honest_take": "Functionally this is an RTL-SDR Blog V3-class dongle (single-input R860/R820T2 tuner, direct-sampling HF, no dedicated upconverter) in a nicer aluminum shell with USB-C instead of micro-USB - not a new design. At $49.50 it costs $10-15 more than a bare RTL-SDR Blog V3, which has the identical TCXO-and-bias-tee feature set; the premium buys the case and connector, not better reception. Community documentation, tutorials and troubleshooting all assume the RTL-SDR Blog boards, so a first-timer following any RTL-SDR guide will be working slightly off-script with this one.",
+    "best_for": [
+      "Beginners wanting a tidy USB-C dongle instead of the more common micro-USB RTL-SDR",
+      "General-purpose scanning, ADS-B tracking, rtl_433 sub-GHz decoding"
+    ],
+    "not_for": [
+      "Anyone chasing better sensitivity or a true HF upconverter - this doesn't have one",
+      "Transmitting anything - it physically can't"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "radios": [
+        {
+          "ic": "RTL2832U + R860",
+          "role": "sdr",
+          "note": "100 kHz-1.74 GHz; R860 is a relabeled R820T2, single RF input. HF direct-sampling only, no dedicated upconverter."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB-C",
+        "SMA female antenna"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "54 x 26 x 10",
+      "weight_g": null,
+      "case": "CNC-machined aluminum alloy",
+      "notable_physical": [
+        "Software-controlled 5V bias tee with LED status indicator",
+        "1 PPM TCXO"
+      ]
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "yes",
+        "note": "100 kHz-1.74 GHz; sub-28.8 MHz via direct sampling, not a dedicated upconverter."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Receive-only RTL2832U hardware; no DAC."
+      },
+      "sdr_bandwidth": {
+        "v": "yes",
+        "note": "Standard RTL2832U figure of roughly 2.4 MHz usable bandwidth."
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Covers 300-928 MHz ISM within its general range; rtl_433 and similar tools work fine."
+      },
+      "subghz_tx": {
+        "v": "no",
+        "note": "No transmit path."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Pure receiver, no protocol decoding onboard."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "SMA female."
+      },
+      "gps": {
+        "v": "partial",
+        "note": "GPS L1 receivable like any RTL-SDR with the right antenna and bias tee; not specifically tested for this unit."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "librtlsdr, SDR++, SDRSharp, GNU Radio."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "1.74 GHz ceiling excludes the 2.4 GHz Wi-Fi band."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "Same reason."
+      },
+      "packet_capture": {
+        "v": "partial",
+        "note": "Raw I/Q only; decoding is up to host software."
+      },
+      "standalone_untethered": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Receive-only; owning and using it is legal essentially everywhere, subject to the normal local caveats about intercepting cellular or other protected traffic."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://hackergadgets.com/products/mini-rtl-sdr-dongle",
+        "what": "official specs: RTL2832U+R860, 100kHz-1.74GHz, 1PPM TCXO, bias tee, USB-C, aluminum case, 54x26x10mm, $49.50"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/the-r860-will-replace-the-r820t2-same-chip-different-name/",
+        "what": "confirms R860 is a renamed R820T2 die, used to compare this dongle's tuner against the R828D-based RTL-SDR Blog V4"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/store/",
+        "what": "RTL-SDR Blog V3 price ($34.95-$39.95) and confirmed TCXO+bias-tee features, used as the honest_take price comparison"
+      }
+    ],
+    "research_gaps": [
+      "No independent teardown found confirming the exact tuner part beyond the vendor's own listing."
+    ]
+  },
+  {
+    "id": "rtl-sdr-generic-hackerwarehouse",
+    "hardware_id": "rtl-sdr-generic-hackerwarehouse",
+    "name": "RTL-SDR (Generic RTL2832U/R820T)",
+    "firmware": "n/a (fixed-function RTL2832U USB device)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Hacker Warehouse (reseller); OEM manufacturer not disclosed",
+    "vendor_url": "https://hackerwarehouse.com",
+    "product_url": "https://hackerwarehouse.com/product/rtlsdr/",
+    "category": "sdr",
+    "subcategory": "rx-only-dongle",
+    "status": "available",
+    "released": null,
+    "price_usd": 40.0,
+    "price_note": "Hacker Warehouse price. Not meaningfully cheaper than a TCXO-equipped RTL-SDR Blog V3 ($34.95-$39.95), which this listing does not claim to match feature-for-feature.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Same ten-minutes-to-first-signal experience as any RTL-SDR dongle.",
+    "build_effort": "assembled",
+    "build_note": "USB dongle, no soldering.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A bare-bones RTL2832U+R820T USB dongle sold as a general-purpose SDR receiver, 24-1750 MHz (up to roughly 1.85 GHz in practice), officially marketed as a DVB-T/DAB/FM tuner repurposed for SDR use.",
+    "honest_take": "This is the no-frills version of the RTL-SDR story, and the seller's own page does not claim a TCXO or bias tee - features the RTL-SDR Blog V3/V4 and Hacker Gadgets' Mini dongle both advertise explicitly. Frequency stability will drift more with temperature without a TCXO, which matters for narrowband digital modes (POCSAG paging, some IoT protocols) more than for wideband work like ADS-B. At $40 this is not meaningfully cheaper than a documented, community-standard RTL-SDR Blog V3, so there is little reason to pick it over that one unless you specifically want Hacker Warehouse's own bundling.",
+    "best_for": [
+      "A basic first SDR for wideband listening and ADS-B tracking"
+    ],
+    "not_for": [
+      "Frequency-stability-sensitive digital modes without a TCXO",
+      "Anyone who can get an RTL-SDR Blog V3 for a similar price instead"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "radios": [
+        {
+          "ic": "RTL2832U + R820T",
+          "role": "sdr",
+          "note": "24-1750 MHz per vendor listing (up to ~1.85 GHz achievable in practice); no TCXO or bias tee mentioned by the seller."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "USB powered.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB Type-A",
+        "SMA female antenna (updated version)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": []
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "yes",
+        "note": "24-1750 MHz per vendor; no TCXO mentioned."
+      },
+      "sdr_tx": {
+        "v": "no",
+        "note": "Receive-only RTL2832U hardware."
+      },
+      "sdr_bandwidth": {
+        "v": "partial",
+        "note": "Vendor states 2.0 Msps; real-world usable bandwidth on RTL2832U dongles is typically lower than the claimed figure."
+      },
+      "subghz_rx": {
+        "v": "yes",
+        "note": "300-928 MHz ISM range within its general tuning range."
+      },
+      "subghz_tx": {
+        "v": "no"
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Pure receiver, no protocol decoding onboard."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "SMA on the 'updated version' per the vendor listing."
+      },
+      "gps": {
+        "v": "partial",
+        "note": "GPS L1 receivable like any RTL-SDR with the right antenna; not specifically tested for this unit."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "librtlsdr, SDR++, SDRSharp, GNU Radio."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "Frequency ceiling (~1.75-1.85GHz) excludes the 2.4 GHz Wi-Fi band."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "Same reason."
+      },
+      "packet_capture": {
+        "v": "partial",
+        "note": "Raw I/Q only; decoding is up to host software."
+      },
+      "standalone_untethered": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Receive-only; owning and using it is legal essentially everywhere, subject to the normal local caveats about intercepting cellular or other protected traffic."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "poor",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "RTL-SDR DVB-T Dongle"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/rtlsdr/",
+        "what": "vendor specs: RTL2832U+R820T, 24-1750MHz, 2.0 Msps, 8-bit, SMA connector, $40, no TCXO/bias-tee claimed"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/store/",
+        "what": "RTL-SDR Blog V3 pricing ($34.95-$39.95) and confirmed TCXO+bias-tee features, used for the honest_take price/feature comparison"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/the-r860-will-replace-the-r820t2-same-chip-different-name/",
+        "what": "background on the R820T/R820T2/R860 tuner family this dongle's R820T belongs to"
+      }
+    ],
+    "research_gaps": [
+      "Exact physical dimensions of the dongle itself not published (vendor page lists packaging dimensions only).",
+      "No independent teardown found for this specific listing."
+    ]
+  },
+  {
+    "id": "sdr-rx-upconverter-jasonkits",
+    "hardware_id": "sdr-rx-upconverter-jasonkits",
+    "name": "SDR-Rx HF Up Converter Module",
+    "firmware": "n/a (passive/analog RF hardware, no firmware)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "JasonKits",
+    "vendor_url": "https://www.tindie.com/stores/jasonkits/",
+    "product_url": "https://www.tindie.com/products/jasonkits/sdr-rx-software-defined-radio-up-converter-module/",
+    "category": "accessory",
+    "subcategory": "hf-upconverter",
+    "status": "available",
+    "released": null,
+    "price_usd": 39.5,
+    "price_note": "Tindie listing price. The RTL-SDR dongle it upconverts for is explicitly 'NOT SUPPLIED' and must be bought separately.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "You need to already own and understand a separate RTL-SDR/DVB-T dongle and how to retune for the shifted HF frequencies - this module supplies nothing on its own.",
+    "build_effort": "assembled",
+    "build_note": "Assembled module; a DVB-T/RTL-SDR dongle is sold separately and required to do anything with it.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A relay-switched HF upconverter and VHF/UHF preamp that sits between an antenna and an existing RTL-SDR/DVB-T dongle, shifting 10 kHz-50 MHz up into the dongle's normal tuning range while passing VHF/UHF/SHF straight through with a 3dB preamp.",
+    "honest_take": "This is a classic mixer-based upconverter - the JasonKits listing does not name the exact IC, but this class of module has historically been built around an NE612/SA612-family mixer (now a legacy, out-of-production chip family per its Wikipedia entry, so modern boards may use a different but functionally similar part; unconfirmed here). It is not itself an SDR and does nothing without a separate RTL2832U-based dongle plugged downstream, which the listing explicitly states is 'NOT SUPPLIED.' It solves the exact HF problem the RTL-SDR Blog V4 already solves for free with a built-in SA612 upconverter - if you do not already own an older dongle that lacks HF coverage, buying a V4-class dongle instead is simpler and no more expensive than buying this plus a separate receive-only dongle.",
+    "best_for": [
+      "Adding HF coverage to an older RTL-SDR/DVB-T dongle that lacks a built-in upconverter",
+      "Tinkerers who want to understand or modify a simple upconverter circuit"
+    ],
+    "not_for": [
+      "Anyone starting from scratch - an RTL-SDR Blog V4-class dongle with a built-in upconverter is simpler",
+      "Standalone use - it requires a separate SDR dongle to do anything at all"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "sdr",
+          "note": "Passive/active mixer-based HF upconverter, historically built around an NE612/SA612-family mixer for this class of module; seller does not publish the exact part number."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from the host computer's USB 5V; no battery.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "F connector (VHF/UHF/SHF input)",
+        "BNC connector (HF input)",
+        "USB (power only, no data)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "SPDT relay for HF vs VHF/UHF/SHF path switching",
+        "3dB VHF/UHF preamp inline",
+        "Power and mode-selection indicator LEDs"
+      ]
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "addon",
+        "note": "Extends an existing RTL-SDR-class dongle's low end down to 10 kHz; has no receive capability of its own without one."
+      },
+      "sdr_tx": {
+        "v": "no"
+      },
+      "subghz_rx": {
+        "v": "partial",
+        "note": "Passes 433/868/915 MHz ISM bands through its VHF/UHF/SHF path with a 3dB preamp rather than upconverting them; actual reception still depends entirely on the downstream RTL-SDR dongle."
+      },
+      "subghz_tx": {
+        "v": "no"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Separate F (VHF/UHF/SHF) and BNC (HF) antenna inputs."
+      },
+      "subghz_amplified": {
+        "v": "partial",
+        "note": "3dB preamp exists only on the VHF/UHF passthrough path, not on the HF upconversion path."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Passive accessory; requires both USB power and a downstream SDR dongle."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Purely analog hardware with a manual band-select switch; nothing to script."
+      },
+      "gps": {
+        "v": "unknown",
+        "note": "Whether the VHF/UHF preamp path extends usefully to GPS L1 (1575 MHz) is not documented."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "packet_capture": {
+        "v": "no",
+        "note": "Analog front end only; no digitizing or capture capability of its own."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Passive receive-only accessory with no transmit capability; owning and using it carries essentially no radio-licensing risk."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "SDR-Rx Up Converter"
+    ],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/jasonkits/sdr-rx-software-defined-radio-up-converter-module/",
+        "what": "vendor specs: 10kHz-50MHz upconversion, F/BNC connectors, SPDT relay switching, 3dB VHF/UHF preamp, USB powered, $39.50, dongle not included"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/NE612",
+        "what": "background on the NE612/SA612 mixer-oscillator chip family commonly used in this class of upconverter, and confirmation it is now out of production"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/building-a-simple-upconverter-with-a-ne612-ic/",
+        "what": "independent description of the common NE612/SA612-based upconverter design pattern this type of module follows"
+      }
+    ],
+    "research_gaps": [
+      "Exact mixer IC used in this specific module not published by the seller.",
+      "No independent teardown or review found for this listing."
+    ]
+  },
+  {
+    "id": "urti",
+    "hardware_id": "urti",
+    "name": "URTI (Universal Radio Test Instrument)",
+    "firmware": "n/a (not yet released)",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/greatscottgadgets/lab-notes",
+    "firmware_note": "Public engineering lab notes are tracked on GitHub through eight development phases; no firmware has shipped yet.",
+    "vendor": "Great Scott Gadgets",
+    "vendor_url": "https://greatscottgadgets.com",
+    "product_url": "https://greatscottgadgets.com/urti/",
+    "category": "sdr",
+    "subcategory": "multi-instrument-sdr",
+    "status": "vaporware",
+    "released": null,
+    "price_usd": null,
+    "price_note": "Not for sale. In active, ARDC/TAPR-funded open-source development; no price has been announced. The 'vaporware' status value is the closest fit in this database's controlled vocabulary for 'not yet released, no committed date' - it is not a judgment that the project is fake or abandoned; GSG publishes transparent public progress reports.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "expert",
+    "skill_note": "Aimed at replacing several pieces of bench test equipment at once (spectrum analyzer, VNA, signal generator, power meter, frequency counter); using it well will require understanding what each of those instruments does.",
+    "build_effort": "assembled",
+    "build_note": "Not yet purchasable in any form; projected as an assembled instrument in two planned variants (handheld and a headless computer peripheral) once released.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "An in-development, ARDC/TAPR-funded open-source SDR instrument from Great Scott Gadgets (makers of HackRF and YARD Stick One) intended to combine a spectrum analyzer, vector network analyzer, vector signal generator/analyzer, antenna analyzer, power meter and frequency counter with a full-duplex wideband SDR and an integrated directional coupler, released under CERN-OHL-P/BSD-3-Clause open licenses, in both a handheld and a tethered computer-peripheral form factor.",
+    "honest_take": "There is no shipping product, no price, and no confirmed release date - this is a public, transparently-tracked engineering effort (GSG's own phase-two update confirms an initial prototype board has been fabricated and its components tested), not vaporware in the deceptive sense, but it is also not something you can buy or evaluate today. If the ambitious feature list actually ships as described, it would be a meaningfully different class of device from anything else in this batch, and notably GSG's existing flagship, the HackRF, is explicitly half-duplex - a working full-duplex GSG product would be new territory for them. Until it ships, treat every capability below as aspirational and unconfirmed.",
+    "best_for": [
+      "Watching GSG's public development progress if you want an eventual all-in-one RF test instrument"
+    ],
+    "not_for": [
+      "Buying today - it is not for sale",
+      "Anyone who needs a working instrument now; a HackRF or LimeSDR plus a dedicated VNA covers this ground today"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not yet published.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "sdr",
+          "note": "Wideband full-duplex architecture with an integrated directional coupler is the stated design goal; no chip-level details published as of this research pass."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Not yet published.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Two planned form factors: portable handheld and a headless computer peripheral",
+        "Integrated directional coupler for VNA/antenna-analyzer functions"
+      ]
+    },
+    "capabilities": {
+      "sdr_rx": {
+        "v": "claimed",
+        "note": "Full-duplex wideband SDR is the stated architecture; not yet implemented/shipping to verify."
+      },
+      "sdr_tx": {
+        "v": "claimed",
+        "note": "Same - part of the intended full-duplex design, unconfirmed."
+      },
+      "sdr_full_duplex": {
+        "v": "claimed",
+        "note": "Headline claim of the project; GSG's own HackRF line is explicitly half-duplex, so this would be a first for them if realized."
+      },
+      "sdr_bandwidth": {
+        "v": "unknown"
+      },
+      "subghz_rx": {
+        "v": "claimed",
+        "note": "Would fall within a 'wideband' SDR's range if realized as described; not confirmed."
+      },
+      "subghz_tx": {
+        "v": "claimed",
+        "note": "Same caveat."
+      },
+      "standalone_untethered": {
+        "v": "claimed",
+        "note": "One of two planned form factors is a standalone handheld; not yet built per public lab notes, which state handheld interface firmware has not yet begun."
+      },
+      "scriptable": {
+        "v": "unknown"
+      },
+      "app_store": {
+        "v": "unknown"
+      },
+      "web_ui": {
+        "v": "unknown"
+      },
+      "packet_capture": {
+        "v": "unknown"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Not a shipping product, so no transmission is currently occurring anywhere; legal risk assessment will need revisiting once (if) it ships, given the stated full-duplex wideband transmit capability."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://greatscottgadgets.com/urti/",
+        "what": "official project description: intended instrument functions, two form factors, development phases, ARDC/TAPR funding"
+      },
+      {
+        "url": "https://www.ardc.net/apply/grants/2022-grants/grant-a-low-cost-open-source-universal-radio-test-instrument/",
+        "what": "ARDC grant page confirming funding, open licensing (CERN-OHL-P v2 hardware, BSD-3-Clause software)"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/great-scott-gadgets-urti-phase-two-progress-report/",
+        "what": "independent coverage confirming initial prototype board fabricated and functional as of the phase-two update"
+      },
+      {
+        "url": "https://www.rtl-sdr.com/great-scott-gadgets-to-develop-a-universal-radio-test-instrument-urti/",
+        "what": "independent announcement coverage confirming project scope and GSG's track record (HackRF, YARD Stick One, GreatFET)"
+      }
+    ],
+    "research_gaps": [
+      "No price, release date, or chip-level specifications published as of this research pass.",
+      "Frequency range and TX power not yet specified.",
+      "Whether GSG will price it in HackRF range ($300-500) or as a premium test instrument is unknown."
+    ]
+  },
+  {
+    "id": "pandwarf-marauder",
+    "hardware_id": "pandwarf-marauder",
+    "name": "PandwaRF Marauder",
+    "firmware": "n/a (dedicated hardware, controlled via companion Android app)",
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "PandwaRF (Comthings)",
+    "vendor_url": "https://pandwarf.com",
+    "product_url": "https://pandwarf.com/pandwarf-marauder/",
+    "category": "subghz",
+    "subcategory": "covert-capture-deaddrop",
+    "status": "available",
+    "released": null,
+    "price_usd": 1024,
+    "price_note": "First-pass seed price of $1,024 (sourced via reseller lab401) most closely matches PandwaRF's own 'Marauder Standard' tier at EUR990. PandwaRF also sells a 'Basic' tier at EUR790 (~$818) without rolling-code support, and an 'Ultimate' tier (price not published, contact-to-purchase) bundling a one-year 'Kaiju Gate Openers Pack - LEA License.' LEA stands for Law Enforcement Agency: the deepest rolling-code decryption/generation features are explicitly licensed to law enforcement rather than sold openly. The specific lab401 URL in the seed data returned HTTP 404 at time of research, suggesting that listing may have been delisted or gone out of stock.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Designed to be deployed and left running unattended (a 'dead drop'); its rolling-code analysis output is only useful to someone who already understands RF/keyfob protocols and has (or buys) the separate Kaiju analysis software/subscription.",
+    "build_effort": "assembled",
+    "build_note": "Sold assembled and ready to deploy; the Ultimate tier includes three band-specific antennas, a USB-C cable and a hard case.",
+    "stealth": "covert",
+    "form_factor": "box",
+    "summary": "An autonomous, battery-powered sub-GHz capture device meant to be hidden near a target (a 'dead drop') and left running for extended periods, silently recording keyfob, garage-door and alarm-remote transmissions on 315/433/868/915 MHz to internal memory (256-512 captures depending on tier) for later retrieval over Bluetooth LE. It shares the broader PandwaRF ecosystem with the handheld PandwaRF Rogue Pro, but is built for unattended field collection rather than interactive handheld use.",
+    "honest_take": "Read the tier structure before assuming you are buying 'rolling-code defeat': the Basic tier (EUR790) only logs fixed-code transmissions with no timestamps; genuine rolling-code cataloguing needs the Standard tier (EUR990) or above, and PandwaRF's own material is explicit that 'rolling code support' here means capturing and cataloguing transmissions for offline analysis via their separate Kaiju software, not defeating the rolling-code cryptography outright. Kaiju's most capable 'Gate Openers Pack' - with model identification and code generation - is gated behind a one-year 'LEA' (Law Enforcement Agency) license bundled only with the Ultimate tier, which strongly implies PandwaRF does not sell the strongest rolling-code-defeat features to the general public. As a covert implant this is a serious, purpose-built tool at a serious price (comparable to the handheld PandwaRF Rogue Pro plus an ongoing analysis subscription) - it is not a garage-door hacking gadget for a hobbyist, and deploying it on property or vehicles you do not own crosses from an RF-licensing question into a physical-intrusion and surveillance-law question well before the transmission-licensing one does.",
+    "best_for": [
+      "Long-duration unattended RF collection on physical penetration tests with explicit written authorization",
+      "Professional/LEA use cases where the Kaiju licensing is available"
+    ],
+    "not_for": [
+      "Hobbyists wanting to defeat a rolling-code garage door - this device largely collects and catalogs, it does not crack the crypto without add-on licensing",
+      "Anyone without legal authorization to place a hidden RF recorder on property they do not control"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not disclosed. PandwaRF's handheld Rogue line is understood in the RF-hacking community to be CC1101-based (TI's common sub-GHz transceiver), but this has not been independently confirmed for the Marauder's internal hardware specifically.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "sub-ghz",
+          "note": "Dual simultaneous frequency capture across 315/433/868/915 MHz on Standard/Ultimate tiers (single band on Basic); exact radio IC(s) not published."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Vendor states continuous listening drains the battery quickly and recommends an external USB battery pack for extended deployments; exact battery capacity not published.",
+      "charging": "USB-C (Ultimate tier; cable included)",
+      "pmic": null,
+      "storage": "256 captures (Basic) or 512 captures (Standard/Ultimate), internal flash, timestamped on Standard/Ultimate only",
+      "connectivity": [
+        "Bluetooth Low Energy (data sync to Android app)",
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Unmarked/discreet enclosure on the Ultimate tier for covert deployment",
+      "notable_physical": [
+        "Designed for covert/dead-drop placement",
+        "Stealth BLE advertising option, Ultimate tier only, to avoid revealing itself during a BLE scan",
+        "Three band-specific SMA antennas (315/433/868-915 MHz) included with the Ultimate tier"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "315/433/868/915 MHz; two bands simultaneously on Standard/Ultimate, one band on Basic."
+      },
+      "subghz_tx": {
+        "v": "unknown",
+        "note": "Marketed purely as a capture device; PandwaRF's other products (Rogue) transmit, but no source found confirms the Marauder itself can transmit."
+      },
+      "subghz_replay": {
+        "v": "unknown",
+        "note": "Not described as a replay device in any source found; appears to be capture-and-analyze only, with replay/generation handled by a separate Rogue unit."
+      },
+      "subghz_rolling_code": {
+        "v": "partial",
+        "note": "Standard/Ultimate tiers catalog and analyze rolling-code transmissions against an internal database and, with the separate Kaiju software/subscription, can identify device models. PandwaRF's own materials describe this as analysis, not code prediction or cryptographic defeat. The Basic tier has no rolling-code handling at all."
+      },
+      "subghz_bruteforce": {
+        "v": "no",
+        "note": "This is a passive capture device, not the Rogue Pro's active brute-force engine."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Three dedicated SMA ports by band on the Ultimate tier."
+      },
+      "subghz_amplified": {
+        "v": "unknown"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "Data is stored in onboard flash, not removable SD; retrieved over BLE to an Android app and exported as JSON."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Entire point of the device - deployed and left running without a host connection."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Core function: autonomous RF capture, cataloguing and timestamping to internal memory."
+      },
+      "scriptable": {
+        "v": "unknown",
+        "note": "Controlled via a dedicated Android app, not documented as scriptable in the RfCat/Python sense."
+      },
+      "app_store": {
+        "v": "no",
+        "note": "Dedicated PandwaRF Marauder Android app for retrieval, not a general app catalog."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "gps": {
+        "v": "unknown"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "This is a passive receiver for its core function, so the pure radio-licensing risk is lower than for a transmitter - but that is almost beside the point: a device explicitly designed to be hidden and left recording other people's keyfob and remote-control signals is a covert-surveillance device, and placing one on a vehicle, property, or gate you do not own or lack authorization to test is very likely to violate wiretapping/surveillance-device and trespass laws in most jurisdictions regardless of any radio-licensing rule. If paired with a separate transmitter (e.g. a PandwaRF Rogue) to replay or generate codes, that transmission is a further offense on top of the surveillance question. Treat this strictly as an authorized-engagement tool with signed scope, not a general-purpose gadget."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No - dedicated PandwaRF Marauder Android app for retrieval",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "PandwaRF Marauder Basic",
+      "PandwaRF Marauder Standard",
+      "PandwaRF Marauder Ultimate"
+    ],
+    "sources": [
+      {
+        "url": "https://pandwarf.com/pandwarf-marauder/",
+        "what": "official tier comparison: frequencies, memory capacity, timestamps, rolling-code support and pricing (Basic EUR790, Standard EUR990) across Basic/Standard/Ultimate"
+      },
+      {
+        "url": "https://pandwarf.com/product/pandwarf-marauder-ultimate/",
+        "what": "Ultimate tier specifics: 512 captures, 3 antennas, dimensions, Kaiju Gate Openers Pack with 1-year LEA license, stealth BLE, unmarked enclosure"
+      },
+      {
+        "url": "https://pandwarf.com/news/rolling-codes-support-for-marauder-ultimate/",
+        "what": "clarifies that 'rolling code support' means capture, cataloguing and Kaiju-based offline analysis, not cryptographic defeat"
+      },
+      {
+        "url": "https://lab401.com/collections/all-products/products/pandwarf-marauder",
+        "what": "the seed-data reseller URL; returned HTTP 404 at time of research, noted as a research gap"
+      }
+    ],
+    "research_gaps": [
+      "Exact radio chip(s) and MCU not published.",
+      "Precise battery capacity/runtime not published.",
+      "The lab401 URL in the first-pass seed data returned HTTP 404 at time of research; could not confirm current price or stock at that specific reseller.",
+      "Could not confirm which specific tier corresponds exactly to the $1,024 seed price - Standard is the closest match by currency conversion.",
+      "Whether the device itself can transmit/replay, or is receive-only, is not confirmed by any source found."
+    ]
+  },
+  {
+    "id": "glytch-mesh-mod-pager",
+    "hardware_id": "glytch-mesh-mod-pager",
+    "name": "Glytch Mesh Mod for Pager",
+    "firmware": "MeshtasticD (runs on the WiFi Pineapple Pager's own Linux OS)",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/glytchtech/Pager-Mod-Docs",
+    "firmware_note": "The mod has no MCU of its own; it installs the standard MeshtasticD daemon on the Pineapple Pager's own OpenWrt-based Linux system, which then drives the attached radio. This is stock Meshtastic, not a custom mesh protocol.",
+    "vendor": "Glytch (GlytchTech), sold through Hak5",
+    "vendor_url": "https://shop.hak5.org",
+    "product_url": "https://shop.hak5.org/products/glytch-mesh-mod-for-pager",
+    "category": "accessory",
+    "subcategory": "lora-mesh-addon",
+    "status": "available",
+    "released": null,
+    "price_usd": 60.0,
+    "price_note": "Official Hak5 shop price. EU reseller lab401 lists the identical product (confirmed: '868/900 MHz radio with an integrated antenna... for the WiFi Pineapple Pager') at EUR79 (~$85, shown sold out at time of research). This database's seed data listed these as two separate candidates ('Glytch Mesh Module for Pineapple Pager' via lab401 at $85.32, and 'Glytch Mesh Mod for Pager' via Hak5 at $60) - they are the same physical product from two different sellers, merged here into one record.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Physical install is described as roughly 5 minutes; the MeshtasticD service starts automatically, but getting real use out of a mesh node still requires understanding Meshtastic's own network concepts.",
+    "build_effort": "assembly",
+    "build_note": "3D-printed, hand-assembled clip-on module with 'minor variations' per unit (hand production); no soldering, clips onto the Pineapple Pager's expansion point.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A 3D-printed, hand-assembled clip-on module adding an 868/900 MHz radio with an integrated antenna to the Hak5 WiFi Pineapple Pager, installing the standard MeshtasticD daemon to give the Pager a decentralized mesh-messaging channel independent of Wi-Fi or cellular infrastructure.",
+    "honest_take": "This turns the Pineapple Pager into a Meshtastic mesh node, not into a sub-GHz attack tool - despite living in the 'subghz' candidate bucket, its actual job is off-grid team communication, closer in spirit to Retia's Nibble boards than to a replay or jamming device. The vendor does not publish the exact radio IC, so treat range and throughput claims as generic LoRa/Meshtastic performance until tested. Buying it from Hak5 directly ($60) is meaningfully cheaper than the EU reseller lab401's listing (EUR79, roughly $85, and shown sold out during this research pass) - check both before paying reseller markup, and note that Glytch also sells GPS and Ethernet mods for the same Pager if mesh isn't the only expansion you want.",
+    "best_for": [
+      "Adding off-grid mesh comms to an existing WiFi Pineapple Pager for field engagements",
+      "Team coordination without relying on cellular or the target network's Wi-Fi"
+    ],
+    "not_for": [
+      "Sub-GHz replay, scanning or jamming - it is a comms radio, not an attack tool",
+      "Anyone without a WiFi Pineapple Pager already - this does not work standalone"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU of its own; relies entirely on the Pineapple Pager's own onboard Linux system, which runs the MeshtasticD daemon against the attached radio.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "lora",
+          "note": "868/900 MHz radio with an integrated antenna; exact chip not published by the vendor."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Draws power from the host Pineapple Pager; no battery of its own.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Clips onto WiFi Pineapple Pager expansion point"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed, hand-assembled",
+      "notable_physical": [
+        "Integrated antenna, no external SMA connector mentioned"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "claimed",
+        "note": "Implicit in Meshtastic mesh operation at 868/900 MHz; vendor does not break out RX/TX separately or publish sensitivity figures."
+      },
+      "subghz_tx": {
+        "v": "claimed",
+        "note": "Required for mesh participation; vendor does not publish TX power."
+      },
+      "subghz_replay": {
+        "v": "no",
+        "note": "Not an RF pentest tool - it is a Meshtastic comms radio with no capture/replay function."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Not applicable; carries mesh-network traffic only, not keyfob/remote protocols."
+      },
+      "subghz_external_antenna": {
+        "v": "unknown",
+        "note": "Antenna is described as integrated into the 3D-printed module; unclear if it is user-replaceable."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a WiFi Pineapple Pager host to function; not usable on its own."
+      },
+      "scriptable": {
+        "v": "addon",
+        "note": "Inherits whatever scripting the host Pineapple Pager and Meshtastic's own Python/API tooling offer; the module itself adds no scripting surface."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "gps": {
+        "v": "no",
+        "note": "Glytch sells a separate GPS mod for the same Pager; this mesh mod does not include GPS."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "addon",
+        "note": "The Pineapple Pager has its own web UI; this module does not add a separate one."
+      },
+      "ble_scan": {
+        "v": "no"
+      },
+      "ir_tx": {
+        "v": "no"
+      },
+      "hf_1356_read": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Standard Meshtastic operation in the license-exempt 868/900 MHz ISM bands; staying within regional power/duty-cycle limits (ETSI EN 300 220 in Europe, FCC Part 15 in the US) keeps this in normal amateur/IoT-radio territory, not the higher-risk category of devices that replay or jam licensed signals."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Glytch Mesh Module for Pineapple Pager"
+    ],
+    "sources": [
+      {
+        "url": "https://shop.hak5.org/products/glytch-mesh-mod-for-pager",
+        "what": "official Hak5 shop listing: price $60, 868/900MHz radio with integrated antenna, 3D-printed hand-assembled construction, GitHub docs link"
+      },
+      {
+        "url": "https://lab401.com/collections/pentesting-network",
+        "what": "confirms the identical product listed by EU reseller lab401 at EUR79, shown sold out at time of research - establishes this and the Hak5 listing are the same product, not two devices"
+      },
+      {
+        "url": "https://github.com/glytchtech/Pager-Mod-Docs/tree/main/Mesh",
+        "what": "vendor's own setup documentation confirming the mod installs the MeshtasticD daemon on the Pager's Linux OS and installs in about 5 minutes"
+      }
+    ],
+    "research_gaps": [
+      "Exact LoRa radio IC not published.",
+      "TX power and effective mesh range not published or independently tested.",
+      "Could not confirm current stock status at Hak5's own shop beyond an active price listing."
+    ]
+  },
+  {
+    "id": "nibble-zero",
+    "hardware_id": "nibble-zero",
+    "name": "Nibble Zero",
+    "firmware": "Meshtastic / Meshcore / Reticulum (user-selectable)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/RetiaLLC/Nibble",
+    "firmware_note": "Ships flashable with any of the three open mesh firmwares; switching between Meshtastic and Meshcore is done via the browser-based Nugget.dev flashing tool or from a mounted Flipper Zero.",
+    "vendor": "Retia (Retia LLC)",
+    "vendor_url": "https://retia.io",
+    "product_url": "https://retia.io/products/nibble-zero-kit",
+    "category": "subghz",
+    "subcategory": "lora-mesh-node",
+    "status": "available",
+    "released": "2025",
+    "price_usd": 75.0,
+    "price_note": "Retia direct price for the kit (board, 3D-printed case, BMP280 sensor, antenna). The Nibble is a fully open-hardware design (RetiaLLC/Nibble on GitHub, released as open hardware at HOPE 2025) - over 500 have reportedly been self-built worldwide, so the underlying board can be built from the published files for roughly parts cost instead of buying the finished kit.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Meshtastic/Meshcore setup is largely app-guided; flashing firmware via the browser-based Nugget.dev tool or directly from a Flipper Zero needs no development environment.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled with a 3D-printed case; a dedicated onboard 3.3V regulator was added specifically because the base Waveshare ESP32-S3 Zero board's own regulator cannot reliably sustain continuous LoRa transmission without heat damage.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "An open-hardware ESP32-S3 (Waveshare ESP32-S3 Zero) + Semtech SX1262 (Seeed WIO-SX1262 module) LoRa mesh node running Meshtastic, Meshcore or Reticulum firmware, with a BMP280 environmental sensor and a Flipper-Zero-compatible pinout that lets it mount directly onto a Flipper Zero, using the Flipper as a battery and keyboard.",
+    "honest_take": "This is not a Flipper Zero add-on in the GPIO-shield sense (like Electronic Cats' board) - it is an independent, fully open-source LoRa mesh node (design credited to Kody Kinzie, Zac Beran and Felix Orozco, released as open hardware at HOPE 2025) that happens to be pin-compatible with a Flipper Zero and can use it as a battery/keyboard when mounted. The underlying ESP32-S3 + SX1262 combination is a commodity Meshtastic pairing used by many boards; the $75 kit price buys Retia's case, BMP280 sensor, the dedicated 3.3V regulator fix, and convenience - not anything electrically unique, and since the full design is open-source on GitHub you can build the bare board yourself for materially less if you don't need the finished kit. If you don't specifically want the Flipper integration, a bare Heltec or LilyGo LoRa32 board running the same open Meshtastic firmware is cheaper still.",
+    "best_for": [
+      "Meshtastic/Meshcore users who want to manage the node from a Flipper Zero they already carry",
+      "Environmental logging alongside mesh comms (BMP280)",
+      "Anyone who wants to self-build from the fully open GitHub design instead of buying the kit"
+    ],
+    "not_for": [
+      "Anyone price-sensitive who doesn't need the Flipper integration or case - a bare ESP32-S3+SX1262 Meshtastic board is cheaper",
+      "Sub-GHz attack/replay work - this is a comms radio, not an RF pentest tool"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3 (Waveshare ESP32-S3 Zero board)",
+      "mcu_primary_note": "Only 8 GPIO pins are broken out to buttons on the base board; Retia added a dedicated 3.3V regulator because the board's own integrated regulator was found inadequate for continuous LoRa transmit current.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "Semtech SX1262 (Seeed WIO-SX1262 module)",
+          "role": "lora",
+          "note": "Software-selectable 868 or 915 MHz. Two module variants exist: IPEX-connector versions need an external IPEX antenna, non-IPEX versions connect straight to the Nibble's own antenna pad."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Not specified by vendor; when mounted on a Flipper Zero, the Flipper's own battery powers it via a reverse-polarity-protected connection.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (flashing)",
+        "Flipper Zero-compatible pinout (mount as add-on)",
+        "U.FL antenna or coil antenna"
+      ],
+      "gpio": "8 GPIO pins accessible via buttons on the base ESP32-S3 Zero board",
+      "sensors": [
+        "BMP280 (temperature/pressure)"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed",
+      "notable_physical": [
+        "Reverse-polarity protection diode for the Flipper Zero connection",
+        "Dedicated onboard 3.3V regulator added to prevent thermal issues during continuous LoRa TX"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via SX1262, 868/915 MHz LoRa."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Via SX1262; TX power not published by Retia."
+      },
+      "subghz_replay": {
+        "v": "no",
+        "note": "Mesh comms firmware, not an RF replay/pentest tool."
+      },
+      "subghz_rolling_code": {
+        "v": "no"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "U.FL connector on IPEX module variants; coil antenna option on non-IPEX variants."
+      },
+      "gps": {
+        "v": "no",
+        "note": "BMP280 provides pressure/temperature only, not location; no GPS chip on this board."
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32-S3 has native BLE hardware; Meshtastic firmware commonly exposes BLE for phone-app pairing."
+      },
+      "wifi_scan_24": {
+        "v": "partial",
+        "note": "ESP32-S3 has Wi-Fi silicon and Meshtastic can optionally bridge over Wi-Fi/MQTT, but this is not the device's primary function."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs its own mesh firmware independently once flashed; a mounted Flipper only supplies battery/keyboard convenience, it is not required."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open Meshtastic/Meshcore/Reticulum firmware; breadboard-style GPIO for peripherals."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "addon",
+        "note": "Meshtastic itself offers an optional web UI on some builds; not a feature added by the Nibble Zero board."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "ibutton_1wire": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Standard license-exempt LoRa/Meshtastic operation in the 868/915 MHz ISM bands; stay within your region's power and duty-cycle limits (ETSI EN 300 220 / FCC Part 15). This is a communications device, not a transmitter aimed at someone else's equipment, which is the main reason its legal risk is lower than most devices in this batch."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://retia.io/products/nibble-zero-kit",
+        "what": "kit contents, price $75, BMP280 sensor, Flipper Zero integration description, firmware options"
+      },
+      {
+        "url": "https://retia.io/blogs/news/introducing-the-nibble-zero",
+        "what": "detailed hardware writeup: Waveshare ESP32-S3 Zero, Seeed WIO-SX1262, 8 GPIO pins, added 3.3V regulator for LoRa thermal issue, Flipper battery/keyboard integration, reverse-polarity diode"
+      },
+      {
+        "url": "https://github.com/RetiaLLC/Nibble",
+        "what": "confirms the Nibble design is released as fully open hardware, credits Kody Kinzie/Zac Beran/Felix Orozco, HOPE 2025 release, 500+ self-built units"
+      },
+      {
+        "url": "https://events.ccc.de/congress/2025/hub/en/event/detail/meshtastic-for-flipper-zero",
+        "what": "39C3 workshop listing confirming Flipper Zero interoperability as a controller for mesh operations"
+      }
+    ],
+    "research_gaps": [
+      "Battery capacity not published for standalone (non-Flipper-mounted) use.",
+      "Exact antenna gain/range not published.",
+      "TX power in dBm not published."
+    ]
+  },
+  {
+    "id": "nibble-screen-connect",
+    "hardware_id": "nibble-screen-connect",
+    "name": "Nibble Screen Connect",
+    "firmware": "Meshtastic (full support) / Meshcore (preliminary)",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/RetiaLLC/Nibble",
+    "firmware_note": "Built on the same open-source Nibble design lineage as the Nibble Zero (credited to Kody Kinzie/Zac Beran/Felix Orozco, created for 38C3); Retia's own blog describes the base open design as combining a Waveshare ESP32-S3 Zero with an RFM95 radio, while this specific commercial kit is built around an SX1262 module instead - the design has evolved across radio choices between community and commercial variants.",
+    "vendor": "Retia (Retia LLC)",
+    "vendor_url": "https://retia.io",
+    "product_url": "https://retia.io/products/nibble-screen-connect",
+    "category": "subghz",
+    "subcategory": "lora-mesh-node",
+    "status": "available",
+    "released": null,
+    "price_usd": 50.0,
+    "price_note": "Retia direct price. Like the Nibble Zero, this descends from the fully open-source Nibble hardware project (RetiaLLC/Nibble on GitHub); a self-built version from the published files would cost roughly parts cost instead.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Meshtastic setup is app-guided; Meshcore support is explicitly labeled 'preliminary' by the vendor, so expect rougher edges on that firmware path.",
+    "build_effort": "assembled",
+    "build_note": "Sold as a populated PCB with mounting holes; no case is included, the board is specifically sized to fit inside a length of PVC pipe for weatherproof outdoor mounting.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A more expandable ESP32-S3 + Semtech SX1262 LoRa mesh node than the Nibble Zero, adding a 0.92-inch SSD1306 OLED display for on-device message viewing, two buttons, an LED, and a BME280 environmental sensor, sized to fit inside a PVC pipe for outdoor or semi-permanent mesh relay deployment.",
+    "honest_take": "The core hardware story is the same as the Nibble Zero: ESP32-S3 + SX1262 is a commodity Meshtastic combination available on many boards for less, and this design descends from the same fully open-source Nibble project (originally built around an RFM95 radio at 38C3, before this commercial variant moved to SX1262). What's genuinely different here is the OLED screen, letting you read mesh messages without a phone, and the PVC-pipe-friendly form factor for a semi-permanent outdoor relay node. If you want a 'read messages on the device itself' Meshtastic node rather than a phone-paired one, this is a reasonable niche pick - but check Meshcore support status first, since the vendor calls it only 'preliminary,' meaning that firmware path is less mature than Meshtastic.",
+    "best_for": [
+      "A semi-permanent outdoor LoRa mesh relay you can weatherproof in a PVC pipe",
+      "Reading Meshtastic messages directly on-device via the OLED, without a paired phone"
+    ],
+    "not_for": [
+      "Meshcore users wanting full support today - vendor calls it 'preliminary'",
+      "Anyone wanting the cheapest possible Meshtastic node - the open Nibble design can be self-built for less"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3 Zero",
+      "mcu_primary_note": "Dual-core with native Wi-Fi/Bluetooth and USB.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "Semtech SX1262",
+          "role": "lora",
+          "note": "Software-selectable 868 or 915 MHz, built-in U.FL antenna connector. Note: the original open-source 38C3 'Nibble' design this descends from used an RFM95 radio instead."
+        }
+      ],
+      "display": {
+        "type": "SSD1306 OLED",
+        "size_in": 0.92,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Not specified by vendor.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "2 push buttons",
+        "1 status LED",
+        "Breadboard-compatible I2C/SPI headers",
+        "U.FL antenna"
+      ],
+      "gpio": "Breadboard-compatible I2C and SPI pads",
+      "sensors": [
+        "BME280 (temperature/humidity/pressure)"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None included - designed to fit inside a PVC pipe for outdoor mounting",
+      "notable_physical": [
+        "Compact PCB with mounting holes",
+        "Coil-style or wire antenna option"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via SX1262, 868/915 MHz LoRa."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "TX power not published."
+      },
+      "subghz_replay": {
+        "v": "no",
+        "note": "Mesh comms firmware, not an RF replay/pentest tool."
+      },
+      "subghz_rolling_code": {
+        "v": "no"
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "U.FL connector plus a coil/wire antenna option."
+      },
+      "gps": {
+        "v": "no",
+        "note": "BME280 provides humidity/pressure/temperature only, no location."
+      },
+      "ble_scan": {
+        "v": "yes",
+        "note": "ESP32-S3 native BLE; used for Meshtastic app pairing."
+      },
+      "wifi_scan_24": {
+        "v": "partial",
+        "note": "ESP32-S3 has Wi-Fi silicon; not the device's primary function."
+      },
+      "standalone_untethered": {
+        "v": "yes"
+      },
+      "scriptable": {
+        "v": "yes"
+      },
+      "txt_viewer": {
+        "v": "yes",
+        "note": "OLED displays received mesh messages directly on-device."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "addon",
+        "note": "Meshtastic itself offers an optional web UI on some builds; not specific to this board."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Standard license-exempt LoRa/Meshtastic operation in the 868/915 MHz ISM bands; stay within regional power and duty-cycle limits (ETSI EN 300 220 / FCC Part 15)."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Nibble Connect"
+    ],
+    "sources": [
+      {
+        "url": "https://retia.io/products/nibble-screen-connect",
+        "what": "official specs: ESP32-S3 Zero, SX1262, SSD1306 0.92in OLED, BME280, 2 buttons, price $50, PVC-pipe form factor"
+      },
+      {
+        "url": "https://retia.io/blogs/news/how-to-make-a-nibble-simple-cutie-meshtastic-node-for-c3",
+        "what": "confirms the underlying open Nibble project design (ESP32-S3 Zero + RFM95), project credits (Kody Kinzie, Felix Orozco, Zac Beran, software contributors), and that it was created for 38C3"
+      },
+      {
+        "url": "https://github.com/RetiaLLC/Nibble",
+        "what": "confirms the Nibble family is released as open hardware"
+      }
+    ],
+    "research_gaps": [
+      "Battery capacity not published.",
+      "Exact TX power not published.",
+      "Whether this commercial kit's schematic exactly matches the open-source 38C3 RFM95-based design or has diverged further (beyond the radio swap to SX1262) is not fully confirmed."
+    ]
+  },
+  {
+    "id": "flipper-addon-subghz-electroniccats",
+    "hardware_id": "flipper-addon-subghz-electroniccats",
+    "name": "Flipper Add-On SubGhz",
+    "firmware": "n/a (requires official Flipper Zero firmware with Sub-GHz mode set to 'external', plus Electronic Cats' LoRa Relay .fap app)",
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/ElectronicCats/flipper-addons",
+    "firmware_note": null,
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://electroniccats.com/store/flipper-lra-subghz/",
+    "category": "accessory",
+    "subcategory": "flipper-gpio-addon",
+    "status": "available",
+    "released": null,
+    "price_usd": 35.0,
+    "price_note": "Electronic Cats direct price. Third-party resellers (eBay) list similar or unbranded equivalents for $20-30; UK reseller KSEC lists the genuine board at GBP54.99 (~$70).",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Requires official Flipper firmware with Sub-GHz mode explicitly set to 'external,' plus installing Electronic Cats' own LoRa Relay app - not a drop-in that works out of the box with every custom firmware.",
+    "build_effort": "assembly",
+    "build_note": "Stacks directly onto the Flipper Zero's 18-pin GPIO header as a shield - no soldering.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A Flipper Zero GPIO shield adding a second, independent CC1101 sub-GHz transceiver plus a Semtech SX1262 LoRa radio (150-960 MHz, LoRaWAN-PHY compliant), letting the Flipper analyze a second sub-GHz signal simultaneously or reach LoRa/LoRaWAN traffic its stock internal CC1101 cannot decode.",
+    "honest_take": "The main value here is not more sub-GHz range - the Flipper's own internal CC1101 already covers the same 300-348/387-464/779-928 MHz bands this add-on's CC1101 does - it is the SX1262 LoRa radio, which the stock Flipper has no equivalent for at all. If you only want general sub-GHz replay/analysis and never touch LoRa/LoRaWAN, this board adds little beyond a second simultaneous-capture channel. It requires the Flipper's official firmware with Sub-GHz mode set to 'external' plus a specific .fap app, so it is not a universal drop-in for every custom firmware build, and like the Flipper's own internal radio, nothing about it defeats rolling codes.",
+    "best_for": [
+      "Flipper Zero users who specifically need LoRa/LoRaWAN traffic analysis",
+      "Simultaneous dual-frequency sub-GHz capture"
+    ],
+    "not_for": [
+      "General sub-GHz replay - the Flipper's built-in CC1101 already covers this",
+      "Anyone not running official firmware with external sub-GHz mode support",
+      "Rolling-code defeat - neither radio on this board does that"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU of its own; both radios are driven directly by the host Flipper Zero over its GPIO header.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "300-348/387-464/779-928 MHz, up to +12 dBm, up to 600 kbps, sensitivity -116 dBm at 433 MHz/0.6kBaud and -112 dBm at 868 MHz/1.2kBaud. Second, independent unit from the Flipper's own internal CC1101."
+        },
+        {
+          "ic": "Semtech SX1262",
+          "role": "lora",
+          "note": "150-960 MHz continuous, up to +22 dBm, LoRaWAN PHY compliant."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from the Flipper Zero's GPIO header; no battery of its own.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper Zero 18-pin GPIO header (shield/stack)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Onboard/integrated antenna; an 'Ext/E' indicator appears on the Flipper's screen when external-antenna mode is active"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via the onboard CC1101, same bands as the Flipper's internal radio."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "CC1101 TX up to +12 dBm."
+      },
+      "subghz_replay": {
+        "v": "addon",
+        "note": "Replay is a Flipper firmware/app function that uses this board as an external radio, not something the board does independently."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Not mentioned anywhere in vendor or wiki documentation; the Flipper's own internal rolling-code limitations apply equally here."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "Board has its own antenna; wiki documents an 'Ext/E' indicator confirming external-antenna mode."
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "Stock CC1101 output only; no separate power amplifier stage documented."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a Flipper Zero host to function."
+      },
+      "scriptable": {
+        "v": "addon",
+        "note": "Accessed via Flipper .fap apps (Electronic Cats' own LoRa Relay app) running on Flipper firmware."
+      },
+      "app_store": {
+        "v": "addon",
+        "note": "The required LoRa Relay app is distributed through Flipper's own app catalog."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "gps": {
+        "v": "no"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "Does not add BLE; the Flipper's own separate BLE radio is unaffected."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Does not add NFC; the Flipper's own separate NFC reader is unaffected."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Receiving is broadly legal. Transmitting on the CC1101 side outside license-exempt ISM allocations, or on the LoRaWAN-compliant SX1262 side outside its intended LoRaWAN network parameters, without authorization is a criminal offense in most countries, separate from any offense involved in actuating a gate, garage, alarm or vehicle you do not own with a captured signal."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "Yes - LoRa Relay app distributed via Flipper's app catalog",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Flipper SubGhz Add-On",
+      "Flipper LRA SubGHz"
+    ],
+    "sources": [
+      {
+        "url": "https://electroniccats.com/store/flipper-lra-subghz/",
+        "what": "official specs: CC1101 (300-348/387-464/779-928MHz, +12dBm, sensitivity figures) and SX1262 LoRa (150-960MHz, +22dBm, LoRaWAN PHY), price $35, firmware requirements"
+      },
+      {
+        "url": "https://github.com/ElectronicCats/flipper-addons/wiki/3.-Flipper-Add%E2%80%90On:-SubGHz",
+        "what": "official wiki: installation steps, LoRa Relay app requirement, external antenna indicator, no rolling-code or dual-band-capture claims made"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/flipper-zero-add-on-subghz-electronic-cats/",
+        "what": "independent UK reseller listing confirming GBP54.99 price and 'external CC1101 + LoRa SX1272/1262' description"
+      }
+    ],
+    "research_gaps": [
+      "Whether the two radios can be used for genuinely simultaneous dual-band capture, or only one at a time, is not explicitly documented.",
+      "No independent teardown confirming the exact SX1262 module part beyond the vendor's own page."
+    ]
+  },
+  {
+    "id": "daeva",
+    "hardware_id": "daeva",
+    "name": "Daeva",
+    "firmware": "Daeva firmware (Arduino/ESP32, project-specific)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/cifertech/Daeva",
+    "firmware_note": null,
+    "vendor": "cifertech (open-source project, no commercial vendor)",
+    "vendor_url": "https://github.com/cifertech",
+    "product_url": "https://github.com/cifertech/Daeva",
+    "category": "subghz",
+    "subcategory": "diy-subghz-replay-tool",
+    "status": "diy-only",
+    "released": "2024",
+    "price_usd": 30,
+    "price_note": "No assembled unit is sold anywhere found; this is a rough parts-cost estimate (ESP32-WROOM-32U module, CC1101 breakout, OLED, microSD slot, TP4056 charger, misc SMD switches/rotary encoder) based on typical per-part pricing for this class of component. The project does not publish a BOM total.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Requires sourcing parts, fabricating and soldering a custom PCB (schematic provided in the repo), 3D printing the case, and building/flashing the firmware yourself - no assembled option exists.",
+    "build_effort": "full-diy",
+    "build_note": "Repo includes Schematic and STL (case) folders; you fabricate the PCB, solder components, and 3D print the case yourself.",
+    "stealth": "discreet",
+    "form_factor": "handheld",
+    "summary": "An open-source, MIT-licensed, ESP32 + CC1101 sub-GHz scanner/replay tool with an OLED display, rotary encoder, microSD logging and TP4056 battery charging - a small-form-factor, bare-metal alternative to a Flipper Zero's sub-GHz function, buildable from the published schematic. 201 GitHub stars; last commit 2024-06-25.",
+    "honest_take": "This is functionally 'a Flipper Zero's CC1101 sub-GHz app, minus the Flipper, plus solder fumes' - the CC1101 radio is the same chip the Flipper uses internally, so its actual RF capability ceiling is identical (region-locked ISM bands, no rolling-code decryption of any kind). The README markets 'replay attack' capability without ever mentioning rolling versus fixed codes, which is a real gap: replaying a captured KeeLoq or similar rolling-code transmission from a modern car or garage door will not work, and nothing in the documented feature set suggests otherwise. The project has been quiet since its last commit in June 2024 (well over a year as of this research), so treat it as a working reference design rather than an actively-maintained tool - expect to debug it yourself if something doesn't work on current toolchain versions.",
+    "best_for": [
+      "Learning to build a sub-GHz tool from scratch instead of buying a Flipper Zero",
+      "Hobbyists who want a bare CC1101 replay tool with a screen and SD logging"
+    ],
+    "not_for": [
+      "Anyone wanting rolling-code capability - none is implemented or claimed",
+      "Buyers who want a finished product - full DIY only, no assembled units found anywhere"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-WROOM-32U",
+      "mcu_primary_note": null,
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "315/433/868/915 MHz; the same chip family the Flipper Zero uses internally."
+        }
+      ],
+      "display": {
+        "type": "OLED (flat flex-cable variant)",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "TP4056 Li-ion charging circuit; battery capacity not specified by the project.",
+      "charging": "USB (via TP4056)",
+      "pmic": null,
+      "storage": "microSD",
+      "connectivity": [
+        "USB",
+        "microSD"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed (STL files in repo)",
+      "notable_physical": [
+        "Rotary encoder",
+        "5 SMD microswitches",
+        "NeoPixel LED",
+        "LF33 voltage regulator"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via CC1101, 315/433/868/915 MHz."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Via CC1101, same bands."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Documented headline feature: capture and retransmit."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Not implemented or claimed anywhere in the project's documentation; replaying a captured rolling-code transmission will not work."
+      },
+      "subghz_bruteforce": {
+        "v": "no",
+        "note": "Not documented as a feature."
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "Stock CC1101 output, no separate PA mentioned."
+      },
+      "subghz_external_antenna": {
+        "v": "unknown",
+        "note": "Schematic likely includes an antenna connection but the exact connector type (PCB trace vs SMA) is not confirmed from available documentation."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "MicroSD slot for storing captures."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery-powered with its own display and controls."
+      },
+      "scriptable": {
+        "v": "unknown",
+        "note": "Arduino/ESP32 firmware is open-source and modifiable, but no interactive scripting shell is documented."
+      },
+      "gps": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "ESP32 has Bluetooth hardware but it is not used by the documented Daeva feature set."
+      },
+      "wifi_scan_24": {
+        "v": "no",
+        "note": "ESP32 has Wi-Fi hardware but it is not used by the documented Daeva feature set."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as any sub-GHz transceiver: receiving is broadly legal, but transmitting outside license-exempt ISM allocations - or replaying a captured signal to actuate a gate, garage, alarm or vehicle you do not own - is a separate offense from radio licensing in most countries. Being a self-built, unbranded device does not change either of those legal facts."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2024-06",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/cifertech/Daeva",
+        "what": "README: hardware list (ESP32-WROOM-32U, CC1101, SD, TP4056, LF33, NeoPixel, rotary encoder, 5 microswitches), MIT license, RF scanning/replay feature description"
+      },
+      {
+        "url": "https://cifertech.net/daeva-your-subghz-replay-attack-gadget-for-rf-hacking/",
+        "what": "project blog writeup confirming OLED display (flat-cable variant) and CP2102 USB-serial bridge, no rolling-code distinction made anywhere"
+      },
+      {
+        "url": "https://api.github.com/repos/cifertech/Daeva",
+        "what": "GitHub API: 201 stars, MIT license, last push 2024-06-25T17:33:29Z"
+      }
+    ],
+    "research_gaps": [
+      "No total BOM cost published by the project.",
+      "Exact OLED size/resolution not specified.",
+      "Battery capacity not specified.",
+      "No assembled/pre-built option found anywhere - full DIY only.",
+      "Exact antenna connector type not confirmed."
+    ]
+  },
+  {
+    "id": "lora-radio-backpack-nugget",
+    "hardware_id": "lora-radio-backpack-nugget",
+    "name": "LoRa Radio Backpack for USB & Bluetooth Nuggets (RFM95)",
+    "firmware": "n/a (passive radio backpack; runs entirely on the host Nugget's CircuitPython firmware)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Retia (Retia LLC)",
+    "vendor_url": "https://retia.io",
+    "product_url": "https://retia.io/products/lora-breakout-for-usb-bluetooth-nugget",
+    "category": "accessory",
+    "subcategory": "lora-badusb-backpack",
+    "status": "available",
+    "released": null,
+    "price_usd": 30.0,
+    "price_note": "Retia direct price. Requires a USB Nugget or Bluetooth Nugget (Retia's own ESP32-S2/S3 BadUSB platforms) sold separately - this database's seed list flagged it correctly as an accessory to an already-cataloged device family.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Plug-and-play onto an existing USB Nugget or Bluetooth Nugget; requires already knowing how to use the host Nugget's own payload/DuckyScript system.",
+    "build_effort": "assembly",
+    "build_note": "Plug-and-play backpack board; has no processor of its own and does nothing without a USB Nugget or Bluetooth Nugget host.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "An RFM95 LoRa radio backpack (selectable 868 or 915 MHz, up to +20 dBm/100 mW) that plugs onto Retia's USB Nugget or Bluetooth Nugget BadUSB platforms, letting a Nugget receive and execute DuckyScript-style keystroke-injection payloads over a long-range LoRa link instead of only Wi-Fi/Bluetooth.",
+    "honest_take": "This is a range extender for an existing attack platform, not an attack tool by itself - the actual BadUSB/keystroke-injection capability lives entirely in the Nugget it plugs into; this board just adds a LoRa command-and-control channel. Retia's own marketing line, 'send BadUSB commands from miles away,' is technically true of LoRa's point-to-point range in ideal open-field, line-of-sight conditions (the RFM95's own datasheet-class figures are commonly cited around 2km with simple antennas, up to double digits of km with directional antennas), but real-world range through walls and buildings during a physical-access engagement will be a small fraction of that - treat 'miles' as a lab number, not an operational one. The RFM95 is a well-understood, off-the-shelf LoRa module also used in Retia's own Nibble boards; nothing about the chip itself is novel.",
+    "best_for": [
+      "Extending a USB Nugget/Bluetooth Nugget's trigger range beyond Wi-Fi/Bluetooth during a physical penetration test",
+      "Meshtastic experiments on the Bluetooth Nugget"
+    ],
+    "not_for": [
+      "Standalone use - does nothing without a Nugget host",
+      "Anyone expecting 'miles' of range indoors or through obstacles"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No processor of its own; relies entirely on the host Nugget's ESP32-S2 (USB Nugget) or ESP32-S3 (Bluetooth Nugget) for all processing.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "RFM95 (HopeRF)",
+          "role": "lora",
+          "note": "868 or 915 MHz, selectable at order time; up to +20 dBm software-selectable output (~100 mW max); ~300uA sleep current, ~120mA during transmission per vendor."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from the host Nugget's 3.3V rail; no battery of its own.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Backpack header onto USB Nugget or Bluetooth Nugget",
+        "UART/SPI/I2C broken out for further expansion"
+      ],
+      "gpio": "UART, SPI, I2C exposed",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": []
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via RFM95, LoRa modulation only, not general-purpose sub-GHz receive."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Up to +20 dBm (100 mW), software-selectable."
+      },
+      "subghz_replay": {
+        "v": "no",
+        "note": "LoRa comms link, not a sub-GHz capture/replay tool."
+      },
+      "subghz_rolling_code": {
+        "v": "no"
+      },
+      "subghz_external_antenna": {
+        "v": "unknown",
+        "note": "RFM95 breakouts typically expose a u.fl pad or wire antenna trace; Retia's listing does not specify which this board uses."
+      },
+      "subghz_amplified": {
+        "v": "yes",
+        "note": "Integrated PA in the RFM95, up to +20 dBm."
+      },
+      "hid_remote_trigger": {
+        "v": "yes",
+        "note": "Vendor's stated primary use case: triggering BadUSB keystroke-injection payloads on the host Nugget over LoRa."
+      },
+      "usb_hid_inject": {
+        "v": "addon",
+        "note": "This is the host Nugget's own function, extended in range by this backpack - not something the backpack does independently."
+      },
+      "scriptable": {
+        "v": "addon",
+        "note": "Inherits the host Nugget's CircuitPython/DuckyScript environment; UART/SPI/I2C broken out for further peripherals."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Cannot function without a USB Nugget or Bluetooth Nugget host."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "addon",
+        "note": "The host Nugget has its own web UI for payload editing; the backpack does not add a separate one."
+      },
+      "gps": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "The LoRa radio itself operates in license-exempt 868/915 MHz ISM allocations and is low-risk if kept within regional power/duty-cycle limits (ETSI EN 300 220 / FCC Part 15) - at the module's maximum +20 dBm output you are close to or at the legal limit in some regions, so check your local allocation before maxing out power. Separately, using the LoRa link to remotely trigger a BadUSB keystroke-injection payload on a computer you do not own or lack authorization to test is a computer-crime offense independent of anything about the radio."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://retia.io/products/lora-breakout-for-usb-bluetooth-nugget",
+        "what": "official specs: RFM95, 868/915MHz selectable, +5 to +20dBm software-selectable power, 300uA sleep/120mA TX current, UART/SPI/I2C, price $30, 'send BadUSB commands from miles away' marketing claim"
+      },
+      {
+        "url": "https://cdn.sparkfun.com/assets/a/9/6/1/0/RFM95W-V2.0.pdf",
+        "what": "HopeRF RFM95W datasheet confirming +20dBm/100mW max output and the chip family this backpack is built on"
+      },
+      {
+        "url": "https://www.adafruit.com/product/3072",
+        "what": "independent RFM95W breakout listing corroborating the ~2km simple-antenna / much greater directional-antenna range figures cited in honest_take"
+      }
+    ],
+    "research_gaps": [
+      "Exact effective range not independently tested or published beyond marketing and general RFM95 datasheet figures.",
+      "Antenna connector type not specified by the vendor.",
+      "Whether it is compatible with the older WiFi Nugget in addition to USB/Bluetooth Nugget is not confirmed."
+    ]
+  },
+  {
+    "id": "cc1101-module-generic-2pack",
+    "hardware_id": "cc1101-module-generic-2pack",
+    "name": "CC1101 Sub-GHz Transceiver Module (2-Pack, generic)",
+    "firmware": "n/a (bare radio IC breakout, no onboard MCU or firmware)",
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "Generic/unbranded (commonly resold on AliExpress and Amazon under various storefront names)",
+    "vendor_url": null,
+    "product_url": "https://www.amazon.com/CC1101-Wireless-Module-Antenna-Transceiver/dp/B0G4VW5Y7F",
+    "category": "accessory",
+    "subcategory": "cc1101-breakout",
+    "status": "available",
+    "released": null,
+    "price_usd": 17.99,
+    "price_note": "Seed price from the batch's Amazon search-results seed URL; this exact listing (2-pack, SMA antenna) is one of many near-identical generic CC1101 breakout listings from unbranded storefronts on Amazon/AliExpress at similar prices ($15-25 for a 2-pack).",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Bare radio breakout with no onboard processor - you must wire it to your own microcontroller over SPI and write or reuse firmware (e.g. an Arduino CC1101 library, rfcat-alike code) to do anything with it.",
+    "build_effort": "soldering",
+    "build_note": "Comes with pin headers; typically needs headers soldered on (or a breadboard) and SPI wiring to a host microcontroller. No case, no firmware, no host board included.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A generic, unbranded breakout board for the TI CC1101 sub-1 GHz transceiver IC with an SMA antenna connector, tunable across 300-348/387-464/779-928 MHz - the same radio chip used inside the Flipper Zero, YARD Stick One, Daeva and many other sub-GHz tools, sold bare with no host processor or firmware of its own.",
+    "honest_take": "This is the raw silicon everyone else's sub-GHz tool in this batch (Flipper Zero, Daeva, RFQuack, the Electronic Cats add-on) is ultimately built around - buying it directly is the cheapest possible way into CC1101 experimentation, but you are entirely on your own for the microcontroller, wiring, firmware and case that turn it into an actual tool. Per the TI datasheet the chip supports up to roughly +10 to +12 dBm output and -110 to -116 dBm sensitivity depending on band and data rate; generic listings rarely specify which PCB layout/antenna matching they used, so real-world range and sensitivity on a $9-per-unit clone board can vary noticeably between sellers even though the chip itself is identical. Like every other CC1101-based device in this batch, it has zero rolling-code capability built in - that would have to come from whatever firmware you write.",
+    "best_for": [
+      "The cheapest entry point into CC1101-based sub-GHz projects (Arduino, ESP32, RfCat-style tools)",
+      "Sourcing a second/spare radio for a DIY project like Daeva or a custom RFQuack build"
+    ],
+    "not_for": [
+      "Anyone wanting a working tool out of the box - it is a bare IC breakout with no host processor or firmware",
+      "Rolling-code work of any kind"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No onboard microcontroller; this is a bare radio IC breakout requiring an external host MCU over SPI.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "Per TI datasheet: 300-348/387-464/779-928 MHz (default 433 MHz), up to ~500 kbps (generic listings commonly cite up to 600kbps), 2-FSK/GFSK/MSK modulation, -110dBm sensitivity at 1200 baud, up to ~10dBm (+10mW) TX power on typical clone boards versus the chip's datasheet ceiling near +12dBm."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Unpowered breakout; requires 1.8-3.6V from a host circuit.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "SPI pin headers",
+        "SMA female antenna"
+      ],
+      "gpio": "SPI plus GDO0/GDO2 interrupt/status pins broken out to headers",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "SMA antenna connector",
+        "Sold as a 2-pack"
+      ]
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Native CC1101 capability per TI datasheet, 300-348/387-464/779-928 MHz."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Native CC1101 capability; generic clone boards commonly list ~10dBm max output versus the chip's datasheet ceiling closer to +12dBm."
+      },
+      "subghz_replay": {
+        "v": "addon",
+        "note": "Needs a host MCU and firmware (e.g. an Arduino CC1101 library) to actually capture and retransmit - the bare module does nothing standalone."
+      },
+      "subghz_rolling_code": {
+        "v": "no"
+      },
+      "subghz_bruteforce": {
+        "v": "addon",
+        "note": "Possible if the host firmware implements it; not inherent to the module."
+      },
+      "subghz_external_antenna": {
+        "v": "yes",
+        "note": "SMA connector included."
+      },
+      "subghz_amplified": {
+        "v": "no",
+        "note": "Bare CC1101 output; no separate PA stage on this class of breakout."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Bare radio IC breakout with no onboard processor; needs a host MCU to do anything."
+      },
+      "scriptable": {
+        "v": "addon",
+        "note": "Entirely dependent on whatever host firmware/library the buyer writes or reuses."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "gps": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same as any bare sub-GHz transceiver: receiving is broadly legal, but transmitting outside license-exempt ISM allocations without authorization is a criminal offense in most countries, and replaying a captured signal to actuate a gate, garage, alarm or vehicle you do not own is typically a separate offense again. Being an unbranded component rather than a finished product does not change either legal fact."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "CC1101 Wireless Module with SMA Antenna"
+    ],
+    "sources": [
+      {
+        "url": "https://www.amazon.com/CC1101-Wireless-Module-Antenna-Transceiver/dp/B0G4VW5Y7F",
+        "what": "representative generic listing: 2-pack, SMA antenna, 315/433/868/915MHz, price context"
+      },
+      {
+        "url": "https://www.ti.com/lit/ds/symlink/cc1101.pdf",
+        "what": "official TI CC1101 datasheet: frequency bands, modulation types, sensitivity (-110dBm @1200 baud), power supply range (1.8-3.6V), programmable output power"
+      },
+      {
+        "url": "https://www.newegg.com/aceirmc-cc1101/p/3D0-0053-00012",
+        "what": "independent cross-check listing confirming this class of generic CC1101+SMA module is widely resold under multiple storefront names with near-identical specs"
+      }
+    ],
+    "research_gaps": [
+      "No specific brand/manufacturer behind this listing - it is one of many visually identical generic CC1101 breakout boards.",
+      "Exact TX power and antenna matching for this specific PCB layout not independently measured.",
+      "Original seed URL was a search-results page rather than a single product listing; a representative individual ASIN was used instead."
+    ]
+  },
+  {
+    "id": "rfquack",
+    "hardware_id": "rfquack",
+    "name": "RFQuack",
+    "firmware": "RFQuack",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/rfquack/RFQuack",
+    "firmware_note": "GPL-2.0 firmware you build yourself onto a user-supplied ESP32 or Teensy (2.x/3.x/4.x) board wired to a CC1101, RF69 or nRF24L01 radio module; there is no fixed hardware design.",
+    "vendor": "rfquack (open-source project / academic)",
+    "vendor_url": "https://github.com/rfquack/RFQuack",
+    "product_url": "https://github.com/rfquack/RFQuack",
+    "category": "subghz",
+    "subcategory": "scriptable-rf-firmware",
+    "status": "diy-only",
+    "released": null,
+    "price_usd": 15,
+    "price_note": "No hardware is sold; this is a rough estimate for a single CC1101 breakout module only ($10-25 depending on source, per the generic CC1101 module pricing also researched in this batch). It does not include the ESP32 or Teensy host board (roughly $5-25 more) that RFQuack's firmware actually runs on.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "You wire your own ESP32/Teensy to a CC1101/RF69/nRF24L01 module, flash the firmware yourself, and drive it from a Python shell - there is no packaged product or guided setup.",
+    "build_effort": "assembly",
+    "build_note": "No PCB of its own; you wire off-the-shelf dev boards and radio breakout modules together over SPI and flash the RFQuack firmware.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "An open-source, GPL-2.0 firmware (with an accompanying academic paper) that turns a user-wired ESP32 or Teensy plus a CC1101, RF69 or nRF24L01 radio module into a Python-scriptable RF sniff/analyze/transmit tool, in the same spirit as RfCat but supporting three different radio chips including 2.4 GHz via the nRF24L01.",
+    "honest_take": "This is a software project, not a device - there is nothing to buy, and the price in this database is a rough guess at the cost of one bare radio module, not a working tool. Its real comparison point is RfCat/YARD Stick One: RFQuack covers more radio chips (CC1101 and RF69 sub-GHz, plus nRF24L01 2.4 GHz in one framework) but has no equivalent to a pre-built, cased USB stick - you are entirely on your own for hardware, wiring and enclosure. Development has been quiet since its last commit in December 2024 (GitHub API rate-limited a precise 'last release' check during this research pass, but the commit date is confirmed), so expect an academic-project pace of support - it originated from a published research paper - rather than a maintained commercial product.",
+    "best_for": [
+      "Researchers who want one scriptable framework spanning both sub-GHz and 2.4 GHz radios",
+      "Anyone building a custom RF tool from parts they already have on hand"
+    ],
+    "not_for": [
+      "Anyone wanting a ready-to-use device - there is no assembled hardware",
+      "Rolling-code work - not implemented or claimed"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32 (or Teensy 2.x/3.x/4.x)",
+      "mcu_primary_note": "User supplies their own dev board; not a fixed hardware design.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "CC1101",
+          "role": "sub-ghz",
+          "note": "OOK, 2-FSK, 4-FSK, MSK modulations supported."
+        },
+        {
+          "ic": "RF69 (HopeRF/Semtech RFM69-family)",
+          "role": "sub-ghz",
+          "note": "FSK, OOK."
+        },
+        {
+          "ic": "nRF24L01",
+          "role": "2.4ghz",
+          "note": "Only non-sub-GHz radio supported; enables 2.4 GHz sniff/transmit work outside this batch's usual scope."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Depends entirely on the user-chosen host board; not specified by the project.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "SPI (to radio modules)",
+        "USB (to host running the Python client)"
+      ],
+      "gpio": "Depends on the chosen ESP32/Teensy board",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": []
+    },
+    "capabilities": {
+      "subghz_rx": {
+        "v": "yes",
+        "note": "Via CC1101 or RF69, user-wired."
+      },
+      "subghz_tx": {
+        "v": "yes",
+        "note": "Via CC1101 or RF69."
+      },
+      "subghz_replay": {
+        "v": "yes",
+        "note": "Sniff+transmit framework naturally supports capture/replay scripting."
+      },
+      "subghz_rolling_code": {
+        "v": "no",
+        "note": "Not implemented or claimed; it is a raw sniff/transmit framework, not a code-breaking tool."
+      },
+      "subghz_external_antenna": {
+        "v": "unknown",
+        "note": "Depends entirely on which breakout module/antenna the user wires up."
+      },
+      "nrf24_scan": {
+        "v": "yes",
+        "note": "Via nRF24L01 support."
+      },
+      "nrf24_jam": {
+        "v": "unknown",
+        "note": "The framework can transmit arbitrary packets on nRF24; whether this constitutes effective jamming is not documented by the project."
+      },
+      "mousejack": {
+        "v": "unknown",
+        "note": "nRF24 support could enable MouseJack-style attacks in principle, but this is not documented as an implemented feature."
+      },
+      "ble_jam": {
+        "v": "no",
+        "note": "nRF24L01 is a proprietary 2.4GHz radio, not a BLE-protocol radio; it cannot participate in or jam the BLE link layer despite sharing the 2.4GHz band."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Core 'sniff' function of the framework."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Core design goal - interactive Python shell/client over the firmware, similar model to RfCat."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Needs a host PC running the Python client."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "As a general-purpose sub-GHz and 2.4 GHz transmit framework, the same rules apply as any scriptable RF tool: receiving is broadly legal, transmitting outside license-exempt ISM allocations without authorization is a criminal offense in most countries, and the device's open frequency/parameter control makes it easy to stray outside a legal band by accident if you do not check your regional allocation first."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2024-12",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/rfquack/RFQuack",
+        "what": "README: supported boards (ESP32, Teensy 2.x/3.x/4.x), supported radios (CC1101, RF69, nRF24L01), sniff/analyze/transmit description, GPL-2.0 license, academic paper link"
+      },
+      {
+        "url": "https://api.github.com/repos/rfquack/RFQuack",
+        "what": "GitHub API: 345 stars, GPL-2.0 license, last push 2024-12-23T21:53:48Z"
+      },
+      {
+        "url": "https://arxiv.org/abs/2104.02551",
+        "what": "academic paper referenced by the project as its origin/basis"
+      }
+    ],
+    "research_gaps": [
+      "No specific 'last release' tag date confirmed (GitHub API was rate-limited during this research pass); last commit date (2024-12-23) used as a proxy.",
+      "Whether nRF24 'jam' via packet flooding is genuinely effective is not documented by the project."
+    ]
+  }
+]

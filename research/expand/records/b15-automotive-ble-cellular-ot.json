@@ -1,0 +1,2136 @@
+[
+ {
+  "id": "piccante-can-firmware",
+  "hardware_id": "piccante-pico-can",
+  "name": "PiCCANTE",
+  "firmware": "PiCCANTE",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/Alia5/PiCCANTE",
+  "firmware_note": "Single open-source firmware image with feature scaling by board: 2 CAN channels on a plain Pico/RP2040, 3 channels plus Wi-Fi/BLE config on a Pico 2 W/RP2350. No separate 'variant' firmware exists - it's one codebase.",
+  "vendor": "Alia5 (open source project)",
+  "vendor_url": "https://github.com/Alia5",
+  "product_url": "https://github.com/Alia5/PiCCANTE",
+  "category": "hardware-debug",
+  "subcategory": "can-bus",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 15,
+  "price_note": "No vendor sells this assembled. Parts-cost estimate for the minimal build: one Pico/RP2040 (~$4-5) plus one SN65HVD-class 3.3V CAN transceiver breakout (~$3-8). A 3-channel Pico 2 W build with three transceivers, wiring and a printed OBD-II shell runs closer to $30-45 in parts.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You are sourcing parts, wiring or fabricating a PCB from the provided KiCAD files, removing stray 120-ohm termination resistors from generic transceiver breakouts, and flashing firmware yourself. Nothing is sold pre-built.",
+  "build_effort": "full-diy",
+  "build_note": "KiCAD PCB source and a 3D-printable OBD-II dongle shell are in the repo, but there is no assembled product or kit to buy from anyone. Minimal builds are perfboard and jumper wire.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "Open-source firmware that turns a Raspberry Pi Pico or Pico 2 (W) plus one to three 3.3V CAN transceivers into a multi-channel CAN bus sniffer and injector, speaking SLCAN/SocketCAN and SavvyCAN's GVRET protocol and partially emulating an ELM327 OBD-II adapter. It's a from-scratch, solder-it-yourself alternative to commercial CAN interfaces like CANtact or PCAN-USB.",
+  "honest_take": "This is a hobbyist CAN interface, not a drop-in CANtact or Kvaser replacement: CAN FD and CAN XL are unsupported by design (the PIO-based bit-banging can't keep up with them), there's no hardware bus filtering yet, and the project's own docs call the ELM327 emulation partial - no adaptive timeouts, no auto protocol detection. There is also no vendor here at all: no assembled board, no warranty, no support contract, just a GitHub repo with 12 open issues. What the ~$15-45 in parts actually buys you is real multi-channel SocketCAN/SavvyCAN compatibility, which is the expensive part of commercial tools - budget your own time for the rest.",
+  "best_for": [
+   "Learning CAN bus and automotive diagnostics for the cost of a Pico and a transceiver breakout",
+   "Multi-channel CAN capture on a near-zero budget per channel",
+   "SocketCAN or SavvyCAN workflows without buying a commercial dongle"
+  ],
+  "not_for": [
+   "CAN FD or CAN XL vehicles - unsupported by design",
+   "Turnkey use - there is no assembled product, you solder and flash this yourself",
+   "Heavy onboard logging - SD card support is still on the roadmap"
+  ],
+  "hardware": {
+   "mcu_primary": "RP2040",
+   "mcu_primary_note": "Dual-core Cortex-M0+ @133MHz on Pico/Pico W. A Pico 2/Pico 2 W (RP2350, dual Cortex-M33 or Hazard3 cores, up to 150MHz) is recommended for the full 3-channel build.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CYW43439",
+     "role": "wifi-ble",
+     "note": "Only present on Pico W/Pico 2 W builds, used for the optional web-based configuration interface and access point - not a wireless attack radio."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered. The project advertises auto deep-sleep for always-connected OBD-II dongle use, not battery operation.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "None built in. SD card logging is listed as in-progress, not shipped.",
+   "connectivity": [
+    "USB",
+    "CAN (1-3 channels via external transceivers)",
+    "Wi-Fi (Pico W/2 W only, config only)"
+   ],
+   "gpio": "Standard Pico 40-pin GPIO; transceivers wired to PIO-driven pins",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None included; a 3D-printable OBD-II dongle enclosure is provided as source files",
+   "notable_physical": [
+    "Status LEDs",
+    "KiCAD PCB design provided for anyone who wants to fab a proper board instead of perfboard"
+   ]
+  },
+  "capabilities": {
+   "packet_capture": {
+    "v": "yes",
+    "note": "CAN 2.0B frame capture on up to 3 buses at once, exposed as SLCAN/SocketCAN interfaces and via SavvyCAN's GVRET binary protocol"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open C/C++ firmware; the host side is driven by standard python-can / can-utils tooling over SocketCAN"
+   },
+   "web_ui": {
+    "v": "addon",
+    "note": "Only the Pico W / Pico 2 W builds run a web-based config page over their own Wi-Fi AP; the plain Pico has no Wi-Fi and no web UI at all"
+   },
+   "wifi_ap_mode": {
+    "v": "addon",
+    "note": "Config-only access point on Wi-Fi-capable boards, not a wireless attack feature"
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "Listed as in-progress on the project roadmap; not implemented as of research date"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "A host running SavvyCAN, can-utils or a serial terminal is required; the Pico alone doesn't log or display captured traffic"
+   },
+   "usb_mass_storage": {
+    "v": "no"
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Purpose-built CAN tool, not a general hardware-debug probe"
+   },
+   "spi_flash_dump": {
+    "v": "no"
+   },
+   "jtag_swd": {
+    "v": "no"
+   },
+   "glitching": {
+    "v": "no"
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "The RP2040's PIO blocks are dedicated to CAN bit-timing, not exposed as a general-purpose analyzer"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Reading CAN traffic on a vehicle you own for diagnostics is unremarkable almost everywhere. Injecting frames can disable safety-relevant systems while a vehicle is moving, and connecting to any vehicle, industrial machine or building system you don't own or have written authorization to test is a computer-misuse or property offence in most jurisdictions - the tool's low cost doesn't change that."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-01",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "PiCCANTE CAN firmware",
+   "Pico CAN sniffer"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/Alia5/PiCCANTE",
+    "what": "feature list, supported transceivers, 2/3-channel split by board, GPL-3.0 license, 93 stars"
+   },
+   {
+    "url": "https://github.com/Alia5/PiCCANTE/tree/main/hardware",
+    "what": "KiCAD PCB source and confirmation no assembled kit is sold"
+   },
+   {
+    "url": "https://github.com/Alia5/PiCCANTE/blob/main/README.md",
+    "what": "ELM327 emulation caveats, SLCAN/GVRET protocol support, roadmap items (SD logging, MITM mode) marked unimplemented"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for automotive CAN bus sniff/inject/ELM327-emulation as a category distinct from generic hardware-debug buses - the closest keys (uart/i2c/jtag_swd) don't fit and packet_capture is a stretch used here for CAN frames specifically",
+   "Exact release date / first-commit date not confirmed",
+   "No published current-draw or transceiver part recommendation beyond 'SN65HVD-class or similar 3.3V compatible'"
+  ]
+ },
+ {
+  "id": "pikvm-v4-plus-hardware-rat",
+  "hardware_id": "pikvm-v4-plus",
+  "name": "PiKVM v4 Plus",
+  "firmware": "PiKVM OS (Arch Linux ARM)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/pikvm/pikvm",
+  "firmware_note": "The same open-source PiKVM OS used by every PiKVM reseller. Lab401 changes nothing about the software or hardware; it sells the stock V4 Plus under the name 'Hardware RAT' for the covert-implant market.",
+  "vendor": "PiKVM (hardware); resold by Lab401 under a red-team-branded listing",
+  "vendor_url": "https://pikvm.org",
+  "product_url": "https://lab401.com/products/pikvm-v4-plus-hardware-rat",
+  "category": "network-implant",
+  "subcategory": "covert-kvm-rat",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 420.0,
+  "price_note": "EUR 359 direct from PiKVM's own store as of 2026-09-10 (~$420 converted at roughly 1.17 USD/EUR); a US reseller (Newegg) lists it around $540-568 with a discount applied. None of these prices include a cellular modem: the V4 Plus ships with an empty mPCIe slot and an empty nano-SIM slot, not a working modem. Yubico-class LTE/5G modules (Quectel EG25-G, SIMCom SIM7600G-H, Sierra Wireless MC7455) plus an antenna and SMA pigtail are separate purchases, typically $30-80 more.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The device itself is plug-and-play once configured, but getting covert cellular connectivity working means sourcing and pairing a compatible LTE modem yourself, which the box does not include.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled KVM-over-IP unit with metal case, pre-flashed microSD, ATX control board and cables. A cellular modem card, SIM and antenna must be bought and installed separately to use the LTE/5G slot at all.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "A Raspberry Pi Compute Module 4 based KVM-over-IP unit: HDMI capture up to 1920x1200@60Hz, virtual keyboard/mouse/mass-storage emulation, Ethernet and Wi-Fi, plus an mPCIe slot and SIM slot for an LTE/5G modem so it can phone home over cellular instead of the target's network. It is PiKVM's own legitimate open-source sysadmin remote-management hardware; Lab401 resells the identical unit as a 'Hardware RAT' for red-team drop-in installs.",
+  "honest_take": "Read PiKVM's own site and this is a sysadmin tool for managing datacenter servers - 'undetectable by antivirus' is Lab401's marketing language, not PiKVM's, and it's true only in the boring sense that a KVM dongle isn't malware running on the host OS, not in the sense that it's hard to notice physically. It genuinely is powerful for physical-access engagements: full keyboard/mouse/video/mass-storage control independent of the target's network. But the 'RAT' framing implies more covertness than you're buying - there's no modem in the box, the mPCIe and SIM slots are empty, and Lab401's page doesn't mention that. A real covert cellular install needs you to separately source a modem, SIM and antenna, adding cost, time and one more thing that can fail during an engagement.",
+  "best_for": [
+   "Physical-access red-team engagements needing full KVM control independent of the target network",
+   "Legitimate remote datacenter/server management - its actual designed purpose",
+   "Situations where Ethernet/Wi-Fi access to the target network is undesirable or unavailable and you add your own cellular modem"
+  ],
+  "not_for": [
+   "Anyone expecting a modem in the box - it is not included",
+   "Fully covert installs without separately budgeting for a modem, SIM plan and antenna",
+   "Software-only engagements - this requires physical access to plug into the target's HDMI/USB"
+  ],
+  "hardware": {
+   "mcu_primary": "Raspberry Pi Compute Module 4 (CM4)",
+   "mcu_primary_note": "Broadcom BCM2711, quad-core Cortex-A72",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "CM4's onboard 2.4/5GHz Wi-Fi; used for network management, not scanning/attack"
+    },
+    {
+     "ic": null,
+     "role": "cellular",
+     "note": "mPCIe slot with USB lines plus a nano-SIM slot for a user-supplied LTE/5G modem; no modem ships in the box"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Mains powered via 12V barrel/DC input; no internal battery",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "Pre-flashed microSD (capacity not published)",
+   "connectivity": [
+    "Gigabit Ethernet",
+    "Wi-Fi 2.4/5GHz",
+    "USB-C",
+    "HDMI in",
+    "2x HDMI out",
+    "mPCIe (LTE/5G modem)",
+    "nano-SIM"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Metal enclosure",
+   "notable_physical": [
+    "OLED status display",
+    "Real-time clock",
+    "ATX control board with cables and brackets for host power management"
+   ]
+  },
+  "capabilities": {
+   "hdmi_capture": {
+    "v": "yes",
+    "note": "Up to 1920x1200@60Hz with audio, via the HDMI-in port"
+   },
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Emulates a USB keyboard and mouse to the target host - this is the KVM's core control mechanism, not a BadUSB-style payload injector"
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Emulates a virtual CD-ROM/flash drive and can mount remote disk images to the target"
+   },
+   "cloud_c2": {
+    "v": "claimed",
+    "note": "PiKVM Cloud and remote-access features let it be reached over the internet, including via the optional cellular modem; not independently tested for this record"
+   },
+   "ethernet_mitm": {
+    "v": "no",
+    "note": "It is a KVM peripheral emulator, not an inline network tap or MITM device"
+   },
+   "ethernet_tap_passive": {
+    "v": "no"
+   },
+   "packet_capture": {
+    "v": "no",
+    "note": "Not a network capture tool"
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Commonly assumed because it sits 'between' keyboard and host in some setups, but PiKVM emulates a peripheral to the target - it does not log the target's own outbound keystrokes"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Runs headless once configured; needs mains power but no attached laptop"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "REST API and Arch Linux ARM userland with package manager access"
+   },
+   "web_ui": {
+    "v": "yes"
+   },
+   "wifi_ap_mode": {
+    "v": "unknown",
+    "note": "PiKVM documents first-boot Wi-Fi client configuration via SD-card files; whether it can also run as its own AP for setup was not confirmed"
+   },
+   "glitching": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Connecting this to a machine or network you don't own or have explicit written authorization to access is a computer-misuse offence in most jurisdictions, independent of how the hardware is marketed. Cellular connectivity via an installed modem also means the operator's SIM/carrier account is directly traceable to the install."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "excellent",
+   "last_release": "2026",
+   "app_store": "No - REST API and web UI",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "PiKVM V4 Plus",
+   "Hardware RAT"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/pikvm-v4-plus-hardware-rat",
+    "what": "Lab401's EUR 359 price, 'undetectable hardware RAT' marketing language, box contents"
+   },
+   {
+    "url": "https://pikvm.org/products/",
+    "what": "official CM4 base, mPCIe/SIM slot for LTE/5G listed as included slots (not an included modem), sysadmin-focused positioning"
+   },
+   {
+    "url": "https://docs.pikvm.org/modem/",
+    "what": "confirms the modem is a separately purchased module; lists SIM7600G-H, LE910C4, MC7455, EG25-G as supported/tested modems and that an antenna/pigtail must be bought separately"
+   },
+   {
+    "url": "https://github.com/pikvm/pikvm",
+    "what": "GPL-3.0 license, 10.3k stars, open-source software/hardware claim, feature list (H.264 capture, mass-storage emulation, power management)"
+   },
+   {
+    "url": "https://www.newegg.com/p/3D0-0001-000K3",
+    "what": "US reseller pricing around $540-568"
+   }
+  ],
+  "research_gaps": [
+   "Whether Lab401's specific unit ships with any modem pre-installed (their own page is ambiguous on this point) could not be confirmed independently of the official PiKVM documentation, which says modems are separate",
+   "No independent teardown found confirming exact microSD capacity or RAM variant of the CM4 used"
+  ]
+ },
+ {
+  "id": "multipick-kronos-epg",
+  "hardware_id": "multipick-kronos-epg",
+  "name": "Multipick Kronos EPG",
+  "firmware": "n/a - motorized mechanical tool, no firmware",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Multipick (sold in the security-tool market as 'Kronos Electric Pick' by Lab401 and others)",
+  "vendor_url": "https://multipick.com",
+  "product_url": "https://lab401.com/products/kronos-electric-pick",
+  "category": "hardware-debug",
+  "subcategory": "electric-lock-pick",
+  "status": "available",
+  "released": null,
+  "price_usd": 232.0,
+  "price_note": "EUR 215 at Lab401 (~$232 converted at roughly 1.08 USD/EUR on 2026-09-10). Multipick's own US store lists the same base unit at $250.52, and a 'Kronos Complete Electric Lock Pick Set' bundle with a hard case and extra needles at $483.56. Prices vary further by regional reseller (KeyPrint UK, LockPickWorld US, etc.).",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Consistent tension and needle placement matter more than raw power; reviewers describe real competence as taking deliberate practice, more so on security-pin cylinders.",
+  "build_effort": "assembled",
+  "build_note": "Ships ready to use: gun body, 5 replacement 0.5mm pick needles, 2 tension wrenches, Allen key for needle swaps, USB charge cable.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "A German-made (Multipick) motorized electric pick gun for non-destructive opening of pin-tumbler profile cylinders, including many standard high-security cylinders. A DC motor drives a needle at up to 13,000 strokes/minute with adjustable 1-4mm stroke amplitude, aimed at locksmiths and physical-penetration testers rather than hobbyists.",
+  "honest_take": "This is a pin-tumbler tool and only a pin-tumbler tool: it is explicitly not effective on disc-detainer, dimple or wafer locks, which is the most common misconception buyers have about 'electric pick guns' in general - people assume one tool defeats all lock families the way a Flipper is assumed to defeat all RFID. Vendor claims of opening '75%+ of locks with practice' are for standard pin-tumbler cylinders under favorable conditions; tight keyways and genuine security pins still demand real skill and time, motor or no motor. At $232-250 for the bare unit it undercuts hand-picking training time, but it is not a shortcut past lock-picking skill - it automates the raking motion, not the reading of pins.",
+  "best_for": [
+   "Physical penetration testers who already understand pin-tumbler picking and want speed on standard/euro-profile cylinders",
+   "Locksmiths doing high-volume non-destructive entry on ordinary pin-tumbler stock",
+   "Quiet operation - reviewers consistently note it as one of the quietest electric picks available"
+  ],
+  "not_for": [
+   "Disc-detainer, dimple or wafer locks - not what this tool is built for",
+   "Beginners expecting the motor to substitute for picking skill",
+   "High-security cylinders without prior manual picking experience - the motor doesn't read pins for you"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No microcontroller; a DC motor and mechanical stroke mechanism, not an electronic/firmware device",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": 2900,
+   "battery_note": "3.7V/2900mAh Li-Ion, approx. 2.5 hours continuous runtime, USB charging",
+   "charging": "USB",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (charging only)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "34 (diameter) x 205 (length)",
+   "weight_g": 350,
+   "case": "Handheld gun body; hard-shell carrying case included only with the 'Complete Set' bundle",
+   "notable_physical": [
+    "13,000 RPM idle speed DC motor",
+    "Adjustable 1-4mm stroke amplitude at the needle chuck",
+    "Interchangeable 0.5mm pick needles via Allen key"
+   ]
+  },
+  "capabilities": {
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Battery powered, no host device or software needed to operate"
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "Trigger is a manual switch on the gun body; no wireless/remote actuation"
+   },
+   "ble_scan": {
+    "v": "no"
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Purely mechanical/electromechanical tool, no programmable logic"
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "USB port is charging-only"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "jtag_swd": {
+    "v": "no"
+   },
+   "i2c": {
+    "v": "no"
+   },
+   "glitching": {
+    "v": "no"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Purely mechanical pick, no RFID/NFC capability despite sharing shelf space with electronic access-control tools"
+   },
+   "lf_125khz_read": {
+    "v": "no"
+   },
+   "magspoof": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Possession of lock-picking tools is legal in most US states and much of Europe for personal or professional use, but a handful of US states and other countries restrict possession without a locksmith license or 'burglary tool' intent, and using it on a lock you don't own or lack authorization to open is a property/burglary offence everywhere. Check your local law before buying or carrying it."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "n/a",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Kronos Electric Pick",
+   "Multipick Elite Kronos EPG",
+   "Kronos EPG"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/kronos-electric-pick",
+    "what": "EUR 215 price, included accessories, 13,000 RPM and 1-4mm stroke claims, battery spec"
+   },
+   {
+    "url": "https://multipick.com/us/opening-entry-tools/lock-picking-lock-manipulation/multipick-elite-lockpicking-world/multipick-elite-kronos-epg/",
+    "what": "official manufacturer price ($250.52), Complete Set bundle price ($483.56), dimensions, weight, runtime"
+   },
+   {
+    "url": "https://locklab.com/high-security-and-challenge-locks/1316-review-multipick-kronos-electric-pick-gun-epg-kit/",
+    "what": "independent review (BosnianBill's LockLab) confirming pin-tumbler focus and not being suited to disc-detainer/dimple/wafer locks"
+   },
+   {
+    "url": "https://www.mrlocksmithtraining.com/kronos-electric-pick-gun-review/",
+    "what": "independent locksmith trade review corroborating quiet operation and skill-dependent success rate"
+   }
+  ],
+  "research_gaps": [
+   "No SCHEMA.md category or capability key models physical lock-picking tools at all; filed under hardware-debug as the least-wrong existing bucket. A dedicated 'physical-access' category and picking-specific capability keys (e.g. pin_tumbler_pick, high_security_pick) would fit this device and similar tools far better",
+   "Exact motor part number and precise stroke-force spec not published by the manufacturer"
+  ]
+ },
+ {
+  "id": "lilygo-t-deck-plus",
+  "hardware_id": "lilygo-t-deck-plus",
+  "name": "LilyGo T-Deck Plus",
+  "firmware": "Meshtastic / MeshCore (community firmware; ships without a security-focused firmware)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/meshtastic/firmware",
+  "firmware_note": "LilyGo ships the board as a bare development platform - you flash Meshtastic, MeshCore or your own ESP-IDF/Arduino code. No offensive-security firmware ships by default, unlike the Bruce-flashed LilyGo boards elsewhere in this database.",
+  "vendor": "LILYGO",
+  "vendor_url": "https://lilygo.cc",
+  "product_url": "https://hackerwarehouse.com/product/t-deck-plus-kit/",
+  "category": "multitool",
+  "subcategory": "lora-gps-handheld",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 85.0,
+  "price_note": "$85 at Hacker Warehouse for the Plus kit (board, LoRa module, GPS, 2000mAh battery, antenna, case). LILYGO's own store and other resellers list the same kit in a similar $80-90 band depending on the LoRa frequency SKU (868/915/923 MHz).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Arrives as a development platform, not a finished security tool - you choose and flash firmware yourself, and Meshtastic/MeshCore setup assumes some comfort with ESP32 flashing tools.",
+  "build_effort": "flash-only",
+  "build_note": "Fully assembled handheld (keyboard, screen, GPS, battery, case). No soldering; flashing firmware via USB is the only setup step.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "A BlackBerry-style ESP32-S3 handheld with a QWERTY keyboard, trackball, 2.8-inch IPS touchscreen, SX1262 LoRa radio, GPS and a 2000mAh battery, sold as a Meshtastic/MeshCore off-grid mesh communicator. It is a general-purpose ESP32-S3 dev platform that happens to carry LoRa and GPS, not a purpose-built security tool.",
+  "honest_take": "Like other LoRa/GPS handhelds in this space, people see 'LoRa + GPS + keyboard' and assume it's a Flipper-class attack tool; it isn't one out of the box. There is no sub-GHz CC1101, no NFC/RFID reader, and no offensive firmware pre-loaded - the SX1262 is a LoRa/FSK part locked to whichever frequency SKU you bought, not a general sub-GHz scanner, and Meshtastic itself has no attack tooling at all. What you're buying for $85 is a capable ESP32-S3 dev board with a keyboard and screen already built - a good base if you intend to write or port your own BLE/Wi-Fi tooling, a poor buy if you expected a mesh-networking Flipper.",
+  "best_for": [
+   "Meshtastic/MeshCore off-grid text messaging - its designed purpose",
+   "A keyboard-and-screen-equipped ESP32-S3 platform for your own firmware projects",
+   "GPS-tagged field logging"
+  ],
+  "not_for": [
+   "Sub-GHz replay/brute-force attacks - no CC1101-class radio",
+   "RFID/NFC work - no reader hardware",
+   "Anyone expecting pre-loaded offensive Wi-Fi/BLE tooling - it ships as a bare dev platform"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Dual-core Xtensa LX7 @240MHz, 16MB flash, 8MB PSRAM, 2.4GHz Wi-Fi 4 and Bluetooth 5 LE",
+   "mcu_secondary": "ESP32-C3 (dedicated keyboard controller)",
+   "radios": [
+    {
+     "ic": "SX1262",
+     "role": "sub-ghz",
+     "note": "LoRa/(G)FSK transceiver, band fixed by SKU (868/915/923MHz depending on region variant); not a general-purpose 300-928MHz scanner"
+    },
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "ESP32-S3 integrated 2.4GHz Wi-Fi 4 and BLE 5; no 5GHz, no Bluetooth Classic"
+    },
+    {
+     "ic": null,
+     "role": "gps",
+     "note": "Branded 'Ulbox GPS' by resellers; exact chip not published by LILYGO"
+    }
+   ],
+   "display": {
+    "type": "ST7789 IPS LCD",
+    "size_in": 2.8,
+    "resolution": "320x240",
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": 2000,
+   "battery_note": "Li-Po, included in the Plus kit",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "microSD (TF) slot, vendor recommends max 32GB FAT32",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE",
+    "LoRa",
+    "GPS"
+   ],
+   "gpio": "Expansion header (unconfirmed pinout detail)",
+   "sensors": [
+    "Microphone",
+    "Speaker"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Assembled plastic handheld enclosure, included in the Plus kit",
+   "notable_physical": [
+    "Physical QWERTY keyboard",
+    "Trackball",
+    "External antenna connector"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "claimed",
+    "note": "ESP32-S3 Wi-Fi radio supports scanning; Meshtastic itself doesn't expose an attacker-facing scan UI, so this depends entirely on what firmware you flash"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-S3 is 2.4GHz Wi-Fi only"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Not present in the shipped Meshtastic/MeshCore firmware; would require flashing different firmware entirely"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "BLE 5 hardware supports it; not exposed by stock Meshtastic firmware"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "ESP32-S3 radio is BLE-only, no Bluetooth Classic"
+   },
+   "subghz_rx": {
+    "v": "partial",
+    "note": "SX1262 receives LoRa/FSK within its fixed SKU band only, not a wideband CC1101-style sub-GHz sniffer"
+   },
+   "subghz_tx": {
+    "v": "partial",
+    "note": "Same band-locked SX1262 limitation applies to transmit"
+   },
+   "subghz_replay": {
+    "v": "no",
+    "note": "Not supported by the shipped firmware; the radio and firmware here are built for LoRa mesh, not capture-and-replay of consumer remotes"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Onboard GPS module included in the Plus kit"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD slot, used by Meshtastic/MeshCore for maps and message history"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Standard ESP32-S3 Arduino/ESP-IDF development target"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Battery, keyboard and screen make it a genuinely standalone handheld"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Not implemented by the shipped Meshtastic/MeshCore firmware; ESP32-S3 has USB-OTG hardware so it's technically possible with custom firmware, but nothing offensive ships by default"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR hardware in the published spec"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No RFID/NFC reader hardware"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "An ordinary development kit running licence-exempt LoRa ISM bands in the region matching its SKU. Using a 915MHz unit in a region licensed for 868MHz (or vice versa) is a radio-licensing violation - buy the SKU for where you'll use it. Any offensive firmware you flash yourself carries its own separate legal exposure."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": "2026",
+   "app_store": "No - Meshtastic/MeshCore apps and firmware, not a security app store",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "T-Deck Plus",
+   "LILYGO T-Deck Plus"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/t-deck-plus-kit/",
+    "what": "$85 price, kit contents (board, LoRa, GPS, 2000mAh battery, antenna, case), Meshtastic compatibility"
+   },
+   {
+    "url": "https://www.cnx-software.com/2024/08/30/lilygo-t-deck-plus-a-blackberry-like-esp32-s3-devkit-with-qwerty-keyboard-trackball-lora-gps-battery-and-more/",
+    "what": "independent hardware writeup: ESP32-S3 dual-core LX7, 16MB flash/8MB PSRAM, SX1262 +22dBm, ST7789 2.8in 320x240, secondary ESP32-C3 keyboard controller"
+   },
+   {
+    "url": "https://meshtastic.org/docs/hardware/devices/lilygo/tdeck/",
+    "what": "official Meshtastic hardware support page confirming the device's primary ecosystem"
+   },
+   {
+    "url": "https://manuals.plus/asin/B0FBGSW2QZ",
+    "what": "user manual confirming microSD slot, 32GB/FAT32 recommendation, offline map usage"
+   }
+  ],
+  "research_gaps": [
+   "Exact GPS chip part number not published by LILYGO (some resellers call it 'Ulbox GPS', not a recognized chip family name)",
+   "GPIO expansion header pinout not confirmed",
+   "Whether any third-party offensive firmware (Bruce, Marauder-class) has been ported to this specific board was not confirmed"
+  ]
+ },
+ {
+  "id": "glytch-gps-mod-pager",
+  "hardware_id": "glytch-gps-mod-pager",
+  "name": "Glytch GPS Mod for Pager",
+  "firmware": "n/a - passive GNSS module read by the Pager's own gpsd service",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/glytchtech/Pager-Mod-Docs",
+  "firmware_note": "No firmware of its own. The WiFi Pineapple Pager's existing gpsd-based GPS support reads it once you set Settings > GPS to the correct serial device and baud rate.",
+  "vendor": "Glytch, in collaboration with Hak5",
+  "vendor_url": "https://shop.hak5.org",
+  "product_url": "https://shop.hak5.org/products/glytch-gps-mod-for-pager",
+  "category": "accessory",
+  "subcategory": "pineapple-pager-gps",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 60.0,
+  "price_note": "$60 direct from Hak5. Seen at EUR 79 (~$85) at Lab401 and around $85.32 at other regional resellers (e.g. KSEC) - roughly 40% over Hak5's own price once converted.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plugs into the Pager's USB port; the only setup step is picking the right serial device and baud rate in the Pager's Settings > GPS menu.",
+  "build_effort": "assembly",
+  "build_note": "Hand-assembled, 3D-printed enclosure that clips on and connects over USB - no soldering. Vendor notes it 'may show variations typical of handcrafted hardware.'",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small 3D-printed, hand-assembled add-on carrying a Quectel LC86-series multi-constellation GNSS chipset, connecting to the WiFi Pineapple Pager over USB to geotag its Wi-Fi survey and attack logs via the Pager's built-in gpsd support. It requires a WiFi Pineapple Pager as the host - it has no function on its own.",
+  "honest_take": "This is exactly what it says: a GPS receiver in a box, nothing more. It adds Wigle-compatible geotagging to wardriving logs the Pager already collects - it does not add any new attack capability. Accuracy is ordinary consumer GNSS (a few meters outdoors with clear sky, degraded or absent indoors), fine for venue-scale wardriving, not for anything needing tight geofence precision. It's a genuinely single-purpose accessory, so don't expect much beyond 'the Pager now knows where it is' - and remember it does nothing without a Pager to plug into.",
+  "best_for": [
+   "Geotagging Wi-Fi survey/attack logs from a WiFi Pineapple Pager",
+   "Wigle-compatible wardriving with the Pager",
+   "Venue-scale signal mapping"
+  ],
+  "not_for": [
+   "Any use without owning a WiFi Pineapple Pager - this has no standalone function",
+   "High-accuracy geofencing - consumer GNSS accuracy only",
+   "Indoor positioning - GNSS degrades or fails indoors like any consumer GPS"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU of its own; passive GNSS module read over serial by the host Pager",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "Quectel LC86",
+     "role": "gps",
+     "note": "Multi-constellation GNSS (GPS/GLONASS/Galileo/BeiDou per Quectel LC86 family)"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the Pager's USB port; no battery of its own",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (to WiFi Pineapple Pager host)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "Quectel LC86 GNSS"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, hand-assembled enclosure",
+   "notable_physical": [
+    "Clips onto/connects to the Pager via USB",
+    "Indoor-use-only regulatory note for EU/EFTA in the 2400-2483.5MHz range printed on the product page (likely boilerplate referencing an unrelated internal radio spec, not a GNSS-specific restriction)"
+   ]
+  },
+  "capabilities": {
+   "gps": {
+    "v": "yes",
+    "note": "Quectel LC86-series multi-constellation GNSS"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "Feeds the Pager's own wardriving/logging tools via gpsd for Wigle-compatible geotagged logs"
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "Logging is handled by the host Pager, not this accessory"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a WiFi Pineapple Pager host; has no function on its own"
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Configured through the host Pager's existing Settings > GPS menu, not its own interface"
+   },
+   "scriptable": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive GNSS receiver; receiving GPS signals is unregulated nearly everywhere. Legal exposure comes entirely from what the host Pager is used for (unauthorized Wi-Fi survey/attack activity), not from this accessory itself."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "n/a",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Glytch GPS Module for Pineapple Pager"
+  ],
+  "sources": [
+   {
+    "url": "https://shop.hak5.org/products/glytch-gps-mod-for-pager",
+    "what": "$60 official price, Quectel LC86 chipset, hand-assembled/3D-printed construction"
+   },
+   {
+    "url": "https://github.com/glytchtech/Pager-Mod-Docs/tree/main/GPS",
+    "what": "USB attachment method, gpsd integration, Settings > GPS baud-rate/serial-device configuration"
+   },
+   {
+    "url": "https://lab401.com/products/glytch-gps-module-for-pineapple-pager",
+    "what": "EUR 79 EU reseller price"
+   },
+   {
+    "url": "https://eu.ksec.co.uk/product/glytch-gps-mod-for-hak5-wifi-pineapple-pager/",
+    "what": "corroborates the higher reseller price point (~$85.32) referenced for this product"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for 'accessory requiring a specific named host device' as a formal relationship - this record states the WiFi Pineapple Pager dependency only in prose and hardware/build notes",
+   "Exact physical connector/mounting mechanism (USB-A plug directly, or a cable) not confirmed beyond 'attach to the Pager's USB port'",
+   "This is a genuinely single-function accessory (GNSS only) - the sparse capability list reflects that, not incomplete research"
+  ]
+ },
+ {
+  "id": "yubikey-neo",
+  "hardware_id": "yubikey-neo",
+  "name": "YubiKey NEO",
+  "firmware": "Yubico stock",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Yubico",
+  "vendor_url": "https://www.yubico.com",
+  "product_url": "https://hackerwarehouse.com/product/yubikey-neo/",
+  "category": "rfid-nfc",
+  "subcategory": "hardware-auth-token",
+  "status": "discontinued",
+  "released": "2012",
+  "price_usd": 50.0,
+  "price_note": "$50 last listed at Hacker Warehouse, now out of stock. Yubico discontinued the NEO around 2018 in favor of the YubiKey 4/5 lines; remaining stock is old inventory or secondhand.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug-and-play OTP out of the box; configuring PIV/OpenPGP smart-card slots needs Yubico's management tools.",
+  "build_effort": "assembled",
+  "build_note": "Finished USB+NFC dongle, no assembly.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A discontinued (2012-2018) dual-interface USB+NFC hardware authentication token supporting Yubico OTP, OATH (TOTP/HOTP), FIDO U2F, and PIV/OpenPGP smart-card functions. It is an authentication device, not an offensive or defensive pentest tool, included here because vendors like Hacker Warehouse stock it as a cheap way to demonstrate hardware-backed authentication.",
+  "honest_take": "The single biggest thing to know: the NEO predates FIDO2/WebAuthn entirely and cannot do it - it only speaks the older FIDO U2F protocol. In 2026, passkeys and FIDO2 are what most 'phishing-resistant auth' deployments actually mean, and this device cannot fill that role no matter how it's marketed. It's a fine, cheap way to demonstrate that hardware OTP/U2F exists and what it feels like to tap a key, but if the goal is to show or use modern passkey-based authentication, a current YubiKey 5-series (or similar FIDO2 token) is the correct purchase, not this discontinued unit. It was not affected by the 2017 ROCA RSA-key-generation flaw that hit YubiKey 4 - that's one thing it has going for it.",
+  "best_for": [
+   "Cheap demonstration of legacy OTP/U2F hardware authentication in a training or awareness context",
+   "PIV/OpenPGP smart-card use on systems that don't need FIDO2"
+  ],
+  "not_for": [
+   "Demonstrating or deploying modern passkey/FIDO2/WebAuthn authentication - it does not support the protocol at all",
+   "Any production security deployment in 2026 - Yubico stopped selling and supporting it years ago",
+   "Anyone who actually wants FIDO2 - buy a current YubiKey 5-series instead"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Secure element/smart-card chip; exact part number not published by Yubico",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "nfc",
+     "note": "13.56MHz NFC for OTP-over-NFC and MIFARE-class contactless communication"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB/NFC powered, no battery",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "Two configurable OTP slots plus OpenPGP/PIV/FIDO U2F applets",
+   "connectivity": [
+    "USB 2.0",
+    "NFC"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Molded plastic USB dongle with tap sensor",
+   "notable_physical": [
+    "Capacitive touch sensor for OTP/U2F trigger",
+    "Keyring hole"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_emulate": {
+    "v": "yes",
+    "note": "Outputs OTP as an NDEF text record when tapped to an NFC reader/phone - this is effectively 13.56MHz tag emulation of a fixed credential, not general HF tag cloning"
+   },
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Types its OTP as keystrokes over USB HID; a fixed, benign credential output, not an arbitrary BadUSB-style payload"
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Not a card-cloning or attack tool despite the NFC interface"
+   },
+   "emv_read": {
+    "v": "no"
+   },
+   "nfc_relay": {
+    "v": "no"
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Configuration only via Yubico's own management utilities, not general scripting"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs a host USB port or NFC reader to do anything"
+   },
+   "ibutton_1wire": {
+    "v": "no"
+   },
+   "magspoof": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "An authentication device with no offensive capability; owning and using it is unremarkable everywhere. The only legal consideration is organizational - using outdated auth hardware that can't do FIDO2 may fail compliance requirements that specify passkey/WebAuthn support."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "n/a",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "Yubico NEO"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/yubikey-neo/",
+    "what": "$50 price, out-of-stock status, OTP/U2F/PIV/OpenPGP feature summary"
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/YubiKey",
+    "what": "2012 release, ~2018 discontinuation, confirms FIDO U2F support added 2014 but no FIDO2/WebAuthn support"
+   },
+   {
+    "url": "https://support.yubico.com/hc/en-us/articles/360013714579-YubiKey-NEO",
+    "what": "official spec listing OTP/OATH/U2F/PIV/OpenPGP support and NFC MIFARE-class contactless interface"
+   },
+   {
+    "url": "https://www.dotforce.es/Fichas_de_producto_web/Protecci%C3%B3n/Yubico/Folletos/Yubico_YubiKeyNEO_ProductSheet.pdf",
+    "what": "Yubico product sheet corroborating dual USB/NFC interface and applet list"
+   }
+  ],
+  "research_gaps": [
+   "Exact secure-element chip part number not published",
+   "Precise end-of-sale date not confirmed beyond community/Wikipedia sourcing to ~2018",
+   "The capability-key list has no keys for OTP/FIDO/PIV/OpenPGP authentication functions specifically - hf_1356_emulate and usb_hid_inject are used here as the closest approximations, but neither captures the actual U2F/PIV/OpenPGP cryptographic functions this device performs"
+  ]
+ },
+ {
+  "id": "rabbit-labs-masta-blasta",
+  "hardware_id": "rabbit-labs-masta-blasta",
+  "name": "Rabbit-Labs Masta-Blasta (IR Blaster)",
+  "firmware": "n/a - passive IR board driven by the Flipper's own IR app",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No microcontroller and no firmware of its own; the Flipper's stock (or unofficial) Infrared app drives the LEDs once GPIO signal output and 5V-on-GPIO are enabled.",
+  "vendor": "Rabbit-Labs",
+  "vendor_url": "https://rabbit-labs.com",
+  "product_url": "https://rabbit-labs.com/product/the-masta-blasta-ir-blaster-by-rabbit-labs/",
+  "category": "accessory",
+  "subcategory": "flipper-ir-board",
+  "status": "available",
+  "released": null,
+  "price_usd": 50.0,
+  "price_note": "$50 at both Hacker Warehouse and Lab401's US pricing; Lab401's EU-currency listing shows EUR 52 (~$56). It is the same Rabbit-Labs product sold by two resellers, not two different boards - both list a 12-LED array at the same $50 price point.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Requires enabling GPIO 5V output and, per Hacker Warehouse's own listing, unofficial firmware with the Debug IR feature enabled - not plug-and-play with stock firmware the way the cheaper 'Original IR Blaster' is.",
+  "build_effort": "assembly",
+  "build_note": "Accessory: requires a Flipper Zero host, mounts on the GPIO header. No soldering, but does require flipping GPIO settings and, per the vendor, unofficial firmware for full function.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A 12-LED high-intensity infrared blaster board for the Flipper Zero GPIO header, designed for a tight, long-throw beam so you can hit a device across a room without aiming precisely. It's Rabbit-Labs' mid/high-power tier, sitting between their cheaper 7-LED 'Original IR Blaster' and their wide-angle-flood 'Slim Shady' board.",
+  "honest_take": "Same story as every powered IR add-on in this niche: it is a resistor-and-LED array, not a chip - the $50 buys Rabbit-Labs' thermal design and focused-beam optics, not silicon. It also needs GPIO 5V mode enabled and, per the vendor's own listing, unofficial firmware with Debug IR turned on, which the cheaper 7-LED 'Original IR Blaster' explicitly does not require ('works out-of-the-box with official firmware'). If you don't want to touch GPIO settings or flash unofficial firmware, the cheaper board is the easier buy; if you specifically want a tight, long-range 'throw' beam rather than wide flood coverage, this is the one in the Rabbit-Labs lineup built for that.",
+  "best_for": [
+   "Long-range, precisely-aimed IR transmission (the 'throw' use case)",
+   "Turning off a single distant TV/projector without walking up to it",
+   "Buyers who already run unofficial Flipper firmware"
+  ],
+  "not_for": [
+   "Wide-angle room coverage - that's the Slim Shady's job, not this board's",
+   "Stock/official-firmware-only users who don't want to flash unofficial firmware",
+   "Anyone expecting a chip on the board - it's LEDs and resistors"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No microcontroller. Passive LED driver board.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None; powered from the Flipper's GPIO 5V rail",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper GPIO header"
+   ],
+   "gpio": "Mates with the Flipper Zero 18-pin GPIO header; requires 5V-on-GPIO enabled",
+   "sensors": [],
+   "dimensions_mm": "4 x 3 x 1 in (per Hacker Warehouse listing, likely packaging not board size)",
+   "weight_g": null,
+   "case": "Bare PCB",
+   "notable_physical": [
+    "12 high-intensity IR LEDs focused for beam throw",
+    "Reverse-polarity protection",
+    "LED footprint designed to accept an optional lens"
+   ]
+  },
+  "capabilities": {
+   "ir_tx": {
+    "v": "yes",
+    "note": "Higher output power than the Flipper's built-in IR LED; vendor markets it for long-throw, not flood"
+   },
+   "ir_flood": {
+    "v": "no",
+    "note": "Designed for a focused 'beam' rather than wide-angle coverage - the flood use case is Rabbit-Labs' separate Slim Shady board"
+   },
+   "ir_universal_remote": {
+    "v": "yes",
+    "note": "Uses the Flipper's own Infrared app and remote database; the board only adds output power"
+   },
+   "ir_rx": {
+    "v": "no",
+    "note": "No receiver on this board; IR learning still uses the Flipper's own onboard IR receiver"
+   },
+   "ir_learn": {
+    "v": "no"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero as host; has no function on its own"
+   },
+   "scriptable": {
+    "v": "no"
+   },
+   "usb_mass_storage": {
+    "v": "no"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app; driven entirely by the Flipper's built-in (or, for full power, unofficial) Infrared app"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Infrared remote control is unregulated as radio spectrum. Legal exposure comes from what you switch off or manipulate - equipment you don't own - not from the technology itself."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "n/a - uses the Flipper's built-in Infrared app",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Masta-Blasta",
+   "MastaBlasta IR Blaster"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/masta-blasta-for-flipper-zero/",
+    "what": "$50 price, Rabbit-Labs brand confirmation, 12-LED count, requirement for unofficial firmware with Debug IR enabled and 5V GPIO mode"
+   },
+   {
+    "url": "https://rabbit-labs.com/product/the-masta-blasta-ir-blaster-by-rabbit-labs/",
+    "what": "official Rabbit-Labs product page confirming the product name and manufacturer"
+   },
+   {
+    "url": "https://lab401.com/collections/flipper-zero",
+    "what": "EUR 52 EU price for the same Rabbit-Labs Masta-Blasta product, confirming it's one product sold through two resellers, not two different boards"
+   },
+   {
+    "url": "https://www.witslb.com/product/rabbit-labs-masta-blasta-ir-blaster-for-flipper-zero/",
+    "what": "third-party reseller listing (Lebanon) corroborating the Masta-Blasta product name and Rabbit-Labs branding as a distinct SKU"
+   }
+  ],
+  "research_gaps": [
+   "Exact LED part number, forward current and radiant intensity not published",
+   "No independently measured range or beam angle figure found, only vendor marketing language ('turn on/off devices without pointing directly at them')"
+  ]
+ },
+ {
+  "id": "rabbit-labs-original-ir-blaster",
+  "hardware_id": "rabbit-labs-original-ir-blaster",
+  "name": "Rabbit-Labs IR Blaster (Original, 7-LED)",
+  "firmware": "n/a - passive IR board driven by the Flipper's own IR app",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No microcontroller and no firmware. Works with official Flipper firmware out of the box, unlike Rabbit-Labs' own Masta-Blasta which the vendor says needs unofficial firmware.",
+  "vendor": "Rabbit-Labs",
+  "vendor_url": "https://rabbit-labs.com",
+  "product_url": "https://lab401.com/products/ir-blaster",
+  "category": "accessory",
+  "subcategory": "flipper-ir-board",
+  "status": "available",
+  "released": null,
+  "price_usd": 40.0,
+  "price_note": "EUR 34.95 at Lab401 (~$40 converted on 2026-09-10). Official Rabbit-Labs store and Tindie list it in a similar band; this is the entry-level, cheapest tier of Rabbit-Labs' three-board IR lineup (this board, Masta-Blasta, Slim Shady).",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug-and-play with official Flipper firmware - no GPIO setting changes or unofficial firmware needed, unlike Rabbit-Labs' pricier Masta-Blasta.",
+  "build_effort": "assembly",
+  "build_note": "Accessory: plugs directly onto the Flipper Zero GPIO header, no soldering, no firmware changes.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A 7-LED infrared blaster add-on for the Flipper Zero, the budget tier of Rabbit-Labs' IR lineup. Vendor claims it can reach any device within line of sight, and unlike the pricier Masta-Blasta it works with the Flipper's official, unmodified firmware.",
+  "honest_take": "This is the cheapest of Rabbit-Labs' three IR boards and the only one of the three that needs zero firmware changes - Masta-Blasta needs unofficial firmware and GPIO tweaks, Slim Shady is a wide-flood design at a higher price. Vendor's '100 meters depending on room conditions' range claim is unverified and almost certainly best-case line-of-sight in a dark room; treat it as marketing until independently measured. Like every board in this category, it's LEDs and a resistor network, not silicon - you're paying for convenience and a tidy form factor, not technology.",
+  "best_for": [
+   "Budget IR range upgrade for the Flipper Zero with zero firmware fuss",
+   "Official-firmware-only users who don't want to flash anything custom",
+   "Basic universal-remote-range work"
+  ],
+  "not_for": [
+   "Maximum range or focused-beam throw - the pricier Masta-Blasta is Rabbit-Labs' own higher-power tier",
+   "Wide-angle flood coverage - that's the Slim Shady",
+   "Anyone expecting the vendor's 100m range claim to hold under normal conditions"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No microcontroller. Passive LED driver board.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None; powered from the Flipper's GPIO 5V rail",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper GPIO header"
+   ],
+   "gpio": "Mates with the Flipper Zero 18-pin GPIO header",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB",
+   "notable_physical": [
+    "7 high-intensity IR LEDs driven from the 5V rail",
+    "Green power/ready indicator LED",
+    "Reverse-polarity protection"
+   ]
+  },
+  "capabilities": {
+   "ir_tx": {
+    "v": "yes",
+    "note": "Vendor claims up to ~100m range depending on room conditions - unverified independently"
+   },
+   "ir_flood": {
+    "v": "no",
+    "note": "Not marketed as wide-angle; a mid-power general-purpose blaster between the flood (Slim Shady) and throw (Masta-Blasta) designs"
+   },
+   "ir_universal_remote": {
+    "v": "yes",
+    "note": "Uses the Flipper's stock Infrared app and remote database"
+   },
+   "ir_rx": {
+    "v": "no",
+    "note": "Transmitter only; IR learning still uses the Flipper's own onboard receiver"
+   },
+   "ir_learn": {
+    "v": "no"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero host"
+   },
+   "scriptable": {
+    "v": "no"
+   },
+   "usb_mass_storage": {
+    "v": "no"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app; driven entirely by the Flipper's built-in Infrared app"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Infrared remote control is unregulated as radio spectrum. Legal exposure comes from what you switch off or manipulate, not the technology itself."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "n/a - uses the Flipper's built-in Infrared app",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "The Original IR Blaster by Rabbit-Labs",
+   "IR Blaster"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/ir-blaster",
+    "what": "EUR 34.95 price, 7-LED count, 'works out-of-the-box with official firmware' claim"
+   },
+   {
+    "url": "https://rabbit-labs.com/product/the-original-ir-blaster-compatible-with-flipper-zero-by-rabbit-labs-3/",
+    "what": "official Rabbit-Labs listing naming it 'The Original IR Blaster', confirming manufacturer and plug-and-play official-firmware support"
+   },
+   {
+    "url": "https://www.tindie.com/products/tehrabbitt/flipper-zero-ir-blaster-by-rabbit-labstm/",
+    "what": "independent reseller listing corroborating 7-LED spec, ~100m claimed range, reverse-polarity protection"
+   },
+   {
+    "url": "https://www.lemona.lt/en/ir-blaster-ir-amplifier-with-7-leds-for-flipper-zero-rabbit-labs.html",
+    "what": "another independent EU reseller listing corroborating the 7-LED count and Rabbit Labs branding"
+   }
+  ],
+  "research_gaps": [
+   "No independent range measurement found; the ~100m figure is vendor marketing",
+   "Exact LED part number and forward current not published"
+  ]
+ },
+ {
+  "id": "electroniccats-flipper-modbus",
+  "hardware_id": "electroniccats-flipper-modbus",
+  "name": "Flipper Add-On: RS485 Modbus",
+  "firmware": "flipper-rs485modbus",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/ElectronicCats/flipper-addons",
+  "firmware_note": "Open-source companion app (GPL-3.0/MIT per the vendor page) for the Flipper Zero, paired with CERN-OHL-1.2 open hardware for the shield itself.",
+  "vendor": "Electronic Cats",
+  "vendor_url": "https://electroniccats.com",
+  "product_url": "https://electroniccats.com/store/flipper-add-on-rs485-modbus/",
+  "category": "accessory",
+  "subcategory": "flipper-ics-board",
+  "status": "available",
+  "released": null,
+  "price_usd": 20.0,
+  "price_note": "$20 direct from Electronic Cats.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Requires understanding of Modbus RTU addressing, function codes and RS485 wiring/termination to use meaningfully - this is an industrial-protocol tool, not a plug-and-play attack board.",
+  "build_effort": "assembly",
+  "build_note": "Accessory: plugs onto the Flipper Zero GPIO header, requires flashing the companion flipper-rs485modbus app via qFlipper/Flipper Lab/mobile app. No 3D-printable case available yet per the vendor.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A GPIO shield plus companion Flipper Zero app that adds RS485 differential signaling and voltage-level shifting, letting the Flipper sniff and inject Modbus RTU traffic on industrial control networks - PLCs, sensors, actuators and similar serial-bus ICS/OT equipment.",
+  "honest_take": "This is a rare, genuinely niche addition to the Flipper ecosystem: real ICS/OT protocol testing (sniff Modbus RTU frames, build and send requests by peripheral ID/function code/address, replay captured packets) rather than another RFID or sub-GHz board. The vendor is upfront that Modbus RTU has no built-in authentication or encryption - which is the industrial-protocol reality, not a flaw in this tool - so anything you can address on the bus you can generally write to. It's explicitly billed as 'designed and built for authorized security testing'; there's no ambiguity about what it's for.",
+  "best_for": [
+   "Authorized ICS/OT security assessments involving Modbus RTU over RS485",
+   "Learning industrial protocol structure hands-on with real hardware",
+   "Sniffing and replaying Modbus traffic for lab/test-bench work"
+  ],
+  "not_for": [
+   "Modbus TCP (Ethernet-based) networks - this is an RS485/serial physical-layer add-on",
+   "Beginners with no Modbus/ICS background - the function is meaningless without protocol knowledge",
+   "Live production ICS networks without authorization - injecting unauthenticated writes can affect physical equipment"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU on the shield itself; it's an RS485 transceiver/level-shifter board, all protocol logic runs on the Flipper's own STM32WB55",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the Flipper's GPIO rail",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper GPIO header",
+    "RS485 screw terminal/header (exact connector not published)"
+   ],
+   "gpio": "Mates with the Flipper Zero 18-pin GPIO header",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB; no 3D-printable case available per vendor",
+   "notable_physical": [
+    "RS485 differential signaling/level-shifting circuitry"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "partial",
+    "note": "RS485 is a differential serial (UART-derived) bus, not raw TTL UART; the shield handles the level-shifting/differential signaling the Flipper's own UART doesn't do natively"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Sniffer mode listens to Modbus RTU bus traffic without transmitting"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open-source companion app; sender mode builds custom Modbus requests by peripheral ID, function code and start address, and can replay captured packets"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero host"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "usb_mass_storage": {
+    "v": "no"
+   },
+   "i2c": {
+    "v": "no",
+    "note": "RS485/Modbus only, not a general hardware-debug bus probe"
+   },
+   "spi_flash_dump": {
+    "v": "no"
+   },
+   "jtag_swd": {
+    "v": "no"
+   },
+   "glitching": {
+    "v": "no"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Distributed as source on GitHub, not through the Flipper app catalog"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Modbus RTU has no authentication or encryption by design, so unauthorized access to a live industrial network can directly affect physical equipment (valves, motors, sensors) - this carries real safety as well as legal exposure. Accessing an ICS/OT network without explicit written authorization is both a computer-misuse offence and potentially a safety incident everywhere; treat this strictly as a lab/authorized-engagement tool."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No - GitHub source, not the Flipper catalog",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Flipper RS485 Modbus Plugin",
+   "Sniff & Inject: RS485 Modbus Add-On"
+  ],
+  "sources": [
+   {
+    "url": "https://electroniccats.com/store/flipper-add-on-rs485-modbus/",
+    "what": "$20 price, sniffer/sender mode description, GPL-3.0/MIT firmware and CERN-OHL-1.2 hardware licensing, 'authorized security testing' framing, no built-in Modbus auth/encryption note"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/flipper-addons",
+    "what": "128-star repo listing this and sibling Flipper add-ons (CANBus, SubGHz, Marauder_Spoof) from the same vendor"
+   },
+   {
+    "url": "https://www.hackster.io/electronic-cats/sniff-inject-rs485-modbus-add-on-7f976d",
+    "what": "independent project writeup corroborating sniff/inject functionality and industrial-protocol use case"
+   },
+   {
+    "url": "https://osrtos.com/projects/flipper-rs485-modbus-plugin/",
+    "what": "third-party embedded-projects index entry corroborating the plugin's existence and Modbus/RS485 focus"
+   }
+  ],
+  "research_gaps": [
+   "Exact RS485 transceiver IC not named in vendor documentation",
+   "Which specific Modbus function codes the sender app supports was not itemized in available sources",
+   "No capability key exists for industrial/ICS protocol sniff-and-inject as a category distinct from generic UART - flagged here using 'uart: partial' as the closest approximation"
+  ]
+ },
+ {
+  "id": "evilapplejuice-esp32",
+  "hardware_id": "generic-esp32-evilapplejuice",
+  "name": "EvilAppleJuice ESP32",
+  "firmware": "EvilAppleJuice-ESP32",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/ckcr4lyf/EvilAppleJuice-ESP32",
+  "firmware_note": "Firmware only - flashes onto any generic ESP32 board (ESP32, ESP32-C3, ESP32-C6 confirmed). No official hardware; presented at COSCUP 2025.",
+  "vendor": "ckcr4lyf (open source project)",
+  "vendor_url": "https://github.com/ckcr4lyf",
+  "product_url": "https://github.com/ckcr4lyf/EvilAppleJuice-ESP32",
+  "category": "bluetooth",
+  "subcategory": "ble-spam-firmware",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 8,
+  "price_note": "No vendor product. A generic ESP32 dev board (plain ESP32, ESP32-C3 or ESP32-C6) costs roughly $5-10 on AliExpress/Amazon; there is nothing else to buy.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "PlatformIO or Arduino IDE flash onto a generic board; no soldering, no case.",
+  "build_effort": "flash-only",
+  "build_note": "Flash the firmware onto any generic ESP32/C3/C6 dev board over USB. No hardware assembly.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "Open-source firmware that spams spoofed BLE advertisements mimicking Apple's Continuity proximity-pairing protocol, triggering repeated fake AirPods/device-setup notification popups on nearby iPhones and iPads. It broadcasts 29 device-type adverts across 3 formats with randomized MAC addresses; with randomization tuned up it can produce a new notification on a target phone as fast as the previous one is dismissed.",
+  "honest_take": "This is advertising-only - it broadcasts BLE packets, it does not scan or listen to anything, so calling it a 'sniffer' or a general BLE attack tool would be wrong. It's also iOS-specific and purely an annoyance/social-engineering vector: it cannot access data, install anything or bypass a lock screen, it just floods the Continuity protocol's UI with fake pairing prompts (the author notes opening the keyboard or camera app suppresses the popups). It runs on any $5-10 generic ESP32 - there's no proprietary hardware here, the $0 firmware is genuinely the whole product, and a Flipper Zero's WiFi Dev Board or any ESP32 add-on already in this database can run it just as well.",
+  "best_for": [
+   "Demonstrating BLE Continuity protocol abuse and iOS notification-spam social engineering in an authorized awareness/training context",
+   "Learning BLE advertising packet crafting on cheap hardware"
+  ],
+  "not_for": [
+   "Any form of BLE sniffing, scanning or data interception - it only transmits",
+   "Attacking Android devices - targets Apple's Continuity protocol specifically",
+   "Bypassing any security control - it is purely a UI/notification nuisance"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (generic)",
+   "mcu_primary_note": "Also confirmed working on ESP32-C3 and ESP32-C6. Any board with Bluetooth 4.2+/BLE 5 support works.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "Integrated ESP32-family BLE radio; author tuned TX power up to 9dBm max for range"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Depends entirely on the generic board used; USB-powered by default",
+   "charging": "USB (board-dependent)",
+   "pmic": null,
+   "storage": "none",
+   "connectivity": [
+    "USB",
+    "Bluetooth LE"
+   ],
+   "gpio": "Board-dependent",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None - bare generic dev board",
+   "notable_physical": []
+  },
+  "capabilities": {
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Core function: broadcasts 29 spoofed Apple Continuity device-type adverts across 3 advertisement formats with randomized MAC addresses"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Advertising-only firmware; performs no BLE scanning or packet sniffing at all"
+   },
+   "ble_sniff": {
+    "v": "no",
+    "note": "No promiscuous or connection-following sniffing capability"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "This is the entire purpose of the project - Apple Continuity proximity-pairing spam"
+   },
+   "ble_spam_android": {
+    "v": "no"
+   },
+   "ble_spam_samsung": {
+    "v": "no"
+   },
+   "ble_spam_swift_pair": {
+    "v": "no",
+    "note": "Targets Apple's Continuity protocol, not Microsoft Swift Pair"
+   },
+   "ble_jam": {
+    "v": "no",
+    "note": "Not RF jamming - it's protocol-level advertisement spam, notifications can be dismissed and the phone otherwise functions normally"
+   },
+   "ble_hid": {
+    "v": "no"
+   },
+   "bt_classic": {
+    "v": "no"
+   },
+   "findmy_track": {
+    "v": "no"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open C++/Arduino source, WTFPL licensed, freely modifiable"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Runs standalone once flashed and powered (e.g. via battery bank), but ships with no case or battery of its own"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Broadcasting BLE advertisements is not itself illegal in most places (unlicensed 2.4GHz ISM band use), but deliberately harassing or disrupting other people's devices without consent can fall under computer-misuse, harassment or nuisance statutes depending on jurisdiction and context. Treat it as authorized-demo-only."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": "2026-06",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "EvilAppleJuice",
+   "iOS BLE Proximity Attack"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/ckcr4lyf/EvilAppleJuice-ESP32",
+    "what": "2300+ stars, WTFPL license, ESP32/C3/C6 target support, 29 device types across 3 advert formats, randomized MAC, 9dBm max TX power, tested iPhone X through 15/iPad Pro on iOS 14-17"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/ckcr4lyf/EvilAppleJuice-ESP32/master/README.md",
+    "what": "author's own description of the notification-flood mechanism and the keyboard/camera-app suppression caveat"
+   },
+   {
+    "url": "https://github.com/l33tfg/iOS-BLE-Proximity-Attack-ESP32",
+    "what": "a fork confirming continued relevance and iOS 18 compatibility updates by the community"
+   },
+   {
+    "url": "https://deepwiki.com/ckcr4lyf/EvilAppleJuice-ESP32",
+    "what": "third-party technical documentation index corroborating the advertising-only architecture and supported ESP32 targets"
+   }
+  ],
+  "research_gaps": [
+   "COSCUP 2025 presentation referenced in the original lead could not be independently located/confirmed",
+   "No independent measurement of real-world range beyond the author's own 9dBm TX power note"
+  ]
+ },
+ {
+  "id": "chimerable-esp32",
+  "hardware_id": "generic-esp32-chimerable",
+  "name": "ChimeraBLE",
+  "firmware": "ChimeraBLE",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/MatthewKuKanich/ChimeraBLE",
+  "firmware_note": "Firmware only. Three build targets share one BLE engine: generic ESP32 WROOM (serial CLI), Seeed XIAO ESP32-C5 (serial CLI), and M5Stack Cardputer ADV (onboard graphical UI).",
+  "vendor": "Matthew KuKanich (open source project)",
+  "vendor_url": "https://github.com/MatthewKuKanich",
+  "product_url": "https://github.com/MatthewKuKanich/ChimeraBLE",
+  "category": "bluetooth",
+  "subcategory": "ble-recon-mitm-firmware",
+  "status": "diy-only",
+  "released": "2026",
+  "price_usd": 8,
+  "price_note": "No vendor product for the ESP32/XIAO-C5 targets (~$5-10 generic board). The Cardputer ADV target requires M5Stack's ~$40-50 Cardputer ADV hardware, sold separately by M5Stack.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Serial CLI operation on the generic-ESP32/XIAO targets assumes comfort with BLE/GATT concepts; the Cardputer build adds a menu UI but the underlying operations (cloning, MITM) still require understanding what you're doing.",
+  "build_effort": "flash-only",
+  "build_note": "Flash onto generic ESP32/XIAO ESP32-C5, or onto an M5Stack Cardputer ADV for the graphical-UI build. No soldering for any target.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "Open-source BLE security and reverse-engineering firmware for ESP32 that can act as a scanning/enumerating central, a cloned/emulated peripheral, or both simultaneously as a man-in-the-middle proxy. It does full GATT service/characteristic/descriptor enumeration with SIG UUID resolution, decodes HID report maps to show live keystrokes from a connected keyboard, clones a device's GATT tree with MAC spoofing, and includes RSSI-based direction finding ('fox-hunting').",
+  "honest_take": "The 'MITM' capability here is impersonation-based, not over-the-air interception: ChimeraBLE connects to the real device as a central and simultaneously advertises a cloned peripheral to the victim host, proxying traffic between the two active connections it holds. That is a real and useful attack, but it is not the same thing as passively following an existing BLE connection's frequency-hopping pattern the way a dedicated sniffer (Ubertooth, Sniffle-class nRF52 dongle) does - ChimeraBLE cannot eavesdrop on a connection it isn't a party to. Cloned characteristics also run without encryption and can't replicate bonding-protected access, so a device relying on BLE bonding for security will not be fully fooled by the clone. It's a genuinely capable, actively developed multi-role tool for the price of a $5-10 board - just don't expect passive network-level sniffing.",
+  "best_for": [
+   "BLE GATT enumeration and HID keystroke decoding on devices you can connect to",
+   "Cloning/emulating a BLE peripheral's advertised identity for testing",
+   "Active man-in-the-middle by impersonation between a device and its paired host"
+  ],
+  "not_for": [
+   "Passive, promiscuous BLE sniffing of a connection you're not part of - it has no radio/firmware capability for following connection hopping",
+   "Cloning devices that rely on BLE bonding/pairing security - clones run unencrypted and can't replicate bonded access",
+   "One-boot persistent multi-profile cloning - only one clone profile is held per boot cycle"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (WROOM, generic) / ESP32-C5 (XIAO) / ESP32-S3 (Cardputer ADV, Stamp-S3A variant)",
+   "mcu_primary_note": "Three supported build targets; the Cardputer ADV variant adds M5Stack's onboard screen/keyboard UI, the other two are serial-CLI only",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "Uses the integrated ESP32-family BLE radio of whichever target board is used"
+    }
+   ],
+   "display": {
+    "type": "M5Stack Cardputer ADV built-in LCD (Cardputer target only)",
+    "size_in": null,
+    "resolution": null,
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Board-dependent; the Cardputer ADV has its own battery, the generic ESP32/XIAO targets are USB-powered",
+   "charging": "USB (board-dependent)",
+   "pmic": null,
+   "storage": "none beyond the target board's own flash",
+   "connectivity": [
+    "USB",
+    "Bluetooth LE"
+   ],
+   "gpio": "Board-dependent",
+   "sensors": [
+    "none beyond target board"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None for generic/XIAO targets; M5Stack Cardputer ADV's own case for that target",
+   "notable_physical": []
+  },
+  "capabilities": {
+   "ble_scan": {
+    "v": "yes",
+    "note": "Active scanning and GATT enumeration - services, characteristics, descriptors, with SIG UUID resolution to friendly names"
+   },
+   "ble_sniff": {
+    "v": "no",
+    "note": "Vendor markets it as intercepting traffic, but this is active connect-based interception (central+peripheral impersonation), not passive over-the-air sniffing of a connection it isn't party to - it cannot follow someone else's existing BLE connection hopping"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Clones a captured device's GATT snapshot and re-advertises it as a peripheral, with MAC spoofing"
+   },
+   "ble_hid": {
+    "v": "yes",
+    "note": "Decodes USB HID 1.11 report maps and displays live keystrokes from a connected BLE keyboard"
+   },
+   "ble_tracker_detect": {
+    "v": "partial",
+    "note": "Device fingerprinting via advertising data (service UUIDs, manufacturer IDs, appearance codes, OUI lookup) plus RSSI-based 'fox-hunting' direction finding; not a dedicated signature-list tracker detector like the site's other detect_* tools"
+   },
+   "ble_jam": {
+    "v": "no"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "BLE only, no Bluetooth Classic support"
+   },
+   "ble_spam_apple": {
+    "v": "no"
+   },
+   "findmy_track": {
+    "v": "no"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open GPL-3.0-or-later source, serial CLI for scripting on two of the three targets"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "The Cardputer ADV build has its own screen/keyboard/battery for standalone use; the generic ESP32/XIAO targets need a host PC over serial"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Decodes BLE HID traffic passively; does not inject USB HID payloads to a host"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Connecting to, cloning or proxying a BLE device you don't own or lack authorization to test is unauthorized access to a computer system in most jurisdictions. Decoding keystrokes from someone else's keyboard without consent may additionally implicate wiretap/interception statutes depending on jurisdiction."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-07",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Chimera BLE"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/MatthewKuKanich/ChimeraBLE",
+    "what": "222 stars, GPL-3.0-or-later license, three build targets, full capability list (GATT enumeration, HID decode, cloning, MITM, fox-hunting), 'authorized testing only' framing"
+   },
+   {
+    "url": "https://github.com/MatthewKuKanich/ChimeraBLE/blob/main/README.md",
+    "what": "architecture detail: Host/Peripheral/MITM roles, one-clone-per-boot limitation, unencrypted clone characteristics"
+   },
+   {
+    "url": "https://github.com/MatthewKuKanich/ChimeraBLE/blob/main/CARDPUTER_GUIDE.md",
+    "what": "confirms M5Stack Cardputer ADV as the graphical-UI hardware target"
+   },
+   {
+    "url": "https://www.youtube.com/watch?v=5FGIKbRqfAQ",
+    "what": "author's own demo video - last resort source, used only to corroborate that the scan/clone/MITM feature set is demonstrated working, not just documented in the README"
+   }
+  ],
+  "research_gaps": [
+   "Very early-stage repo (commit history described as minimal); real-world reliability and false-positive rate of the device fingerprinting not independently tested",
+   "No capability key exists that distinguishes 'active MITM by impersonation' from true passive connection-following sniffing - ble_sniff is marked 'no' here specifically to avoid overstating what this device does, but a dedicated key for active BLE MITM would be more accurate than reusing ble_scan/ble_advertise to describe it"
+  ]
+ },
+ {
+  "id": "bluetooth-ducky-esp32",
+  "hardware_id": "generic-esp32-bluetooth-ducky",
+  "name": "Bluetooth Ducky",
+  "firmware": "Bluetooth Ducky",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/Linuxndroid/Bluetooth-Ducky",
+  "firmware_note": "Firmware only, targets a generic ESP32-WROOM-32 dev board. Uses the third-party ESP32 BLE Keyboard library (T-vK).",
+  "vendor": "Linuxndroid (open source project)",
+  "vendor_url": "https://github.com/Linuxndroid",
+  "product_url": "https://github.com/Linuxndroid/Bluetooth-Ducky",
+  "category": "bluetooth",
+  "subcategory": "ble-hid-injection-firmware",
+  "status": "diy-only",
+  "released": "2025",
+  "price_usd": 8,
+  "price_note": "No vendor product; a generic ESP32-WROOM-32 dev board costs roughly $5-10.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Requires manual code customization and Arduino IDE compilation before deployment - payloads aren't loaded from an SD card the way a USB Rubber Ducky's are, you edit and reflash source.",
+  "build_effort": "flash-only",
+  "build_note": "Flash onto a generic ESP32-WROOM-32 board via Arduino IDE. A companion Windows .exe 'Bluetooth Ducky Monitor' app allows manually triggering payloads over serial.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "Open-source firmware that turns an ESP32 into a BLE HID keyboard emulator, running Ducky Script-style keystroke payloads (open apps, type URLs, run commands) once paired with a target across Windows, macOS, Linux and Android. Positioned as a wireless alternative to a USB Rubber Ducky that doesn't need physical USB port access.",
+  "honest_take": "The 'no physical USB access needed' pitch is real but comes with a big asterisk the project name doesn't advertise: unlike a USB Rubber Ducky, which a target device trusts instantly on physical insertion, this requires the victim to see and accept a Bluetooth pairing prompt the first time - it is not silent on first contact. After that initial pairing it can auto-reconnect quietly, so the realistic attack path is 'get physical access once to pair it, walk away, trigger payloads remotely later,' not 'wave it near an unlocked laptop and go.' It only works against hosts that accept unauthenticated BLE HID pairing, which is common but not universal. At 42 GitHub stars this is a small, lightly-used project compared to established BadUSB tooling - expect rougher edges.",
+  "best_for": [
+   "Physical-access engagements where you can pair once, then trigger payloads remotely without USB port access afterward",
+   "Learning BLE HID emulation and Ducky-Script-style payload design on cheap hardware"
+  ],
+  "not_for": [
+   "Silent first-contact attacks - the victim sees a pairing prompt the first time, unlike a wired BadUSB device",
+   "Targets that don't accept unauthenticated BLE HID pairing",
+   "Anyone wanting SD-card-loaded payloads like a real USB Rubber Ducky - here you edit and reflash source code"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-WROOM-32",
+   "mcu_primary_note": "Generic ESP32 dev board with integrated BLE radio",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "Integrated ESP32 BLE radio, used for HID keyboard emulation"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered by default; board-dependent if battery-powered separately",
+   "charging": "USB",
+   "pmic": null,
+   "storage": "none beyond the board's own flash for the payload script",
+   "connectivity": [
+    "USB (flashing/serial)",
+    "Bluetooth LE"
+   ],
+   "gpio": "Board-dependent",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None - bare generic dev board",
+   "notable_physical": []
+  },
+  "capabilities": {
+   "ble_hid": {
+    "v": "yes",
+    "note": "Core function: emulates a BLE keyboard and injects keystroke payloads once paired"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Advertises as a pairable BLE HID keyboard"
+   },
+   "ble_scan": {
+    "v": "no"
+   },
+   "ble_sniff": {
+    "v": "no"
+   },
+   "ble_jam": {
+    "v": "no"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "BLE only"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Despite the 'Ducky' name, payloads are delivered over Bluetooth, not USB - it is not a USB BadUSB device"
+   },
+   "usb_payload_lang": {
+    "v": "partial",
+    "note": "Uses Ducky-Script-style command syntax, but delivered over BLE rather than USB, and via manual code edits rather than a loadable script file"
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Companion Windows serial monitor app can manually trigger the payload remotely after initial pairing"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open MIT-licensed Arduino source"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Runs standalone once flashed, paired and powered, but ships with no case or battery of its own"
+   },
+   "findmy_track": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Injecting keystrokes into a device you don't own or lack authorization to test is unauthorized computer access in essentially every jurisdiction, and the project's own README says as much. The visible pairing prompt on first use also means this leaves more evidence of tampering than a silent wired BadUSB device."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": "2025-07",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "BluetoothDucky",
+   "BLE Ducky"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/Linuxndroid/Bluetooth-Ducky",
+    "what": "42 stars, MIT license, ESP32-WROOM-32 target, T-vK ESP32 BLE Keyboard library dependency, auto-reconnect after initial pairing, 'authorized use only' disclaimer"
+   },
+   {
+    "url": "https://www.linuxndroid.com/2025/07/turn-your-esp32-into-bluetooth-hid.html",
+    "what": "author's own writeup describing the visible first-pairing requirement and cross-platform Ducky-Script-style payload support"
+   },
+   {
+    "url": "https://github.com/Linuxndroid/Bluetooth-Ducky/blob/main/README.md",
+    "what": "confirms the companion 'Bluetooth Ducky Monitor' Windows app for manual serial-triggered payload execution"
+   }
+  ],
+  "research_gaps": [
+   "Whether auto-reconnect survives across target reboots, or requires the target to still show the device as a known/trusted peripheral, was not confirmed",
+   "No independent third-party test of success rate against modern OS Bluetooth pairing confirmation dialogs (Windows 11 / macOS Sonoma+) was found"
+  ]
+ },
+ {
+  "id": "hackgnar-ble-ctf",
+  "hardware_id": "generic-esp32-ble-ctf",
+  "name": "BLE CTF",
+  "firmware": "ble_ctf",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/hackgnar/ble_ctf",
+  "firmware_note": "Firmware only, targets generic ESP32, ESP32-S3 or ESP32-C6 boards. Deliberately vulnerable - it is a training target, not an attack tool.",
+  "vendor": "hackgnar (open source project)",
+  "vendor_url": "https://github.com/hackgnar",
+  "product_url": "https://github.com/hackgnar/ble_ctf",
+  "category": "bluetooth",
+  "subcategory": "ble-training-target",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 8,
+  "price_note": "No vendor product; any generic ESP32/S3/C6 dev board (~$5-10) works as the target hardware.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Designed specifically as a learning ramp: starts at basic GATT reads and progresses to challenge-response authentication and multi-response notifications across 30 flags.",
+  "build_effort": "flash-only",
+  "build_note": "Flash onto a generic ESP32/S3/C6 board; pre-compiled builds are available or build from source with CMake. The attacking side needs a Linux machine with Bluetooth (built-in or USB dongle) and a BLE client tool like gatttool.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A deliberately vulnerable BLE GATT server used as a hands-on capture-the-flag: 30 progressively harder challenges teaching GATT enumeration, characteristic read/write, notifications, descriptors and challenge-response authentication. It is the de facto standard practice target for learning BLE exploitation, referenced across many independent walkthroughs.",
+  "honest_take": "This is a training target, not an attack device - it does nothing to anyone else's equipment and has no offensive capability of its own; the attacker brings their own BLE scanning/GATT client tooling (gatttool, a phone's nRF Connect app, or another device in this database) and this box is simply the thing being practiced against. Its value is entirely in the progressive challenge design and the large body of independent write-ups that exist for when you get stuck - 776 stars and multiple community walkthroughs make it genuinely well-trodden ground for BLE learning, unlike a lot of single-purpose ESP32 firmware in this space.",
+  "best_for": [
+   "Learning BLE GATT enumeration and exploitation hands-on, progressively",
+   "Practicing gatttool/BLE client tooling against a known-safe target",
+   "Workshop/training environments - the project ships a documented workshop setup guide"
+  ],
+  "not_for": [
+   "Any offensive use - it has no scanning, spam, sniffing or jamming capability, it is purely the target",
+   "Testing against real-world devices - this is a synthetic training target, not representative of production device hardening"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (generic) / ESP32-S3 / ESP32-C6",
+   "mcu_primary_note": "Multiple supported targets with per-variant SDK configs",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "Integrated ESP32-family BLE radio, used to run the vulnerable GATT server"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Board-dependent; USB-powered by default",
+   "charging": "USB (board-dependent)",
+   "pmic": null,
+   "storage": "none",
+   "connectivity": [
+    "USB (flashing)",
+    "Bluetooth LE"
+   ],
+   "gpio": "Board-dependent",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None - bare generic dev board",
+   "notable_physical": []
+  },
+  "capabilities": {
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Advertises itself as a connectable GATT server for clients to attack"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "It is the target, not the attacking tool - scanning is done by whatever BLE client (gatttool, nRF Connect) connects to it"
+   },
+   "ble_sniff": {
+    "v": "no"
+   },
+   "ble_jam": {
+    "v": "no"
+   },
+   "ble_hid": {
+    "v": "no"
+   },
+   "bt_classic": {
+    "v": "no"
+   },
+   "ble_spam_apple": {
+    "v": "no"
+   },
+   "findmy_track": {
+    "v": "no"
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Fixed challenge firmware; you script the attacking client (gatttool/Python), not this device"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Advertises and serves challenges independently once flashed and powered - no host dependency for the target side"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "app_store": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A self-hosted training target with no offensive function of its own; there is no legal exposure from owning or running it. Whatever BLE tooling you use to attack it is a separate consideration if pointed at real third-party devices instead."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "excellent",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "ble_ctf",
+   "BLECTF"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/hackgnar/ble_ctf",
+    "what": "776 stars, ESP32/S3/C6 targets, 30-flag structure, gatttool-based flag submission (handle 0x2c) and score-check (handle 42/0x2a)"
+   },
+   {
+    "url": "https://github.com/hackgnar/ble_ctf/blob/master/docs/workshop_setup.md",
+    "what": "confirms official workshop-format usage and Linux/Bluetooth-dongle client requirements"
+   },
+   {
+    "url": "https://rossmarks.uk/blog/ble-ctf-walkthrough/",
+    "what": "independent walkthrough corroborating gatttool usage and the progressive-difficulty flag structure, evidence of active community write-up ecosystem"
+   },
+   {
+    "url": "https://jasper.la/posts/ble-ctf-write-up/",
+    "what": "second independent write-up, corroborating challenge-response/notification-based later flags"
+   }
+  ],
+  "research_gaps": [
+   "Exact release year of the original project not confirmed",
+   "Whether pre-compiled binaries are distributed via GitHub Releases or must always be built from source was not fully confirmed"
+  ]
+ },
+ {
+  "id": "osmocombb-calypso",
+  "hardware_id": "osmocombb-calypso-phone",
+  "name": "OsmocomBB",
+  "firmware": "OsmocomBB",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/osmocom/osmocom-bb",
+  "firmware_note": "Open Layer 1/2/3 GSM baseband firmware for TI Calypso-chipset phones, replacing the phone's proprietary baseband software entirely.",
+  "vendor": "Osmocom project",
+  "vendor_url": "https://osmocom.org",
+  "product_url": "https://github.com/osmocom/osmocom-bb",
+  "category": "sdr",
+  "subcategory": "gsm-baseband-research",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 15,
+  "price_note": "No vendor product - you buy a used Calypso-chipset feature phone (Motorola C118/C121/C123/C139/C140/C155/V171, historically $2-3 each, more realistically $5-20 on eBay in 2026) and flash it with this open firmware. A cheap serial/USB cable to the phone is usually needed too.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Requires understanding GSM's Layer 1/2/3 stack, sourcing a discontinued phone model on the secondhand market, and running the host-side layer23 applications yourself - there is no beginner path here.",
+  "build_effort": "full-diy",
+  "build_note": "No kit exists. You source a specific secondhand Calypso-chipset Motorola/Sony Ericsson phone, flash OsmocomBB's firmware onto it, and run the PC-side layer2/3 applications (mobile, ccch_scan, cell_log) over a cable link to the phone.",
+  "stealth": "covert",
+  "form_factor": "handheld",
+  "summary": "Open-source GSM baseband firmware for old TI Calypso-chipset feature phones (Motorola C1xx/C139/C155/V171 family), giving full open access to the GSM Layer 1/2/3 stack for protocol research: scanning control channels, logging cell info, and - because 2G's A5/1 encryption and lack of mutual network authentication are both weak - passive research into IMSI-catching and control-channel interception on 2G networks specifically. It is GSM (2G) only; it has no 3G/4G/5G capability of any kind, because those protocols don't run on this hardware or firmware at all.",
+  "honest_take": "Be blunt about what this still gets you in 2026: it is 2G-only, full stop, and 2G is actively being shut down worldwide. US carriers finished their 2G sunsets years ago; multiple European and Asian operators (France's Orange, the Netherlands, Japan, several in Vietnam and Thailand) have 2026 shutdown dates; roughly 70 countries have 2G phase-outs completed or scheduled. That doesn't make OsmocomBB useless - a substantial minority of countries (Saudi Arabia explicitly says it will run 2G indefinitely, and 21 countries have no published shutdown plan at all) still carry live 2G traffic, and it remains the standard open-source reference for GSM air-interface research and teaching regardless of live-network availability. But if the goal is real-world interception capability against a modern phone in a market that has sunset 2G, this tool cannot reach it - the target phone will simply refuse to fall back to a network this hardware can speak to. And this is entirely a research/education tool with a discontinued hardware dependency: you're hunting 15-20-year-old phones on eBay, not buying anything current.",
+  "best_for": [
+   "GSM (2G) protocol research and education in jurisdictions/labs where 2G is still live or in a controlled test network",
+   "Understanding 2G's real security weaknesses (weak A5/1, no mutual authentication) hands-on",
+   "Layer 1/2/3 GSM stack development and experimentation"
+  ],
+  "not_for": [
+   "Any interception or research targeting 3G, 4G or 5G networks - architecturally impossible with this hardware/firmware",
+   "Use in any country/carrier that has completed its 2G sunset - there is no 2G signal to interact with",
+   "Turnkey or beginner use - sourcing discontinued phones and running the host-side toolchain both require real GSM protocol knowledge"
+  ],
+  "hardware": {
+   "mcu_primary": "TI Calypso",
+   "mcu_primary_note": "GSM baseband chipset used in Motorola C11x/C12x/C139/C140/C155/V171-family phones from the mid-2000s; OsmocomBB replaces the phone's stock baseband firmware entirely",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "TI Calypso RF/baseband",
+     "role": "cellular",
+     "note": "GSM 2G only (850/900/1800/1900MHz band-dependent on phone model). No 3G/4G/5G capability - those protocols require entirely different silicon this hardware does not have."
+    }
+   ],
+   "display": {
+    "type": "Original phone's monochrome/basic color LCD",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Original phone battery, typically old/degraded on secondhand units",
+   "charging": "Original phone charger (model-dependent)",
+   "pmic": null,
+   "storage": "none beyond firmware flash",
+   "connectivity": [
+    "Serial/USB cable link to host PC for layer2/3 applications"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Original phone chassis (Motorola C1xx-family candybar form factor)",
+   "notable_physical": [
+    "Standard feature-phone keypad and small LCD from the donor handset"
+   ]
+  },
+  "capabilities": {
+   "sdr_rx": {
+    "v": "no",
+    "note": "Not an SDR - this is real GSM baseband silicon (TI Calypso) confined to standard GSM channels/bands, not a wideband tunable receiver like an SDR"
+   },
+   "sdr_tx": {
+    "v": "no",
+    "note": "Same reasoning: fixed-function GSM baseband, not general-purpose RF transmit"
+   },
+   "sdr_bandwidth": {
+    "v": "no"
+   },
+   "sdr_full_duplex": {
+    "v": "no"
+   },
+   "packet_capture": {
+    "v": "partial",
+    "note": "The ccch_scan/layer23 host tooling can dump received GSM Layer 1 frames and forward them as GSMTAP packets to Wireshark for analysis"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open C source for both firmware and host-side layer2/3 applications (mobile, cell_log, ccch_scan)"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Layer 1 runs on the phone; Layer 2/3 processing happens on a host PC connected over a serial/USB link - the phone alone cannot do protocol research work"
+   },
+   "usb_mass_storage": {
+    "v": "no"
+   },
+   "web_ui": {
+    "v": "no"
+   },
+   "app_store": {
+    "v": "no"
+   },
+   "jtag_swd": {
+    "v": "unknown",
+    "note": "Some Calypso hardware hacking exists in the broader community, but it isn't a stated focus or documented feature of the OsmocomBB project itself"
+   },
+   "glitching": {
+    "v": "no"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "GSM interception and IMSI-catching are tightly regulated or outright illegal for non-licensed operators in most countries, regardless of how cheap or old the hardware is - many jurisdictions treat any unauthorized reception/decoding of mobile network control-channel data, and certainly any active network impersonation, as a serious telecommunications-interception offence carrying criminal penalties. Passive academic research on your own isolated test network (e.g. via OpenBTS/osmocom-bts in a Faraday-shielded lab) is a very different legal position from anything touching live commercial spectrum or real subscriber traffic - treat the two as entirely separate activities and check local telecom law before doing either."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2026-06",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "osmocom-bb",
+   "Osmocom Baseband"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/osmocom/osmocom-bb",
+    "what": "331 stars, project description as a Mobile Station-side GSM implementation for Calypso-chipset phones"
+   },
+   {
+    "url": "https://osmocom.org/projects/baseband/wiki/ccch_scan",
+    "what": "ccch_scan tool: dumps received GSM Layer 1 frames, forwards as GSMTAP to Wireshark, used for control-channel research"
+   },
+   {
+    "url": "https://pub.nethence.com/radio/motorola",
+    "what": "Motorola C123/C121/C118 setup guide confirming supported phone models and the E88 firmware variant used"
+   },
+   {
+    "url": "https://iot.cards/en/resources/guides/sunset-2g",
+    "what": "2026 country-by-country 2G/3G sunset timeline: 19+ countries completed, ~70 countries/139 operators with plans, France/Netherlands/Japan/Vietnam/Thailand 2026 shutdown dates, Saudi Arabia's indefinite-2G stance, 21 countries with no published plan"
+   },
+   {
+    "url": "https://kanaksasak.medium.com/imsi-catcher-attack-and-threat-model-on-2g-network-433bb04ad0ce",
+    "what": "explains why 2G specifically is vulnerable (weak A5/1 cipher, no mutual authentication) and that OsmocomBB-based research targets exactly this weakness - marked as community-sourced, not primary/official documentation"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for cellular/GSM functions at all (passive IMSI catching, control-channel sniffing, cell scanning) - sdr_rx/tx are used here only to explicitly rule out SDR framing, not to describe what the device actually does; a dedicated cellular category and keys (e.g. gsm_2g_only, imsi_catch_passive, cell_scan) are needed for this and any future cellular tool in the database",
+   "Whether any currently-manufactured phone still uses a Calypso-compatible chipset was not found - this appears to depend entirely on 15-20-year-old discontinued secondhand hardware, which is itself a supply-risk finding worth flagging",
+   "Precise list of which of the ~70 countries with 2G phase-out plans have already gone dark versus still pending as of September 2026 was not itemized country-by-country"
+  ]
+ }
+]

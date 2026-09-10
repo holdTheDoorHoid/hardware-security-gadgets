@@ -2386,5 +2386,709 @@
    "Could not confirm the exact release date of either the hardware or the firmware projects, or pull the GitHub releases page (returned 404 on fetch).",
    "Could not confirm whether the htotoo firmware's WiFi SSID spoofer app also performs deauthentication in addition to SSID/beacon spam - only beacon-spam behavior was documented in the sources found."
   ]
+ },
+ {
+  "id": "evil-m5project-core2",
+  "hardware_id": "m5stack-core2-evil-m5",
+  "name": "M5Stack Core2 (Evil-M5Project)",
+  "firmware": "Evil-M5Core2",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/7h30th3r0n3/Evil-M5Project",
+  "firmware_note": "Same repo also ships Evil-Cardputer (the author's recommended primary target, with the deepest feature set: BadUSB, IMSI catcher, LLM chat, IR toolkit, NTLMv2 cracking, SIP/CCTV toolkits), Evil-AtomS3 (needs a separate GPS module, reduced UI on the tiny screen), Evil-M5Core3, and a beta CYD/M5Stick build. This record covers the Core2 build, which per the project's own feature matrix has roughly half of Cardputer's modules and lacks BadUSB, IMSI catcher, LLM chat, IR, and several LAN-attack tools Cardputer has.",
+  "vendor": "M5Stack",
+  "vendor_url": "https://m5stack.com",
+  "product_url": "https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit-v1-3",
+  "category": "wifi",
+  "subcategory": "wifi-bluetooth-audit",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 42.9,
+  "price_note": "The firmware itself is free. $42.90 is M5Stack's current price for the Core2 v1.3 hardware it runs on (the older v1.1 unit is now EOL and redirects buyers to v1.3); add about $12.50 for M5Stack's own GPS/BDS unit if you want the wardriving feature. No vendor sells this pre-flashed as an 'Evil-M5' product.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "M5Burner's web flasher covers basic installation in a couple of minutes, but the project's own instructions require pinning an old ESP32 Arduino core (2.1.4 or below), running a separate script to bypass Espressif's deauth guard, adding extra libraries for BadUSB, and placing SD content inside a specifically-named 'evil' folder - none of that is beginner-friendly.",
+  "build_effort": "flash-only",
+  "build_note": "No soldering for the Core2 build itself - M5Burner or the Arduino IDE flashes over USB-C. The optional GPS unit for wardriving is a Grove-port plug-in, not a solder job.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "Evil-M5Project is a free Wi-Fi/BLE pentest firmware, MIT-licensed per its README (though GitHub finds no separate LICENSE file to auto-detect), that the author builds for several M5Stack boards - M5Cardputer, Core2, Core3, AtomS3 and M5Stack Fire - from one shared codebase. On Core2 it covers scanning, deauth, captive-portal credential capture, karma attacks, beacon spam, handshake capture, a basic LAN toolkit (rogue DHCP/DNS, port scanning), and Flipper/skimmer/deauth detection; the fuller module set (BadUSB, IMSI catcher, LLM chat, IR) is Cardputer-only.",
+  "honest_take": "This is firmware for the plain ESP32 inside a Core2, not a purpose-built security device - the same Xtensa LX6 silicon is in $5 dev boards, and the $42.90 buys you the screen, battery, case and Grove ports, not any special radio capability. The project's own README recommends the Cardputer over the Core2 ('Better one: M5Cardputer'), and its own feature matrix confirms it: Core2 gets deauth, karma, captive portals and a basic LAN toolkit, but not BadUSB, IMSI catching, IR or the 'Wardriving Master' multi-node mode. The 'Evil-Twin' checkbox itself is unchecked for Core2 in that same matrix - despite having network cloning, karma and a captive portal, the developer doesn't consider the automated evil-twin chain complete on this target. Deauth and beacon spam only reach unprotected management frames - WPA3's mandatory PMF stops it like every other ESP32 tool. And the credential-harvesting captive portal plus rogue-DHCP/DNS features push this well past 'harmless Wi-Fi scanner' territory some buyers expect - using them against a network you don't own is a computer-misuse-shaped decision, not a grey area.",
+  "best_for": [
+   "Learning 802.11 attack mechanics on hardware you already own",
+   "Wi-Fi recon, karma and captive-portal testing in a lab you control",
+   "A cheaper, screen-equipped alternative to a bare ESP32 dev board for a Marauder-adjacent feature set"
+  ],
+  "not_for": [
+   "Anything needing sub-GHz, NFC/RFID or a genuine IR blaster - Core2 has none of that in this firmware",
+   "Deauthing modern PMF/WPA3 networks",
+   "The project's fullest feature set - that's the Cardputer build, not Core2",
+   "Anyone wanting a supported, warrantied product - this is a hobby repo with no tagged releases, just a rolling main branch"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-D0WDQ6-V3",
+   "mcu_primary_note": "Dual-core Xtensa LX6 @ 240MHz, 16MB flash, 8MB PSRAM. The original ESP32, not an S3 - no native USB HID, which is why this project's BadUSB feature (Cardputer/AtomS3-only) needs extra library workarounds rather than being a first-class capability.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-D0WDQ6-V3",
+     "role": "wifi",
+     "note": "2.4GHz 802.11 b/g/n only - no 5GHz, unlike the newer ESP32-C5-based Marauder v8/C5 Wardriver already in this database."
+    },
+    {
+     "ic": "ESP32-D0WDQ6-V3",
+     "role": "bluetooth",
+     "note": "Bluetooth Classic + BLE 4.2 (the original ESP32 has both); the firmware's 'Bluetooth Keyboard' feature uses BLE HID."
+    }
+   ],
+   "display": {
+    "type": "ILI9342C IPS LCD, capacitive touch (FT6336U controller)",
+    "size_in": 2.0,
+    "resolution": "320x240",
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": 500,
+   "battery_note": "Built-in 3.7V 500mAh Li-Po with onboard charge management (AXP192 PMIC).",
+   "charging": "USB-C",
+   "pmic": "AXP192",
+   "storage": "microSD slot, vendor-rated up to 16GB; project requires FAT32",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth Classic + BLE",
+    "Grove port (I2C/UART)"
+   ],
+   "gpio": "Grove-style I2C/UART port; full GPIO broken out on the Core2 base",
+   "sensors": [
+    "none used by this firmware"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Plastic enclosure (M5Stack stock case)",
+   "notable_physical": [
+    "Capacitive touchscreen",
+    "Two physical buttons plus a touch button row",
+    "Grove port for GPS/sensor add-ons",
+    "Speaker and microphone (not used by this firmware)"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "AP and client scanning."
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "'Raw Sniffing' mode in the Core2 build."
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Management-frame injection for deauth/beacon-spam, like every ESP32 tool of this kind - not general packet injection."
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "'Deauther' mode; 'Auto Deauther' is Cardputer-only."
+   },
+   "wifi_evil_twin": {
+    "v": "partial",
+    "note": "The project's own feature table checks 'Network Cloning', 'Captive Portal Management' and 'Karma Attack' for Core2, but explicitly leaves the dedicated 'Evil-Twin' row unchecked for this target - only Cardputer has that marked complete."
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "Serves portal pages and logs submitted credentials ('Credential Handling')."
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "'Handshake Master'; the separate 'Check Handshakes' verification tool is Cardputer-only."
+   },
+   "wifi_beacon_spam": {
+    "v": "yes"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "'Sniffing probes' mode."
+   },
+   "wifi_karma": {
+    "v": "yes",
+    "note": "Includes an 'Automated Karma Attack' and a targeted 'Karma Spear' mode."
+   },
+   "wifi_wardriving": {
+    "v": "addon",
+    "note": "Needs the separate GPS module M5Stack sells for the Grove port; the multi-node 'Wardriving Master' aggregation mode is Cardputer-only."
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Used for captive portal/karma/rogue-DHCP modes."
+   },
+   "packet_capture": {
+    "v": "yes"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Captured credentials, handshakes and scan data go to the SD card's 'evil' folder."
+   },
+   "ble_hid": {
+    "v": "yes",
+    "note": "'Bluetooth Keyboard' mode - BLE HID injection."
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "'Wall Of Flipper' - a BLE advertisement pattern match, the same technique as every other ESP32 Flipper detector."
+   },
+   "detect_deauth": {
+    "v": "yes",
+    "note": "'EAPOL/Deauth detection' is checked for Core2 (Core3's row is separately annotated 'No EAPOL', meaning deauth-only detection on that target)."
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "'Skimmer Detector' - matches known BLE skimmer-module name/pairing signatures, not skimmers directly."
+   },
+   "pwnagotchi_spam": {
+    "v": "yes",
+    "note": "'PwnGrid' mode is checked for Core2. The README doesn't explain whether this broadcasts spoofed pwnagotchi identities or joins the real PwnGrid mesh protocol - only that the feature exists."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "'Remote Web Server' - browser-based control/status interface."
+   },
+   "standalone_untethered": {
+    "v": "yes"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and flashing this is legal in the US and most places. Deauth, beacon spam and Wi-Fi scanning fall into the same grey zone as any ESP32 pentest tool - illegal to point at networks you don't control in most jurisdictions. The captive-portal credential capture and rogue-DHCP/DNS features go a step further: harvesting other people's login credentials or hijacking their DNS without consent is straightforwardly a computer-misuse offence almost everywhere, not a licensing technicality. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-09",
+   "app_store": "No - single firmware image per target, no plugin system",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Evil-M5Core2",
+   "Evil-M5Project"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/7h30th3r0n3/Evil-M5Project",
+    "what": "repo metadata via GitHub API: 2,623 stars, 248 forks, last push 2026-09-06T20:15:38Z, no auto-detected LICENSE file"
+   },
+   {
+    "url": "https://github.com/7h30th3r0n3/Evil-M5Project/blob/main/README.md",
+    "what": "full per-device feature matrix, hardware compatibility table, install instructions, embedded MIT license text"
+   },
+   {
+    "url": "https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit-v1-3",
+    "what": "current Core2 v1.3 price $42.90, in stock, ESP32-D0WDQ6-V3, 320x240 2.0in capacitive touch, 500mAh battery, 8MB PSRAM"
+   },
+   {
+    "url": "https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit-v1-1",
+    "what": "predecessor v1.1 now listed EOL, redirecting buyers to v1.3"
+   },
+   {
+    "url": "https://shop.m5stack.com/products/gps-bds-unit-with-sma-antenna-at6668",
+    "what": "$12.50 GPS/BDS add-on unit referenced for wardriving"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp32",
+    "what": "ESP32 series specs confirming Bluetooth Classic + BLE 4.2 dual-mode radio, used for the Core2's MCU capability notes"
+   }
+  ],
+  "research_gaps": [
+   "M5Stack Core2 exact dimensions and weight not confirmed (docs.m5stack.com pages returned connection errors during research)",
+   "No capability key exists for several LAN-layer modules this firmware has on Core2: DHCP starvation, rogue DHCP, DNS switching, generic 'network hijacking', reverse TCP tunnel, printer detection/printing, full network+port scanning, a Wi-Fi channel visualizer, and a webhook-connected honeypot - described in summary/honest_take instead",
+   "No capability key for the 'Probes Attack' mode (distinct from probe-request sniffing) - likely a forged/flood probe-request feature, not confirmed from README text alone",
+   "Exact PwnGrid behavior (spoofing vs joining the real pwnagotchi mesh) not documented",
+   "Whether PMKID-specific capture (vs generic EAPOL handshake capture) exists is not confirmed",
+   "No tagged GitHub releases exist for this repo - development happens directly on main, so 'last_release' reflects the last commit, not a version tag"
+  ]
+ },
+ {
+  "id": "wardriver3000",
+  "hardware_id": "wardriver3000",
+  "name": "wardriver3000",
+  "firmware": "wardriver3000 firmware",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/cifertech/wardriver3000",
+  "firmware_note": "One bundled repo holds both the custom PCB (Altium .SchDoc/.PcbDoc files, not the more commonly-used open KiCad format) and its single Arduino firmware - there's no separate stock/community firmware split because there's no other hardware this runs on.",
+  "vendor": "CiferTech (open-source project, not sold)",
+  "vendor_url": "https://cifertech.net",
+  "product_url": "https://github.com/cifertech/wardriver3000",
+  "category": "wardriving",
+  "subcategory": "gps-wifi-logger",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 30,
+  "price_note": "No vendor sells an assembled unit or bare PCB anywhere found (not on Tindie, not on cifertech.net). $30 is a rough BOM estimate: bare ESP32 module, a NEO-6M-class GPS module, a 128x32 SSD1306 OLED, a microSD breakout, a battery, and a small custom-fabricated PCB run.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You fabricate the author's custom PCB yourself (Altium source files only - most hobbyists will need Altium's free viewer, not their usual KiCad workflow, just to inspect it) and hand-solder an ESP32, GPS module, OLED and SD breakout to it, then compile Arduino code with pins hardcoded in the .ino rather than a config file.",
+  "build_effort": "soldering",
+  "build_note": "Custom two-layer PCB (Gerbers not separately provided - only Altium source files plus top/bottom photos) and a 3D-printed case (STL files included). No kit or assembled option exists.",
+  "stealth": "discreet",
+  "form_factor": "pocket",
+  "summary": "wardriver3000 is a solo hobbyist's open-source ESP32 + GPS + OLED wardriving rig on a custom PCB: it scans nearby Wi-Fi networks, tags them with a GPS fix, and appends the results to a CSV file on a microSD card. It's a from-scratch build - custom board, 3D-printed case, no assembled version - for people who want to build their own wardriving hardware rather than buy one.",
+  "honest_take": "The GitHub repo has had zero commits since April 28, 2024 - over two years before this was written - and a basic 'can you give the gpio pins for this project' issue from mid-2024 sits open and unanswered, so treat this as a frozen snapshot, not a maintained project. More importantly, despite the README's framing around uploading to Wigle.net, the actual firmware writes a custom CSV (BSSID, SSID, capabilities, RSSI, channel, lat, lng, then three hardcoded zeros for altitude/accuracy/type) with no WigleWifi-1.4 header line at all - that's not the format WiGLE's own importer expects, so you'd need to reformat the file yourself before uploading, something the README never mentions. The scanning itself is also just the stock Arduino WiFi.scanNetworks() station-mode call - the same thing any $5 ESP32 dev board can do - not a promiscuous-mode capture; nothing here actually needed the custom PCB except tidiness. For similar money and real solder time, JCMK's actively-maintained 'C5 Wardriver' (dual-band 2.4+5GHz plus BLE, genuine WiGLE-formatted output, updated within the last month as of this check) is the better wardriving pick if you're choosing between DIY projects, and this database's ESP32 Wardriver Pro is a more honestly-documented single-band alternative at similar build effort.",
+  "best_for": [
+   "Practicing PCB assembly and Arduino wiring on a simple, already-designed board",
+   "A learning project for basic ESP32 + GPS + SD integration"
+  ],
+  "not_for": [
+   "Uploading straight to Wigle.net - the CSV needs manual reformatting first",
+   "Anyone wanting ongoing support - the maintainer has been gone since April 2024",
+   "BLE wardriving - listed as a future feature that never shipped",
+   "Anyone who'd rather buy hardware than fabricate a custom PCB - no assembled option exists"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Source code refers to it only as a generic ESP32 module on the custom PCB; the exact part (WROOM-32, DevKitC clone, etc.) isn't stated in the repo or the author's article.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi",
+     "note": "Generic ESP32 2.4GHz Wi-Fi via the Arduino WiFi library's standard station-mode scan (WiFi.scanNetworks()) - not a promiscuous-mode/monitor-mode capture."
+    }
+   ],
+   "display": {
+    "type": "SSD1306 OLED (U8g2 driver, I2C)",
+    "size_in": null,
+    "resolution": "128x32",
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Author's article mentions a lithium battery and a USB-C connector on the PCB; exact cell capacity not published.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "microSD, FAT32",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4GHz"
+   ],
+   "gpio": "Single GPIO26 button pin defined in firmware; GPS wired to pins 34/35 via SoftwareSerial",
+   "sensors": [
+    "GPS module (NEO-6M class per the author's article; exact part not confirmed in the repo)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed enclosure (STL files in repo)",
+   "notable_physical": [
+    "Custom 2-layer PCB",
+    "Single push-button for page switching"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard Arduino WiFi.scanNetworks() active station-mode scan."
+   },
+   "gps": {
+    "v": "yes",
+    "note": "NEO-6M-class module wired via SoftwareSerial; logging is skipped entirely when there's no GPS fix."
+   },
+   "gps_wardrive_log": {
+    "v": "partial",
+    "note": "Writes GPS-tagged CSV rows, but NOT in WigleWifi-1.4 format - no header row, non-standard column order, altitude/accuracy/type hardcoded to 0. Needs manual reformatting before a real WiGLE upload despite the project's stated purpose."
+   },
+   "sd_logging": {
+    "v": "yes"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "That's the whole point of the device, but see gps_wardrive_log for the CSV-format caveat."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Listed under the README's own 'Future Changes' as a planned, not-yet-built feature. Given no commits since April 2024, unlikely to ever ship."
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "No transmit-attack code exists in the source - this is a scan-and-log-only device, though (unlike this database's ESP32 Wardriver Pro) the project doesn't explicitly document passivity as a design goal either."
+   },
+   "wifi_injection": {
+    "v": "no",
+    "note": "No TX/attack code path exists anywhere in the firmware source - the ESP32 radio is only ever used in station-scan mode."
+   },
+   "wifi_ap_mode": {
+    "v": "no",
+    "note": "Never enters AP mode; the firmware only performs client-mode scanning."
+   },
+   "standalone_untethered": {
+    "v": "yes"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passive Wi-Fi scanning and GPS logging for your own reference is legal in essentially every jurisdiction - it's the same activity your phone does constantly. No transmit-attack features exist to create the deauth/injection legal exposure other devices in this database carry."
+  },
+  "ecosystem": {
+   "community": "dead",
+   "docs_quality": "sparse",
+   "last_release": "2024-04",
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "Wardriver3000",
+   "Your Secret Weapon for Wireless Networks - Wardriver"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/cifertech/wardriver3000",
+    "what": "repo metadata via GitHub API: 121 stars, 10 forks, MIT license, created 2024-04-03, last push 2024-04-28T11:09:09Z, 2 open issues both unanswered"
+   },
+   {
+    "url": "https://github.com/cifertech/wardriver3000/blob/main/code/wardriver/wardriver.ino",
+    "what": "full firmware source: confirms WiFi.scanNetworks() station-mode scan, SoftwareSerial GPS on pins 34/35, SSD1306 128x32 OLED via U8g2, CSV write logic with no WigleWifi header and hardcoded 0 altitude/accuracy/type fields"
+   },
+   {
+    "url": "https://github.com/cifertech/wardriver3000/tree/main/PCB",
+    "what": "PCB design provided only as Altium .PcbDoc/.SchDoc files, no Gerbers or KiCad source"
+   },
+   {
+    "url": "https://cifertech.net/wardriver3000-build-your-own-wardriving-machine/",
+    "what": "author's build article: BOM component types (ESP32, NEO-6M GPS, SSD1306 OLED, microSD), no exact part numbers or total cost given"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32DualBandWardriver",
+    "what": "comparison point ('C5 Wardriver' in this database): dual-band 2.4/5GHz + BLE, genuine WiGLE-format CSV output, 239 stars, pushed 2026-08-20"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 module part number not stated anywhere in the repo or author's article",
+   "Exact GPS module model/part number not confirmed beyond the author calling it a 'GPS Neo 6m module'",
+   "No BOM cost breakdown published by the author; $30 is this research pass's own parts estimate",
+   "PCB and enclosure dimensions not measured or published",
+   "Whether the project has been forked into an actively-maintained continuation not checked beyond the 10 GitHub forks shown"
+  ]
+ },
+ {
+  "id": "esp32-wardriver-pro",
+  "hardware_id": "esp32-wardriver-pro",
+  "name": "ESP32 Wardriver Pro",
+  "firmware": "esp32-gps-wifi-wigle",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle",
+  "firmware_note": "Single Arduino sketch plus a modular src/ tree (separate GPS, Wi-Fi scan, storage, display and serial-shell files); no hardware variants - it's written against generic ESP32 DevKit-class wiring.",
+  "vendor": "dkyazzentwatwa (open-source project, not sold)",
+  "vendor_url": "https://github.com/dkyazzentwatwa",
+  "product_url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle",
+  "category": "wardriving",
+  "subcategory": "gps-wifi-logger",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 25,
+  "price_note": "No commercial version exists - the author sells nothing. $25 is a parts estimate for a generic ESP32 DevKit board, a GPS module, an SSD1306 OLED and a microSD breakout, bought individually rather than as a kit.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Breadboard or perfboard wiring of four modules to documented GPIOs, then arduino-cli compilation with a few named libraries - more involved than flashing a pre-built board, less involved than designing a PCB.",
+  "build_effort": "full-diy",
+  "build_note": "No PCB or kit is provided at all - you source four off-the-shelf modules (ESP32 DevKit, GPS, SSD1306 OLED, SD breakout) and wire them point-to-point per the README's pin table, then flash via arduino-cli.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "ESP32 Wardriver Pro is a solo-maintained, deliberately minimal wardriving logger: an ESP32 DevKit board, a GPS module, a small OLED and a microSD card, wired together and flashed with an Arduino sketch that scans Wi-Fi, waits for a GPS fix, and writes properly-formatted WigleWifi-1.4 CSV rows to the SD card. The README states outright that it does not deauthenticate, join networks, inject packets, or attack anything - it only watches and logs.",
+  "honest_take": "The 'passive' framing is honest about intent but worth reading precisely: the underlying WiFi.scanNetworks() call is Arduino's standard active station-mode scan, which transmits 802.11 probe requests on every channel to elicit responses - the same thing your phone does constantly, not a promiscuous-mode radio that only listens. What 'passive' actually means here is narrower and true: no deauth, no packet injection, no joining networks, confirmed directly in the source (WifiScanner.cpp calls nothing but WiFi.scanNetworks). The upside of that narrow scope is real: this is a solo hobby project (40 stars) that still shipped exactly what it says it does - a genuine WigleWifi-1.4 CSV with a correct header - unlike wardriver3000 (also in this database), whose custom PCB and README both promise Wigle compatibility that its own firmware doesn't deliver. Against JCMK's actively-maintained 'C5 Wardriver' (dual-band 2.4+5GHz, BLE, also correctly WiGLE-formatted, from the same team behind ESP32 Marauder), this is the honest budget pick if you specifically want 2.4GHz-only passive logging and don't mind wiring your own board from loose modules - the C5 Wardriver adds 5GHz and BLE for not much more cost and effort, and has a larger, more active community behind it.",
+  "best_for": [
+   "Wardriving with a device that cannot be mistaken for an attack tool",
+   "A well-documented starter project for learning ESP32+GPS+SD integration",
+   "Correctly-formatted Wigle CSV output without designing a PCB"
+  ],
+  "not_for": [
+   "Any active testing - deauth, injection, evil twin and karma are all absent by design",
+   "5GHz or BLE wardriving - 2.4GHz Wi-Fi only; a BLE scanner exists in code but is disabled by default",
+   "Buyers who want an assembled product - no kit or PCB is sold, you wire it from parts"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "README specifies only 'ESP32 DevKit-style board'; no exact module part number given.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi",
+     "note": "Generic ESP32 2.4GHz Wi-Fi, station-mode active scan via WiFi.scanNetworks(false, true) - confirmed in WifiScanner.cpp source."
+    }
+   ],
+   "display": {
+    "type": "SSD1306 OLED, I2C",
+    "size_in": null,
+    "resolution": "128x64",
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Not specified - README doesn't document a battery or power circuit beyond USB power to the DevKit.",
+   "charging": null,
+   "pmic": null,
+   "storage": "microSD via SPI, FAT32",
+   "connectivity": [
+    "Wi-Fi 2.4GHz",
+    "Serial/USB for the debug shell"
+   ],
+   "gpio": "GPS on 16/17 (Serial1), OLED I2C on 21/22, SD SPI on 5/23/19/18, optional buttons on user-defined pins",
+   "sensors": [
+    "GPS module (NMEA @ 9600 baud, exact model not specified)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None sold; author's photos show an unspecified enclosure",
+   "notable_physical": [
+    "Breadboard/perfboard build, no custom PCB"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Active station-mode scan (WiFi.scanNetworks), not a promiscuous-mode capture."
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Logging is gated on a valid GPS fix; TinyGPS++-based."
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "Writes genuine WigleWifi-1.4 format CSVs with a correct header row (appRelease=ESP32WardriverPro...), confirmed in the README's example output."
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Session logs, a periodic summary file, and automatic rotation by size."
+   },
+   "wifi_wardriving": {
+    "v": "yes"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Explicitly absent by design - README states it 'does not deauthenticate clients, join networks, inject packets, or perform active attacks.' Confirmed absent from source; WifiScanner.cpp contains no TX/injection code."
+   },
+   "wifi_injection": {
+    "v": "no",
+    "note": "See wifi_deauth_24 - no injection code path exists in the source."
+   },
+   "wifi_ap_mode": {
+    "v": "no",
+    "note": "Never enters AP mode; station-mode only."
+   },
+   "ble_scan": {
+    "v": "partial",
+    "note": "A BLE scanner hook exists in BleScanner.cpp but is disabled by default 'so the base WiFi logger stays small and stable.'"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Runs off USB power to the DevKit; no battery documented, so it needs a power bank or vehicle USB to be field-portable."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passive network discovery and GPS logging is legal essentially everywhere - it's the same 802.11 probe-request behavior every phone performs walking down the street. No transmit-attack code exists to create the legal exposure that deauth/injection tools carry."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2026-05",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "esp32-gps-wifi-wigle"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle",
+    "what": "repo metadata via GitHub API: 40 stars, Apache-2.0 license, created 2024-07-03, last push 2026-05-18T20:46:59Z, 2 open issues"
+   },
+   {
+    "url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle/blob/main/README.md",
+    "what": "full README: passive-only statement verbatim, hardware BOM, wiring table, WigleWifi-1.4 CSV example with header"
+   },
+   {
+    "url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle/blob/main/src/WifiScanner.cpp",
+    "what": "source confirming WiFi.scanNetworks(false, true) station-mode scan, no injection/deauth/AP code"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32DualBandWardriver",
+    "what": "comparison point ('C5 Wardriver' in this database): dual-band 2.4/5GHz + BLE, 239 stars, pushed 2026-08-20"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 DevKit board model and GPS module model not specified by the author",
+   "No battery/power specification - unclear whether the author intends field use off a power bank or dash USB only",
+   "No case or enclosure sold or specified beyond photos",
+   "$25 price is this research pass's own parts estimate; the author never states a BOM cost"
+  ]
+ },
+ {
+  "id": "flipper-wifi-devboard-gps-expansion",
+  "hardware_id": "flipper-wifi-devboard-gps-expansion",
+  "name": "WiFi Dev Board GPS Expansion",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "This is a passive adapter board with no firmware of its own - it exposes GPS and microSD to whichever firmware the host Flipper Zero Wi-Fi Dev Board (an ESP32-S2 board made by Flipper Devices, not JCMK) is running. In practice that means ESP32 Marauder, the only Dev Board firmware with code paths that use SD storage and GPS for wardriving/pcap logging.",
+  "vendor": "Just Call Me Koko LLC",
+  "vendor_url": "https://justcallmekokollc.com",
+  "product_url": "https://justcallmekokollc.com/products/flipper-zero-dev-board-sd-gps",
+  "category": "wifi",
+  "subcategory": "accessory-expansion",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 21,
+  "price_note": "Sold out at the vendor as of this check, no restock date given.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "The vendor describes soldering the adapter PCB directly against the back of the Flipper Zero Wi-Fi Dev Board, joint by joint ('no wires needed') - fine hand-soldering on an already-populated board, not a beginner's first solder job.",
+  "build_effort": "soldering",
+  "build_note": "Solder-on adapter, confirmed by the vendor's own product description: 'placing the adapter PCB against the back of the Flipper Zero WiFi Dev Board and soldering each connection.' Ships with the adapter PCB and a ceramic GPS antenna; no wiring harness.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small adapter PCB from JCMK (the ESP32 Marauder developer's company) that solders onto the back of the official Flipper Zero Wi-Fi Dev Board (an ESP32-S2 board made by Flipper Devices, which has no SD slot or GPS of its own) to add a microSD slot, a GPS receiver with ceramic antenna, and UART activity LEDs. It exists specifically to give that board's ESP32 Marauder firmware somewhere to write pcap captures and Wigle-format wardrive logs, and a GPS fix to tag them with.",
+  "honest_take": "This only makes sense if you already own three separate things: a Flipper Zero, the official ESP32-S2 Wi-Fi Dev Board (sold separately by Flipper Devices), and now this $21 adapter - plus a soldering iron. The Wi-Fi Dev Board's ESP32-S2 has no Bluetooth at all (S2 silicon lacks it) and 2.4GHz-only Wi-Fi, so this expansion doesn't add any radio capability - it only adds the storage and positioning that Marauder's wardriving and pcap-capture modes need. The 'UART activity LEDs' are exactly what they sound like: two indicator LEDs so you can tell serial traffic is flowing without hooking up a logic analyzer, not a new interface. If GPS wardriving is the actual goal rather than stacking accessories onto a Flipper you already own, JCMK's own 'C5 Wardriver' or Marauder v8 board (both already in this database) get you dual-band Wi-Fi, GPS and SD in one purchase with no soldering.",
+  "best_for": [
+   "Flipper Zero + Wi-Fi Dev Board owners who want Marauder's pcap and wardrive logging to actually go somewhere",
+   "Adding a visual UART-activity indicator to the Dev Board for debugging"
+  ],
+  "not_for": [
+   "Anyone without the separate Flipper Zero and official Wi-Fi Dev Board already",
+   "5GHz Wi-Fi or Bluetooth work - the underlying ESP32-S2 has neither",
+   "Beginners uncomfortable soldering directly onto a populated board"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "This product has no MCU of its own - it's a passive adapter for the ESP32-S2-WROVER-based Flipper Zero Wi-Fi Dev Board.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "gps",
+     "note": "GPS receiver chip model not published on the product page; ships with a ceramic patch GPS antenna."
+    }
+   ],
+   "display": {
+    "type": null,
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "None - powered through the host Wi-Fi Dev Board.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Adds a microSD slot (none exists on the stock Wi-Fi Dev Board)",
+   "connectivity": [
+    "Solders directly to the Wi-Fi Dev Board's rear pads"
+   ],
+   "gpio": null,
+   "sensors": [
+    "GPS (model unconfirmed)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None included; vendor sells a separate optional enclosure",
+   "notable_physical": [
+    "UART activity LEDs",
+    "Ceramic GPS antenna included"
+   ]
+  },
+  "capabilities": {
+   "gps": {
+    "v": "yes",
+    "note": "Adds GPS hardware the host board lacks natively; usable only by firmware written to read it (Marauder)."
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Adds the microSD slot the stock Wi-Fi Dev Board doesn't have."
+   },
+   "gps_wardrive_log": {
+    "v": "addon",
+    "note": "Functional only when the host board runs ESP32 Marauder, which has the code paths for this specific GPS+SD combination."
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "This accessory's microSD slot is what makes pcap logging possible on the host board - it has none otherwise."
+   },
+   "wifi_scan_24": {
+    "v": "addon",
+    "note": "Not from this board - inherited entirely from the host Wi-Fi Dev Board's ESP32-S2 and whatever firmware it runs."
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Host board's ESP32-S2 is 2.4GHz-only; this accessory adds no radio capability at all."
+   },
+   "wifi_deauth_24": {
+    "v": "addon",
+    "note": "The host board's own Marauder feature, independent of this GPS/SD accessory - included here for comparison since it's still gated on the same custom-firmware host"
+   },
+   "wifi_monitor_mode": {
+    "v": "addon",
+    "note": "Host board's own Marauder feature; this accessory doesn't gate it, just gives its captures somewhere to be saved"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Notable absence, but it belongs to the host board: the ESP32-S2 has no Bluetooth Classic radio at all, so nothing this expansion adds can change that."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Same silicon limitation - the ESP32-S2 has no Bluetooth radio of any kind (Classic or BLE), so no BLE features exist on this host regardless of this accessory."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires the Flipper Zero plus the separately-sold Wi-Fi Dev Board it solders onto; has no function on its own."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "This is a passive storage/positioning add-on - GPS reception carries no transmission legal exposure. Whatever legal risk applies comes entirely from the host Wi-Fi Dev Board's firmware (Marauder's deauth/capture features), not from this board."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Flipper Zero Wi-Fi Dev Board SD/GPS Adapter",
+   "WiFi Dev Board SD GPS Adapter"
+  ],
+  "sources": [
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-dev-board-sd-gps",
+    "what": "product page: $21.00, sold out, solder-on installation description, ceramic GPS antenna included, UART activity LEDs"
+   },
+   {
+    "url": "https://developer.flipper.net/flipperzero/doxygen/dev_board.html",
+    "what": "official Flipper Developer docs confirming the Wi-Fi Dev Board is ESP32-S2-based with no native SD or GPS"
+   },
+   {
+    "url": "https://flipper.net/products/wifi-devboard",
+    "what": "Flipper Devices' own product page for the base Wi-Fi Dev Board this expansion attaches to"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32DualBandWardriver",
+    "what": "JCMK's 'C5 Wardriver' - dual-band 2.4/5GHz + BLE + GPS + SD wardriver requiring no soldering, referenced for comparison"
+   },
+   {
+    "url": "https://www.justcallmekokollc.com/products/marauder-v8",
+    "what": "JCMK's Marauder v8 board with built-in GPS/SD, referenced for comparison, per this database's existing record"
+   }
+  ],
+  "research_gaps": [
+   "Exact GPS chip/module part number not published on the product page",
+   "Board dimensions and weight not published",
+   "No schematic or PCB files linked from the product page to independently verify the design beyond the vendor's own description",
+   "Exact original release date of this accessory not found",
+   "Whether firmware other than ESP32 Marauder also supports this GPS+SD combination not confirmed"
+  ]
  }
 ]

@@ -1036,7 +1036,7 @@
   "status": "out-of-stock",
   "released": null,
   "price_usd": 65.0,
-  "price_note": null,
+  "price_note": "Keelog sells a near-identical product directly — the KeyGrabber Forensic Keylogger Cable (16MB flash, same USB-extension-cable form factor, same special-key-combination retrieval, no Wi-Fi) — for $59.99, about 8% less than this $65 generic listing.",
   "price_is_estimate": false,
   "price_checked": "2026-09-10",
   "skill_level": "beginner",
@@ -1045,8 +1045,8 @@
   "build_note": "Fully assembled USB extension cable form factor.",
   "stealth": "covert",
   "form_factor": "cable",
-  "summary": "A hardware keylogger built into the body of an ordinary-looking USB extension cable, with 16MB of internal flash and date/time-stamping, supporting over 40 national keyboard layouts. The SKU (EW-C16TK) suggests it's an OEM-manufactured product resold under Hacker Warehouse's own listing rather than a house-designed device.",
-  "honest_take": "The listing's claim of being '100% stealthy, undetectable for security software' is true of essentially every hardware keylogger in this category — antivirus and other host-side software fundamentally cannot see a passive device sitting between the keyboard and the USB port, since nothing runs on the host OS at all. That's a category-wide property, not something unique to this product, and it's worth recognizing as boilerplate marketing rather than a differentiator. The listing also doesn't say how you retrieve the logged data (no documented keystroke combo or mass-storage mode confirmed), which is unusual for this class of device and worth clarifying with the seller before buying if retrieval matters to you. At $65 with no Wi-Fi and a generic OEM origin, it's priced above the base KeyGrabber PS/2 model ($55, established manufacturer, WiFi variant available) without an obvious capability edge.",
+  "summary": "A hardware keylogger built into the body of an ordinary-looking USB extension cable, with 16MB of internal flash and date/time-stamping, supporting over 40 national keyboard layouts. The SKU (EW-C16TK) and spec sheet are a near-exact match for Keelog's own 'KeyGrabber Forensic Keylogger Cable' (16MB, extension-cable form factor, 40+ layouts, special-key-combination retrieval into USB mass-storage mode) — this is very likely the same or a closely cloned product resold generically rather than a house-designed device.",
+  "honest_take": "The listing's claim of being '100% stealthy, undetectable for security software' is true of essentially every hardware keylogger in this category — antivirus and other host-side software fundamentally cannot see a passive device sitting between the keyboard and the USB port, since nothing runs on the host OS at all. That's a category-wide property, not something unique to this product, and it's worth recognizing as boilerplate marketing rather than a differentiator. This listing itself doesn't document a retrieval method, but Keelog's identically-specced 'KeyGrabber Forensic Keylogger Cable' — same 16MB capacity, same cable form factor, same feature list — documents pressing a predefined key combination to switch into USB mass-storage mode; treat that as the likely (not vendor-confirmed for this exact listing) retrieval mechanism. At $65 versus Keelog's own $59.99 for what looks like the same device, and versus the KeyGrabber PS/2 at $55 elsewhere in this database, the generic listing isn't winning on price either.",
   "best_for": [
    "Buyers wanting an inline keylogger already housed in an innocuous-looking extension cable rather than a compact dongle",
    "Environments supporting one of 40+ specific national keyboard layouts"
@@ -1077,8 +1077,8 @@
   "capabilities": {
    "usb_keylogger": {"v": "yes", "note": "16MB internal flash, date/time-stamping, 40+ national keyboard layouts supported"},
    "usb_hid_inject": {"v": "no", "note": "No injection or scripting feature mentioned; pure passive logger"},
-   "usb_exfil": {"v": "unknown", "note": "Listing does not specify a retrieval method (no documented key-combo or confirmed mass-storage mode)"},
-   "usb_mass_storage": {"v": "unknown", "note": "Common in this device class but not explicitly confirmed by this listing; not assumed"},
+   "usb_exfil": {"v": "partial", "note": "This exact listing doesn't document a retrieval method, but Keelog's identically-specced 'KeyGrabber Forensic Keylogger Cable' documents a predefined key-combination switch to mass-storage mode; treated as likely but not vendor-confirmed for this specific listing"},
+   "usb_mass_storage": {"v": "partial", "note": "Same reasoning as usb_exfil: inferred from Keelog's matching product spec, not directly confirmed by this listing"},
    "wifi_ap_mode": {"v": "no", "note": "No wireless hardware or feature mentioned"},
    "hid_remote_trigger": {"v": "no", "note": "No remote-trigger feature described"},
    "scriptable": {"v": "no", "note": "No software/firmware customization mentioned; fixed-function device"},
@@ -1100,9 +1100,11 @@
   },
   "aliases": [],
   "sources": [
-   {"url": "https://hackerwarehouse.com/product/keylogger-usb-extension-cable/", "what": "Product listing: price, 16MB storage, timestamping, 40+ keyboard layouts, 'undetectable' marketing claim, SKU"}
+   {"url": "https://hackerwarehouse.com/product/keylogger-usb-extension-cable/", "what": "Product listing: price, 16MB storage, timestamping, 40+ keyboard layouts, 'undetectable' marketing claim, SKU EW-C16TK"},
+   {"url": "https://www.keelog.com/keygrabber-forensic-keylogger-cable-usb-extension-cable-hardware-keylogger-with-flash/", "what": "Keelog's own near-identical product (KeyGrabber Forensic Keylogger Cable): $59.99 price, 16MB capacity, cable form factor, key-combination-to-mass-storage retrieval mechanism, used for the price/spec comparison and rebadge finding"},
+   {"url": "https://www.keelog.com/keygrabber-keylogger/", "what": "Keelog's general KeyGrabber family overview, confirming the 'switches to flash drive mode with a special key combination' retrieval pattern used across this class of product"}
   ],
-  "research_gaps": ["Could not identify the original OEM manufacturer behind SKU 'EW-C16TK'; this appears to be a rebadged/generic product sold under multiple storefronts, but the original source could not be traced with confidence.", "Only one independent source found (the reseller's own listing); could not corroborate storage capacity, retrieval method, or 'undetectable' claim against a second source or teardown.", "Data retrieval mechanism is not documented anywhere found — marked as unknown rather than assumed."]
+  "research_gaps": ["Could not confirm with certainty whether this is literally a resold Keelog unit or a separate clone with matching specs — the SKU 'EW-C16TK' doesn't appear on Keelog's own site, so it may be a different OEM producing an equivalent design.", "Retrieval mechanism (key-combination to mass storage) is inferred from Keelog's matching product, not directly confirmed by Hacker Warehouse's own listing text."]
  },
  {
   "id": "keygrabber-keelog",

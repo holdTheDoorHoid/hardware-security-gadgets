@@ -552,6 +552,10 @@
       {
         "url": "https://halehound.com/products/cinder-ferret",
         "what": "Confirmed price ($30), that it includes CC1101 + NRF24 pre-soldered with harnesses, and its role as a plug-and-play companion board."
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "TI's official CC1101 datasheet confirming the chip's standard 300-348/387-464/779-928MHz sub-GHz coverage and TX+RX capability referenced in this record."
       }
     ],
     "research_gaps": [
@@ -719,6 +723,10 @@
       {
         "url": "https://halehound.com/products/cinder-ferret-v2",
         "what": "Confirmed price ($40), ATGM336H GPS module addition via 1.25mm JST, ships pre-soldered with harnesses for all 3 modules, developed with Midwest Gadgets."
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "TI's official CC1101 datasheet confirming the chip's standard 300-348/387-464/779-928MHz sub-GHz coverage and TX+RX capability referenced in this record."
       }
     ],
     "research_gaps": [
@@ -878,6 +886,10 @@
       {
         "url": "https://halehound.com/products/cinder-ferret-v2-2-double-nrf",
         "what": "Confirmed price ($40), dual-NRF24 configuration, co-development with Midwest Gadgets, and the vendor's own statement that second-radio firmware was not yet released ('out shortly... in a few weeks')."
+      },
+      {
+        "url": "https://www.ti.com/product/CC1101",
+        "what": "TI's official CC1101 datasheet confirming the chip's standard 300-348/387-464/779-928MHz sub-GHz coverage and TX+RX capability referenced in this record."
       }
     ],
     "research_gaps": [
@@ -1869,6 +1881,10 @@
       {
         "url": "https://github.com/greatscottgadgets/hackrf",
         "what": "Official open-source hardware/firmware repo for the HackRF family, including Opera Cake schematics under hardware/operacake."
+      },
+      {
+        "url": "https://hackrf.readthedocs.io/en/latest/hardware_expansion_bus.html",
+        "what": "Documents HackRF's expansion header, the mechanism Opera Cake and other addon boards use for control/power without a separate MCU of their own."
       }
     ],
     "research_gaps": [
@@ -2184,6 +2200,10 @@
       {
         "url": "https://github.com/nanovna/NanoVNA-H",
         "what": "Open-source NanoVNA hardware/firmware project reference for the broader design lineage this hardware variant descends from."
+      },
+      {
+        "url": "https://www.zeenko.tech/nanovna",
+        "what": "Confirms NanoVNA's origin as a project designed by edy555, and Zeenko's role as a hardware manufacturer/reseller of variants including the F model."
       }
     ],
     "research_gaps": [
@@ -2519,6 +2539,10 @@
       {
         "url": "https://en.wikipedia.org/wiki/UConsole",
         "what": "Independent reference corroborating uConsole's release history and CM4/CM5 compute module options relevant to this board's USB 3.0/RJ45 caveat."
+      },
+      {
+        "url": "https://www.semtech.com/products/wireless-rf/lora-connect/sx1262",
+        "what": "Official Semtech SX1262 product page confirming the chip is a sub-GHz LoRa/FSK transceiver, supporting the 860-960MHz TX+RX capability claimed for this board."
       }
     ],
     "research_gaps": [

@@ -1195,7 +1195,11 @@
       "uart":           {"v": "no", "note": "No digital communication interface at all - fully analogue probes."},
       "i2c":            {"v": "no", "note": "No digital communication interface."},
       "scriptable":     {"v": "no", "note": "No software interface of its own - purely analogue sensing hardware read out by whatever oscilloscope or ChipWhisperer it's connected to."},
-      "standalone_untethered": {"v": "no", "note": "Needs an external oscilloscope or ChipWhisperer capture board to record anything the probes sense - on its own it produces analogue signals, not data."}
+      "standalone_untethered": {"v": "no", "note": "Needs an external oscilloscope or ChipWhisperer capture board to record anything the probes sense - on its own it produces analogue signals, not data."},
+      "spi_flash_dump": {"v": "no", "note": "Not a flash-dumping tool - sensing probes only."},
+      "logic_analyzer": {"v": "no", "note": "No digital signal capture or decode capability - purely analogue power/EM sensing."},
+      "web_ui":         {"v": "no", "note": "No interface of any kind, digital or otherwise."},
+      "app_store":      {"v": "no", "note": "No companion software."}
     },
 
     "legal": {

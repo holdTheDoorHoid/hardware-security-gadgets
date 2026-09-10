@@ -554,6 +554,10 @@
    {
     "url": "https://www.fcc.gov/general/jammer-enforcement",
     "what": "FCC's general position on unlawful RF interference/jamming devices, used to source the legal.notes risk assessment applied to this and every deauther in the batch"
+   },
+   {
+    "url": "https://www.amebaiot.com/en/ameba-arduino-summary/",
+    "what": "Realtek Ameba/RTL8720 development platform documentation, used as general background on the chip family this board is built on since no board-specific schematic was found"
    }
   ],
   "research_gaps": [
@@ -2251,6 +2255,10 @@
    {
     "url": "https://www.kali.org/docs/nethunter/",
     "what": "NetHunter project overview and supported-device model, used to confirm this is the standard free distribution rather than a custom build"
+   },
+   {
+    "url": "https://gitlab.com/kalilinux/nethunter",
+    "what": "official NetHunter project repository, confirming this is the standard free/open-source distribution rather than a custom build unique to this seller"
    }
   ],
   "research_gaps": [

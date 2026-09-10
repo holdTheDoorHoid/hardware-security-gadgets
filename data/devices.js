@@ -32077,25 +32077,25 @@ window.DEVICES = [
   "firmware_kind": "diy",
   "firmware_repo": "https://github.com/DevKitty-io/Nugget-Invader",
   "firmware_note": "There is no single firmware - you flash one of several separate Arduino sketches depending on what you want the board to do that day. Nugget Invader is the attack suite, HaxxDetector the defensive one, Packet Monitor the visualiser. Nugget Invader / HaxxDetector / Packet Monitor",
-  "vendor": "DevKitty / Alex Lynd (HakCat); kits historically via HackerBoxes",
-  "vendor_url": "https://devkitty.io/",
-  "product_url": null,
+  "vendor": "Retia LLC (Alex Lynd)",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/collections/all",
   "category": "wifi",
   "subcategory": "educational-wifi-board",
-  "status": "diy-only",
+  "status": "available",
   "released": "2021",
-  "price_usd": 20.0,
-  "price_note": "ESTIMATE, parts only, because you can no longer buy one. Wemos D1 Mini ESP8266 ~$3, SH1106 or SSD1306 OLED ~$4, four tactile buttons and a WS2812 ~$2, an 8-pin header, and the cat-shaped PCB from the published design files at JLCPCB's minimum order of five, ~$10-15 shipped. The maker's shop (shop.devkitty.io, redirecting to lyndlabs.io) returns HTTP 402 - a frozen Shopify store - as of 2026-09-06, wifinugget.com does not resolve, and HackerBoxes lists no Nugget product. Kits historically sold for roughly $35-45.",
+  "price_usd": 75.0,
+  "price_note": "$75 assembled from Retia (retia.io), in stock and verified 2026-09-10. A solder-it-yourself kit is $70, which is poor value against the assembled board. The older $20 figure referred to the bare-board DIY route from the original DevKitty shop, which is gone.",
   "price_is_estimate": true,
-  "price_checked": "2026-09-06",
+  "price_checked": "2026-09-10",
   "skill_level": "beginner",
   "skill_note": "Deliberately designed as a first hardware project - through-hole soldering, a friendly shape, and workshop material written around it. That was its whole purpose.",
-  "build_effort": "soldering",
-  "build_note": "Through-hole build from published design files: solder a D1 Mini, an OLED, four buttons and an LED onto a cat-shaped PCB, then flash whichever sketch you want. No SMD work. The successor board, CutieCat, uses the same recipe and is still at version v0.0.",
+  "build_effort": "assembled",
+  "build_note": "Sold assembled and pre-flashed; a separate unassembled solder kit is also offered.",
   "stealth": "overt",
   "form_factor": "board",
   "summary": "A cat-shaped ESP8266 board with a small OLED and a d-pad, built by Alex Lynd as a teaching platform for Wi-Fi security and hardware soldering. It ran a family of separate sketches - Nugget Invader for deauthentication and reconnaissance, HaxxDetector for spotting Wi-Fi attacks, a packet monitor, a WiGLE wardriver - and was widely used in conference workshops and HackerBoxes kits.",
-  "honest_take": "This one is effectively dead, and that matters more than any feature. The firmware repos were last touched in 2021-2022, the USB-Nugget repo is archived, the maker's shop returns a payment-required error meaning the Shopify store is frozen, and wifinugget.com no longer resolves. The successor, CutieCat, has nine stars and is still labelled v0.0. It was a genuinely good educational board and it deserves credit for that, but if you are looking for a first Wi-Fi security project in 2026, build something with a maintainer. Capability-wise it was always modest and honest about it: ESP8266 means 2.4GHz only, the deauth is the same management-frame trick everything else here uses and is defeated by PMF and WPA3, and the Invader README itself notes the deauth proof-of-concept needs an older ESP8266 SDK to compile.",
+  "honest_take": "Earlier reports that this line was dead are out of date. The original wifinugget.com domain and the DevKitty shop really are gone, which is why the project looks abandoned from the outside, but the creator moved it to Retia LLC and the WiFi, USB and Bluetooth Nuggets are all in stock and actively committed to as of September 2026. What has genuinely changed is the price: this is a $75 assembled ESP8266 teaching board, not the ~$20 DIY item it once was, and an ESP8266 running the free ESP8266 Deauther firmware costs about $6. You are paying for the case, the assembly, the curriculum and the cat.",
   "best_for": [
    "Historical reference - a lot of 2021-2023 workshop material assumes it",
    "A charming first soldering project if you already own one"
@@ -32202,11 +32202,11 @@ window.DEVICES = [
    "notes": "Owning and building it is legal, and the detector sketch is entirely passive. The deauthentication sketch is the problem: the FCC has treated Wi-Fi deauth as prohibited interference under 47 U.S.C. 333, and disrupting networks you do not own is an offence under the UK Computer Misuse Act and equivalents elsewhere. Check your local law; this is not legal advice."
   },
   "ecosystem": {
-   "community": "dead",
-   "docs_quality": "sparse",
-   "last_release": "n/a - no tagged releases; the attack sketch was last updated 2022-02, the detector 2021-10",
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-09",
    "app_store": "No - separate sketches you flash individually",
-   "abandoned_risk": "already-abandoned"
+   "abandoned_risk": "medium"
   },
   "aliases": [
    "Nugget",
@@ -32235,13 +32235,18 @@ window.DEVICES = [
    {
     "url": "https://shop.devkitty.io",
     "what": "the maker's shop; redirects to lyndlabs.io which returns HTTP 402 Payment Required - a frozen Shopify store, checked 2026-09-06"
+   },
+   {
+    "url": "https://retia.io/collections/all/products.json",
+    "what": "live catalogue confirming WiFi Nugget $75 available, USB Nugget $75, Bluetooth Nugget $80, checked 2026-09-10"
    }
   ],
   "research_gaps": [
    "Could not establish whether the maker intends to revive the shop or the project",
    "Original kit prices could not be confirmed from an archived listing",
    "Whether HaxxDetector specifically fingerprints Pwnagotchi is undocumented",
-   "Parts cost is an estimate, since nothing is currently for sale"
+   "Parts cost is an estimate, since nothing is currently for sale",
+   "Vendor migration from DevKitty to Retia LLC is inferred from the creator's involvement and the product line continuing under the same names; no vendor statement announcing the move was found."
   ]
  },
  {
