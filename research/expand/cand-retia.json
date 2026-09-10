@@ -1,0 +1,122 @@
+[
+  {
+    "name": "WiFi Nugget (ESP8266)",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/wi-fi-nugget-assembled",
+    "price_usd": 75.00,
+    "one_line": "ESP8266 (D1 Mini) board with OLED screen, 4 buttons and a neopixel, pre-flashed with a Wi-Fi deauther; open-source firmware also does SSDP phishing pages and deauth-attack detection.",
+    "category_guess": "wifi",
+    "why_notable": "Open-source ESP8266 deauther hardware, originating from the community project at github.com/skickar/WiFiNugget (also used for the HakCat-Tech HaxxDetector deauth-detection firmware) and sold assembled by Retia — a cheap alternative deauth platform to the ones already tracked.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "USB Nugget (ESP32S2)",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/wi-fi-nugget-s2-nugget-esp32s2",
+    "price_usd": 75.00,
+    "one_line": "ESP32-S2 board with native USB, OLED screen and buttons that enumerates as a USB flash drive and HID keyboard for drag-and-drop keystroke-injection (BadUSB) payloads, remotely controllable over Wi-Fi.",
+    "category_guess": "usb-hid",
+    "why_notable": "Open-source BadUSB platform with its own 'Nugget OS' firmware and CircuitPython payload repos (RetiaLLC/RubberNugget-CircuitPython, RetiaLLC/S2-Nugget on GitHub) — functionally a Wi-Fi-controlled, mass-storage-loadable alternative to the USB Rubber Ducky already in the DB.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Bluetooth Nugget (ESP32S3)",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/bluetooth-nugget-esp32s3",
+    "price_usd": 80.00,
+    "one_line": "ESP32-S3 board (dual-core successor to the USB Nugget) adding native BLE to the existing Wi-Fi monitor-mode and USB-HID keystroke-injection capability; screen and 6 buttons for on-device payload selection.",
+    "category_guess": "multi",
+    "why_notable": "Adds BLE attacks (demoed publicly sending pairing-request popup spam to nearby phones) to the open-source Nugget line, and is the base board for Retia's LoRa Meshtastic backpack add-on.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Solder Your Own Nugget Kit",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/diy-s2-wifi-nugget-kit-unassembled",
+    "price_usd": 70.00,
+    "one_line": "Unassembled kit (PCB, SH1106 screen, 4 buttons, neopixel, 3D-printed case, plus a D1 Mini ESP8266 and an S2 Mini ESP32-S2 board) that the buyer solders into either a WiFi Nugget or a USB Nugget.",
+    "category_guess": "multi",
+    "why_notable": "Same open-source hardware/firmware as the WiFi Nugget and USB Nugget entries, just sold unassembled as a soldering-practice SKU — flagging as likely a duplicate device in different packaging rather than a distinct product.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "LoRa Radio Backpack for USB & Bluetooth Nuggets (RFM95)",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/lora-breakout-for-usb-bluetooth-nugget",
+    "price_usd": 30.00,
+    "one_line": "RFM95 LoRa radio add-on board (selectable 868MHz or 915MHz) that plugs onto a USB Nugget or Bluetooth Nugget for long-range wireless, exposing UART/SPI/I2C for extra peripherals.",
+    "category_guess": "subghz",
+    "why_notable": "Vendor explicitly markets this as enabling 'long-range bad USB attacks' — it's sold specifically to extend the range/reach of the already-listed USB/Bluetooth Nugget BadUSB devices, plus adds Meshtastic support.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Open Source Meshtastic Nibble",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/rp2040-meshtastic-nibble-bme280-sensor-kit",
+    "price_usd": 10.00,
+    "one_line": "Open-source RFM95 LoRa (868/915MHz) mesh-networking node built around an RP2040 or ESP32-S3, sold as bare PCB, unsoldered kit, or fully soldered; runs Meshtastic firmware for encrypted off-grid mesh comms.",
+    "category_guess": "subghz",
+    "why_notable": "Fully open-source (github.com/retiallc/nibble), debuted at 38C3 alongside a 'Hacker's Guide to Meshtastic' talk; flagged borderline because its core function is encrypted mesh networking/comms rather than an offensive or defensive security-testing primitive, though it's squarely hacker-con hardware.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "Nibble Screen Connect",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/nibble-screen-connect",
+    "price_usd": 50.00,
+    "one_line": "ESP32-S3 board with a Semtech SX1262 LoRa radio, OLED screen, 2 buttons and a BME280 sensor, breadboard-compatible, for a hand-held Meshtastic or Meshcore mesh node.",
+    "category_guess": "subghz",
+    "why_notable": "More expandable open-source Nibble variant (adds Meshcore support alongside Meshtastic); same borderline reasoning as the base Nibble — it's mesh comms hardware, not an attack tool.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "Nibble Zero",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/nibble-zero-kit",
+    "price_usd": 75.00,
+    "one_line": "ESP32-S3 + LoRa mesh node (Meshtastic, Meshcore, or Reticulum firmware) with a 3D-printed case and BMP280 sensor that can be flashed and operated directly from a Flipper Zero.",
+    "category_guess": "subghz",
+    "why_notable": "Notable for direct Flipper Zero integration — the Flipper flashes and controls the node — bridging an already-cataloged device (Flipper Zero) into LoRa mesh networking; same comms-vs-attack-tool borderline reasoning as the other Nibble variants.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "Newsheen Hacker Smart Cat Lamp Kit (pre-assembled)",
+    "vendor": "Retia (base hardware branded Newsheen)",
+    "seller_url": "https://retia.io/products/newsheen-hacker-smart-cat-lamp-kit-pre-assembled",
+    "price_usd": 75.00,
+    "one_line": "ESP32-S3 board with Wi-Fi and Bluetooth built into a squishy cat-shaped desk-lamp enclosure; reflashable into an audio-reactive light, internet radio, or a Meshtastic/Meshcore/Reticulum mesh node.",
+    "category_guess": "multi",
+    "why_notable": "'Newsheen' appears to be the OEM/brand of the underlying smart-lamp reference hardware; Retia resells it with open hacker firmware access to its ESP32-S3 (Wi-Fi/BT, upgradable to a LoRa mesh node) — the same 'known board plus community firmware' relationship called out for other entries, just in a lamp enclosure instead of a display or dev board; borderline since it ships and is marketed primarily as a lamp.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "NFC Placard Mystery Pack",
+    "vendor": "Retia",
+    "seller_url": "https://retia.io/products/nfc-placard-mystery-pack",
+    "price_usd": 10.00,
+    "one_line": "Pack of 3 random passive NFC tags (mix of NTAG213/NTAG215, some glow-in-the-dark) mounted on placards styled to blend into urban signage; writable for URL redirection or Amiibo-style emulation.",
+    "category_guess": "rfid",
+    "why_notable": "Passive tags with no onboard logic of their own — closer to a consumable than a device; flagged borderline low-confidence since the DB scope explicitly covers RFID/NFC but also excludes generic items with no capability of their own.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "low"
+  }
+]

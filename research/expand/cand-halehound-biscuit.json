@@ -1,0 +1,122 @@
+[
+  {
+    "name": "HaleHound-CYD 3.5\" Complete Unit Build",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/halehound-3-5-complete-unit-limited-small-batch",
+    "price_usd": 235.0,
+    "one_line": "Hand-assembled ESP32 touchscreen (Hosyond 3.5\" ST7796U CYD-style board) plus a CC1101 sub-GHz radio, NRF24L01+PA+LNA 2.4GHz radio, PN532 NFC/RFID reader and GPS module wired together, running custom firmware for WiFi deauth/evil-twin/captive-portal, BLE spoofing and BLE exploit replay (Airoha RACE CVE against headphones), NRF24 mousejack/2.4GHz sniffing, CC1101 sub-GHz replay/bruteforce/Flipper .sub playback, and MIFARE Classic NFC read/write/clone/emulate.",
+    "category_guess": "multi",
+    "why_notable": "Multi-radio (WiFi/BLE/sub-GHz/2.4GHz/NFC/GPS) pentest handheld built on a commodity 'Cheap Yellow Display' style ESP32 touchscreen (same class of board as the already-tracked ESP32 Cheap Yellow Display, though a different 3.5\" Hosyond SKU, not the same product) with custom firmware self-authored by the seller (github.com/JesseCHale per the listing) -- not a rebrand of an existing named project such as Bruce or Marauder.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "DIY 2.8\" HaleHound Kit",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/diy-halehound-kit",
+    "price_usd": 139.0,
+    "one_line": "Unassembled kit: 2.8\" CYD E32R28T exposed-SPI ESP32 touchscreen, 3D-printed case with an embedded NTAG216 tag, and a CC1101 sub-GHz + NRF24 2.4GHz 'Cinder Ferret V2' companion board with wiring harness; buyer solders and flashes the same multi-radio firmware used in the assembled HaleHound (no PN532 NFC reader or battery included).",
+    "category_guess": "multi",
+    "why_notable": "Same open multi-radio firmware/hardware design as the assembled HaleHound-CYD unit, sold as a bare-PCB/DIY kit (in scope under this project's DIY-kit rule) at a lower price; built on commodity CYD-style ESP32 hardware, not a rebrand of another named open-source project.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "DIY HaleHound 3.5\" Kit",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/diy-halehound-3-5-kit",
+    "price_usd": 149.0,
+    "one_line": "3.5\" version of the DIY HaleHound kit: exposed-SPI CYD touchscreen, 3D-printed case with embedded NTAG216, CC1101 + NRF24 'Cinder Ferret V2' companion board, and wiring harness; buyer solders and flashes it (no PN532 NFC reader or battery included).",
+    "category_guess": "multi",
+    "why_notable": "Larger-screen sibling of the 2.8\" DIY kit with identical firmware and radio set, sold unassembled between the bare 2.8\" kit and the fully-built complete unit in price.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Fire Weasel and Leash PRO DIY Kit",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/fire-weasel-and-leash-pro-diy-kit",
+    "price_usd": 185.0,
+    "one_line": "DIY kit built around the community-designed 'Fire Weasel' carrier PCB (replaces hand-wiring): 3.5\" exposed-SPI CYD, CC1101 sub-GHz + NRF24 2.4GHz radios, an ATGM336H GPS module with ceramic antenna, voltage boost/buck converters, and a 3D-printed case; seller states roughly a 45-minute build; no battery included.",
+    "category_guess": "multi",
+    "why_notable": "A redesigned, easier-to-solder version of the DIY HaleHound 3.5\" kit using a purpose-built carrier board ('Fire Weasel', credited to community members BkBroiler and Hamspice/Midwest Gadgets) instead of a loose wiring harness; same firmware/radio capability as the other HaleHound kits, not a separate open-source project.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Fire Weasel Board and Leash DIY Kit",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/fire-weasel-board-and-leash-diy-kit",
+    "price_usd": 48.0,
+    "one_line": "Standalone 'Fire Weasel' carrier PCB and strap/leash sold alone for builders who already have their own CYD display and CC1101/NRF24/GPS modules; $48 unsoldered or $78 fully soldered and tested.",
+    "category_guess": "hw-hacking",
+    "why_notable": "Bare-PCB component (in scope under this project's DIY-kit rule) that forms the wiring backbone for the HaleHound build family; by itself it carries no radios, so its actual RF/NFC capability depends entirely on the CYD display and CC1101/NRF24/GPS modules the buyer supplies separately -- flagging borderline because the board alone does nothing.",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "Cinder Ferret",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/cinder-ferret",
+    "price_usd": 30.0,
+    "one_line": "Companion radio board that plugs into the HaleHound CYD build, combining a CC1101 sub-GHz transceiver and an NRF24L01 2.4GHz radio on one pre-soldered board with wiring harnesses.",
+    "category_guess": "multi",
+    "why_notable": "Bare add-on radio board (in scope under this project's DIY-kit rule) supplying the sub-GHz and 2.4GHz capability for the HaleHound firmware; sold standalone for builders upgrading or repairing an existing unit -- superseded by Cinder Ferret V2 in current kits.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Cinder Ferret V2",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/cinder-ferret-v2",
+    "price_usd": 40.0,
+    "one_line": "Second-generation Cinder Ferret companion board, adding an ATGM336H GPS module (1.25mm JST) alongside the existing CC1101 sub-GHz and NRF24 2.4GHz radios; shipped soldered with harnesses for all three modules.",
+    "category_guess": "multi",
+    "why_notable": "Same product family as the original Cinder Ferret with GPS added for wardriving; this is the companion board now shipped standard in the current HaleHound DIY kits, superseding the original Cinder Ferret.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Cinder Ferret V2.2 Double NRF",
+    "vendor": "HaleHound",
+    "seller_url": "https://halehound.com/products/cinder-ferret-v2-2-double-nrf",
+    "price_usd": 40.0,
+    "one_line": "Variant of the Cinder Ferret V2 companion board with two NRF24L01 2.4GHz radios instead of one, alongside the CC1101 sub-GHz radio, for wider 2.4GHz spectrum coverage.",
+    "category_guess": "multi",
+    "why_notable": "Dual-NRF24 variant of the Cinder Ferret line, co-developed with 'Midwest Gadgets'; at the time of listing the seller states firmware support for the second radio was not yet released ('out shortly').",
+    "dupe_of": null,
+    "borderline": true,
+    "confidence": "medium"
+  },
+  {
+    "name": "Biscuit Pro",
+    "vendor": "Biscuit Shop",
+    "seller_url": "https://biscuitshop.us/products/biscuit-pro",
+    "price_usd": 125.0,
+    "one_line": "Headless, phone-app-controlled (BLE GATT) wardriving/security toolkit on a dual-ESP32 board: an ESP32-C5 handles simultaneous 2.4/5GHz WiFi 6 scanning, deauth, evil-portal, PMKID/4-way-handshake capture and beacon spam, while an ESP32-WROOM-32E handles the BLE link to the app, BLE/Classic Bluetooth recon (AirTag/Flipper Zero/Flock/skimmer detection), and BLE spam attacks (Sour Apple, Swiftpair, Fast Pair); no onboard screen, OTA firmware updates over WiFi.",
+    "category_guess": "multi",
+    "why_notable": "(a) Exact match to the device already tracked in the database as 'Biscuit Pro' -- same name, same vendor. This is the device's current live listing/spec, useful for a Phase 2 agent to verify the tracked record's firmware/capability list is still current, since the product page states features ship via OTA updates.",
+    "dupe_of": "Biscuit Pro",
+    "borderline": false,
+    "confidence": "high"
+  },
+  {
+    "name": "Biscuit Ultra",
+    "vendor": "Biscuit Shop",
+    "seller_url": "https://biscuitshop.us/products/biscuit-ultra",
+    "price_usd": 160.0,
+    "one_line": "Same ESP32-C5 (dual-band WiFi 6 scanner) + ESP32-WROOM-32E (BLE/app link) chipset and firmware capability set as Biscuit Pro, in a larger enclosure: 3200mAh battery (~3x the Pro's runtime), dual external RP-SMA antenna connectors, a microSD slot for local/offline PCAP logging, and support for external 'node' devices to extend scan coverage across a wider area.",
+    "category_guess": "multi",
+    "why_notable": "(b) A genuinely different hardware model in the same family as the already-tracked 'Biscuit Pro,' NOT the same device under a new name and NOT just a firmware variant: different PCB/enclosure, bigger battery, external antenna connectors, SD card slot and multi-node support that the Pro lacks, while running the same underlying ESP32-C5/WROOM-32E firmware capability set. Reviewer note: this project's automated dedupe.py strips the word 'pro' when normalizing names, so 'Biscuit Pro' normalizes to 'biscuit' and would falsely substring-match 'Biscuit Ultra' -- confirm this stays a separate entry in Phase 2 rather than being auto-dropped as a duplicate.",
+    "dupe_of": null,
+    "borderline": false,
+    "confidence": "high"
+  }
+]

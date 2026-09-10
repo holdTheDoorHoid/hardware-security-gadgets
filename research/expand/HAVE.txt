@@ -1,0 +1,161 @@
+ACR122U
+ADALM-PLUTO (PlutoSDR)
+AWOK Dual Mini v3
+AWOK Dual Touch v3
+AirDrive Forensic Keylogger
+BLEKey
+BLEShark Nano
+Bash Bunny Mark II
+Biscuit Pro
+Bjorn
+BomberCat
+Bruce RF Reaper
+Bus Pirate 5
+Bus Pirate v3.6
+C5 Wardriver
+Cactus WHID
+CaptainDMA 75T
+CatSniffer V3
+Chameleon Tiny / Tiny Pro
+Chameleon Ultra
+ChameleonMini RevG
+ChipSHOUTER
+ChipSHOUTER-PicoEMP
+ChipWhisperer-Husky
+ChipWhisperer-Lite (CW1173)
+ChipWhisperer-Nano
+Crazyradio PA
+Cynthion
+DSTIKE Deauther Watch
+Deauth Detector
+Digispark and CH552 BadUSB boards
+Doppelgänger Core
+ESP RFID Tool
+ESP32 Cheap Yellow Display (ESP32-2432S028R)
+ESP32 Marauder Mini v3
+ESP32 Marauder v6.1
+ESP32 Marauder v7
+ESP32 Marauder v8
+ESP32-DIV v1
+ESP32-DIV v2
+ESPKey
+Evil Crow Cable Wind
+Evil Crow RF V2
+Facedancer
+Faultier
+Faulty Cat
+Flipper BlackHat
+Flipper Zero
+Flipper Zero "Predator" Module (unbranded ESP32-S2 + display + GPS + 433 MHz)
+Flipper Zero 3-in-1 Multi Board (generic ESP32 + CC1101 + nRF24)
+Flipper Zero BFFB (v1)
+Flipper Zero BFFB v2
+Flipper Zero Video Game Module
+Flipper Zero Wi-Fi Dev Board
+GL.iNet GL-AR300M (as a Wi-Fi Pineapple alternative)
+Generic ESP32 dev board (Ghost ESP)
+Generic handheld 125 kHz RFID copier (EM4100/T5577)
+Glasgow Interface Explorer
+GreatFET One
+HackRF + PortaPack H2
+HackRF + PortaPack H4M
+HackRF One
+HackRF Pro
+High Boy
+Honey Honey Apex 5 (ESP32 Marauder 5G Module)
+Hunter Cat
+Hunter Cat NFC
+InputStick RAT
+JTAGulator
+KIISU V4B
+Key Croc
+Keysy LF RFID Duplicator & Emulator
+Kode Dot
+KrakenSDR
+LAN Turtle
+LAN Turtle Hub
+LilyGo T-Dongle-C5
+LilyGo T-Dongle-S3 (USB Army Knife)
+LilyGo T-Embed CC1101
+LilyGo T-LoRa Pager
+LilyGo T-Watch S3
+LimeSDR Mini 2.0
+M5Stack AtomS3U (USB Army Knife)
+M5Stack Cardputer (Ghost ESP)
+M5Stack Cardputer Adv (Bruce)
+M5StickC Plus2 (ESP32 Marauder)
+M5StickS3 (Bruce)
+MagSpoof
+MalDuino Elite
+MeowKit S3
+Minino
+Monstatek M1
+NFC Kill (v3)
+NM-RF-HAT (NerdMiner RF Hat)
+Nordic nRF52840 Dongle
+O.MG Adapter
+O.MG Cable
+O.MG DemonSeed EDU
+O.MG Plug
+O.MG UnBlocker
+Oui-Spy
+P4wnP1 A.L.O.A.
+POOM
+Packet Squirrel Mark II
+PandwaRF Rogue Pro
+Plunder Bug LAN Tap
+Pocket Ghost
+Proxmark 5
+Proxmark3 Easy
+Proxmark3 RDV4.01
+Pwnagotchi
+RF-Clown v1
+RF-Clown v2
+RTL-SDR Blog V4
+Rabbit-Labs Flux Capacitor (Amplified CC1101)
+Rabbit-Labs Multi Pass MagSpoof Flipper Board
+Rabbit-Labs Poltergeist 5GHz Wi-Fi Board
+Rabbit-Labs RL Ghost Board (ESP32-C6)
+Rabbit-Labs The Slim Shady (IR Blaster)
+Ragnar
+RaspyJack
+Rayhunter (on Orbic RC400L)
+SONOFF ZBDongle-P (CC2652P) running Sniffle
+Screamer PCIe Squirrel
+Screen Crab
+Shark Jack
+Shark Jack Display
+Signal Owl
+SignalSDR Pro
+SkimmerGuard
+TI CC1352P7 LaunchPad running Sniffle
+Tastic RFID Thief
+The Banshee
+The Tick
+Throwing Star LAN Tap
+Tigard
+USB Rubber Ducky
+USB armory Mk II
+USBKill V4
+USBNinja Professional
+Ubertooth One
+Ultimate Marauder
+WHIDBoard Pro
+Waveshare ESP32-S3 1.47in LCD (USB Army Knife)
+Waveshare ESP32-S3-GEEK (USB Army Knife)
+Waveshare RP2040-GEEK (USB Army Knife)
+WiFi Coconut
+WiFi Duck
+WiFi Nugget
+WiFi Pineapple Enterprise
+WiFi Pineapple Mark VII + AC
+WiFi Pineapple Pager
+YARD Stick One
+ZeroTrace AirLeak Pro
+bladeRF 2.0 micro xA4
+iCopy-XS
+nRF24L01+ module for Flipper Zero (mousejack / 2.4 GHz)
+nRFBox v1
+nRFBox v3
+nyanBOX
+pico-ducky (Raspberry Pi Pico BadUSB)
