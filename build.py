@@ -61,18 +61,68 @@ def main():
             devices.append(d)
 
     # --- ids ---
-    seen = {}
+    # Two research agents working different batches can independently write the
+    # same device. Renaming the second one to '<id>-2' hides that: the site then
+    # shows the same product twice with two different capability matrices, and
+    # whichever agent researched it less thoroughly gets equal billing.
+    # So: same id AND same hardware => merge the records. Only a genuine slug
+    # collision between different hardware gets renamed.
+    CONF = {"yes": 4, "no": 4, "partial": 4, "addon": 4, "claimed": 2, "unknown": 1}
+    LIST_FIELDS = ["best_for", "not_for", "aliases", "research_gaps", "sources"]
+
+    def merge_into(keep, drop):
+        """Fold `drop` into `keep`. Prefer confirmed data over vendor claims."""
+        for k, v in drop.items():
+            if k in ("_src", "id", "capabilities") or k in LIST_FIELDS:
+                continue
+            cur = keep.get(k)
+            if cur in (None, "", {}, []):
+                keep[k] = v
+            elif k in ("summary", "honest_take") and isinstance(v, str) and isinstance(cur, str) \
+                 and len(v) > len(cur):
+                keep[k] = v            # the fuller write-up wins
+        for k in LIST_FIELDS:
+            a, b = keep.get(k) or [], drop.get(k) or []
+            if isinstance(a, list) and isinstance(b, list):
+                out, marks = [], set()
+                for item in a + b:
+                    mark = json.dumps(item, sort_keys=True) if isinstance(item, (dict, list)) else str(item)
+                    if mark not in marks:
+                        marks.add(mark); out.append(item)
+                keep[k] = out
+        kc = keep.setdefault("capabilities", {})
+        for cap, val in (drop.get("capabilities") or {}).items():
+            if cap not in kc:
+                kc[cap] = val; continue
+            a, b = kc[cap], val
+            av = a.get("v") if isinstance(a, dict) else None
+            bv = b.get("v") if isinstance(b, dict) else None
+            if CONF.get(bv, 0) > CONF.get(av, 0):
+                kc[cap] = b
+            elif av != bv and CONF.get(av, 0) == CONF.get(bv, 0):
+                warns.append(f"MERGE CONFLICT {keep['id']}.{cap}: "
+                             f"'{av}' ({keep.get('_src')}) vs '{bv}' ({drop.get('_src')}) - kept '{av}'")
+        keep["_merged_from"] = sorted(set((keep.get("_merged_from") or []) + [drop.get("_src")]))
+
+    seen, merged_out = {}, []
     for d in devices:
         if not d.get("id"):
             d["id"] = slug(f"{d.get('name','unknown')}-{d.get('firmware','')}") or "unknown"
+        if not d.get("hardware_id"):
+            d["hardware_id"] = slug(d.get("name", "unknown"))
         base_id = d["id"]
+        prior = seen.get(base_id)
+        if prior is not None and prior.get("hardware_id") == d.get("hardware_id"):
+            warns.append(f"MERGED duplicate '{base_id}': {d.get('_src')} folded into {prior.get('_src')}")
+            merge_into(prior, d)
+            merged_out.append(d)
+            continue
         n = 2
         while d["id"] in seen:
             d["id"] = f"{base_id}-{n}"; n += 1
-            warns.append(f"duplicate id '{base_id}' -> renamed '{d['id']}' ({d.get('_src')})")
+            warns.append(f"id collision '{base_id}' (different hardware) -> renamed '{d['id']}' ({d.get('_src')})")
         seen[d["id"]] = d
-        if not d.get("hardware_id"):
-            d["hardware_id"] = slug(d.get("name","unknown"))
+    devices = [d for d in devices if d not in merged_out]
 
     # --- normalise firmware labels (they must work as a short badge) ---
     for d in devices:
