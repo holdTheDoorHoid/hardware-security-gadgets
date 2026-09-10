@@ -1511,7 +1511,7 @@
   "status": "available",
   "released": "2025",
   "price_usd": 64,
-  "price_note": "$64 USD confirmed via Lab401's US storefront (Shop Pay listing); Lab401's EU-facing page lists EUR 49 (~\u00a342 GBP) - currency shown depends on storefront region.",
+  "price_note": "$64 USD confirmed via Lab401's US storefront (Shop Pay listing); Lab401's EU-facing page lists EUR 49 (~£42 GBP) - currency shown depends on storefront region.",
   "price_is_estimate": false,
   "price_checked": "2026-09-10",
   "skill_level": "beginner",
@@ -1802,7 +1802,7 @@
  {
   "id": "flatsat-defcon-34",
   "hardware_id": "flatsat",
-  "name": "FlatSat \u2013 DEFCON 34",
+  "name": "FlatSat – DEFCON 34",
   "firmware": "FlatSat Firmware",
   "firmware_kind": "stock",
   "firmware_repo": "https://github.com/Pwnsat/FlatSat",
@@ -2243,18 +2243,6 @@
     "v": "no",
     "note": "No onboard logic-analyzer function; solving the hardware stages implies bringing your own analyzer/scope to probe UART and SPI, same as any bare MCU target."
    },
-   "ble_scan": {
-    "v": "no",
-    "note": "No radio of any kind onboard - a fully wired USB device. Listed explicitly since other keychain-sized hacking gadgets (e.g. Flipper-adjacent badges) commonly have BLE and a buyer might assume this does too."
-   },
-   "wifi_scan_24": {
-    "v": "no",
-    "note": "No Wi-Fi radio; CH32V003 is a small RISC-V MCU with no wireless peripherals."
-   },
-   "subghz_rx": {
-    "v": "no",
-    "note": "No sub-GHz radio onboard."
-   },
    "gps": {
     "v": "no",
     "note": "No GPS or any location hardware onboard."
@@ -2310,7 +2298,8 @@
    "I2C support is marked 'unknown' rather than yes/no - CH32V003 supports I2C in hardware, but no source found confirms or denies it being exposed/used on this board.",
    "Exact board dimensions/weight not published anywhere found.",
    "Important correction to the brief's premise: this is NOT literally 'the same maker' as The Skull CTF - Crowd Supply's own copy calls it a 'spiritual successor', and The Skull was made by Uri Shaked (Wokwi), a different person/company from Gili Yankovitch (Nyx Software Security Solutions).",
-   "This is a narrow, single-purpose training target (a wired USB CTF puzzle) - the several explicit 'no' wireless/storage entries above are included specifically because other keychain-sized hacking badges commonly have BLE/storage and a buyer might wrongly assume this one does too; it has none of that, by design."
+   "This is a narrow, single-purpose training target (a wired USB CTF puzzle) - the several explicit 'no' wireless/storage entries above are included specifically because other keychain-sized hacking badges commonly have BLE/storage and a buyer might wrongly assume this one does too; it has none of that, by design.",
+   "Single-purpose device: the capability matrix is deliberately short rather than padded with unrelated 'no' entries."
   ]
  }
 ]

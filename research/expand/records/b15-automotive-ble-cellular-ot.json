@@ -400,9 +400,6 @@
     "v": "no",
     "note": "Trigger is a manual switch on the gun body; no wireless/remote actuation"
    },
-   "ble_scan": {
-    "v": "no"
-   },
    "scriptable": {
     "v": "no",
     "note": "Purely mechanical/electromechanical tool, no programmable logic"
@@ -421,13 +418,6 @@
     "v": "no"
    },
    "glitching": {
-    "v": "no"
-   },
-   "hf_1356_read": {
-    "v": "no",
-    "note": "Purely mechanical pick, no RFID/NFC capability despite sharing shelf space with electronic access-control tools"
-   },
-   "lf_125khz_read": {
     "v": "no"
    },
    "magspoof": {
@@ -471,7 +461,8 @@
   ],
   "research_gaps": [
    "No SCHEMA.md category or capability key models physical lock-picking tools at all; filed under hardware-debug as the least-wrong existing bucket. A dedicated 'physical-access' category and picking-specific capability keys (e.g. pin_tumbler_pick, high_security_pick) would fit this device and similar tools far better",
-   "Exact motor part number and precise stroke-force spec not published by the manufacturer"
+   "Exact motor part number and precise stroke-force spec not published by the manufacturer",
+   "Single-purpose device: the capability matrix is deliberately short rather than padded with unrelated 'no' entries."
   ]
  },
  {

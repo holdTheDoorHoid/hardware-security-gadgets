@@ -107,3 +107,29 @@ invisible one to an American.
 
 `research/expand/PRICE_VERIFY.json` lists the devices whose currency could not be
 confirmed from first-pass data.
+
+## Clarification: the capability count is a symptom, not a quota
+
+A researcher correctly pointed out that "aim for 10+ capability entries"
+conflicts with the schema's own rule that a `"no"` belongs in the matrix only
+when the absence is *notable*. The schema is right and the number is subordinate
+to it. To be unambiguous:
+
+**Do not pad.** A USB protocol sniffer should not carry `subghz_rx: "no"`,
+`ble_scan: "no"` and `lf_125khz_read: "no"`. Nobody shopping for a USB sniffer
+wonders whether it does sub-GHz, so those entries add length and no information.
+
+The test for including a `"no"` is whether a plausible buyer of *this* device
+could reasonably have assumed the answer was yes. `wifi_scan_5: "no"` on a board
+marketed as a Wi-Fi tool passes that test. `subghz_rolling_code: "no"` on a
+sub-GHz replay device passes it emphatically. `ir_tx: "no"` on a network tap
+does not.
+
+The reason the count was raised at all is that the first batches averaged 3
+entries where 16 was normal — that was genuine under-reporting within each
+device's own domain, not a shortage of unrelated keys. Fill the matrix
+thoroughly *inside the device's category* (use `category_keys.json` for that),
+and leave everything outside it alone.
+
+A single-purpose device with 6 well-chosen entries beats one with 20 padded
+ones, and if that is where a device honestly lands, say so in `research_gaps`.

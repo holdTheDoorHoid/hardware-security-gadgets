@@ -1,0 +1,2066 @@
+[
+  {
+    "id": "paw-protector",
+    "hardware_id": "paw-protector",
+    "name": "PAW Protector",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "Purely passive analog circuit (power-switch and charge-detect ICs) - there is no microcontroller and nothing to flash. The linked GitHub repo holds hardware design files only.",
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://electroniccats.com/store/paw-protector/",
+    "category": "detection-defense",
+    "subcategory": "usb-data-blocker",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 20,
+    "price_note": "Direct from Electronic Cats.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug-and-play inline adapter; nothing to configure.",
+    "build_effort": "assembled",
+    "build_note": "Ships fully assembled, USB-A male to USB-A female.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A passive inline USB-A adapter that physically severs the D+/D- data lines between a phone/laptop and an untrusted charger or public USB port, while still passing up to 2.4A of charging current (with Apple/Quick-Charge fast-charge detection). It is a 'USB condom' - there is no MCU, just power-management and ESD-protection silicon (TPS2561 power switch, TPS2514A fast-charge detect, TPD2E001 ESD array).",
+    "honest_take": "It cannot detect or warn you of anything - it structurally blocks data regardless of what is on the other end, so don't confuse it with Electronic Cats' own Paw Detector, which actually inspects a cable. The common misconception is that a 'USB data blocker' senses a malicious charger; this one doesn't sense, it just amputates the data pins, which is simpler and arguably more trustworthy but gives zero feedback if you plug it in wrong or the port is doing something exotic like USB-PD data-over-power signaling.",
+    "best_for": [
+      "Charging a phone from an unknown USB port (airport, hotel, conference) with no data risk",
+      "A cheap, foolproof juice-jacking mitigation for non-technical users"
+    ],
+    "not_for": [
+      "Verifying whether a specific cable or port is malicious before trusting it",
+      "Any use case that needs data sync while charging"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU - fixed-function analog/power-management circuit only.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": "Pass-through only (not itself rechargeable)",
+      "pmic": "TPS2561 (dual-channel power switch w/ current limit) + TPS2514A (fast-charge signature detect)",
+      "storage": null,
+      "connectivity": [
+        "USB-A (host, male)",
+        "USB-A (device, female)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Molded plastic shell around a small PCB",
+      "notable_physical": [
+        "TPD2E001 ESD-protection diode array on the blocked data lines"
+      ]
+    },
+    "capabilities": {
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "Pure power-passthrough adapter; does not enumerate as any USB device class itself."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "No MCU, cannot inject keystrokes or any HID traffic."
+      },
+      "usb_keylogger": {
+        "v": "no",
+        "note": "Not a capture device - it removes the data path entirely."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "Explicitly the opposite of its function: designed to make exfiltration impossible over this link."
+      },
+      "usb_ethernet_attack": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Purely passive, needs no host software or configuration."
+      },
+      "scriptable": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A purely defensive device with no restrictions anywhere Electronic Cats ships to. No legal concerns beyond normal customs treatment of small electronics."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025-06",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://electroniccats.com/store/paw-protector/",
+        "what": "price, feature list, IC part numbers (TPS2561/TPS2514A/TPD2E001), max charge current"
+      },
+      {
+        "url": "https://github.com/ElectronicCats/pawprotector",
+        "what": "hardware repo - confirms CERN-OHL v1.2 hardware / GPL-3.0 licensing and repo creation date (2023-01-30), used for released year"
+      },
+      {
+        "url": "https://www.hackster.io/electronic-cats/paw-protector-the-ultimate-armor-for-your-usb-devices-b23ae5",
+        "what": "vendor's own technical writeup demonstrating the device on a real host (phone stops enumerating as a data device once PAW Protector is inline), corroborating the data-blocking claim"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for 'USB data-line blocking while passing power' - the device's entire function. The nearest existing keys only describe attacks/features it deliberately does NOT have.",
+      "Vendor page lists dimensions as '18 x 12.5 x 2 cm' and weight as '0.080 g', both of which are physically implausible for this product (too large / far too light) and are almost certainly a units error in the vendor's own spec table. Not corrected here since no independent measurement was available - treat vendor physical dimensions as unreliable."
+    ]
+  },
+  {
+    "id": "paw-detector",
+    "hardware_id": "paw-detector",
+    "name": "Paw Detector",
+    "firmware": null,
+    "firmware_kind": "stock",
+    "firmware_repo": null,
+    "firmware_note": "Runs fixed onboard ADC-based anomaly-detection firmware on the CH32V003; vendor states firmware is GPL-3.0 but no dedicated public repo could be located (see research_gaps).",
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://electroniccats.com/store/paw-detector/",
+    "category": "detection-defense",
+    "subcategory": "usb-cable-detector",
+    "status": "available",
+    "released": "2026",
+    "price_usd": 18,
+    "price_note": "Direct from Electronic Cats.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Plug the suspect cable/port through it and read one LED - no software, no setup.",
+    "build_effort": "assembled",
+    "build_note": "Ships fully assembled, keychain-sized.",
+    "stealth": "discreet",
+    "form_factor": "keychain",
+    "summary": "A keychain-sized USB pass-through tester built around a CH32V003 RISC-V microcontroller that runs onboard ADC analysis on the data-line pins to flag the electrical signature of a hidden keylogger/exfiltration implant inside a 'malicious cable' (O.MG-Cable-style). A steady LED means the cable/port is flagged as suspicious; no light is the vendor's 'presumed safe' state. Presented at DEF CON 34.",
+    "honest_take": "This is a heuristic anomaly detector tuned against known inline-implant electrical signatures, not a certified verifier - a well-engineered implant that keeps its data-line loading within normal-cable tolerances, or one that only activates after a time delay, is a plausible way to slip past it, and it only tests the instant you plug in rather than continuously monitoring. The common misconception is treating a clear LED as proof a cable is safe in any absolute sense; it only means this specific detector's heuristics didn't trip, against the implant designs it was tuned on.",
+    "best_for": [
+      "Screening an unfamiliar or borrowed USB cable before trusting it with a laptop/phone",
+      "Quick field checks at cons/travel where O.MG-style cable implants are a realistic threat"
+    ],
+    "not_for": [
+      "Formal / certified cable security auditing",
+      "Detecting exfiltration methods that don't rely on an inline active implant (e.g. a compromised charger's firmware alone)"
+    ],
+    "hardware": {
+      "mcu_primary": "CH32V003F4U6",
+      "mcu_primary_note": "WCH RISC-V MCU; performs onboard ADC signal analysis on its port-A pins to characterize the connected cable/port.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered parasitically through the USB connection under test; no internal battery.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB-A (host, male)",
+        "USB-A (device, female, for the cable under test)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "ADC-based data-line signal analysis"
+      ],
+      "dimensions_mm": "35 x 18",
+      "weight_g": null,
+      "case": "Small keychain PCB, largely unenclosed",
+      "notable_physical": [
+        "Single status LED (steady = malicious cable detected)"
+      ]
+    },
+    "capabilities": {
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "usb_hid_inject": {
+        "v": "no"
+      },
+      "usb_keylogger": {
+        "v": "no"
+      },
+      "usb_exfil": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Works with no host PC or app - just an LED readout."
+      },
+      "scriptable": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A purely defensive detection device. No legal concerns in any jurisdiction reviewed."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Paw Detector - Malicious USB cables detector"
+    ],
+    "sources": [
+      {
+        "url": "https://electroniccats.com/store/paw-detector/",
+        "what": "price, MCU (CH32V003F4U6), detection method description, LED behavior, DEF CON 34 presentation, board dimensions"
+      },
+      {
+        "url": "https://www.hackster.io/electronic-cats/getting-started-with-paw-detector-a6c8c2",
+        "what": "vendor's own tutorial: usage flow (plug cable through detector, then into host), LED behavior confirmation, and framing against keystroke/mouse/payload-injection malicious-cable attacks"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/paw-detector-malicious-usb-cables-detector-electronic-cats/",
+        "what": "independent reseller (KSEC Labs, a UK red-team/pentest hardware shop) listing, used to cross-check price and product description against the vendor's own page"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for 'detects a malicious/keylogging USB cable via electrical anomaly' - this is the device's entire function and the detection-defense key list (detect_skimmer, detect_pineapple, etc.) has no USB-cable-implant equivalent.",
+      "Could not locate a dedicated public GitHub repository for Paw Detector firmware/hardware design despite the vendor page stating it is open source (CERN-OHL v1.2 / GPL-3.0); only the sibling PAW Protector repo (github.com/ElectronicCats/pawprotector) was found, which is a different product.",
+      "Exact release year is an inference from 'DEF CON 34' (2026) being cited as its debut, not a stated ship date."
+    ]
+  },
+  {
+    "id": "usbkeylogger-push3ax",
+    "hardware_id": "usbkeylogger-push3ax",
+    "name": "USBKeylogger",
+    "firmware": "Stock (Push3AX)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/Push3AX/USBKeylogger",
+    "firmware_note": "Arduino-style .ino sketch for the ESP8266; user compiles and flashes it themselves, there is no pre-flashed commercial unit.",
+    "vendor": "Push3AX",
+    "vendor_url": "https://github.com/Push3AX/USBKeylogger",
+    "product_url": "https://github.com/Push3AX/USBKeylogger",
+    "category": "usb-hid",
+    "subcategory": "hardware-keylogger",
+    "status": "diy-only",
+    "released": "2023",
+    "price_usd": 12,
+    "price_note": "No commercial kit or vendor listing exists. Estimate is parts cost only (ESP-07S module, 3MB+ SPI flash, small PCB, passives) based on typical pricing for boards of this complexity; PCB fabrication and assembly are on the builder. Gerbers and BOM are published on OSHWHub, not sold as a kit.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Requires SMD soldering (or a PCB assembly service) and flashing ESP8266 firmware; no case design or enclosure is provided.",
+    "build_effort": "full-diy",
+    "build_note": "Gerber files and BOM only - two PCB variants (compact inline, and a USB-hub form factor with one logging port). No assembled option exists.",
+    "stealth": "covert",
+    "form_factor": "cable",
+    "summary": "A hardware keystroke logger built around an ESP8266 (ESP-07S) module that sits inline between a USB keyboard and the host, invisible to host-side antivirus because the capture happens entirely in hardware before the OS ever sees it. It logs to 3MB of onboard flash in a circular buffer and can push AES-128-encrypted keylogs over its own Wi-Fi to ntfy.sh or a custom HTTP endpoint; a bundled offline HTML tool decrypts the payload. Ships as Gerbers/BOM only, in a compact inline form or a USB-hub form where only the bottom port logs.",
+    "honest_take": "'Invisible to antivirus' is true only for the host machine - the device broadcasts its own open Wi-Fi access point (default SSID USBKeylogger_XXXXXX) by default, which is a dead giveaway to anyone running a Wi-Fi scanner nearby, and unless you self-host an ntfy server, the public ntfy.sh relay only retains pushed logs for 3 hours. This is a real wiretapping device, not a 'pentest gadget' in the softened sense the README's framing implies - installing it on hardware you don't own or aren't explicitly authorized to monitor is a criminal offense almost everywhere (see legal notes), regardless of how the project markets itself.",
+    "best_for": [
+      "Authorized red-team engagements with signed physical-access scope",
+      "Learning USB HID sniffing and ESP8266 exfil techniques on your own hardware"
+    ],
+    "not_for": [
+      "Covert installation on any device/person without explicit authorization (illegal in virtually all jurisdictions)",
+      "Long unattended deployments on the default public ntfy.sh relay (3-hour log retention)"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP-07S (ESP8266)",
+      "mcu_primary_note": "Integrated 2.4 GHz Wi-Fi; performs USB low-speed keyboard protocol capture and AES-128 encryption in firmware.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wifi",
+          "note": "ESP8266 integrated 802.11 b/g/n radio, used both to host its own AP and to join open networks for exfil."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Bus-powered from the host USB port.",
+      "charging": null,
+      "pmic": null,
+      "storage": "3 MB onboard SPI flash, circular buffer",
+      "connectivity": [
+        "USB-A (pass-through, keyboard side)",
+        "USB-A (host side)",
+        "Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None - bare PCB, designed to be hidden inside a keyboard shell or hub enclosure",
+      "notable_physical": [
+        "Compact variant fits inside a keyboard case",
+        "USB-hub variant logs only on its bottom port"
+      ]
+    },
+    "capabilities": {
+      "usb_keylogger": {
+        "v": "yes",
+        "note": "Core function: inline USB low-speed keyboard capture to flash, no host driver or software involved."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Passive capture only - does not inject keystrokes or emulate a BadUSB payload device."
+      },
+      "usb_mass_storage": {
+        "v": "no",
+        "note": "Exfil is via its own Wi-Fi web server, not a mass-storage drop."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Built-in config/keylog-viewer web page at 192.168.5.1 when connected to its AP."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Hosts an open AP (default SSID USBKeylogger_XXXXXX) by default for configuration and log retrieval."
+      },
+      "wifi_scan_24": {
+        "v": "partial",
+        "note": "Can auto-scan for and join nearby *open* Wi-Fi networks as an exfil fallback; this is not general Wi-Fi reconnaissance/pentesting."
+      },
+      "cloud_c2": {
+        "v": "yes",
+        "note": "AES-128-encrypted keylog push to ntfy.sh (public relay, 3h retention) or a custom HTTP endpoint."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "Uses onboard SPI flash, not removable SD."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Captures and can auto-push logs with no host PC involvement once installed."
+      },
+      "scriptable": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Hardware keyloggers that capture keystrokes without the device owner's and user's consent implicate wiretapping/interception law in most jurisdictions (e.g. US federal and state wiretap statutes, many of which require all-party consent; UK Computer Misuse Act / RIPA; EU ePrivacy Directive), independent of whether the data is later used. Owning and experimenting with one on hardware you own is generally legal; installing it on a device or for a person without clear authorization is a criminal offense in essentially every jurisdiction covered by this database. This is not legal advice - check local law before deploying."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2026-06",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/Push3AX/USBKeylogger",
+        "what": "full feature set, ESP-07S/ESP8266 hardware, 3MB flash, AES-128/ntfy.sh exfil, GPL-3.0 license, Gerbers-only distribution"
+      },
+      {
+        "url": "https://github.com/Push3AX/USBKeylogger",
+        "what": "GitHub API: 67 stars, last push 2026-06-15, repo created 2023-12-06 (used for released year and ecosystem activity)"
+      },
+      {
+        "url": "https://oshwhub.com/ant-project/usbkeylogger_v2_bak2",
+        "what": "the actual open-hardware design files (\u7acb\u521b\u5f00\u6e90\u786c\u4ef6/OSHWHub) for the USB-hub variant, confirming Gerbers/BOM-only distribution with no assembled option"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for 'exfiltrates via a self-hosted open Wi-Fi AP + web UI' as a distinct pattern from cloud_c2 - conflated here under wifi_ap_mode + cloud_c2.",
+      "Exact MCU part number (ESP-07S) is drawn from page content rather than a bill-of-materials file directly reviewed line-by-line; treat with slightly lower confidence than a datasheet-sourced part number.",
+      "Only one independent source (the GitHub repo itself) exists for this project - no third-party teardown or review was found."
+    ]
+  },
+  {
+    "id": "okhi",
+    "hardware_id": "okhi",
+    "name": "okhi (Open Keylogger Hardware Implant)",
+    "firmware": "Stock (therealdreg), v7+",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/therealdreg/okhi",
+    "firmware_note": "Open-source MIT-licensed firmware for both chips; supports OTA updates over Wi-Fi from v7 onward, so the implant can be updated in place without physical access after initial installation.",
+    "vendor": "therealdreg / rootkit.es (now via Elecrow)",
+    "vendor_url": "https://github.com/therealdreg/okhi",
+    "product_url": "https://www.elecrow.com/store/rootkit.es",
+    "category": "usb-hid",
+    "subcategory": "keylogger-implant",
+    "status": "available",
+    "released": "2024",
+    "price_usd": 89,
+    "price_note": "Implant board alone, sold via the rootkit.es storefront (now hosted on Elecrow after rootkit.es/fr33project.org migrated). Required companion probe boards are extra: USB Sniffing Adapter $33, PS/2 Sniffing Adapter $33, PS/2 5V-to-3.3V Level Shifter $23 - a working USB sniffing setup is closer to $122 all-in. It is also fully open hardware/source if you'd rather build it yourself.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "The implant itself ships assembled and pre-designed for concealment, but wiring it into a target keyboard/tower covertly (tapping cable pads or internal traces) demands real soldering and tradecraft even though the board needs no assembly.",
+    "build_effort": "assembled",
+    "build_note": "Sold pre-assembled; fully open hardware (MIT) if you want to fab your own instead. A separate 'implant probe' board (USB or PS/2 variant) is required to program and test it before deployment.",
+    "stealth": "implant",
+    "form_factor": "board",
+    "summary": "A tiny (implant-sized) RP2040 + ESP32-C2 board designed to be concealed inside a keyboard, laptop, or tower case, intercepting USB (low-speed) or PS/2 keystrokes and serving them over its own Wi-Fi web dashboard in real time. It draws its power parasitically from the keyboard's own cable (~120 mA) rather than needing a battery, persists every keystroke to its own flash so nothing is lost across reboots, and supports OTA firmware updates over Wi-Fi from v7 onward so it never needs to be pulled once installed.",
+    "honest_take": "The parasitic-power design and OTA updates make this materially harder to detect and easier to maintain than a typical inline keylogger dongle - there's no separate device plugged into a USB port to notice, and updates don't require reopening the target. That is also exactly why it is a serious surveillance/wiretapping tool rather than a toy: unlike a bolt-on USB dongle, it is explicitly engineered to be permanently embedded and forgotten. Treat the 'proof of concept and educational tool' framing in the README as a legal disclaimer, not a technical limitation - the hardware works exactly as advertised for covert, persistent keystroke capture.",
+    "best_for": [
+      "Authorized red-team physical-access engagements with explicit written scope",
+      "Research into USB/PS2 protocol sniffing and RP2040+ESP32 dual-chip OTA design"
+    ],
+    "not_for": [
+      "Installing on any keyboard/computer without the owner's and every user's explicit, informed consent - a legal minefield almost everywhere",
+      "USB full-speed or high-speed keyboards (limited to classic USB low-speed mode as of the reviewed version)"
+    ],
+    "hardware": {
+      "mcu_primary": "RP2040",
+      "mcu_primary_note": "Dual-core Cortex-M0+; handles keyboard protocol sniffing/parsing using its PIO peripherals.",
+      "mcu_secondary": "ESP32-C2 (ESP8684)",
+      "mcu_secondary_note": "RISC-V single-core; handles Wi-Fi connectivity and the web dashboard.",
+      "radios": [
+        {
+          "ic": "ESP32-C2 (ESP8684)",
+          "role": "wifi",
+          "note": "2.4 GHz Wi-Fi for the real-time web dashboard and OTA updates."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "No battery - parasitically powered from the keyboard's own USB/PS2 cable, drawing roughly 120 mA (must stay within the shared 500 mA USB 2.0 budget with the keyboard itself).",
+      "charging": null,
+      "pmic": null,
+      "storage": "Onboard flash, persistent circular keystroke log (survives reboot/power loss)",
+      "connectivity": [
+        "USB (low-speed keyboard interception)",
+        "PS/2 (via separate level-shifter board)",
+        "Wi-Fi"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, no enclosure - designed to be hidden inside host hardware",
+      "notable_physical": [
+        "Separate USB and PS/2 'implant probe' boards required for programming and bench testing",
+        "5V-to-3.3V level shifter board required for PS/2 use"
+      ]
+    },
+    "capabilities": {
+      "usb_keylogger": {
+        "v": "yes",
+        "note": "Core function; also supports PS/2 keyboards via a companion level-shifter board."
+      },
+      "usb_hid_inject": {
+        "v": "no",
+        "note": "Passive sniffing only, does not inject keystrokes."
+      },
+      "usb_mass_storage": {
+        "v": "partial",
+        "note": "Only in bootloader/programming mode (RP2040 UF2 drag-and-drop flashing via a probe board), not during normal keylogging operation."
+      },
+      "usb_exfil": {
+        "v": "no",
+        "note": "Exfiltrates over Wi-Fi to its own web dashboard, not over the USB link itself."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Real-time keystroke viewing, log download/wipe, and multi-language keyboard-layout selection via a built-in web dashboard."
+      },
+      "cloud_c2": {
+        "v": "no",
+        "note": "Data stays on a local web dashboard served by the implant itself; no cloud relay like USBKeylogger's ntfy.sh push."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "Logs to onboard flash, not removable SD."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Operates fully autonomously once installed; a host is only needed to view the dashboard or push OTA updates."
+      },
+      "app_store": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same wiretapping/interception exposure as any hardware keylogger (see USBKeylogger's legal note), heightened here because the product is explicitly engineered and marketed as a concealable 'implant' rather than a visible inline dongle - covert, persistent capture of another person's keystrokes without consent is a criminal offense in essentially every jurisdiction this database covers. Owning and testing one on your own hardware for research is generally legal. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "excellent",
+      "last_release": "2026-08",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/therealdreg/okhi",
+        "what": "full README: RP2040+ESP32-C2 architecture, parasitic power draw (~120mA), OTA update support since v7, PS/2 and USB capture, MIT license"
+      },
+      {
+        "url": "https://github.com/therealdreg/okhi",
+        "what": "GitHub API: 110 stars, last push 2026-08-29, repo created 2024-08-05 (used for released year and ecosystem status)"
+      },
+      {
+        "url": "https://www.elecrow.com/store/rootkit.es",
+        "what": "current storefront (rootkit.es migrated to Elecrow); implant price $89, probe-board prices ($33/$33/$23)"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for 'parasitic power draw from the target cable, no external power needed' or for 'OTA firmware update over Wi-Fi' - both are genuine differentiators versus USBKeylogger, which needs a physical reflash.",
+      "Could not confirm whether the Wi-Fi dashboard runs in AP mode (its own hotspot, like USBKeylogger) or joins an existing network (station mode) - the README does not state this explicitly, so no wifi_ap_mode-equivalent claim is made.",
+      "PS/2 capture is confirmed as a feature but the maximum keyboard protocol speed/compatibility limits for that path were not detailed in available sources."
+    ]
+  },
+  {
+    "id": "hydralink",
+    "hardware_id": "hydralink",
+    "name": "HydraLink",
+    "firmware": "Stock (dissecto GmbH)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/dissecto-GmbH/hydralink",
+    "firmware_note": "Open-source (MPL-2.0) Python CLI plus a separate Linux kernel module (dissecto-GmbH/hydralink-kernel-module) for native low-latency interface support.",
+    "vendor": "dissecto GmbH",
+    "vendor_url": "https://dissecto.com",
+    "product_url": "https://www.crowdsupply.com/dissecto/hydralink",
+    "category": "hardware-debug",
+    "subcategory": "automotive-ethernet-interface",
+    "status": "preorder",
+    "released": "2025",
+    "price_usd": 349,
+    "price_note": "Crowd Supply campaign price; 222% funded as of research date and listed 'Available for pre-order', shipping had begun per a Jul 30 2025 update.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Assumes familiarity with Ethernet tooling (Wireshark/tcpdump/bridge-utils) and automotive network concepts (SOME/IP, DoIP); the hardware itself is plug-and-play.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled pocket-sized module, USB 3.0 Gen1 Type-C in, pre-soldered 2.54mm header out to the single-pair Ethernet wires.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A USB 3.0 to automotive Ethernet (100BASE-T1 and 1000BASE-T1 single twisted pair) adapter that enumerates as a native Ethernet interface (hydra0/hydra1) on Linux/macOS/Windows, so standard tools - Wireshark, Scapy, tcpdump, bridge-utils, ethtool - work against in-vehicle Ethernet with no special drivers. Two units, one set to master and one to slave, form a transparent Layer-2 wire-speed MITM bridge for fuzzing SOME/IP or validating DoIP implementations. It has no CAN, LIN, or any other automotive-bus support at all - Ethernet only.",
+    "honest_take": "This solves a real, underserved gap - almost every other budget automotive tool on the market (including everything else in this batch) is CAN-only, and modern vehicles increasingly run Ethernet backbones that those tools simply cannot see. But 'open source' here is qualified: dissecto states the schematic is redacted because it depends on proprietary information from the single-pair PHY chip vendor, so you get open drivers and firmware, not a fully open hardware design, unlike CANable/CANtact/panda. It also only speaks single-pair automotive Ethernet (100/1000BASE-T1) - it will not talk to a normal office switch or a standard 100BASE-Tx/1000BASE-T link the way the pricier TOSUN TE1051 ($1,642) can.",
+    "best_for": [
+      "Fuzzing/validating SOME/IP and DoIP implementations on Ethernet-backboned vehicles",
+      "Building a portable master/slave MITM bridge for in-vehicle Ethernet without bulky media converters"
+    ],
+    "not_for": [
+      "Any CAN, CAN-FD, or LIN work - it has zero automotive-bus support outside Ethernet",
+      "Connecting to standard office/home Ethernet gear (100BASE-Tx/1000BASE-T are not supported)"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not disclosed; vendor states the schematic is partly redacted due to proprietary information from the single-pair PHY chip manufacturer.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "automotive-ethernet-phy",
+          "note": "Single-pair Ethernet PHY supporting 100BASE-T1 and 1000BASE-T1, full duplex; exact part number not disclosed by the vendor."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB 3.0 Gen1 Type-C",
+        "Single-pair automotive Ethernet (pre-soldered 2.54mm header)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "74 x 41 x 16",
+      "weight_g": 55,
+      "case": "Compact enclosed module with status LEDs",
+      "notable_physical": [
+        "Link-activity and link-speed status LEDs",
+        "Software-selectable master/slave mode (no hardware switch needed)"
+      ]
+    },
+    "capabilities": {
+      "ethernet_tap_passive": {
+        "v": "yes",
+        "note": "Two units in master/slave mode form a transparent Layer-2 bridge that forwards frames between hydra0/hydra1."
+      },
+      "ethernet_mitm": {
+        "v": "yes",
+        "note": "The master/slave bridge is explicitly positioned for wire-speed MITM/fuzzing of SOME/IP and DoIP traffic."
+      },
+      "usb_ethernet_attack": {
+        "v": "yes",
+        "note": "Functions as a USB-to-(automotive)-Ethernet adapter for MITM use, though it speaks single-pair 100/1000BASE-T1, not standard 8P8C copper Ethernet."
+      },
+      "packet_capture": {
+        "v": "yes",
+        "note": "Appears as a native NIC; works directly with Wireshark/tcpdump/Scapy, no proprietary capture software required."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open-source Python CLI for bitrate/mode switching and scripting; also has a native Linux kernel module."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a host PC over USB; not a standalone logger."
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using this on a vehicle's network you own or are authorized to test is legal research/diagnostic work. Using it to intercept or manipulate Ethernet traffic on a vehicle you do not own or lack authorization for can implicate the same computer-misuse and wiretap-style statutes that apply to any network MITM tool. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2025-10",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.crowdsupply.com/dissecto/hydralink",
+        "what": "full spec sheet, price, funding status, comparison table vs TE1051/FC602/100Base-T1 USB Interface, open-source (MPL-2.0) claim, GitHub repo links"
+      },
+      {
+        "url": "https://github.com/dissecto-GmbH/hydralink",
+        "what": "Python CLI/driver repo; GitHub API confirms MPL-2.0 license, 13 stars, last push 2025-10-17"
+      },
+      {
+        "url": "https://github.com/dissecto-GmbH/hydralink-kernel-module",
+        "what": "Linux kernel module repo for native low-latency interface support; GitHub API confirms active as of 2026-07-13"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for automotive single-pair Ethernet (100BASE-T1/1000BASE-T1) specifically, or for master/slave bridge mode - ethernet_mitm/ethernet_tap_passive were used as the closest fit but don't capture that this is automotive-specific, not general LAN Ethernet.",
+      "Exact PHY chip part number is undisclosed by the vendor (contractually redacted), so mcu_primary/radios.ic are left null rather than guessed.",
+      "Could not independently verify the open-source driver actually achieves the claimed wire-speed forwarding under load - relying on vendor claim only, not a third-party benchmark."
+    ]
+  },
+  {
+    "id": "cantact-pro",
+    "hardware_id": "cantact-pro",
+    "name": "CANtact Pro",
+    "firmware": "Stock (Linklayer Labs)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/linklayer/cantact-pro-fw",
+    "firmware_note": "Cross-platform USB driver plus CLI; Python (python-can), C/C++, and Rust APIs, and ETAS BUSMASTER support on Windows.",
+    "vendor": "Linklayer Labs",
+    "vendor_url": "https://linklayer.com",
+    "product_url": "https://www.crowdsupply.com/linklayer-labs/cantact-pro",
+    "category": "hardware-debug",
+    "subcategory": "can-bus-interface",
+    "status": "discontinued",
+    "released": "2020",
+    "price_usd": 129,
+    "price_note": "Last Crowd Supply campaign price before discontinuation (early-bird was $100; planned future retail was $149). As of research date the Crowd Supply listing shows every purchase option - the $129 regular tier, the $100 early-bird tier, and even the original $49 CANtact - marked 'No Longer Available', with a 'Not Available' status banner on the whole campaign page. This resolves the batch's flagged status ambiguity: it is discontinued, not currently sold at $129.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Aimed at engineers doing real CAN/CAN-FD bus work, not a beginner tool.",
+    "build_effort": "assembled",
+    "build_note": "Shipped pre-installed in an enclosure; USB cable not included.",
+    "stealth": "overt",
+    "form_factor": "box",
+    "summary": "An open-hardware, dual-channel, galvanically isolated USB-to-CAN interface: one channel is CAN/CAN-FD/single-wire-CAN, the other is CAN/CAN-FD, both behind isolation between the CAN side and USB/host side, over a high-speed (480 Mbit/s) USB link with dual DB9 connectors. It was the professional successor to Eric Evenchick's original single-channel, non-isolated CANtact, and directly benchmarked itself on its own Crowd Supply page against the isolated 2-channel ICS ValueCAN 4-2 ($445) and the non-isolated Tiny-CAN II-XL (~$180).",
+    "honest_take": "On paper this is exactly the 'isolation + CAN-FD + dual channel' combination that separates a lab-grade interface from a $15 hobby build, and its own comparison table against ValueCAN/Tiny-CAN backs that up - but you cannot actually buy one today. The Crowd Supply campaign is fully sold out and marked discontinued, so treat any listing you find elsewhere with suspicion; the currently-buyable open-hardware alternative with real isolation is CANable Pro from Openlight Labs, though that one drops CAN-FD to keep isolation, which CANtact Pro did not have to compromise on.",
+    "best_for": [
+      "(Historically) professional automotive/embedded CAN-FD work needing isolation on two independent channels"
+    ],
+    "not_for": [
+      "Buying today - it is discontinued; look at panda (CAN-FD, 3 channels, isolation unconfirmed) or CANable Pro (isolated, but no CAN-FD) instead"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Not disclosed in available sources; hardware design files exist on GitHub (linklayer/cantact-hw, KiCad) but detailed component-level specs were not accessible (GitHub returned 403 to automated fetch).",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "can-fd",
+          "note": "Channel 1: CAN / CAN-FD / single-wire CAN"
+        },
+        {
+          "ic": null,
+          "role": "can-fd",
+          "note": "Channel 2: CAN / CAN-FD"
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (High Speed, 480 Mbit/s)",
+        "2x DB9 (CAN)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosed, 4 indicator LEDs",
+      "notable_physical": [
+        "Electrical isolation between CAN and USB",
+        "Dual industry-standard DB9 connectors"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "CAN sniffing via SocketCAN (Linux) or the cross-platform CLI/driver."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Official Python (python-can), C/C++, and Rust APIs."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a connected host; not a standalone logger."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no",
+        "note": "Dedicated CAN interface; does not expose a general-purpose UART bridge for other targets."
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using a CAN interface for diagnostics/research on a vehicle or system you own or are authorized to test is legal. Using it to access, alter, or disable systems on a vehicle you do not own or lack authorization for can implicate unauthorized-access and, for immobiliser/safety-system tampering specifically, vehicle-theft-adjacent statutes. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "good",
+      "last_release": "2023-03",
+      "app_store": "No",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.crowdsupply.com/linklayer-labs/cantact-pro",
+        "what": "full spec sheet, comparison table vs ValueCAN/Tiny-CAN, and definitive 'Not Available' / 'No Longer Available' status on every purchase tier (resolves the discontinued-vs-available question)"
+      },
+      {
+        "url": "https://github.com/linklayer/cantact-hw",
+        "what": "GitHub API: 404 stars, last push 2021-11-08, CC BY-SA 4.0 hardware license"
+      },
+      {
+        "url": "https://github.com/linklayer/cantact-pro-fw",
+        "what": "GitHub API: 52 stars, last push 2023-03-17, MIT license (used for ecosystem/abandoned_risk)"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN channel count (2), CAN-FD support (both channels), galvanic isolation (yes), or single-wire CAN (channel 1 only) - all four are explicit headline differentiators for this exact device per the assignment brief.",
+      "GitHub returned HTTP 403 to automated fetch for linklayer/cantact-hw, so exact MCU and CAN transceiver part numbers could not be confirmed from the schematic itself; relied on the Crowd Supply spec sheet only."
+    ]
+  },
+  {
+    "id": "panda-comma-ai",
+    "hardware_id": "panda",
+    "name": "panda",
+    "firmware": "Stock (comma.ai)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/commaai/panda",
+    "firmware_note": "MIT-licensed firmware with vehicle-specific safety logic from the separate opendbc project; heavily tested (CI, MISRA static analysis, hardware-in-the-loop) because it also gates openpilot's driving-safety model, not just diagnostics.",
+    "vendor": "comma.ai",
+    "vendor_url": "https://comma.ai",
+    "product_url": "https://comma.ai/shop/red-panda",
+    "category": "hardware-debug",
+    "subcategory": "can-bus-interface",
+    "status": "available",
+    "released": "2016",
+    "price_usd": 99,
+    "price_note": "Current SKU (STM32H725-based, marketed as 'red panda'); comma.ai/shop/panda now redirects to /shop/red-panda, i.e. this is the only panda variant currently sold. Older 'grey'/'black'/'white' panda hardware generations from 2016-2020 are no longer the shipping product.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Raw CAN/CAN-FD access to a live vehicle bus; the safety-rated firmware helps, but effective use still requires understanding vehicle CAN semantics.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled in an enclosure; requires the separate 'panda paw' accessory to force DFU/recovery mode if a flash goes wrong.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "comma.ai's open-hardware USB CAN interface, currently sold as a single SKU ('red panda') built on an STM32H725 (4x the CPU of prior generations) with CAN-FD support on all 3 of its CAN buses plus one additional multiplexed bus. It is comma's own tool for both openpilot (where a red panda is required to run CAN-FD-only cars on a comma 3) and general car-hacking/diagnostics via its Python library and the opendbc/cabana ecosystem, and works as a plain CAN-to-USB adapter independent of openpilot.",
+    "honest_take": "The '3 CAN buses, all CAN-FD' spec reads like a lab-grade interface, but comma has never published a galvanic-isolation claim anywhere in its documentation - assume it is NOT isolated between the vehicle bus and your USB port unless you find evidence otherwise, unlike CANable Pro or the (discontinued) CANtact Pro, which both market isolation as a headline feature. The real product here is the safety-audited opendbc firmware and the openpilot/cabana software ecosystem around it, not exotic hardware - at $99 it undercuts every isolated competitor, but you're trading isolation and a shipped enclosure design for that price and for openpilot integration most car-hacking buyers won't use.",
+    "best_for": [
+      "openpilot installs that need CAN-FD support (comma 3 on CAN-FD vehicles)",
+      "General CAN/CAN-FD bus access with an actively maintained, safety-tested open-source firmware stack"
+    ],
+    "not_for": [
+      "Work where galvanic isolation between your laptop and the vehicle bus is required (not confirmed present)",
+      "comma two (this panda generation is explicitly not compatible with it)"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32H725",
+      "mcu_primary_note": "4x the CPU performance of the prior panda generation, per comma.ai's own product page.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosed",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "Full CAN/CAN-FD bus access via the Python `Panda` class (can_recv/can_send)."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Official Python library; integrates with opendbc (safety logic) and cabana (trace/visualization tool)."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires a connected host (PC or comma 3/4 device)."
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "addon",
+        "note": "DFU/recovery mode requires the separate 'panda paw' accessory, not built in."
+      },
+      "uart": {
+        "v": "no",
+        "note": "Has an internal serial debug console for developing panda's own firmware, not a general-purpose UART bridge for external targets."
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using panda for diagnostics/research on a vehicle you own or are authorized to test is legal. Using it to access, alter, or disable systems on a vehicle you don't own or lack authorization for can implicate unauthorized-access and, for safety-system tampering, more serious statutes. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "red panda",
+      "comma panda"
+    ],
+    "sources": [
+      {
+        "url": "https://comma.ai/shop/red-panda",
+        "what": "current product page: price $99, STM32H725, CAN FD on all 3 buses + 1 multiplexed, comma-two incompatibility, no GPS"
+      },
+      {
+        "url": "https://github.com/commaai/panda",
+        "what": "README: MCU confirmation, MIT license, opendbc/openpilot integration, CI/MISRA testing rigor"
+      },
+      {
+        "url": "https://github.com/commaai/panda",
+        "what": "GitHub API: 1701 stars, last push 2026-09-09 (used for ecosystem activity)"
+      },
+      {
+        "url": "https://github.com/commaai/panda/blob/master/board/README.md",
+        "what": "flash.py/recover.py workflow, panda paw DFU recovery accessory"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN channel count (3 + 1 multiplexed), CAN-FD support, LIN channel count, or GMLAN support - all explicitly called for in the assignment brief.",
+      "Galvanic isolation between the CAN side and USB/host side is not confirmed either way by any official comma.ai source found; do not assume isolated.",
+      "Whether the current 'red panda' hardware still includes an ESP32/Wi-Fi radio (present on some earlier panda generations per third-party sources) could not be confirmed from official documentation - omitted from hardware.radios rather than guessed.",
+      "Exact physical connector (OBD-II vs. a proprietary harness) for the current red panda SKU was not stated on the shop page."
+    ]
+  },
+  {
+    "id": "wican-pro",
+    "hardware_id": "wican-pro",
+    "name": "WiCAN Pro",
+    "firmware": "Stock WiCAN firmware",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/meatpiHQ/wican-fw",
+    "firmware_note": "Same open-source WiCAN firmware family as the base WiCAN, extended for the Pro's dedicated OBD interpreter chip and dual-UART hardware.",
+    "vendor": "MeatPi Electronics",
+    "vendor_url": "https://meatpi.com",
+    "product_url": "https://www.crowdsupply.com/meatpi-electronics/wican-pro",
+    "category": "hardware-debug",
+    "subcategory": "obd2-can-interface",
+    "status": "preorder",
+    "released": "2024",
+    "price_usd": 89,
+    "price_note": "Crowd Supply page is labeled 'Available for pre-order' (2262 backers, 2262% funded) even though the last stated ship date (Sep 08 2026) has already passed as of this check - treating the page's own status label as authoritative rather than inferring 'available' from the passed date.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Designed to be usable by car enthusiasts with common OBD apps, but its dual-UART dev features and Home Assistant integration reward more technical users.",
+    "build_effort": "assembled",
+    "build_note": "OBD-II dongle form factor; USB-C is for firmware flashing/debugging only - the device cannot be powered over USB-C and must be plugged into a vehicle's OBD-II port (or an external 12V source) to run.",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "An ESP32-S3-based OBD-II scanner built around a dedicated (unnamed by the vendor) OBD interpreter chip that covers all legislated OBD-II protocols in one device: ISO 15765-4 CAN, SAE J1939 CAN, ISO 11898 raw CAN, Medium-Speed CAN (MS-CAN), GM High-Speed CAN, Single-Wire CAN (GMLAN), plus the legacy K-line protocols SAE J1850-PWM/VPW, ISO 9141-2, and ISO 14230-4. It emulates ELM327 v2.3, ELM329 v2.2, STN, and VT instruction sets (so it works with Car Scanner, Torque, OBD Auto Doctor, BimmerCode, OBD Fusion, etc.), integrates directly with Home Assistant with no companion app required, and adds a USB-C flashing port, microSD logging, a wake-on-motion accelerometer, and a USB host port for optional LTE/GPS modules on top of the base WiCAN feature set.",
+    "honest_take": "The protocol coverage genuinely is broad - MeatPi's own comparison table shows it matching or beating a $150+ OBDLink MX+ on paper - but CAN-FD is never mentioned anywhere in the spec sheet despite being increasingly common on 2021+ vehicles, and there's no claim of galvanic isolation either, so this is a convenience/diagnostics tool for your own vehicle's OBD-II port, not a lab-grade isolated interface for bench work on a live harness. The 'cannot be powered via USB-C' caveat catches people off guard too: you can't bench-test it from a USB power brick, only from a vehicle or an OBD-II 12V breakout.",
+    "best_for": [
+      "All-in-one OBD-II diagnostics across legacy K-line and modern CAN-based protocols in one dongle",
+      "Home Assistant / smart-home integration of vehicle diagnostics without a phone app"
+    ],
+    "not_for": [
+      "CAN-FD vehicles (not supported)",
+      "Bench work needing galvanic isolation from the vehicle bus (not claimed)",
+      "Powering/testing off a USB power brick alone"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3",
+      "mcu_primary_note": "Runs the WiCAN firmware; dual-UART setup, one dedicated to ESP32-S3 flashing/debug, the other firmware-configurable to talk to the OBD interpreter chip.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "obd-interpreter",
+          "note": "Dedicated OBD-II protocol interpreter chip handling all legislated protocols; exact part number not disclosed by the vendor."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from the vehicle's OBD-II port; cannot be powered via its own USB-C port.",
+      "charging": null,
+      "pmic": null,
+      "storage": "microSD card slot for data logging",
+      "connectivity": [
+        "Wi-Fi",
+        "Bluetooth LE",
+        "USB-C (flashing/debug only)",
+        "USB host port (for optional LTE/GPS modules)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "Accelerometer/IMU (wake-on-motion)"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "OBD-II dongle enclosure",
+      "notable_physical": [
+        "Multi-function push button",
+        "Real-time clock retains time for a few minutes unpowered"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "CAN sniffing via slcan/SocketCAN and RealDash CAN protocol support."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open-source WiCAN firmware; SocketCAN/python-can compatible."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Wi-Fi/CAN configuration via a built-in web interface, inherited from the base WiCAN firmware."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD slot for data logging - a feature the base (non-Pro) WiCAN lacks."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Integrates directly with Home Assistant with no phone app or PC required for normal operation."
+      },
+      "gps": {
+        "v": "addon",
+        "note": "Optional ESPNetLink LTE/GPS module via the USB host port; not included."
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "partial",
+        "note": "Two onboard UART links - one dedicated to ESP32-S3 flashing/debug, one firmware-configurable to command the OBD interpreter chip. Not a general-purpose external UART bridge for arbitrary hacking targets."
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A diagnostics-focused OBD-II scanner; legal to own and use on a vehicle you own or are authorized to diagnose. Using it to modify or unlock functions on a vehicle you don't own, or bypassing manufacturer restrictions in ways that violate local vehicle-modification or anti-tampering law, is a separate concern. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.crowdsupply.com/meatpi-electronics/wican-pro",
+        "what": "full spec sheet, protocol list, ELM327/ELM329/STN/VT emulation, comparison table vs WiCAN/OBDLink MX+, price, pre-order status, USB-C power caveat"
+      },
+      {
+        "url": "https://github.com/meatpiHQ/wican-fw",
+        "what": "GitHub API: 770 stars, last push 2026-09-09 (used for ecosystem activity); README referenced from the Crowd Supply page for open-source firmware confirmation"
+      },
+      {
+        "url": "https://www.crowdsupply.com/meatpi-electronics/wican",
+        "what": "sibling WiCAN product page, used to confirm the shared WiCAN firmware/software ecosystem and to contrast feature differences (e.g. SD logging)"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for OBD-II protocol breadth (3 CAN variants + 1 single-wire CAN + legacy K-line protocols), CAN-FD support (appears absent - not mentioned anywhere in the spec sheet), or galvanic isolation (not claimed) - all central to the assignment brief.",
+      "The marketing text says 'three CAN BUS protocols and one SW CAN' but the detailed protocol table lists up to six CAN-family variants (including Medium-Speed CAN and GM High-Speed CAN) that may share physical pins rather than being six independent electrical channels - exact physical CAN channel count is not confirmed.",
+      "Exact part number of the 'dedicated OBD interpreter chip' is not disclosed by the vendor."
+    ]
+  },
+  {
+    "id": "cantact-v1-2-hackerwarehouse",
+    "hardware_id": "cantact-v1-2-hackerwarehouse",
+    "name": "CANtact v1.2",
+    "firmware": "Original CANtact firmware",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/linklayer/cantact-hw",
+    "firmware_note": "Uses the original open-source CANtact hardware design and firmware/driver stack by Eric Evenchick (Linklayer Labs) - this is a repackaging, not new hardware.",
+    "vendor": "Hacker Warehouse (fork of the original CANtact design)",
+    "vendor_url": "https://hackerwarehouse.com",
+    "product_url": "https://hackerwarehouse.com/product/cantact-v1-2/",
+    "category": "hardware-debug",
+    "subcategory": "can-bus-interface",
+    "status": "available",
+    "released": null,
+    "price_usd": 80,
+    "price_note": "Direct from Hacker Warehouse.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "A raw single-channel CAN interface; expects familiarity with SocketCAN/CAN tooling.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled with a Cat5 cable and an RJ45-to-OBD-II adapter.",
+    "stealth": "overt",
+    "form_factor": "box",
+    "summary": "A Hacker Warehouse repackaging of Eric Evenchick's original open-source CANtact USB-to-CAN interface, with two changes from the original design: a USB-C connector in place of USB-B, and an RJ45-to-OBD-II adapter (with an included Cat5 cable) in place of the original's direct wiring. Per the original CANtact's own published comparison table (used by its successor CANtact Pro to position itself), the base CANtact design is single-channel, has no CAN-FD support, and is not galvanically isolated.",
+    "honest_take": "This is the original entry-level CANtact with a couple of connector conveniences bolted on, sold at $80 - which is more expensive than the $60-70 isolated CANable Pro from Openlight Labs (a more direct descendant of the same open-source lineage) while offering strictly less: single channel, no isolation, no CAN-FD. Unless the RJ45-to-OBD-II adapter specifically is what you need, CANable Pro is the better buy for the same money or less.",
+    "best_for": [
+      "Basic single-channel CAN sniffing/injection with a direct OBD-II hookup out of the box"
+    ],
+    "not_for": [
+      "Isolated or CAN-FD work - neither is supported",
+      "Anyone comparing price-to-capability against CANable Pro or panda"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Original CANtact hardware design (linklayer/cantact-hw); component-level detail was not accessible (GitHub 403'd automated fetch of the hardware repo).",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "can",
+          "note": "Single CAN channel, CAN 2.0 A/B only - no CAN-FD, per the original CANtact's own published spec table."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB-C"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Enclosed",
+      "notable_physical": [
+        "RJ45-to-OBD-II adapter with Cat5 cable included, replacing the original's direct wiring"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "CAN sniffing/injection via the original CANtact CLI/driver and SocketCAN on Linux."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Compatible with the original CANtact python-can-based tooling."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no"
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using a CAN interface for diagnostics/research on a vehicle you own or are authorized to test is legal. Using it to access or alter systems on a vehicle you don't own or lack authorization for can implicate unauthorized-access law. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2021-11",
+      "app_store": "No",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "CANtact"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/cantact-v1-2/",
+        "what": "price, USB-C + RJ45-to-OBD-II modifications, host OS compatibility"
+      },
+      {
+        "url": "https://github.com/linklayer/cantact-hw",
+        "what": "GitHub API: 404 stars, last push 2021-11-08 (used for ecosystem/abandoned_risk)"
+      },
+      {
+        "url": "https://www.crowdsupply.com/linklayer-labs/cantact-pro",
+        "what": "original CANtact's own published spec table (single channel, no isolation, no CAN-FD) as referenced by its successor product's comparison table"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN channel count (1), absence of CAN-FD, or absence of isolation - all directly relevant per the assignment brief.",
+      "Exact MCU and CAN transceiver part numbers could not be confirmed - GitHub returned HTTP 403 to automated fetch of the hardware schematic repo.",
+      "Release year for this specific Hacker Warehouse fork/SKU is unknown; the underlying open-source CANtact design dates to around 2016."
+    ]
+  },
+  {
+    "id": "canable-pro",
+    "hardware_id": "canable-pro",
+    "name": "CANable Pro",
+    "firmware": "Stock slcan / candleLight (switchable)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/normaldotcom/canable2-fw",
+    "firmware_note": "Ships with slcan firmware (enumerates as a plain serial device); can be reflashed to candleLight firmware for native SocketCAN support on Linux with no slcand daemon needed.",
+    "vendor": "Protofusion Labs / Openlight Labs (Ethan Zonca)",
+    "vendor_url": "https://canable.io",
+    "product_url": "https://openlightlabs.com/products/canable-pro-1-1-isolated-usb-to-can-adapter",
+    "category": "hardware-debug",
+    "subcategory": "can-bus-interface",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 70,
+    "price_note": "Current flagship is 'CANable Pro 1.1' at $70 (5kV isolation) from Openlight Labs, up from the original CANable Pro's $60 (2.5kV isolation), which is also still listed. The non-isolated 'CANable 2.0' sibling board is cheaper at $35 but was sold out at Openlight Labs at time of check. The Tindie listing this batch's seller_url points to (tindie.com/products/protofusion/canable-pro-isolated-usb-to-can-adapter) shows the seller 'taking a break until Jan. 26, 2018' - that storefront is dormant; the live, current storefront is openlightlabs.com (formerly also store.protofusion.org), run by the same designer, Ethan Zonca.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "A bare CAN interface; expects SocketCAN/CAN-tooling familiarity.",
+    "build_effort": "assembled",
+    "build_note": "Ships assembled, bare PCB with breakaway mounting holes, no enclosure.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "An open-hardware, single-channel, galvanically isolated (5kV on the current 1.1 revision, 2.5kV on the original) USB-to-CAN adapter with a 3-pin screw terminal (CANH/CANL/GND), descended from the original CANtact design. It supports CAN 2.0 A/B up to 1 Mbit/s and works with slcan (via can-utils/slcand/Wireshark on Linux, or the cantact-app GUI on Windows/Mac), candleLight firmware for native SocketCAN, Cangaroo (with DBC file decoding), and the cross-platform canard Python library.",
+    "honest_take": "The critical thing to know before buying anything in this product line is that isolation and CAN-FD are currently mutually exclusive across the vendor's own catalog: the isolated CANable Pro/Pro 1.1 (this record) is CAN 2.0-only with no FD, while the cheaper, non-isolated CANable 2.0 sibling has beta CAN-FD support but zero isolation between your laptop's USB port and the vehicle bus. You cannot buy one board from this vendor with both today - pick the risk you'd rather manage (frying a USB port vs. being unable to talk to a CAN-FD-only bus) before ordering. Also worth knowing: the Tindie storefront that shows up first in a lot of searches for 'CANable Pro' has had a dormant 'seller on a break' banner since 2018; buy from openlightlabs.com instead.",
+    "best_for": [
+      "Isolated single-channel CAN 2.0 bench work where protecting your laptop's USB port matters",
+      "Cross-platform CAN sniffing/injection via Cangaroo, SocketCAN, or Python"
+    ],
+    "not_for": [
+      "CAN-FD vehicles (use the non-isolated CANable 2.0, or panda, instead)",
+      "Multi-channel work (single channel only)"
+    ],
+    "hardware": {
+      "mcu_primary": "STM32G431CBTx",
+      "mcu_primary_note": "Confirmed from the canable2-fw firmware repo's linker script; not independently confirmed the isolated Pro variant uses the identical part, but it is the same open-hardware lineage.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "can",
+          "note": "Single CAN channel, CAN 2.0 A/B up to 1 Mbit/s. The isolated Pro/Pro 1.1 variant does NOT support CAN-FD; the non-isolated sibling 'CANable 2.0' has beta CAN-FD slcan support at 2M/5M baud instead."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (Type-C on CANable 2.0; Type-B/Micro varies by revision on the Pro line)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare PCB, no enclosure",
+      "notable_physical": [
+        "3-pin CANH/CANL/GND screw terminal",
+        "Bootloader button",
+        "Termination enable/disable jumper",
+        "Breakaway mounting holes"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "Via slcand+can-utils/Wireshark, or natively via SocketCAN with candleLight firmware."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "canard Python library; Cangaroo for GUI trace/DBC decoding."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "standalone_untethered": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no"
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using a CAN interface for diagnostics/research on a vehicle you own or are authorized to test is legal. Using it to access or alter systems on a vehicle you don't own or lack authorization for can implicate unauthorized-access law. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2023-09",
+      "app_store": "No",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "CANable 2.0",
+      "CANable Pro 1.1",
+      "CANable (original)"
+    ],
+    "sources": [
+      {
+        "url": "https://canable.io/",
+        "what": "authoritative current product lineup: CANable 2.0 ($35, non-isolated, CAN-FD beta) vs CANable Pro ($60, 2.5kV isolation, no FD) vs archived original CANable; software ecosystem (Cangaroo, SocketCAN, python-can)"
+      },
+      {
+        "url": "https://openlightlabs.com/products/canable-pro-1-1-isolated-usb-to-can-adapter",
+        "what": "current price ($70) and isolation spec (5kV) for the Pro 1.1, the SKU actually being sold today"
+      },
+      {
+        "url": "https://openlightlabs.com/products/canable-2-0",
+        "what": "confirms CANable 2.0 lacks isolation, has beta CAN-FD, and was sold out at time of check"
+      },
+      {
+        "url": "https://www.tindie.com/products/protofusion/canable-pro-isolated-usb-to-can-adapter/",
+        "what": "the batch's original seller_url - confirms this listing shows a 'seller taking a break until Jan. 26, 2018' banner, i.e. it is a dormant storefront, not the live one"
+      },
+      {
+        "url": "https://github.com/normaldotcom/canable2-fw",
+        "what": "STM32G431CBTx MCU, CAN-FD slcan support in firmware; GitHub API: 160 stars, last push 2023-09-28"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN channel count (1), CAN-FD support (present on the non-isolated sibling only), or galvanic isolation (5kV on this SKU) - all central to the assignment brief and to this specific product line's key trade-off.",
+      "Exact MCU part number for the isolated Pro/Pro 1.1 boards specifically (as opposed to the non-isolated CANable 2.0, whose STM32G431 is confirmed from source) was not independently verified.",
+      "Treated CANable 2.0 and CANable Pro as one merged record per the batch's single input row and shared seller lineage; they are technically two different current SKUs with different trade-offs (isolation vs. CAN-FD) and could arguably be split into two separate database records."
+    ]
+  },
+  {
+    "id": "flipper-canbus-electroniccats",
+    "hardware_id": "flipper-canbus-electroniccats",
+    "name": "CAN Bus for Flipper Zero (Electronic Cats)",
+    "firmware": "Flipper MCP2515 CANBUS app",
+    "firmware_kind": "community",
+    "firmware_repo": "https://github.com/ElectronicCats/flipper-MCP2515-CANBUS",
+    "firmware_note": "Official Electronic Cats Flipper app (AGPL-3.0): sniff, hex/normal display, log to SD, save/replay/modify/inject packets.",
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://electroniccats.com/store/flipper-add-on-canbus/",
+    "category": "hardware-debug",
+    "subcategory": "flipper-canbus-addon",
+    "status": "available",
+    "released": "2024",
+    "price_usd": 35,
+    "price_note": "$35 direct from Electronic Cats. The identical board is resold as 'CAN bus for Flipper Zero' by Hacker Warehouse at $55, and as 'CANBus Module for Flipper Zero' by Lab401 at EUR 39 (~$42) - three listings, one product. Buy direct for the lowest price.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Requires a Flipper Zero and basic CAN-bus/OBD-II knowledge to use meaningfully.",
+    "build_effort": "assembly",
+    "build_note": "Plugs directly onto the Flipper Zero's GPIO header - no soldering.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A GPIO add-on board that turns a Flipper Zero into a basic CAN 2.0B sniffer/injector using an MCP2515 SPI CAN controller, with an official app supporting packet sniffing (hex or normal display), SD-card logging of sniff sessions, and packet injection/replay including saved-and-modified packets. It also supports OBD2 scanning and UDS diagnostics per the vendor. The vendor explicitly states it is 'directly incompatible' with CAN-FD vehicles.",
+    "honest_take": "At $35 direct it's a cheap way to add CAN sniffing to a Flipper Zero you already own, but it is CAN 2.0B only via the MCP2515 - the vendor's own page warns it will not work on CAN-FD vehicles, an increasingly large share of the fleet since roughly 2020. If you need CAN-FD or isolation, this isn't it - look at panda ($99, CAN-FD on 3 buses) or CANable Pro (isolated) instead; this addon's value is convenience (reusing a Flipper you already have), not raw capability. Also worth knowing: three different resellers list this as three apparently different products at three different prices ($35 Electronic Cats direct / $55 Hacker Warehouse / ~$42 Lab401) - they are the same board, and one first-pass automated scan flagged the Lab401 listing as a possible duplicate of an unrelated nRF24L01+ Flipper module (a 2.4GHz radio addon) rather than of these other two CAN listings; that flag was a false positive on the wrong pair - the real duplication is among these three CAN resellers, which this record merges into one.",
+    "best_for": [
+      "Adding basic CAN 2.0B sniff/inject capability to an existing Flipper Zero cheaply",
+      "OBD2/UDS scanning on non-CAN-FD vehicles"
+    ],
+    "not_for": [
+      "CAN-FD vehicles (explicitly unsupported)",
+      "Isolated or multi-channel work"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No MCU of its own - relies entirely on the Flipper Zero's STM32WB55 for processing and power.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "MCP2515",
+          "role": "can",
+          "note": "SPI CAN 2.0B controller (up to 10 MHz SPI, 2.7-5.5V supply, ~5mA active). No companion CAN transceiver IC (e.g. a TJA1050 or SN65HVD230, normally required alongside an MCP2515 to actually drive the bus) could be confirmed in available documentation - see research_gaps."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from the Flipper Zero's GPIO header.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper Zero GPIO (SPI)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare GPIO addon board",
+      "notable_physical": [
+        "CAN-High (white wire) / CAN-Low (black wire) screw or pin connections"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "CAN sniffing via the official Flipper app, hex or normal display."
+      },
+      "scriptable": {
+        "v": "no"
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "yes",
+        "note": "Distributed as a Flipper Zero app through the official app catalog / GitHub."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Exports sniffing sessions as LOG files to the Flipper's SD card."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires the Flipper Zero as host; non-functional on its own."
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no"
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning and using a CAN interface for diagnostics/research on a vehicle you own or are authorized to test is legal. Using it to access, alter, or disable systems (including OBD2/UDS-reachable functions) on a vehicle you don't own or lack authorization for can implicate unauthorized-access law. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": "2026-01",
+      "app_store": "Yes - official Flipper app catalog",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "Flipper Add-On: CANBus",
+      "CANBus Module for Flipper Zero"
+    ],
+    "sources": [
+      {
+        "url": "https://electroniccats.com/store/flipper-add-on-canbus/",
+        "what": "MCP2515 controller confirmation, no CAN-FD, $35 price, SavvyCAN (Electronic Cats fork) software support"
+      },
+      {
+        "url": "https://hackerwarehouse.com/product/can-bus-for-flipper-zero/",
+        "what": "confirms this is the same Electronic Cats MCP2515-based product resold at $55"
+      },
+      {
+        "url": "https://lab401.com/collections/hardware-audit",
+        "what": "confirms the Lab401 'CANBus Module for Flipper Zero' listing (EUR 39) is the same Electronic Cats product, not a duplicate of the unrelated nRF24L01+ module"
+      },
+      {
+        "url": "https://github.com/ElectronicCats/flipper-MCP2515-CANBUS",
+        "what": "app feature list (sniff, log, inject/replay), AGPL-3.0/CERN-OHL licensing; GitHub API: 187 stars, last push 2026-01-23, repo created 2024-03-11"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists for CAN channel count (1), CAN-FD support (explicitly absent), or isolation (not mentioned, presumed absent) - central to the assignment brief.",
+      "Could not confirm the companion CAN transceiver IC paired with the MCP2515 controller (e.g. TJA1050, SN65HVD230, or similar) - no dedicated hardware/schematic repo could be located separately from the firmware repo.",
+      "This record merges three reseller listings (Electronic Cats direct, Hacker Warehouse, Lab401) that a first-pass script treated as three separate leads; confirmed via each vendor's own product description that all three describe the identical MCP2515-based Electronic Cats board."
+    ]
+  },
+  {
+    "id": "canpico-canhack",
+    "hardware_id": "canpico-canhack",
+    "name": "CANHack Toolkit / CANPico",
+    "firmware": "CANHack (MicroPython)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/kentindell/canhack",
+    "firmware_note": "MicroPython library (canhack.c/canhack.h under the hood) demonstrating low-level bit-banging attacks against the CAN protocol itself; includes a special build for the DEF CON 30 Car Hacking Village badge.",
+    "vendor": "Canis Automotive Labs (Dr. Ken Tindell)",
+    "vendor_url": "https://canislabs.com",
+    "product_url": "https://canislabs.com/canpico/",
+    "category": "hardware-debug",
+    "subcategory": "can-bus-attack-toolkit",
+    "status": "discontinued",
+    "released": "2021",
+    "price_usd": 45,
+    "price_note": "Last known price for the assembled CANPico board (Raspberry Pi Pico pre-installed) from SK Pang Electronics. The board now appears discontinued: SK Pang's own listing title reads 'CANPico Board - Retired, replacement available' and the vendor's own product page (canislabs.com/canpico/) no longer resolves to working content. The CANHack software toolkit itself remains available and usable on any RP2040 + compatible CAN-FD transceiver combo.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "expert",
+    "skill_note": "This is a protocol data-link-layer attack toolkit (bus-off DoS, selective frame corruption via precise bit timing), not a beginner sniffing tool - it assumes real understanding of CAN's arbitration/error-handling mechanics.",
+    "build_effort": "assembled",
+    "build_note": "CANPico shipped as an assembled Pi Pico carrier board; since it's discontinued, the same MicroPython toolkit can be rebuilt on any RP2040 board wired to a CAN-FD controller/transceiver pair (~$15-20 in parts) as a DIY substitute.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A proof-of-concept library demonstrating that CAN's data-link layer can be attacked directly through precisely-timed bit-banging - no cryptographic break needed - to cause denial-of-service (bus-off attacks) or selective corruption of specific frames on a live CAN bus. It ran on CANPico, a carrier board pairing a Raspberry Pi Pico (RP2040) with Microchip's MCP2517FD CAN-FD controller and MCP2562FD CAN-FD transceiver on a screw terminal, with a MicroPython build also made for the DEF CON 30 Car Hacking Village badge.",
+    "honest_take": "The real contribution here is the technique, not the board: CANHack proves that CAN's total lack of frame authentication and its cooperative, deterministic error-handling can be turned into precision denial-of-service and selective-corruption primitives using only accurate timing, which is a genuinely important result for understanding why CAN alone is not a security boundary. The hardware it shipped on (CANPico) looks to be discontinued at its original retailer and the vendor's own product page is dead, but because the technique only needs an RP2040 plus an FD-capable MCP2517FD/MCP2562FD pair and runs in MicroPython, it is straightforward to rebuild on generic parts if you can't find an original board.",
+    "best_for": [
+      "Understanding/demonstrating CAN data-link-layer attacks (bus-off DoS, error-frame injection) for research or training",
+      "Low-cost RP2040-based CAN-FD experimentation if you build your own carrier"
+    ],
+    "not_for": [
+      "Buying new today as an assembled product - CANPico is discontinued at its known retailer",
+      "Passive sniffing/logging as a primary use case - this toolkit is specifically about active data-link-layer attacks"
+    ],
+    "hardware": {
+      "mcu_primary": "RP2040",
+      "mcu_primary_note": "Raspberry Pi Pico; dual-core Cortex-M0+, used both to run MicroPython and to bit-bang precisely-timed CAN attack frames.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "MCP2517FD",
+          "role": "can-fd",
+          "note": "CAN-FD controller."
+        },
+        {
+          "ic": "MCP2562FD",
+          "role": "can-fd",
+          "note": "CAN-FD transceiver."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (Pico)",
+        "CAN screw terminal"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Bare Pi Pico carrier board",
+      "notable_physical": [
+        "Screw terminal CAN connection"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "Can sniff bus traffic as part of demonstrating/targeting attacks."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "MicroPython-based toolkit, fully scriptable."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Once flashed, the Pico runs the attack/demo code with no host PC required."
+      },
+      "usb_mass_storage": {
+        "v": "yes",
+        "note": "Standard RP2040 UF2 bootloader behavior: mounts as a mass-storage device for drag-and-drop firmware flashing."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no",
+        "note": "Not documented as a general-purpose external UART bridge; RP2040 exposes UART pins generically but this is not an advertised feature of the CANPico board."
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no",
+        "note": "Not voltage/clock glitching - the toolkit's attacks are protocol-timing based (bit-banging valid/invalid CAN frames), a different technique from hardware fault injection."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Unlike passive CAN sniffing, this toolkit implements active attacks (bus-off denial-of-service, selective frame corruption) against a live CAN network. Using these techniques on a bus you do not own or are not explicitly authorized to test is unauthorized access and/or computer/vehicle damage under most jurisdictions' computer-misuse and criminal-damage statutes, and is more serious than passive monitoring. Research and testing on your own hardware, or under a signed authorization, is the legitimate use case. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2024-04",
+      "app_store": "No",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "CANHack",
+      "CANPico"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/kentindell/canhack",
+        "what": "toolkit description, CANPico hardware (MCP25xxFD family), MicroPython/DEF CON 30 badge build; GitHub API: 393 stars, last push 2024-04-01"
+      },
+      {
+        "url": "https://www.skpang.co.uk/products/canpico-board",
+        "what": "retirement notice ('Retired, replacement available') for the assembled CANPico board"
+      },
+      {
+        "url": "https://www.cnx-software.com/2021/05/26/canpico-open-source-board-adds-can-bus-to-raspberry-pi-pico/",
+        "what": "original 2021 launch coverage confirming MCP2517FD/MCP2562FD chipset and used to establish the 2021 release year"
+      },
+      {
+        "url": "https://kentindell.github.io/canpico",
+        "what": "designer's own page describing the CANPico board and CANHack toolkit relationship"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN-specific data-link-layer attacks (bus-off denial-of-service, selective error-frame injection/corruption) - this toolkit's entire purpose - or for CAN-FD support/channel count/isolation generally.",
+      "canislabs.com/canpico/ (the vendor's own product page) redirected to a dead/parked page during this research, and SK Pang (a UK reseller) shows the board as retired with an unnamed 'replacement' - could not confirm what, if anything, currently replaces it, or whether Canis Labs sells directly at all today.",
+      "No galvanic isolation is mentioned for the CANPico board; treated as unconfirmed/likely absent rather than asserted."
+    ]
+  },
+  {
+    "id": "wican",
+    "hardware_id": "wican",
+    "name": "WiCAN",
+    "firmware": "Stock WiCAN firmware",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/meatpiHQ/wican-fw",
+    "firmware_note": "Open-source firmware shared with WiCAN Pro; on this base hardware it supports RealDash, SavvyCAN, BUSMaster, python-can/SocketCAN, and a browser-based Web-CAN client over WebSocket/WebUSB.",
+    "vendor": "MeatPi Electronics",
+    "vendor_url": "https://meatpi.com",
+    "product_url": "https://www.crowdsupply.com/meatpi-electronics/wican",
+    "category": "hardware-debug",
+    "subcategory": "obd2-can-interface",
+    "status": "available",
+    "released": "2022",
+    "price_usd": 42,
+    "price_note": "Crowd Supply listing shows 'Limited items in stock. Order below' for both form factors (WiCAN-OBD and WiCAN-USB), both priced at $42.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Simple enough for enthusiasts using RealDash/SavvyCAN, but effective CAN work still requires understanding the target vehicle's bus.",
+    "build_effort": "assembled",
+    "build_note": "Two form factors sold at the same price: WiCAN-OBD (OBD-II dongle) and WiCAN-USB (bare board with USB or screw-terminal power, 7.5-36V range for 12V/24V trucks).",
+    "stealth": "discreet",
+    "form_factor": "box",
+    "summary": "An ESP32-C3-based CAN-to-Wi-Fi/BLE bridge sold as either an OBD-II dongle (WiCAN-OBD) or a bare USB/screw-terminal board (WiCAN-USB), supporting CAN 2.0 A/B up to 1 Mbit/s with a built-in web interface for Wi-Fi/CAN configuration, an AP-or-station Wi-Fi mode, MQTT battery-voltage alerts, and a sub-1mA sleep mode triggered by low bus voltage. It works with RealDash, SavvyCAN, BUSMaster, and python-can/SocketCAN, and there's also a browser-based Web-CAN client that talks to it over WebSocket or WebUSB with no native app at all.",
+    "honest_take": "At $42 for either form factor, this is one of the cheapest actively-maintained CAN-to-Wi-Fi bridges around (770 GitHub stars, commits within the last day as of this writing) - but it is CAN 2.0 only with no galvanic isolation and no CAN-FD, so treat it as a telemetry/convenience tool for your own vehicle rather than a lab-grade interface. For CAN-FD, step up to WiCAN Pro or panda; for isolation, step up to CANable Pro.",
+    "best_for": [
+      "Cheap Wi-Fi/BLE telemetry and custom RealDash dashboards for a vehicle you own",
+      "Remote low-voltage battery monitoring on infrequently-driven vehicles (MQTT alerts)"
+    ],
+    "not_for": [
+      "CAN-FD vehicles",
+      "Isolated bench work on a live harness"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C3",
+      "mcu_primary_note": "Single-core RISC-V with integrated Wi-Fi/BLE.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "can",
+          "note": "CAN 2.0 A/B up to 1 Mbit/s; no CAN-FD, no isolation mentioned in vendor documentation."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": "Powered from OBD-II (WiCAN-OBD, 7.5-16V) or USB/screw terminal (WiCAN-USB, 7.5-36V, suited to 12V/24V trucks); <1mA in low-voltage sleep mode.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Wi-Fi (AP or station mode)",
+        "Bluetooth LE",
+        "USB (WiCAN-USB variant only)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "OBD-II dongle (WiCAN-OBD) or bare screw-terminal board (WiCAN-USB)",
+      "notable_physical": [
+        "Diode-protected USB port",
+        "Firmware updates over Wi-Fi"
+      ]
+    },
+    "capabilities": {
+      "packet_capture": {
+        "v": "yes",
+        "note": "Via slcan/SocketCAN, RealDash, or SavvyCAN, over Wi-Fi, BLE, or USB depending on variant."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "python-can/SocketCAN support; open-source firmware."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Built-in web interface for Wi-Fi and CAN configuration."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Wi-Fi can be used in AP or station mode."
+      },
+      "ble_scan": {
+        "v": "no",
+        "note": "BLE is used only as a data-transport option for RealDash/SavvyCAN, not for scanning or reconnaissance of other BLE devices."
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No SD card slot - unlike WiCAN Pro, which adds one."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Operates over Wi-Fi/BLE without needing a continuously-tethered PC; MQTT alerts work unattended."
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      },
+      "uart": {
+        "v": "no"
+      },
+      "spi_flash_dump": {
+        "v": "no"
+      },
+      "i2c": {
+        "v": "no"
+      },
+      "jtag_swd": {
+        "v": "no"
+      },
+      "logic_analyzer": {
+        "v": "no"
+      },
+      "glitching": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A diagnostics/telemetry-focused CAN interface; legal to own and use on a vehicle you own or are authorized to test. Using it to access or alter systems on a vehicle you don't own or lack authorization for can implicate unauthorized-access law. Not legal advice - check local law."
+    },
+    "ecosystem": {
+      "community": "very-active",
+      "docs_quality": "excellent",
+      "last_release": "2026-09",
+      "app_store": "No",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "WiCAN-OBD",
+      "WiCAN-USB"
+    ],
+    "sources": [
+      {
+        "url": "https://www.crowdsupply.com/meatpi-electronics/wican",
+        "what": "full spec sheet, two form factors, $42 price, comparison table vs Macchina A0/Freematics ONE+, sleep-mode current draw, software compatibility list"
+      },
+      {
+        "url": "https://github.com/meatpiHQ/wican-fw",
+        "what": "GitHub API: 770 stars, last push 2026-09-09 (used for ecosystem activity, shared with WiCAN Pro)"
+      },
+      {
+        "url": "https://github.com/meatpiHQ/wican-fw",
+        "what": "README: confirms CAN2.0A/B up to 1Mbit/s with no CAN-FD mention, ELM327 v2.3 emulation, MQTT/MQTTS, RealDash/SavvyCAN/BUSmaster compatibility"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for CAN channel count (1), absence of CAN-FD, or absence of isolation - central to the assignment brief.",
+      "Exact release year (2022) is inferred from the Crowd Supply campaign's 'funded on Oct 05 2022' date, not an explicit 'released' field from the vendor."
+    ]
+  },
+  {
+    "id": "hitager",
+    "hardware_id": "hitager",
+    "name": "hitager",
+    "firmware": "Stock (kivijakola)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/kivijakola/hitager",
+    "firmware_note": "Windows GUI + Arduino (Nano/Mega2560) firmware; user builds/flashes both sides themselves, no packaged installer or commercial kit.",
+    "vendor": "kivijakola (independent open-source project)",
+    "vendor_url": "https://github.com/kivijakola/hitager",
+    "product_url": "https://github.com/kivijakola/hitager",
+    "category": "rfid-nfc",
+    "subcategory": "automotive-transponder-tool",
+    "status": "diy-only",
+    "released": "2022",
+    "price_usd": 25,
+    "price_note": "No commercial kit exists. Estimate covers an Arduino Nano/Mega2560 only (~$5-15) - it does NOT include a PCF7991-based reader board (e.g. an iProg RFID Adapter, Hitag2 v3.1 reader, or ZedBull Mini), which the project requires but does not sell and which typically costs significantly more than the Arduino itself. Total realistic cost to get a working setup is well above this headline figure.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "expert",
+    "skill_note": "Requires deep familiarity with NXP Hitag2/Hitag3/Hitag AES cryptography and automotive immobiliser systems, plus sourcing and wiring a separate PCF7991 reader board the project does not provide.",
+    "build_effort": "full-diy",
+    "build_note": "Bring-your-own-hardware: an Arduino Nano or Mega2560 plus a separately-sourced PCF7991-based reader board (not sold by this project). The GitHub wiki includes a 'building your own hitager hardware' guide.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A Windows GUI plus Arduino firmware combination for reading, writing, and cloning NXP Hitag-family low-frequency (125kHz) automotive immobiliser transponders - Hitag2, Hitag2+EE, Hitag2 Extended (including the BMW EE extension), Hitag3, Hitag AES, and Hitag Pro - plus VVDI Super Chip and specific BMW key part numbers (PCF7944/7945/7953). It relies on an NXP PCF7991 Advanced Base Station IC, which must be sourced from a compatible existing reader product (examples given: an iProg RFID Adapter, a Hitag2 v3.1 reader, or a ZedBull Mini) since the project does not sell or design its own RF front end.",
+    "honest_take": "This is a serious, narrow tool for one specific job - attacking NXP Hitag-family immobiliser transponders used across a large share of 2000s-2010s VAG/BMW/etc. keys - not a general RFID/NFC tool, and it has zero HF 13.56MHz capability (no Mifare, no general NFC, no EMV), so don't buy it expecting Flipper-style card cloning. It's also genuinely bring-your-own-hardware in a way the $25 headline cost obscures: the actual RF front end (a PCF7991-based reader) isn't sold by the project at all, so the real cost and difficulty of getting a working setup are both meaningfully higher than the Arduino-only estimate suggests. It has been quiet since a January 2023 last commit, so treat it as a stable-but-unmaintained reference tool rather than an actively supported one.",
+    "best_for": [
+      "Research into NXP Hitag2/Hitag3/Hitag AES immobiliser transponder cryptography",
+      "Cloning/programming Hitag-family keys for vehicles you own, if you already have a compatible PCF7991 reader"
+    ],
+    "not_for": [
+      "General RFID/NFC work (no HF 13.56MHz support at all)",
+      "Anyone without a PCF7991-based reader already in hand - none is sold with this project"
+    ],
+    "hardware": {
+      "mcu_primary": "Arduino Nano or Mega2560 (ATmega328P / ATmega2560)",
+      "mcu_primary_note": "User-supplied, not sold with the project.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "PCF7991",
+          "role": "lf-125khz",
+          "note": "NXP Advanced Base Station IC (ABIC) for 125kHz Hitag-family transponders. Not sold by this project - must be sourced from a compatible third-party reader board (e.g. iProg RFID Adapter, Hitag2 v3.1 reader, ZedBull Mini)."
+        }
+      ],
+      "display": null,
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (Arduino serial link to Windows GUI)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None - bare Arduino + separately-sourced reader board",
+      "notable_physical": []
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "Reads Hitag2/Hitag2+EE/Hitag2 Extended/Hitag3/Hitag AES/Hitag Pro transponders and specific BMW key part numbers."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "Writes/clones supported Hitag-family transponders, including to VVDI Super Chip blanks."
+      },
+      "lf_125khz_emulate": {
+        "v": "unknown",
+        "note": "Project description centers on read/write/clone workflows to a physical blank transponder; active tag emulation (as opposed to writing a blank) is not clearly documented either way."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "This is a 125kHz LF-only tool - no HF 13.56MHz capability at all, despite being adjacent in the 'RFID tool' category to devices that do both."
+      },
+      "mifare_classic_attacks": {
+        "v": "no"
+      },
+      "iso15693": {
+        "v": "no"
+      },
+      "emv_read": {
+        "v": "no"
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open-source Arduino firmware + Windows GUI; source available for modification."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Requires the Windows GUI running on a connected PC; not a standalone handheld."
+      },
+      "web_ui": {
+        "v": "no"
+      },
+      "app_store": {
+        "v": "no"
+      },
+      "sd_logging": {
+        "v": "no"
+      },
+      "cloud_c2": {
+        "v": "no"
+      },
+      "usb_mass_storage": {
+        "v": "no"
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Transponder cloning tools for vehicle immobilisers sit in a genuinely higher-risk legal category than passive RFID/NFC readers: possessing and researching this kind of hardware is generally legal, but using it to clone or bypass an immobiliser on a vehicle you are not authorized to access is theft-adjacent conduct (unauthorized access to a motor vehicle), and several jurisdictions have specific statutes targeting tools connected to keyless/immobiliser vehicle theft (for example, preparatory-offense provisions in UK law). This is not legal advice, no operational guidance for defeating a vehicle you don't own is given here, and you should check local law before acquiring or using this kind of tool."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2023-01",
+      "app_store": "No",
+      "abandoned_risk": "high"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/kivijakola/hitager",
+        "what": "full transponder support list (Hitag2/3/AES/Pro, VVDI Super Chip, BMW keys), PCF7991 hardware requirement, bring-your-own-reader model, license file presence"
+      },
+      {
+        "url": "https://github.com/kivijakola/hitager",
+        "what": "GitHub API: 87 stars, last push 2023-01-09, repo created 2022-03-23 (used for released year and abandoned_risk)"
+      },
+      {
+        "url": "https://hackaday.com/2023/10/28/open-source-key-programmer-for-hitag2-keys/",
+        "what": "independent Hackaday coverage (Oct 28 2023), confirming the batch's first-pass note; also confirms the project name 'AESHitager' for the Windows GUI and that a salvaged Renault-sourced reader is a typical PCF7991 source"
+      }
+    ],
+    "research_gaps": [
+      "No capability keys exist for Hitag-family (125kHz) transponder cloning specifically - lf_125khz_read/write were used as the closest fit, but the schema doesn't distinguish 'clone to a blank' from generic LF read/write, which matters for an immobiliser-transponder tool like this.",
+      "Exact license terms (a license.txt file exists per the repo) were not read in full; GitHub's API reports the SPDX identifier as unassignable/NOASSERTION."
+    ]
+  }
+]
