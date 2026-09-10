@@ -60,15 +60,24 @@ for f in sorted(glob.glob(os.path.join(D,"cand-*.json"))):
         if isinstance(r, dict) and r.get("name"):
             r["_src"] = src; rows.append(r)
 
-BADGE = re.compile(r"\b(badge|sao|shitty add-?on|defcon \d|def con \d)\b", re.I)
-OUT   = re.compile(r"\b(implant(able)?|xseries|x-?series|magic card|gen1a|gen 1a|t5577|blank (card|tag|fob))\b", re.I)
+# Scope filters match on the NAME only. Matching descriptions killed ten real
+# devices: "implant" means a network or USB implant here (PoisonTap, Diabolic
+# Parasite, okhi), not a chip in a hand; and Gatekeeper and ProxmarkPro were
+# dropped for mentioning the blank cards they write to.
+BADGE = re.compile(r"\b(sao|shitty add-?on|def ?con \d|dc\d\d badge)\b|\bbadge\b(?! ?(reader|data|capture|cloner))", re.I)
+# Body implants only: needs an explicit body/implantable cue, not the word alone.
+BODY  = re.compile(r"\b(implantable|subdermal|xseries|x-?(?:em|nt|sied|df2|mag)\b|biomagnet|flex(?:nt|df2|ug|m1|class))\b", re.I)
+CARDS = re.compile(r"^(magic |gen ?[124]a? |t5577 |blank |uid )|\b(blank|magic|clonable|writable) (card|tag|fob|badge)s?\b", re.I)
 
 new, dupes, dropped, near, seen = [], [], [], [], {}
 for r in rows:
     name = r["name"].strip()
     blob = f"{name} {r.get('one_line','')} {r.get('why_notable','')}"
-    if BADGE.search(name) or OUT.search(blob):
-        dropped.append((r["_src"], name, "out of scope")); continue
+    why = ("badgelife" if BADGE.search(name)
+           else "body implant" if BODY.search(blob)
+           else "blank/magic card" if CARDS.search(name) else None)
+    if why:
+        dropped.append((r["_src"], name, why)); continue
     # the researching agent's own dupe_of call is evidence: it read the page
     declared = (r.get("dupe_of") or "").strip()
     if declared:
@@ -100,6 +109,7 @@ print(f"files parsed : {len(set(r['_src'] for r in rows))}")
 print(f"raw rows     : {len(rows)}")
 print(f"dup of HAVE  : {len(dupes)}")
 print(f"out of scope : {len(dropped)}")
+for s_, n_, w_ in dropped: print(f"    {n_[:50]:<52} {w_}  [{s_}]")
 print(f"NEW unique   : {len(new)}")
 print(f"near-misses  : {len(near)}  (kept as new, flagged _possible_dupe_of)")
 for s_, n_, m_ in near: print(f"    {n_}  ~=  {m_}   [{s_}]")

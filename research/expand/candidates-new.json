@@ -1,5 +1,19 @@
 [
  {
+  "name": "HydraLink",
+  "vendor": "dissecto GmbH",
+  "seller_url": "https://www.crowdsupply.com/dissecto/hydralink",
+  "price_usd": 349,
+  "one_line": "USB 3.0 to Automotive Ethernet (100BASE-T1 / 1000BASE-T1) adapter appearing as a native Ethernet interface, letting Wireshark, Scapy, tcpdump and bridge-utils sniff, bridge and manipulate in-vehicle Ethernet such as SOME/IP and DoIP at wire speed.",
+  "category_guess": "automotive",
+  "why_notable": "Every other automotive tool found is CAN-focused; this covers the Ethernet layer of modern vehicles.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "CANtact Pro",
   "vendor": "Linklayer Labs (Eric Evenchick)",
   "seller_url": "https://www.crowdsupply.com/linklayer-labs/cantact-pro",
@@ -302,6 +316,48 @@
   "_src": "hackerwarehouse"
  },
  {
+  "name": "BusKill",
+  "vendor": "Alt Shift",
+  "seller_url": "https://www.crowdsupply.com/alt-shift/buskill",
+  "price_usd": 99,
+  "one_line": "Magnetic breakaway USB cable acting as a laptop dead-man's switch: yanked away, it triggers a configured action - screen lock, shutdown, or on Linux an optional LUKS-header wipe.",
+  "category_guess": "forensics",
+  "why_notable": "Anti-seizure gadget for snatch-and-run and border-search scenarios; different mechanism from the tracked USBKill V4, which destroys the port electrically.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "KEYVILBOARD - Wi-Fi",
+  "vendor": "KEYVILBOARD",
+  "seller_url": "https://www.tindie.com/products/keyvilboard/keyvilboard-wi-fi/",
+  "price_usd": 79.95,
+  "one_line": "Inline hardware keylogger for QWERTY keyboards storing about 3M characters, retrievable over a hidden Wi-Fi network at up to 30m range; supports remote key injection.",
+  "category_guess": "forensics",
+  "why_notable": "Distinct Wi-Fi-exfil keylogger, different maker and hardware from Masterkey and the tracked AirDrive.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Ovrdrive USB",
+  "vendor": "Interrupt Labs",
+  "seller_url": "https://www.crowdsupply.com/interrupt-labs/ovrdrive-usb",
+  "price_usd": 79,
+  "one_line": "Open-hardware 8GB USB drive (ATtiny24A + SM3257ENT) reading as blank storage unless plugged in three times in quick succession; includes a disabled-by-default circuit that can invert supply voltage to overheat the flash chip as a physical self-destruct.",
+  "category_guess": "forensics",
+  "why_notable": "Anti-forensics hidden-data storage with an explicit hardware self-destruct hook.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "O.MG Malicious Cable Detector",
   "vendor": "Hak5 / O.MG",
   "seller_url": "https://lab401.com/collections/all-products/products/o-mg-malicious-cable-detector",
@@ -314,11 +370,13 @@
   "confidence": "high",
   "_src": "lab401",
   "_also": [
-   "specialty"
+   "specialty",
+   "vendors"
   ],
   "_price_seen": [
    74.52,
-   60.0
+   60.0,
+   40.0
   ]
  },
  {
@@ -346,6 +404,20 @@
   "borderline": false,
   "confidence": "high",
   "_src": "hackerwarehouse"
+ },
+ {
+  "name": "Masterkey - WiFi USB Keylogger",
+  "vendor": "JustCallMeKoko",
+  "seller_url": "https://www.tindie.com/products/justcallmekoko/masterkey-wifi-usb-keylogger/",
+  "price_usd": 45.0,
+  "one_line": "Inline USB pass-through that logs keystrokes internally, exposes a Wi-Fi AP for wireless retrieval, and can also inject keystrokes and scripts.",
+  "category_guess": "forensics",
+  "why_notable": "Combined hardware keylogger and HID injector from the ESP32 Marauder author.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "EvilCrow-Keylogger",
@@ -402,6 +474,20 @@
   "_src": "github"
  },
  {
+  "name": "okhi (Open Keylogger Hardware Implant)",
+  "vendor": "therealdreg / rootkit.es",
+  "seller_url": "https://github.com/therealdreg/okhi",
+  "price_usd": null,
+  "one_line": "30x20mm implant with an RP2040 intercepting USB/PS2 keystrokes (parasitically powered off the keyboard cable) and an ESP32-C2 exfiltrating them over Wi-Fi to a web dashboard; persists to flash, OTA updates.",
+  "category_guess": "forensics",
+  "why_notable": "110 stars, last commit 2026-08-29. Sold via rootkit.es, no listed price found.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "badusb",
+  "_src": "github"
+ },
+ {
   "name": "MACOBOX - Hardware Pentest Platform",
   "vendor": "Lab401",
   "seller_url": "https://lab401.com",
@@ -418,6 +504,35 @@
   ]
  },
  {
+  "name": "ChipSHOVER",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/chipshover",
+  "price_usd": 10000.0,
+  "one_line": "Motorized 3-axis XYZ positioning stage, 5 cm travel per axis, better than 200 nm precision and 4 um repeatability, for placing EM fault-injection probes or side-channel sensors over a die; driven from an LCD panel or Python.",
+  "category_guess": "hw-hacking",
+  "why_notable": "New product category for NewAE - a precision robotic positioner for chip-level probing.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae",
+  "_src": "vendors",
+  "_possible_dupe_of": "ChipSHOUTER"
+ },
+ {
+  "name": "CW310 Bergen Board (Large FPGA, K410T)",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/cw310-bergen-board-large-fpga-k410t-for-full-emulation",
+  "price_usd": 5310.0,
+  "one_line": "FPGA target board around a Xilinx Kintex K410T with a supervisory MCU for config/temp/voltage/clock control, DDR3+SRAM, JTAG/USB/PMOD headers, multi-stage VCC-INT filtering with inductive shunt and LNA for power analysis, and SMA/fan access for EM fault injection.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Large-FPGA target for full SoC/crypto-core emulation in side-channel research. Out of stock (supply chain).",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
   "name": "ChipWhisperer - HuskyPlus",
   "vendor": "NewAE Technology",
   "seller_url": "https://lab401.com/collections/all",
@@ -429,7 +544,14 @@
   "borderline": false,
   "confidence": "high",
   "_src": "specialty",
-  "_possible_dupe_of": "ChipWhisperer-Husky"
+  "_possible_dupe_of": "ChipWhisperer-Husky",
+  "_also": [
+   "vendors"
+  ],
+  "_price_seen": [
+   1250.0,
+   1100.0
+  ]
  },
  {
   "name": "AutoProber",
@@ -444,6 +566,62 @@
   "confidence": "medium",
   "_slice": "badusb",
   "_src": "github"
+ },
+ {
+  "name": "PhyWhisperer-USB (CW610)",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/phywhisperer-usb",
+  "price_usd": 360.0,
+  "one_line": "In-line USB 2.0 LS/FS/HS monitor and trigger box with a Spartan FPGA and 240 MHz clock; buffers 8,192 bytes, fires a cycle-accurate trigger on matched data patterns, has a power shunt and front-panel power-cycle button, and feeds sync clock/trigger to ChipWhisperer capture hardware.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Returned by both the NewAE and Crowd Supply surveys at different prices - $360 direct, $365 on Crowd Supply. Times power-analysis and fault-injection captures against USB targets.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae+crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "NewAE Probe Set with Power Supply",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/probe-set-with-power-supply",
+  "price_usd": 350.0,
+  "one_line": "Isolated power module (5V USB in, +3.3V for LNA, +/-7.8V for the differential probe, up to 50V isolation) sold with a differential probe, an LNA probe and an H-field probe for measuring power and EM signals off a chip.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Physical EM and power probes not covered by any tracked capture board; closer to sensing accessories than a standalone instrument.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
+  "name": "CW308 UFO Board",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/cw308-ufo-board",
+  "price_usd": 325.0,
+  "one_line": "Baseboard providing shared 1.2-3.5V supplies, an oscillator/crystal socket, on-board filtering for clean power measurement and diode-protected I/O for voltage glitching, accepting swappable 8-bit, 32-bit and FPGA target daughtercards.",
+  "category_guess": "hw-hacking",
+  "why_notable": "The standard target platform for ChipWhisperer side-channel and glitching work. Listed out of stock.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
+  "name": "tinySniffer - USB sniffer",
+  "vendor": "tinyDebian",
+  "seller_url": "https://www.tindie.com/products/tinydebian/tinysniffer-usb-sniffer/",
+  "price_usd": 179.0,
+  "one_line": "Inline pass-through capturing full USB 1.x/2.0 enumeration and traffic between host and peripheral, remotely controllable, with disconnect/reconnect simulation and capture filtering.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Remote-operable inline USB sniffer intended to be shipped to a target site - a different use case from bench analyzers.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "BugBlat miniSniffer 2",
@@ -464,6 +642,34 @@
    160.92,
    195.0
   ]
+ },
+ {
+  "name": "Socket Target for CW308 (STM32F-SOCKET64)",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/socket-target-for-cw308",
+  "price_usd": 140.0,
+  "one_line": "CW308 daughtercard with an empty TQFP-64 ZIF socket and a switch selecting two pinouts, for socketing user-supplied STM32F chips for side-channel and glitch testing without soldering. No MCU included.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Bare socket/adapter card for the CW308 ecosystem - borderline against the generic-adapter exclusion.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
+  "name": "ESP32JTAG",
+  "vendor": "EZ32",
+  "seller_url": "https://www.crowdsupply.com/ez32/esp32jtag",
+  "price_usd": 139,
+  "one_line": "Wi-Fi-connected JTAG/SWD debug probe combining an ESP32 with an onboard FPGA, a 16-channel 250MHz logic analyzer, FPGA bitstream programming and a UART terminal, all through a built-in web server with no drivers.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Wireless multi-function debug probe; the tracked Tigard, Glasgow and Bus Pirate are all wired USB.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
  },
  {
   "name": "Project Reboot: Hardware Audit Training Target",
@@ -497,6 +703,20 @@
   "borderline": false,
   "confidence": "high",
   "_src": "specialty"
+ },
+ {
+  "name": "Open Source Portable USB Sniffer USB2.0",
+  "vendor": "takeit",
+  "seller_url": "https://www.tindie.com/products/takeit/open-source-portable-usb-sniffer-usb20/",
+  "price_usd": 85.0,
+  "one_line": "Board capturing USB 1.1/2.0 bus traffic at up to 48Mbps with open-source capture firmware and four status LEDs; captures analyzed in Wireshark.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Dedicated USB protocol-analysis hardware, a niche not represented.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "BRUSCHETTA Board",
@@ -542,6 +762,34 @@
   ]
  },
  {
+  "name": "PicoGlitcher v3",
+  "vendor": "Faulty Hardware",
+  "seller_url": "https://www.tindie.com/products/faulty-hardware/picoglitcher-v3/",
+  "price_usd": 59.0,
+  "one_line": "Raspberry Pi Pico 2 voltage-glitching tool with two MOSFET crowbar outputs, 1.2-5V level shifters and adjustable trigger filtering for fault injection against microcontrollers.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Same product as the GitHub fault-injection-library / Findus entry, at $59 here versus a ~$67 estimate from the vendor's own store - resolve before publishing.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "OpticSpy",
+  "vendor": "Grand Idea Studio",
+  "seller_url": "https://www.crowdsupply.com/grand-idea-studio/opticspy",
+  "price_usd": 49,
+  "one_line": "Photodiode receiver module converting visible and near-IR optical signals into a digital serial stream over USB, for finding and decoding optical covert channels, blinkenlight data exfiltration and IR remote signals.",
+  "category_guess": "hw-hacking",
+  "why_notable": "TEMPEST-style optical covert-channel discovery - a niche nothing tracked covers.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "Fire Weasel Board and Leash DIY Kit",
   "vendor": "HaleHound",
   "seller_url": "https://halehound.com/products/fire-weasel-board-and-leash-diy-kit",
@@ -553,6 +801,48 @@
   "borderline": true,
   "confidence": "medium",
   "_src": "halehound-biscuit"
+ },
+ {
+  "name": "hs-probe",
+  "vendor": "probe-rs",
+  "seller_url": "https://www.tindie.com/products/probe-rs/hs-probe/",
+  "price_usd": 47.0,
+  "one_line": "STM32F723 open-hardware SWD/JTAG probe, CMSIS-DAP v1/v2 compatible, USB 2.0 High-Speed with a USB mux for bootloader access; ships with ribbon cables and STDC10/14 connectors.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Open high-speed debug probe from the probe-rs project, distinct from the tracked Bus Pirate, Glasgow and Tigard.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Sword of Secrets",
+  "vendor": "Nyx Software Security Solutions",
+  "seller_url": "https://www.crowdsupply.com/nyx-software-security-solutions/sword-of-secrets",
+  "price_usd": 45,
+  "one_line": "Keychain-sized RISC-V board hosting a multi-stage hardware CTF requiring hardware reverse engineering, breaching protection registers over SPI/UART and firmware-level exploitation; new stages arrive as USB firmware updates.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Hands-on hardware-hacking training device (successor to The Skull CTF) built on real embedded-exploitation technique. Training targets are a category nothing tracked covers.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "SAM4S CW313 Target",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/sam4s-cw313-target",
+  "price_usd": 44.99,
+  "one_line": "Target board with a populated Microchip ATSAM4S2 (Cortex-M4, 128KB flash, 64KB SRAM, 1.2V core) programmable by serial bootloader or JTAG, for running crypto code under power and fault analysis. Requires a CW313 baseboard.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Populated MCU target sold as its own SKU.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae",
+  "_src": "vendors"
  },
  {
   "name": "SPIDriver",
@@ -573,6 +863,20 @@
    37.8,
    34.95
   ]
+ },
+ {
+  "name": "IBDAP - CMSIS-DAP JTAG/SWD Debug Adapter",
+  "vendor": "Armstart",
+  "seller_url": "https://www.tindie.com/products/Armstart/ibdap-cmsis-dap-jtagswd-debug-adapter/",
+  "price_usd": 35.95,
+  "one_line": "NXP LPC11U35 open-source USB debug adapter implementing CMSIS-DAP over JTAG/SWD with UART/I2C/SPI peripherals for breakpoints, stepping and firmware download to ARM targets.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Independent open-hardware JTAG/SWD adapter.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "I2CDriver",
@@ -604,6 +908,20 @@
   "_src": "lab401"
  },
  {
+  "name": "CW312T-RP2350",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/cw312t-rp2350",
+  "price_usd": 30.0,
+  "one_line": "Target board carrying a Raspberry Pi RP2350 (dual-core ARM + RISC-V) with an external regulator bypassing the chip's internal one, for power analysis and fault-injection/glitch-detector testing.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Standalone target board for a current, widely used MCU family (Pico 2).",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
   "name": "TermDriver 2",
   "vendor": "Lab401",
   "seller_url": "https://lab401.com/collections/hardware-audit",
@@ -632,6 +950,62 @@
   "confidence": "low",
   "_slice": "badusb",
   "_src": "github"
+ },
+ {
+  "name": "O.MG Programmer USB A+C",
+  "vendor": "MG.LOL, sold via Hak5",
+  "seller_url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+  "price_usd": 25.0,
+  "one_line": "USB dongle for initial provisioning, firmware updates, recovery after self-destruct, and forensic dumps/backups of any O.MG Cable, Plug, Adapter or UnBlocker; one programmer covers the whole family.",
+  "category_guess": "hw-hacking",
+  "why_notable": "The required tool for reflashing and forensically imaging the O.MG implant line - not a cable, case or sticker.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "hak5",
+  "_src": "vendors"
+ },
+ {
+  "name": "XDS110 Debugger",
+  "vendor": "MuseLab",
+  "seller_url": "https://www.tindie.com/products/johnnywu/xds110-debugger/",
+  "price_usd": 15.0,
+  "one_line": "Compact USB debug probe for TI MCUs and DSPs supporting JTAG, cJTAG, SWD and UART with 5V/3.3V target power; works with CCS, Keil and OpenOCD.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Cheap dedicated probe for TI silicon, a niche the tracked general-purpose probes do not cover.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "SparkFun microSD Sniffer",
+  "vendor": "SparkFun Electronics",
+  "seller_url": "https://www.sparkfun.com/sparkfun-microsd-sniffer.html",
+  "price_usd": 13.5,
+  "one_line": "Same interposer concept sized for microSD: exposes the SPI bus between a microSD card and its socket on an 8-pin header for external capture.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Relevant to intercepting microSD traffic in cameras, dashcams and IoT devices during hardware-hacking or forensic work.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "sparkfun",
+  "_src": "vendors"
+ },
+ {
+  "name": "SD Sniffer",
+  "vendor": "SparkFun Electronics",
+  "seller_url": "https://www.sparkfun.com/sd-sniffer.html",
+  "price_usd": 12.5,
+  "one_line": "Passive interposer PCB inserting between a full-size SD card and its host socket, breaking out the SPI/SD bus lines to a header so a logic analyzer or MCU can passively capture card-to-host traffic.",
+  "category_guess": "hw-hacking",
+  "why_notable": "SparkFun's own copy says the tap is for use 'whether for hacking or debugging'. Cheap purpose-sold interposer for SD-based embedded and forensic targets.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "sparkfun",
+  "_src": "vendors"
  },
  {
   "name": "DirtyJTAG",
@@ -695,6 +1069,20 @@
   "_src": "koko"
  },
  {
+  "name": "Mini DAPLink Debug Probe",
+  "vendor": "MuseLab",
+  "seller_url": "https://www.tindie.com/products/johnnywu/mini-daplink-debug-probe/",
+  "price_usd": 4.8,
+  "one_line": "3.2x1.7cm USB-C DAPLink probe for ARM Cortex-M targets (STM32, GD32, nRF51/52) over SWD/JTAG plus a USB-serial UART bridge; enumerates as COM port and HID.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Extremely cheap dedicated SWD/JTAG probe - the budget end of the debug-probe comparison.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Airfrog",
   "vendor": "piersfinlayson",
   "seller_url": "https://github.com/piersfinlayson/airfrog",
@@ -749,6 +1137,77 @@
   "confidence": "high",
   "_slice": "badusb",
   "_src": "github"
+ },
+ {
+  "name": "ChipWhisperer Pro (CW1200)",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/chipwhisperer",
+  "price_usd": null,
+  "one_line": "Higher-tier ChipWhisperer capture unit. Datasheet and older docs exist but it no longer appears on NewAE's current store or ChipWhisperer product page.",
+  "category_guess": "hw-hacking",
+  "why_notable": "APPEARS DISCONTINUED, superseded by Husky/HuskyPlus. Worth adding with status discontinued rather than omitting, since people still own and resell these.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_slice": "newae",
+  "_src": "vendors",
+  "_possible_dupe_of": "ChipWhisperer-Nano"
+ },
+ {
+  "name": "CW305 Artix FPGA Target Board",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.newae.com/product-page/cw305-artix-fpga-target",
+  "price_usd": null,
+  "one_line": "Artix-7 FPGA target board for side-channel analysis against crypto cores implemented in FPGA logic.",
+  "category_guess": "hw-hacking",
+  "why_notable": "APPEARS DISCONTINUED - product URL now 404s, seemingly superseded by the CW310. Same recommendation: list as discontinued.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_slice": "newae",
+  "_src": "vendors"
+ },
+ {
+  "name": "GlitchCaster",
+  "vendor": "Diffused Tactics",
+  "seller_url": "https://www.crowdsupply.com/diffused-tactics/glitchcaster",
+  "price_usd": null,
+  "one_line": "Modular EMFI probe head based on the open PicoEMP design generating a roughly 250V EM pulse through a leaded or SMA probe coil; standard 40mm-fan mounting so it can be positioned by a 3D-printer or CNC stage. No built-in controller.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Commercial EMFI tool on the same open design as the tracked ChipSHOUTER-PicoEMP, aimed at CNC-mounted repeatable glitching. Coming Soon - no funding, no price.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "EPIC Erebus",
+  "vendor": "SecuringHardware.com",
+  "seller_url": "https://www.crowdsupply.com/securinghw/epic-erebus",
+  "price_usd": null,
+  "one_line": "M.2 2230 FPGA board (Lattice ECP5) for PCIe DMA research; PCILeech-compatible, supports standalone memory acquisition and patch/match without a tethered host, fully open gateware, firmware and toolchain.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Compact PCILeech-class DMA board in M.2 form factor, distinct from the tracked Screamer PCIe Squirrel. Coming Soon - not yet funded, no price.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "ChipJabber Unplugged",
+  "vendor": "NewAE Technology",
+  "seller_url": "https://www.crowdsupply.com/newae/chipjabber-unplugged",
+  "price_usd": null,
+  "one_line": "DIY-buildable voltage fault-injection kit with no programmable logic, in three build variants (through-hole, small SMD battery-powered Mini, and home-etch/PCB-mill friendly); pairs with a NOTDuino target demonstrating bypass of an EEPROM-keyed secure-boot check.",
+  "category_guess": "hw-hacking",
+  "why_notable": "Manual knob-tuned glitcher rather than an automated FPGA one - distinct from ChipWhisperer-Lite/Nano/Husky. Coming Soon, no price.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
  },
  {
   "name": "HaleHound-CYD 3.5\" Complete Unit Build",
@@ -816,6 +1275,34 @@
   "_src": "halehound-biscuit"
  },
  {
+  "name": "ESP32 Marauder Double Barrel 5G - C5 version",
+  "vendor": "HoneyHoneyTrading",
+  "seller_url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-double-barrel-5g-c5-version/",
+  "price_usd": 139.0,
+  "one_line": "Dual-system board: a standalone ESP32 Marauder unit with touchscreen, battery and GPS, plus a second ESP32-C5 dual-band 2.4/5GHz Flipper-controlled radio, a CC1101 sub-GHz chip and four external antennas.",
+  "category_guess": "multi",
+  "why_notable": "Adds genuine 5GHz Wi-Fi scanning and deauth, which the tracked Marauder v6.1/v7/v8 boards do not have.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "HacPhone - Rooted NetHunter/Kali Nexus 5X",
+  "vendor": "Unlimited Coverage",
+  "seller_url": "https://www.tindie.com/products/ucshop/hacphone-rooted-nethunterkali-linux-nexus-5x/",
+  "price_usd": 119.99,
+  "one_line": "Rooted Nexus 5X pre-installed with Kali NetHunter for Wi-Fi cracking and deauth, network recon, vulnerability testing and Bluetooth/NFC assessment.",
+  "category_guess": "multi",
+  "why_notable": "A discontinued retail phone re-flashed and sold as a pentest platform - base hardware is old retail, but the security firmware is the product.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Feberis Pro",
   "vendor": "Feberis",
   "seller_url": "https://lab401.com/products/feberis-pro",
@@ -832,6 +1319,20 @@
   ]
  },
  {
+  "name": "unsurv offline",
+  "vendor": "Unsurv Technologies",
+  "seller_url": "https://www.crowdsupply.com/unsurv-technologies/unsurv-offline",
+  "price_usd": 99,
+  "one_line": "ESP32 board with GNSS receiver, accelerometer and NFC tag interface that cross-references logged GPS tracks against an offline OpenStreetMap database of camera locations, producing a daily surveillance-camera proximity report read out over NFC.",
+  "category_guess": "multi",
+  "why_notable": "Counter-surveillance camera-proximity logger; the automotive/forensics survey judged it out of scope as a privacy receiver, the Crowd Supply survey included it. Needs a call.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "Bluetooth Nugget (ESP32S3)",
   "vendor": "Retia",
   "seller_url": "https://retia.io/products/bluetooth-nugget-esp32s3",
@@ -843,6 +1344,20 @@
   "borderline": false,
   "confidence": "high",
   "_src": "retia"
+ },
+ {
+  "name": "ESPboy:DIY",
+  "vendor": "ESPboy",
+  "seller_url": "https://www.tindie.com/products/espboy/espboydiy-homebrew-gadgetdevelopment-platform/",
+  "price_usd": 79.0,
+  "one_line": "ESP8266 handheld (128x128 TFT, 8 buttons, speaker, battery) marketed for retro gaming, with plug-in modules and firmware for Wi-Fi attacks, RFID/NFC cloning and emulation, iButton storage, 433MHz barrier control, U2F and BadUSB payloads.",
+  "category_guess": "multi",
+  "why_notable": "Genuine multi-protocol capability bolted onto a retro-gaming platform - borderline because gaming is the primary marketed use.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "Newsheen Hacker Smart Cat Lamp Kit (pre-assembled)",
@@ -989,6 +1504,32 @@
   "_src": "github"
  },
  {
+  "name": "Multifunction Network Box",
+  "vendor": "Hacker Warehouse",
+  "seller_url": "https://hackerwarehouse.com/product/multifunction-network-box/",
+  "price_usd": 1500.0,
+  "one_line": "Linux-based network appliance with an LCD status display that logs and selectively blocks traffic across up to 16 GbE ports during an engagement. Price range $1,500-$3,000 by model (Model 100 / Model 1000).",
+  "category_guess": "network",
+  "why_notable": "A purpose-built covert network-implant/traffic-control box, more capable than the passive taps already tracked, with no equivalent in the DB.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_src": "hackerwarehouse"
+ },
+ {
+  "name": "PiKVM v4 Plus",
+  "vendor": "PiKVM",
+  "seller_url": "https://lab401.com/collections/pentesting-network",
+  "price_usd": 387.72,
+  "one_line": "Hardware KVM-over-IP remote access unit with a built-in 3/4/5G modem, marketed by the seller as an undetectable remote-access tool for red-team engagements (price converted from EUR).",
+  "category_guess": "network",
+  "why_notable": "Cellular-connected out-of-band remote access hardware, a distinct implant category from the USB/network-tap tools already tracked.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "medium",
+  "_src": "lab401"
+ },
+ {
   "name": "Gigabit Ethernet Tap",
   "vendor": "Dualcomm",
   "seller_url": "https://hackerwarehouse.com/product/gigabit-ethernet-tap/",
@@ -1015,6 +1556,20 @@
   "_src": "hackerwarehouse"
  },
  {
+  "name": "Firewalla",
+  "vendor": "Firewalla",
+  "seller_url": "https://www.tindie.com/products/firewallallc/firewalla-smart-internet-security-for-your-home/",
+  "price_usd": 109.0,
+  "one_line": "Inline network appliance (quad-core ARM, 512MB RAM) between router and LAN, passively monitoring connected devices for threats, filtering content and offering VPN and ad-blocking through a mobile app.",
+  "category_guess": "network",
+  "why_notable": "Consumer defensive appliance rather than a testing tool - weakest fit in this batch. Recommend dropping.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Glytch GPS Module for Pineapple Pager",
   "vendor": "Hak5",
   "seller_url": "https://lab401.com/collections/pentesting-network",
@@ -1035,17 +1590,80 @@
   ]
  },
  {
-  "name": "Glytch Ethernet Module for Pineapple Pager",
-  "vendor": "Hak5 (Glytch line)",
-  "seller_url": "https://lab401.com/collections/all",
-  "price_usd": 59.0,
-  "one_line": "Add-on module giving the WiFi Pineapple Pager wired Ethernet connectivity for LAN-based payloads.",
+  "name": "LittlePcap Network Tap",
+  "vendor": "Little Things",
+  "seller_url": "https://www.tindie.com/products/littlethings/littlepcap-network-tappacket-capture-to-usb-drive/",
+  "price_usd": 80.0,
+  "one_line": "Inline dual-gigabit-Ethernet tap writing captured traffic as PCAP files directly to an attached USB drive; USB-C powered, roughly 16s boot.",
   "category_guess": "network",
-  "why_notable": "Capability-adding accessory for the already-tracked WiFi Pineapple Pager, enabling wired-network attack payloads.",
+  "why_notable": "Captures to its own USB drive, unlike the tracked Throwing Star and Plunder Bug which need a separate capture host.",
   "dupe_of": null,
   "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Glytch Ethernet Module for Pineapple Pager",
+  "vendor": "Hak5",
+  "seller_url": "https://lab401.com/collections/pentesting-network",
+  "price_usd": 63.72,
+  "one_line": "Wired Ethernet add-on for the WiFi Pineapple Pager enabling LAN-based payload deployment in addition to its WiFi radios (price converted from EUR).",
+  "category_guess": "network",
+  "why_notable": "Turns the WiFi-only Pineapple Pager into a wired network implant as well, similar in role to a LAN Turtle.",
+  "dupe_of": null,
+  "borderline": true,
   "confidence": "medium",
-  "_src": "specialty"
+  "_src": "lab401",
+  "_also": [
+   "specialty"
+  ],
+  "_price_seen": [
+   63.72,
+   59.0
+  ]
+ },
+ {
+  "name": "Netgotchi Pro",
+  "vendor": "OlleStore",
+  "seller_url": "https://www.tindie.com/products/ollestore/netgotchi-pro-portable-network-security-scanner/",
+  "price_usd": 59.0,
+  "one_line": "Battery-powered ESP8266 + OLED variant of Negotchi with the same scanning, honeypot and alarm functions, configurable by onboard buttons or a phone web portal.",
+  "category_guess": "network",
+  "why_notable": "Portable version of the same maker's scanner line.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Negotchi - network security scanner",
+  "vendor": "OlleStore",
+  "seller_url": "https://www.tindie.com/products/ollestore/negotchi-network-security-scanner/",
+  "price_usd": 44.0,
+  "one_line": "ESP8266 + OLED board that periodically scans the local Wi-Fi network for hosts and vulnerabilities and runs a honeypot service, sounding an on-screen alarm if the honeypot is touched.",
+  "category_guess": "network",
+  "why_notable": "Standalone intrusion-detection gadget - a different category from the tracked wardriving and deauth boards.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Glytch Ethernet Mod for Pager",
+  "vendor": "Glytch with Hak5",
+  "seller_url": "https://shop.hak5.org/products/glytch-ethernet-mod-for-pager",
+  "price_usd": 40.0,
+  "one_line": "3D-printed add-on using an RTL8152B USB-to-Ethernet chip to give the WiFi Pineapple Pager a wired RJ45 port.",
+  "category_guess": "network",
+  "why_notable": "Stock USB-Ethernet controller with no security-specific circuitry - closer to the generic-adapter exclusion than the other two Glytch mods. Recommend dropping.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_slice": "hak5",
+  "_src": "vendors"
  },
  {
   "name": "PhanTap",
@@ -1089,6 +1707,20 @@
   "_src": "github"
  },
  {
+  "name": "PoisonTap",
+  "vendor": "Samy Kamkar",
+  "seller_url": "https://github.com/samyk/poisontap",
+  "price_usd": 15,
+  "one_line": "Raspberry Pi Zero USB implant emulating an Ethernet adapter to hijack traffic from a locked machine, siphon HTTP cookies for the Alexa top 1M, and expose the internal router via DNS rebinding.",
+  "category_guess": "network",
+  "why_notable": "6474 stars, last commit 2018-11-26. Kept past the staleness cutoff: it directly inspired the O.MG Cable and Packet Squirrel class of device already tracked.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "wifi",
+  "_src": "github"
+ },
+ {
   "name": "RPi0 USB-A Addon Board",
   "vendor": "Hacker Warehouse",
   "seller_url": "https://hackerwarehouse.com/product/rpi0-usb-a-board/",
@@ -1100,6 +1732,19 @@
   "borderline": false,
   "confidence": "high",
   "_src": "hackerwarehouse"
+ },
+ {
+  "name": "PiKVM v4 Plus - Hardware RAT",
+  "vendor": "PiKVM",
+  "seller_url": "https://lab401.com/collections/all",
+  "price_usd": 540.0,
+  "one_line": "KVM-over-IP hardware remote access tool with built-in cellular (3/4/5G) connectivity, marketed for covert drop-in red-team installs.",
+  "category_guess": "other",
+  "why_notable": "Repurposes KVM-over-IP hardware as a covert, network-independent remote-access implant for red-team engagements.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "medium",
+  "_src": "specialty"
  },
  {
   "name": "Kronos Electric Pick",
@@ -1143,6 +1788,20 @@
   "borderline": false,
   "confidence": "high",
   "_src": "hackerwarehouse"
+ },
+ {
+  "name": "Glytch GPS Mod for Pager",
+  "vendor": "Glytch with Hak5",
+  "seller_url": "https://shop.hak5.org/products/glytch-gps-mod-for-pager",
+  "price_usd": 60.0,
+  "one_line": "3D-printed hand-assembled add-on carrying a Quectel LC86 multi-constellation GNSS chipset that clips onto the WiFi Pineapple Pager to geotag its Wi-Fi survey and attack logs.",
+  "category_guess": "other",
+  "why_notable": "Own chipset and SKU, adds a sensor the base Pager lacks. Seen at $79 and $85.32 at other sellers.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "hak5",
+  "_src": "vendors"
  },
  {
   "name": "Masta-Blasta for Flipper Zero",
@@ -1339,6 +1998,20 @@
   "_src": "github"
  },
  {
+  "name": "Odiin: NFC Tag Emulation Toolkit",
+  "vendor": "cmd; wtf?",
+  "seller_url": "https://www.tindie.com/products/cmd/odiin-nfc-tag-emulation-toolkit/",
+  "price_usd": 169.0,
+  "one_line": "nRF52840 handheld with a 320x240 LCD that loads tag dump files from SD and emulates NFC-A tags (NTAG21X, partial MIFARE Classic/Ultralight) when tapped to a reader.",
+  "category_guess": "rfid",
+  "why_notable": "Dedicated NFC tag-emulation handheld, distinct from the tracked Chameleon, ACR122U and Proxmark devices.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Long Range RFID Reader/Writer DL533N XL",
   "vendor": "D-Logic",
   "seller_url": "https://lab401.com/products/long-range-rfid-reader-writer-dl533n-xl",
@@ -1492,6 +2165,34 @@
   "_src": "github"
  },
  {
+  "name": "NFC Card Reader Module with ESP32-S3",
+  "vendor": "HermitX",
+  "seller_url": "https://www.tindie.com/products/hermitx/nfc-card-reader-module-with-esp32-s3/",
+  "price_usd": 46.0,
+  "one_line": "ESP32-S3 + PN5321 module reading, writing and emulating ISO14443 A/B, MIFARE and FeliCa, with an 8-LED array, 3W speaker and microSD for audio-visual feedback on tag events.",
+  "category_guess": "rfid",
+  "why_notable": "Full read/write/emulate NFC chipset on an ESP32-S3, though the listing frames it as an access-control project board rather than a pentest tool.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "GGtag",
+  "vendor": "Eurolan",
+  "seller_url": "https://www.crowdsupply.com/eurolan-ltd/ggtag",
+  "price_usd": 45,
+  "one_line": "RP2040 e-paper badge emulating 125kHz RFID tags (ASK and FSK), programmed over USB serial, a web-serial browser interface, or audio via ggwave; 3.52-inch e-paper display.",
+  "category_guess": "rfid",
+  "why_notable": "Novel form factor for RFID tag emulation - not a Proxmark/Chameleon/Flipper-style reader.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "ESP-RFID-Tool v2 PRO",
   "vendor": "Raik Schneider (Einstein2150)",
   "seller_url": "http://RFID-tool.foto-video-it.de",
@@ -1504,6 +2205,20 @@
   "confidence": "high",
   "_slice": "auto",
   "_src": "github"
+ },
+ {
+  "name": "VICINO",
+  "vendor": "MCQN Ltd",
+  "seller_url": "https://www.tindie.com/products/mcqn_ltd/vicino/",
+  "price_usd": 40.0,
+  "one_line": "ST25R3916B RFID/NFC reader-writer module over SPI, pin- and mounting-hole-compatible with existing RC522 project designs.",
+  "category_guess": "rfid",
+  "why_notable": "Higher-end RFID chipset than the common cheap MFRC522 boards, positioned as a drop-in upgrade.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "RFIDler",
@@ -1527,6 +2242,20 @@
   "one_line": "Raspberry Pi 3 covert long-range badge-capture rig built to hide inside a Maxiprox 5375, Indala ASR-620 or HID R90 and log Wiegand data over Wi-Fi; needs a donor reader.",
   "category_guess": "rfid",
   "why_notable": "239 stars, last commit 2021-10-25. Kept past the staleness cutoff as the widely-cited reference build for covert long-range Wiegand interception.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "rfid",
+  "_src": "github"
+ },
+ {
+  "name": "Gatekeeper",
+  "vendor": "wghozayel",
+  "seller_url": "https://github.com/wghozayel/Gatekeeper",
+  "price_usd": 35,
+  "one_line": "Raspberry Pi 3 + Proxmark3 rig derived from Wiegotcha that hides in a long-range HID reader, captures badge data and clones to a blank card in the field via web UI.",
+  "category_guess": "rfid",
+  "why_notable": "19 stars, last commit 2024-04-16. Adds same-session cloning to the Wiegotcha design.",
   "dupe_of": null,
   "borderline": true,
   "confidence": "medium",
@@ -1755,6 +2484,20 @@
   "_src": "github"
  },
  {
+  "name": "QuadRF",
+  "vendor": "Scale RF",
+  "seller_url": "https://www.crowdsupply.com/scale-rf/quadrf",
+  "price_usd": 549,
+  "one_line": "4x4 coherent MIMO SDR tile with an integrated Raspberry Pi 5 that measures arrival-time differences across four antennas to render a real-time AR overlay of RF sources on a camera feed at 30fps, and can pass a selected signal to GNU Radio.",
+  "category_guess": "sdr",
+  "why_notable": "Vendor names locating hidden wireless cameras and rogue access points through walls; RF direction-finding in the same spirit as the tracked KrakenSDR.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "PortaPack H4M Pro for HackRF Pro",
   "vendor": "Great Scott Gadgets / Mayhem",
   "seller_url": "https://hackerwarehouse.com/product/portapack-h4m-pro-for-hackrf-pro/",
@@ -1796,12 +2539,27 @@
   "confidence": "high",
   "_src": "hackerwarehouse",
   "_also": [
-   "lab401"
+   "lab401",
+   "vendors"
   ],
   "_price_seen": [
    190.0,
    205.2
   ]
+ },
+ {
+  "name": "moRFeus",
+  "vendor": "Othernet",
+  "seller_url": "https://www.crowdsupply.com/othernet/morfeus",
+  "price_usd": 159,
+  "one_line": "Field-configurable 30MHz-6GHz frequency mixer/converter and signal generator with an LCD and button interface and USB-HID programmability, switching between mixer and standalone generator modes.",
+  "category_guess": "sdr",
+  "why_notable": "Long-standing RF-hacking accessory for shifting HackRF/SDR tuning ranges. Vendor's own use-case list names wideband jammers, though the device is general-purpose lab gear.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
  },
  {
   "name": "NanoVNA-F",
@@ -1818,6 +2576,20 @@
   "_also": [
    "specialty"
   ]
+ },
+ {
+  "name": "RFGEN44",
+  "vendor": "CircuitValley",
+  "seller_url": "https://www.crowdsupply.com/circuitvalley/rfgen44",
+  "price_usd": 139,
+  "one_line": "USB-powered driver-free RF signal generator (ADF4351 synthesizer, PIC16 MCU) producing 35MHz-4.4GHz output in 10kHz steps, controllable over USB HID from Python or Matlab. Live crowdfunding campaign.",
+  "category_guess": "sdr",
+  "why_notable": "Generic hobbyist/lab RF source with no security framing on its page; included only for dual-use potential. Weakest candidate in this batch.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
  },
  {
   "name": "uConsole AIO V2 (RTL-SDR/LoRa/GPS/RTC/USB Hub/USB 3.0/RJ45 Ethernet)",
@@ -1846,6 +2618,20 @@
   "_src": "specialty"
  },
  {
+  "name": "MSI.SDR 10kHz-2GHz Panadapter SDR Receiver",
+  "vendor": "MMM999",
+  "seller_url": "https://www.tindie.com/products/mmm999/sdr-simplified-version-rsp1-software-defined-radio",
+  "price_usd": 65.0,
+  "one_line": "12-bit ADC SDR receiver covering 10kHz-2GHz with up to 10MHz bandwidth, 0.5ppm TCXO, SMA antenna port, micro-USB, aluminium enclosure.",
+  "category_guess": "sdr",
+  "why_notable": "Wideband receiver in a different product line from the tracked RTL-SDR, HackRF, KrakenSDR and PlutoSDR. An RSP1 clone - worth stating plainly.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Mini RTL-SDR Dongle",
   "vendor": "Hacker Gadgets",
   "seller_url": "https://hackergadgets.com/products/mini-rtl-sdr-dongle",
@@ -1870,6 +2656,20 @@
   "borderline": false,
   "confidence": "medium",
   "_src": "hackerwarehouse"
+ },
+ {
+  "name": "SDR-Rx Up Converter Module",
+  "vendor": "JasonKits",
+  "seller_url": "https://www.tindie.com/products/jasonkits/sdr-rx-software-defined-radio-up-converter-module/",
+  "price_usd": 39.5,
+  "one_line": "HF upconverter and preamp (10kHz-50MHz, relay-switched VHF/UHF/SHF pass-through) extending the low-frequency range of an existing RTL-SDR dongle; F and BNC connectors, USB powered.",
+  "category_guess": "sdr",
+  "why_notable": "Adds real HF reception to existing SDR dongles but is an accessory rather than a standalone tool.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "Universal Radio Hacker",
@@ -1970,6 +2770,20 @@
   "_src": "github"
  },
  {
+  "name": "URTI (Universal Radio Test Instrument)",
+  "vendor": "Great Scott Gadgets",
+  "seller_url": "https://greatscottgadgets.com/urti/",
+  "price_usd": null,
+  "one_line": "In-development wideband full-duplex SDR with an integrated directional coupler, intended to act as spectrum analyzer, VNA, vector signal generator/analyzer, antenna analyzer, power meter and frequency counter in one device.",
+  "category_guess": "sdr",
+  "why_notable": "Open-source GSG project (ARDC/TAPR funded) with a live product page, no price and no release. Needs a status check before listing.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "low",
+  "_slice": "gsg",
+  "_src": "vendors"
+ },
+ {
   "name": "PandwaRF Marauder",
   "vendor": "PandwaRF",
   "seller_url": "https://lab401.com/collections/all",
@@ -2014,6 +2828,20 @@
   "borderline": true,
   "confidence": "medium",
   "_src": "retia"
+ },
+ {
+  "name": "Glytch Mesh Mod for Pager",
+  "vendor": "Glytch with Hak5",
+  "seller_url": "https://shop.hak5.org/products/glytch-mesh-mod-for-pager",
+  "price_usd": 60.0,
+  "one_line": "3D-printed add-on with an 868/900 MHz radio and integrated antenna that clips onto the WiFi Pineapple Pager for sub-GHz mesh networking.",
+  "category_guess": "subghz",
+  "why_notable": "Adds off-grid mesh comms to an already-tracked device. Seen at $79 and $85.32 elsewhere.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "hak5",
+  "_src": "vendors"
  },
  {
   "name": "Nibble Screen Connect",
@@ -2156,6 +2984,34 @@
   "_src": "github"
  },
  {
+  "name": "Diabolic Parasite",
+  "vendor": "UNIT 72784",
+  "seller_url": "https://www.crowdsupply.com/unit-72784/diabolic-parasite",
+  "price_usd": 125,
+  "one_line": "Inline USB implant: the target's keyboard or mouse plugs into the Parasite's female port and the Parasite into the freed host port. Clones the passthrough device's hardware identity, logs keystrokes to a web UI, and wirelessly triggers injection with randomized typing cadence and ALT+Numpad layout bypass.",
+  "category_guess": "usb-hid",
+  "why_notable": "Passive keylogging, identity cloning and remote injection in one covert implant.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "Diabolic Drive",
+  "vendor": "UNIT 72784",
+  "seller_url": "https://www.crowdsupply.com/unit-72784/diabolic-drive",
+  "price_usd": 115,
+  "one_line": "USB flash-drive-shaped device behaving as normal 64GB storage until wirelessly commanded over Wi-Fi to expose a HID keyboard interface and inject a stored payload; spoofs VID/PID/serial for both the storage and HID personas.",
+  "category_guess": "usb-hid",
+  "why_notable": "Combines real flash storage, remote-triggered HID injection and hardware-ID spoofing in one drive.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
   "name": "USB Nugget (ESP32S2)",
   "vendor": "Retia",
   "seller_url": "https://retia.io/products/wi-fi-nugget-s2-nugget-esp32s2",
@@ -2208,6 +3064,93 @@
   "_src": "specialty"
  },
  {
+  "name": "UsbSafe2",
+  "vendor": "KS Elektronikdesign",
+  "seller_url": "https://www.crowdsupply.com/karoly-simon/usbsafe2",
+  "price_usd": 39,
+  "one_line": "Inline USB dongle with a physical button to disable the data lines (anti-juice-jacking) and clamp output voltage/current at five selectable thresholds to protect the downstream device from a malicious or faulty host.",
+  "category_guess": "usb-hid",
+  "why_notable": "Data blocker plus overvoltage/overcurrent cutoff; same niche as the tracked O.MG UnBlocker but a distinct older product.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "crowdsupply",
+  "_src": "vendors"
+ },
+ {
+  "name": "USB Snake Box",
+  "vendor": "The Maker Cat",
+  "seller_url": "https://www.tindie.com/products/TheMakerCat/usb-snake-box-circuit-python-hacking-tool/",
+  "price_usd": 38.74,
+  "one_line": "CircuitPython microcontroller in a 3D-printed box with four buttons, each mapped to a different pre-programmed keystroke-injection payload.",
+  "category_guess": "usb-hid",
+  "why_notable": "Multi-button physical BadUSB, a distinct form factor from tracked single-payload devices.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "HackyPi",
+  "vendor": "SB Components",
+  "seller_url": "https://www.tindie.com/products/sbc/hackypi-programmable-diy-usb-hacking-tool/",
+  "price_usd": 37.99,
+  "one_line": "RP2040 USB stick with a 1.14in TFT and SD slot that emulates HID keyboard input and runs drag-and-drop cross-platform payload scripts.",
+  "category_guess": "usb-hid",
+  "why_notable": "BadUSB board with an onboard display - not one of the tracked Digispark/CH552/pico-ducky designs.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "BLE BadUSB (JDY-08)",
+  "vendor": "michalmonday",
+  "seller_url": "https://www.tindie.com/products/michalmonday/ble-badusb-jdy-08/",
+  "price_usd": 25.0,
+  "one_line": "ATmega32U4 + JDY-08 BLE module USB stick emulating keyboard and mouse and accepting remote command injection over BLE 4.0; open source, Arduino-programmable.",
+  "category_guess": "usb-hid",
+  "why_notable": "BLE-remote-triggered BadUSB - a different attack surface from the Wi-Fi and onboard-payload devices tracked.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors",
+  "_also": [
+   "vendors"
+  ]
+ },
+ {
+  "name": "Wifi BadUSB",
+  "vendor": "michalmonday",
+  "seller_url": "https://www.tindie.com/products/michalmonday/wifi-badusb/",
+  "price_usd": 25.0,
+  "one_line": "ATmega32U4 + ESP-12F USB stick acting as a HID injector and hosting its own Wi-Fi access point for control and reflashing; runs supremeDuck, wifi_ducky or ESPloitV2.",
+  "category_guess": "usb-hid",
+  "why_notable": "Wi-Fi-controlled BadUSB from the same maker, distinct hardware from the BLE variants.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Programmable BadUSB Payload Cable USB-A to USB-C",
+  "vendor": "Unlimited Coverage",
+  "seller_url": "https://www.tindie.com/products/ucshop/programmable-badusb-payload-cable-usb-a-to-usb-c/",
+  "price_usd": 24.99,
+  "one_line": "USB-A to USB-C cable with an embedded microcontroller emulating HID and mass storage, storing multiple reprogrammable payloads, with an LED status indicator.",
+  "category_guess": "usb-hid",
+  "why_notable": "Cable-form payload injector at a tenth the price of an O.MG Cable - worth comparing directly against it.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "Mouse Jiggler",
   "vendor": "Generic",
   "seller_url": "https://hackerwarehouse.com/product/mouse-jiggler/",
@@ -2232,6 +3175,35 @@
   "borderline": true,
   "confidence": "medium",
   "_src": "hackerwarehouse"
+ },
+ {
+  "name": "Vidar attiny85 based BadUSB",
+  "vendor": "rot13labs",
+  "seller_url": "https://www.tindie.com/products/rot13labs/vidar-attiny85-based-badusb/",
+  "price_usd": 20.0,
+  "one_line": "Miniature ATtiny85 USB stick emulating a keyboard and firing a pre-programmed payload on plug-in; firmware user-modifiable.",
+  "category_guess": "usb-hid",
+  "why_notable": "Minimal cheap ATtiny85 BadUSB from a different maker than the tracked Digispark/CH552 boards.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "Evil Crow Cable",
+  "vendor": "AprilBrother",
+  "seller_url": "https://www.tindie.com/products/aprbrother/evil-crow-cable/",
+  "price_usd": 12.5,
+  "one_line": "ATtiny85 BadUSB cable with data lines enabled, emulating a keyboard to run pre-programmed payloads. No Wi-Fi.",
+  "category_guess": "usb-hid",
+  "why_notable": "Same brand as the tracked Evil Crow Cable Wind but genuinely different silicon - ATtiny85 with no ESP32-S3 or Wi-Fi, at half the price.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors",
+  "_possible_dupe_of": "Evil Crow Cable Wind"
  },
  {
   "name": "EvilDuck",
@@ -2260,6 +3232,34 @@
   "confidence": "high",
   "_slice": "badusb",
   "_src": "github"
+ },
+ {
+  "name": "Flipper Zero Wardriving GPS enabled ESP32 Board",
+  "vendor": "Texas Flipper Boards",
+  "seller_url": "https://www.tindie.com/products/texasflipperboards/flipper-zero-wardriving-gps-enabled-esp32-board/",
+  "price_usd": 120.0,
+  "one_line": "ESP32 with external antenna and GPS receiver as a Flipper Zero add-on, preloaded with Marauder, in a 3D-printed case; connects over serial and logs to the Flipper SD card.",
+  "category_guess": "wifi",
+  "why_notable": "Same concept as NetNinja from a different maker at a $20 premium - a direct head-to-head comparison.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
+  "name": "NetNinja Wardriving GPS Marauder",
+  "vendor": "BPM Circuits",
+  "seller_url": "https://www.tindie.com/products/bpmcircuits/netninja-wardriving-gps-marauder-flipper-zero/",
+  "price_usd": 100.0,
+  "one_line": "Flipper Zero expansion combining an ESP32 with a battery-backed GPS module and 2.4GHz antenna, writing geotagged Wi-Fi PCAPs to the Flipper's SD card, preloaded with Marauder.",
+  "category_guess": "wifi",
+  "why_notable": "GPS-tagged wardriving for Flipper Zero, a capability the tracked Flipper Wi-Fi boards lack.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
  },
  {
   "name": "GhostBoard",
@@ -2393,6 +3393,20 @@
   "_src": "specialty"
  },
  {
+  "name": "ESP32 Network Toolbox",
+  "vendor": "Klhnikov's",
+  "seller_url": "https://www.tindie.com/products/klhnikov/esp32-network-toolbox/",
+  "price_usd": 50.0,
+  "one_line": "ESP32 board with an Android companion app: Wi-Fi scanning, promiscuous packet sniffing, deauth frames, evil-twin captive portal, network mapping and BLE scanning, exporting PCAP/CSV/JSON.",
+  "category_guess": "wifi",
+  "why_notable": "Full Wi-Fi pentest toolbox with a phone app. Listing shows out of stock since Aug 2023 - supply needs checking.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "ALFA AWUS036ACM",
   "vendor": "ALFA Network",
   "seller_url": "https://justcallmekokollc.com/products/alfa-awus036acm",
@@ -2492,6 +3506,20 @@
   "_src": "github"
  },
  {
+  "name": "Wifi deauther PLUG PLAY ESP8266 v2.0",
+  "vendor": "ez sellers",
+  "seller_url": "https://www.tindie.com/products/technicians/wifi-deauther-plug-play-deauther-esp8266-v20/",
+  "price_usd": 29.76,
+  "one_line": "Pre-flashed NodeMCU with a web deauther UI at 192.168.4.1 supporting SSID spoofing, probe-request spam and deauthentication, powered over micro-USB.",
+  "category_guess": "wifi",
+  "why_notable": "Pre-flashed NodeMCU reseller listing.",
+  "dupe_of": null,
+  "borderline": false,
+  "confidence": "high",
+  "_slice": "tindie",
+  "_src": "vendors"
+ },
+ {
   "name": "ESP32 Wardriver Pro",
   "vendor": "dkyazzentwatwa",
   "seller_url": "https://github.com/dkyazzentwatwa/esp32-gps-wifi-wigle",
@@ -2569,6 +3597,27 @@
   "borderline": false,
   "confidence": "high",
   "_slice": "wifi",
-  "_src": "github"
+  "_src": "github",
+  "_also": [
+   "vendors"
+  ],
+  "_price_seen": [
+   6,
+   20.0
+  ]
+ },
+ {
+  "name": "2.4/5 GHz Deauther",
+  "vendor": "PCB Studios",
+  "seller_url": "https://www.tindie.com/products/pcb-studios/245-ghz-deauther/",
+  "price_usd": null,
+  "one_line": "RTL8720dn board hosting its own AP with a web UI, scanning and deauthing across 2.4GHz and 5GHz, with an RGB status LED.",
+  "category_guess": "wifi",
+  "why_notable": "Dual-band deauther on an RTL8720dn rather than ESP32/ESP8266 - a different chipset from every tracked deauther. Listing marked Product Retired with no price.",
+  "dupe_of": null,
+  "borderline": true,
+  "confidence": "medium",
+  "_slice": "tindie",
+  "_src": "vendors"
  }
 ]
