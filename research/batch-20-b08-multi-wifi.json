@@ -1,0 +1,3400 @@
+[
+ {
+  "id": "piglet-wardriver",
+  "hardware_id": "piglet-wardriver",
+  "name": "Piglet Wardriver",
+  "firmware": "Piglet",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/Hamspiced/piglet",
+  "firmware_note": "One codebase built for four different Seeed XIAO targets (ESP32-S3, C5, C6, C3); board choice decides whether you get 5GHz. Adds an ESP-NOW mesh scanning-node mode not found in most older wardriving firmware.",
+  "vendor": "Hamspiced (open-source project, no company)",
+  "vendor_url": "https://github.com/Hamspiced/piglet",
+  "product_url": "https://github.com/Hamspiced/piglet",
+  "category": "wardriving",
+  "subcategory": "wifi-wardriver-firmware",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 14,
+  "price_note": "Cost of a bare Seeed XIAO ESP32-C5 board only (needed for the 5GHz feature). Add roughly $10-20 for a UART GPS module, a few dollars for an optional OLED and an SD card - a real 5GHz-capable build runs closer to $35-50 all in, not $14.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Flashing is simple, but there is no official carrier board - you wire your own GPS module (and optionally an OLED) to a bare XIAO before it is a wardriver at all.",
+  "build_effort": "soldering",
+  "build_note": "No official kit or enclosure. You supply the XIAO board and a UART GPS module and wire them yourself; the README mentions a PCBWay pre-assembled listing but that is third-party, not official.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "Open-source wardriving firmware for Seeed's XIAO ESP32 family: 2.4GHz Wi-Fi scanning on every supported board, genuine 5GHz scanning on the C5, GPS-tagged WiGLE-format CSV logging to SD, a live web UI, and an ESP-NOW mesh mode letting several units share scan coverage as networked nodes. It is a passive collection tool with no attack features anywhere in the source.",
+  "honest_take": "Piglet does one job and is honest that it only does that job - there is no deauth, no injection, nothing offensive in the source, and it is entitled to the credit that deserves. The catch is what the $14 headline price hides: that is a bare MCU board with no GPS, no case, and no carrier PCB, so a real build costs closer to $35-50 once you wire in a GPS module yourself. If you want 5GHz wardriving without any DIY wiring, the already-tracked C5 Wardriver (also ESP32-C5-based, from the ESP32 Marauder author) ships as a proper host board with GPS, battery management, a screen and buttons built in for $69 plus a $10-15 dev kit - more total dollars, zero soldering. Piglet's actual differentiator is the ESP-NOW mesh mode, which nothing else in this comparison offers, and the CC BY-NC license means nobody can legally sell you a finished unit even if they wanted to.",
+  "best_for": [
+   "Multi-node ESP-NOW mesh wardriving across several cheap boards",
+   "5GHz WiGLE logging on the cheapest possible silicon if you don't mind wiring your own GPS",
+   "Hobbyists who already own XIAO boards"
+  ],
+  "not_for": [
+   "Anyone who wants a finished, cased device out of the box",
+   "Any offensive Wi-Fi capability - none exists in this firmware",
+   "Commercial resale or bundling - the CC BY-NC license forbids it"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-C5",
+   "mcu_primary_note": "Recommended target for 5GHz: single-core RISC-V @240MHz, dual-band 2.4+5GHz Wi-Fi 6, BLE5. The firmware also builds for the XIAO ESP32-S3 (dual-core Xtensa, 2.4GHz only), C6 (RISC-V, 2.4GHz Wi-Fi6 + 802.15.4) and C3 (single-core RISC-V, 2.4GHz only, headless per the README).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-C5 (or S3/C6/C3 depending on chosen board)",
+     "role": "wifi",
+     "note": "2.4GHz on every target; genuine 5GHz scanning only on the C5. Uses active scanning (WiFi.scanNetworks-style); the README does not describe promiscuous packet capture."
+    }
+   ],
+   "display": {
+    "type": "Optional SSD1306/SH1106 OLED (not included)",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Board-dependent; not part of the base firmware kit. Optional battery monitoring is supported if one is wired in.",
+   "charging": "USB-C (board-dependent)",
+   "pmic": null,
+   "storage": "microSD, for WiGLE-format CSV export",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4/5GHz (board-dependent)",
+    "ESP-NOW mesh"
+   ],
+   "gpio": "Not fixed - README documents wiring for a GPS UART and an optional OLED, varying by which XIAO variant is used",
+   "sensors": [
+    "GPS module (addon, UART, exact part not specified by the firmware)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None supplied",
+   "notable_physical": [
+    "No stock enclosure",
+    "Web UI for configuration and file access",
+    "Live OLED status if one is wired in"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Active scanning on every supported XIAO target"
+   },
+   "wifi_scan_5": {
+    "v": "partial",
+    "note": "Only on the XIAO ESP32-C5 target; S3/C6/C3 builds are 2.4GHz only"
+   },
+   "wifi_monitor_mode": {
+    "v": "no",
+    "note": "Uses active scanNetworks-style scanning per the README, not promiscuous/monitor-mode capture"
+   },
+   "wifi_injection": {
+    "v": "no",
+    "note": "No transmit-based frame injection in the source"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Explicitly passive reconnaissance only - no deauth code in the project"
+   },
+   "wifi_evil_twin": {
+    "v": "no",
+    "note": "No rogue-AP feature"
+   },
+   "wifi_beacon_spam": {
+    "v": "no",
+    "note": "No beacon-spam feature"
+   },
+   "wifi_handshake_capture": {
+    "v": "no",
+    "note": "No EAPOL/handshake capture documented"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Core purpose: GPS-tagged, WiGLE CSV to SD, live status display"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Automatic AP fallback for configuration when it can't join a known network"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Not documented despite BLE-capable silicon on every supported board"
+   },
+   "gps": {
+    "v": "addon",
+    "note": "External UART GPS module, wired by the builder; not included or specified"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "Position, heading and speed logged alongside every scan"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "WiGLE CSV export to microSD"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Control, uploads, file management and configuration over a browser"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app catalog"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Runs off USB/board battery, but needs a wired GPS module to log position at all"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Purely passive Wi-Fi scanning and logging - no transmission beyond normal Wi-Fi/ESP-NOW association. This carries far less legal exposure than a deauth or injection tool. Wardriving (recording visible network names/locations from public streets) is broadly legal in most jurisdictions, but check local rules on GPS logging and Wi-Fi surveys."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-07",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Piglet"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/Hamspiced/piglet",
+    "what": "README - supported boards, feature list, CC BY-NC 4.0 license, ESP-NOW mesh mode"
+   },
+   {
+    "url": "https://github.com/Hamspiced/piglet/commits/main",
+    "what": "last commit date, v2.58 on 2026-07-23 adding XIAO C3 support"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp32-c5",
+    "what": "ESP32-C5 dual-band 2.4/5GHz Wi-Fi 6 spec, confirming which XIAO target actually reaches 5GHz"
+   },
+   {
+    "url": "https://www.seeedstudio.com/xiao-series-page",
+    "what": "Seeed XIAO board family this firmware targets"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for ESP-NOW mesh scanning-node coordination - the firmware's key differentiator has no dedicated key",
+   "Exact GPS module part number not specified by the firmware/README",
+   "Original project release date not found",
+   "Whether Wi-Fi scanning ever uses promiscuous/monitor mode rather than only active scanNetworks() calls could not be fully confirmed from the README alone"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "esp8266-deauther",
+  "hardware_id": "esp8266-deauther",
+  "name": "ESP8266 Deauther",
+  "firmware": "ESP8266 Deauther",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/SpacehuhnTech/esp8266_deauther",
+  "firmware_note": "The direct conceptual ancestor of ESP32 Marauder and most of the deauther firmware in this comparison. Still receiving issues and pull requests into 2025 despite a last code commit of 2024-08-14 - unusually long-lived for a single-maintainer ESP project.",
+  "vendor": "Spacehuhn Technologies (Stefan Kremser)",
+  "vendor_url": "https://deauther.com",
+  "product_url": "https://github.com/SpacehuhnTech/esp8266_deauther",
+  "category": "wifi",
+  "subcategory": "wifi-deauth-firmware",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 6,
+  "price_note": "Cost of a bare Wemos D1 Mini or NodeMCU ESP8266 board - no official kit or case exists. Pre-flashed boards sold by unrelated third parties on marketplaces run closer to $20.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Flash-and-go on a $6 board over USB; no soldering for basic use, though the optional OLED/TFT display and button add-ons are a separate wiring step.",
+  "build_effort": "flash-only",
+  "build_note": "Arduino IDE flash to any ESP8266 board. Optional display and physical buttons are documented but sold/sourced separately.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "The firmware that effectively founded the ESP-based Wi-Fi attack category: deauthentication flooding, beacon/SSID spam, and Wi-Fi scanning on a sub-$10 ESP8266 board, with a web UI and an optional physical display. It has no Bluetooth, no 5GHz, and no packet injection beyond management-frame attacks - 2017-era ESP8266 capability, not the newer ESP32/C5 feature set found elsewhere in this batch.",
+  "honest_take": "This is the firmware essentially every other ESP-based deauther and Marauder-style tool descends from conceptually, and it is still maintained nearly a decade later - genuinely unusual longevity for this category. But do not confuse 'foundational' with 'capable': the ESP8266 has no Bluetooth radio at all, no 5GHz, and PMF/802.11w defeats its deauth exactly as it defeats every newer device's deauth, on any modern access point. If you want the same basic idea with a screen, GPS, BLE and an actively maintained community, ESP32 Marauder (already tracked at multiple price points from $20 up) picked up where this project left off and is the better buy for anything built after about 2019.",
+  "best_for": [
+   "The cheapest possible entry point into how deauth attacks actually work",
+   "Retrofitting old ESP8266 boards already in a parts drawer",
+   "Historical/educational reference for this entire device category"
+  ],
+  "not_for": [
+   "Bluetooth or BLE work - the ESP8266 has no radio for it",
+   "5GHz networks of any kind",
+   "Any network with 802.11w/PMF enabled or running WPA3"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP8266",
+   "mcu_primary_note": "Single-core Tensilica L106 @80/160MHz, 2.4GHz Wi-Fi only, no Bluetooth, no native USB peripheral (board-dependent UART bridge for the USB port).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP8266 (integrated)",
+     "role": "wifi",
+     "note": "802.11 b/g/n, 2.4GHz only"
+    }
+   ],
+   "display": {
+    "type": "Optional OLED/TFT (not included)",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Board-dependent; not part of the base firmware kit",
+   "charging": "Micro-USB (board-dependent)",
+   "pmic": null,
+   "storage": "None built in beyond onboard flash for saved SSID lists",
+   "connectivity": [
+    "Wi-Fi 2.4GHz",
+    "Micro-USB (serial)"
+   ],
+   "gpio": "Documented pin maps for optional display/button add-ons, varying by board",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None",
+   "notable_physical": [
+    "Web UI reachable from a phone or laptop",
+    "Runs on essentially any ESP8266 dev board"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Network and device scanning"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP8266 silicon has no 5GHz radio"
+   },
+   "wifi_monitor_mode": {
+    "v": "partial",
+    "note": "The project has historically included a packet-monitor/sniffer view; full promiscuous capture to file is not documented as clearly as the scan/deauth/beacon modules"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Raw management-frame TX for deauth/beacon; not general-purpose 802.11 injection"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Broadcast and targeted deauth flooding; blocked entirely by 802.11w/PMF, which WPA3 makes mandatory"
+   },
+   "wifi_deauth_5": {
+    "v": "no",
+    "note": "No 5GHz radio to transmit on"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Dozens of fake SSIDs from named or random-generator lists"
+   },
+   "wifi_evil_twin": {
+    "v": "no",
+    "note": "No rogue-AP/captive-portal feature in this project"
+   },
+   "wifi_captive_portal": {
+    "v": "no",
+    "note": "Not implemented"
+   },
+   "wifi_handshake_capture": {
+    "v": "no",
+    "note": "No EAPOL/handshake capture"
+   },
+   "wifi_pmkid": {
+    "v": "no",
+    "note": "Not implemented"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hosts its own configuration AP"
+   },
+   "wifi_wardriving": {
+    "v": "no",
+    "note": "No GPS support or WiGLE export"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "ESP8266 has no Bluetooth radio"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "No Bluetooth radio"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No native USB device peripheral on the ESP8266"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio on this board"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC/RFID hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Primary control interface"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Deauthenticating networks you do not own is a computer-misuse/interference offence in most countries, and unlawful under FCC rules in the US regardless of intent. The project's own README states 'use it only against your own networks and devices.' Owning the hardware is legal everywhere; transmitting deauth frames against others' networks is not."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2024-08",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Spacehuhn Deauther",
+   "ESP8266 Deauther v3"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/SpacehuhnTech/esp8266_deauther",
+    "what": "README feature list (scan/deauth/beacon spam), redirect to deauther.com for docs"
+   },
+   {
+    "url": "https://deauther.com",
+    "what": "official documentation and DIY build guides"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp8266",
+    "what": "ESP8266 spec confirming 2.4GHz-only Wi-Fi with no Bluetooth and no native USB peripheral"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "successor project comparison point for the honest_take"
+   }
+  ],
+  "research_gaps": [
+   "Exact original release year not confirmed",
+   "Specific license text (LICENSE file present, content not read in full) not verified",
+   "Whether the current maintained branch differs meaningfully from the 2024-08-14 last commit"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "pcb-studios-dual-band-deauther",
+  "hardware_id": "pcb-studios-dual-band-deauther",
+  "name": "2.4/5 GHz Deauther",
+  "firmware": "PCB Studios Deauther firmware",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Closed vendor firmware for the RTL8720DN; no public source repository found.",
+  "vendor": "PCB Studios",
+  "vendor_url": "https://pcb-studios.com",
+  "product_url": "https://www.tindie.com/products/pcb-studios/245-ghz-deauther/",
+  "category": "wifi",
+  "subcategory": "dual-band-deauther",
+  "status": "discontinued",
+  "released": null,
+  "price_usd": null,
+  "price_note": "Listing marked Product Retired with no price shown; the seller states they stopped selling on Tindie and directs buyers to pcb-studios.com or direct contact. No current price could be found.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Ships as a working board with a browser control panel at 192.168.1.1 - no flashing needed for basic use.",
+  "build_effort": "assembled",
+  "build_note": "Sold pre-assembled; hosts its own AP ('RTL8720dn-Deauther') for control.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small RTL8720DN board that hosts its own Wi-Fi AP and a browser-based control panel for scanning and deauthenticating networks on both 2.4GHz and 5GHz. It is one of the very few devices in this whole comparison built on a Realtek chip rather than an Espressif ESP32/ESP8266, which is its only real point of technical distinction.",
+  "honest_take": "The RTL8720DN genuinely is a dual-band 2.4/5GHz Wi-Fi chip, which is more than most ESP8266-class deauthers can claim, so the headline capability is at least chip-plausible. But the product is retired, unpriced, sold through a single-person Tindie shop that says it has stopped taking Tindie orders, and no firmware repository or independent teardown was found to verify what the firmware actually does with that silicon - the RGB LED's 'frame transmission' indicator and the 5GHz deauth claim both rest entirely on the seller's own listing text. Like every deauther here, PMF/802.11w on a modern WPA3 or PMF-enabled network defeats it regardless of which chip is doing the transmitting.",
+  "best_for": [
+   "Curiosity about the Realtek RTL8720DN as an alternative to the usual ESP32/ESP8266 deauthers",
+   "Buyers who specifically want native dual-band deauth hardware, if a current unit can still be sourced directly from the seller"
+  ],
+  "not_for": [
+   "Buying new through Tindie - the listing is retired with no price",
+   "Any network with PMF/802.11w or WPA3 enabled",
+   "Anyone who wants an actively maintained, documented product"
+  ],
+  "hardware": {
+   "mcu_primary": "RTL8720DN",
+   "mcu_primary_note": "Realtek dual-band Wi-Fi SoC (2.4GHz + 5GHz, 802.11a/b/g/n/ac). Also carries Bluetooth LE silicon on-die but the product does not appear to expose or use it.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "RTL8720DN",
+     "role": "wifi",
+     "note": "Chip-level dual-band 2.4/5GHz; no independent RF verification of this specific board's actual on-air behaviour was found"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Not stated; likely USB-powered only",
+   "charging": "USB (board-dependent)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Wi-Fi 2.4/5GHz",
+    "Web UI over its own AP"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None stated",
+   "notable_physical": [
+    "RGB status LED: red=system state, green=HTTP activity, blue=frame transmission"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Network scanning per listing"
+   },
+   "wifi_scan_5": {
+    "v": "claimed",
+    "note": "Vendor states 5GHz scanning; RTL8720DN is chip-capable but no independent RF verification found"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "Headline feature; no source code or independent test found to confirm implementation quality"
+   },
+   "wifi_deauth_5": {
+    "v": "claimed",
+    "note": "Same caveat - chip-capable, unverified in practice"
+   },
+   "wifi_monitor_mode": {
+    "v": "unknown",
+    "note": "Not described in the listing"
+   },
+   "wifi_injection": {
+    "v": "unknown",
+    "note": "Not described beyond deauth"
+   },
+   "wifi_beacon_spam": {
+    "v": "no",
+    "note": "Not mentioned anywhere in the listing"
+   },
+   "wifi_evil_twin": {
+    "v": "no",
+    "note": "Not mentioned"
+   },
+   "wifi_captive_portal": {
+    "v": "no",
+    "note": "Not mentioned"
+   },
+   "wifi_handshake_capture": {
+    "v": "no",
+    "note": "Not mentioned"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hosts its own 'RTL8720dn-Deauther' AP for the control panel"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "BLE silicon present on the RTL8720DN but not exposed by this product"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Not exposed"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC/RFID hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No HID capability described"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Primary control interface at 192.168.1.1"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Same exposure as any deauther - transmitting deauth frames against networks you don't own is unlawful interference in most jurisdictions (FCC rules in the US) regardless of which chip sends them."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "poor",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "RTL8720dn Deauther"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/pcb-studios/245-ghz-deauther/",
+    "what": "product listing - retired status, RGB LED behaviour, control panel details, seller statement about leaving Tindie"
+   },
+   {
+    "url": "https://www.realtek.com/en/products/communications-network-ics/item/rtl8720dn",
+    "what": "RTL8720DN dual-band 2.4/5GHz Wi-Fi + BLE chip capability, cross-referenced against the listing's claims"
+   },
+   {
+    "url": "https://www.fcc.gov/general/jammer-enforcement",
+    "what": "FCC's general position on unlawful RF interference/jamming devices, used to source the legal.notes risk assessment applied to this and every deauther in the batch"
+   },
+   {
+    "url": "https://www.amebaiot.com/en/ameba-arduino-summary/",
+    "what": "Realtek Ameba/RTL8720 development platform documentation, used as general background on the chip family this board is built on since no board-specific schematic was found"
+   }
+  ],
+  "research_gaps": [
+   "No firmware source repository found - closed/undocumented",
+   "No independent RF test of actual 5GHz deauth performance",
+   "Current price and purchase channel (pcb-studios.com direct) could not be confirmed",
+   "Release date unknown",
+   "Only 2 sources found for this device - could not locate independent reviews or teardowns"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "halehound-cyd-35-complete",
+  "hardware_id": "halehound-cyd-35-complete",
+  "name": "HaleHound-CYD 3.5\" Complete Unit Build",
+  "firmware": "HaleHound",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/JesseCHale/HaleHound-CYD",
+  "firmware_note": "Same closed-source, proprietary-licensed firmware documented on the already-tracked bare-CYD HaleHound build - binaries only, from one web flasher, forked from CiferTech's MIT-licensed ESP32-DIV. This SKU is the only current HaleHound product that still bundles a PN532 NFC reader; the cheaper DIY kits below dropped it.",
+  "vendor": "Jesse C. Hale (HaleHound)",
+  "vendor_url": "https://halehound.com",
+  "product_url": "https://halehound.com/products/halehound-3-5-complete-unit-limited-small-batch",
+  "category": "multitool",
+  "subcategory": "rf-multitool",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 235.0,
+  "price_note": "5.5-week hand-build lead time at checkout (hand-built by the single-person operation). No battery, no antennas included - buyer adds a LiPo (vendor suggests a PS3-controller-style 3.7V cell) plus 2.4GHz and sub-GHz antennas separately.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Hand-built and pre-flashed by the seller; buyer adds a battery and antennas but does no soldering or flashing themselves.",
+  "build_effort": "assembled",
+  "build_note": "Hand-assembled to order by the single-person HaleHound operation, hence the multi-week lead time. Firmware ships pre-flashed.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "The flagship assembled HaleHound: a Hosyond 3.5-inch ST7796U touchscreen CYD-style board hand-wired to a CC1101 sub-GHz radio, an NRF24L01+PA+LNA 2.4GHz radio, a PN532 NFC/RFID reader and a GPS module, running HaleHound's closed multi-protocol firmware. It is the only current HaleHound SKU that still includes the PN532 - the cheaper DIY kits dropped it.",
+  "honest_take": "This is the same firmware documented in detail on the already-tracked bare-CYD HaleHound entry, and every caveat there applies here too: it is marketed in places as open source and is not - the firmware repo holds only a README and a proprietary license, no code, and that license explicitly forbids redistribution or modification. What $235 actually buys over the $139-185 DIY kits below is someone else soldering and wiring in the discrete CC1101/nRF24/PN532/GPS modules by hand, plus the PN532 those kits no longer include. It still needs a battery and antennas bought separately, still cannot do BadUSB (no ESP32 in this class has native USB), and the CC1101 sub-GHz wiring documented for this firmware family tops out around 439MHz - it will not reach 868/915MHz gear. The 'Airoha RACE CVE' Bluetooth-headphone exploit is a genuinely current, specific attack, unusual to see actually implemented rather than just namedropped - but it targets a narrow list of affected headphone models, not Bluetooth broadly.",
+  "best_for": [
+   "Buyers who want NFC/RFID (PN532) alongside sub-GHz, 2.4GHz and Wi-Fi/BLE without doing any soldering",
+   "Anyone who wants the widest current HaleHound module set, pre-assembled"
+  ],
+  "not_for": [
+   "Anyone who wants source code they can audit or fork",
+   "868/915MHz sub-GHz targets",
+   "BadUSB/HID work - impossible on this ESP32 class",
+   "Buyers in a hurry - 5.5 week hand-build lead time"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (Hosyond CYD-style board, exact WROOM variant not published)",
+   "mcu_primary_note": "Same ESP32-WROOM-32 class silicon as the rest of the HaleHound line - dual-core Xtensa, 2.4GHz Wi-Fi/BLE, no native USB peripheral (the USB port is a UART bridge).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "Discrete module, hand-wired. This firmware family's documentation covers 300-439MHz capture/replay - not the full 300-928MHz range a Flipper reaches."
+    },
+    {
+     "ic": "NRF24L01+PA+LNA",
+     "role": "2.4ghz-proprietary",
+     "note": "+20dBm amplified module for MouseJack, sniffing and the firmware's 'jamming' modules (narrowband 2.4GHz spam, not true wideband jamming)"
+    },
+    {
+     "ic": "PN532",
+     "role": "nfc",
+     "note": "13.56MHz reader/writer/emulator - the one module the DIY kits below no longer include"
+    },
+    {
+     "ic": "ESP32 (integrated)",
+     "role": "wifi-ble",
+     "note": "2.4GHz only, no 5GHz"
+    }
+   ],
+   "display": {
+    "type": "Hosyond ST7796U TFT",
+    "size_in": 3.5,
+    "resolution": "320x480",
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": null,
+   "battery_note": "Not included. Vendor suggests a 3.7V LiPo similar to a PS3 controller cell.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "microSD (CYD platform standard)",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth/BLE",
+    "GPS (UART)"
+   ],
+   "gpio": "Hand-wired per HaleHound's documented CYD pinout, same family of pin assignments as the bare-board HaleHound build",
+   "sensors": [
+    "GPS (ATGM-class module, exact part not published for this SKU)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None included",
+   "notable_physical": [
+    "Ships without antennas - vendor recommends a Bolton Dart for 2.4GHz and an ANT700 for sub-GHz separately",
+    "Signature required on delivery"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "AP/station scanning per shared firmware"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-class Wi-Fi is 2.4GHz only"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Promiscuous capture, per the shared HaleHound firmware documentation"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Per vendor listing"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Per vendor listing"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "Named GARMR in the shared firmware"
+   },
+   "wifi_karma": {
+    "v": "yes",
+    "note": "Per shared firmware documentation"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Per shared firmware documentation"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture to microSD, per shared firmware documentation"
+   },
+   "wifi_wardriving": {
+    "v": "addon",
+    "note": "Needs the bundled GPS wired to the UART; GPS is included on this SKU"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Custom beacons/spoofing"
+   },
+   "ble_spam_apple": {
+    "v": "claimed",
+    "note": "'BLE spoofing (Apple/Samsung/Google/Tile)' per listing"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "Module documented as 'Lunatic Fringe' on the shared firmware"
+   },
+   "ble_tracker_spoof": {
+    "v": "claimed",
+    "note": "Same module both detects and spoofs per the shared firmware documentation"
+   },
+   "subghz_rx": {
+    "v": "yes",
+    "note": "CC1101, 300-439MHz per shared firmware documentation"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same CC1101"
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "Includes Flipper .sub file playback per listing"
+   },
+   "subghz_bruteforce": {
+    "v": "yes",
+    "note": "Includes Tesla charge-port command replay per listing"
+   },
+   "subghz_rolling_code": {
+    "v": "partial",
+    "note": "KeeLoq decoding only - does not defeat a modern manufacturer-keyed rolling code"
+   },
+   "subghz_amplified": {
+    "v": "unknown",
+    "note": "No PA module or extra buck converter mentioned for this SKU's CC1101, unlike the E07 PA option documented elsewhere in the HaleHound line"
+   },
+   "nrf24_scan": {
+    "v": "yes",
+    "note": "Promiscuous 2.4GHz capture per shared firmware"
+   },
+   "mousejack": {
+    "v": "yes",
+    "note": "Per vendor listing"
+   },
+   "nrf24_jam": {
+    "v": "claimed",
+    "note": "Marketed loosely as jamming; narrowband nRF24 spam on this firmware family, not wideband jamming"
+   },
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "PN532 included on this SKU"
+   },
+   "hf_1356_write": {
+    "v": "yes",
+    "note": "PN532 included"
+   },
+   "hf_1356_emulate": {
+    "v": "partial",
+    "note": "MIFARE emulation via firmware; best performance documented elsewhere in the line as needing a Chameleon Ultra over Bluetooth rather than the PN532 alone"
+   },
+   "mifare_classic_attacks": {
+    "v": "yes",
+    "note": "Read/write/clone/emulate per listing"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No 125kHz coil or LF module in this SKU"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Included on this SKU"
+   },
+   "gps_wardrive_log": {
+    "v": "claimed",
+    "note": "GPS-stamped logging per listing"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No native USB peripheral on this ESP32 class"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware on the CYD platform"
+   },
+   "detect_surveillance_cam": {
+    "v": "yes",
+    "note": "'Flock You' camera detection module shared across the HaleHound firmware line"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Bluetooth skimmer-hunting module shared across the line"
+   },
+   "detect_drone": {
+    "v": "yes",
+    "note": "Remote ID-based anti-drone module shared across the line"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "This firmware ships jamming modules. Deliberate radio jamming is a criminal offence in the US (FCC), the UK, the EU and most other jurisdictions with no research exemption for transmitting. Deauth, evil twin, MouseJack, sub-GHz replay/bruteforce and NFC cloning each carry separate legal exposure in most jurisdictions. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "HaleHound Complete Unit",
+   "HaleHound 3.5in"
+  ],
+  "sources": [
+   {
+    "url": "https://halehound.com/products/halehound-3-5-complete-unit-limited-small-batch",
+    "what": "product listing - price, included/excluded parts, battery/antenna guidance, module feature list, disclaimers"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/README.md",
+    "what": "shared firmware module list, documented 300-439MHz CC1101 wiring, GPIO collisions, VALHALLA liability gating (verified on the already-tracked base HaleHound entry, reused here since it's the same firmware)"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/LICENSE",
+    "what": "proprietary license text: redistribution, modification and commercial distribution all prohibited"
+   },
+   {
+    "url": "https://github.com/cifertech/ESP32-DIV",
+    "what": "the MIT-licensed upstream project HaleHound firmware is derived from"
+   },
+   {
+    "url": "https://github.com/JesseCHale/HaleHound-CYD/releases",
+    "what": "confirms binaries are not published as GitHub release assets - distribution is via the web flasher only"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for the Airoha RACE (CVE-2025-20700) Bluetooth-headphone link-key extraction module - noted in summary only",
+   "Exact ESP32 module part number for the Hosyond board not published",
+   "GPS receiver part number not published for this SKU",
+   "Whether this SKU's CC1101 wiring matches the 300-439MHz range documented for the base HaleHound firmware, or covers more, was not directly confirmed for this specific product page"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "halehound-fire-weasel-leash-pro",
+  "hardware_id": "halehound-fire-weasel-leash-pro",
+  "name": "Fire Weasel and Leash PRO DIY Kit",
+  "firmware": "HaleHound",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/JesseCHale/HaleHound-CYD",
+  "firmware_note": "Same closed-source HaleHound firmware documented on the base CYD build and the Complete Unit above - binaries only from one web flasher, derivative of CiferTech's MIT-licensed ESP32-DIV.",
+  "vendor": "HaleHound (Fire Weasel carrier board designed by community members BkBroiler and Midwest Gadgets/Hamspice)",
+  "vendor_url": "https://halehound.com",
+  "product_url": "https://halehound.com/products/fire-weasel-and-leash-pro-diy-kit",
+  "category": "multitool",
+  "subcategory": "rf-multitool",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 185.0,
+  "price_note": "No battery included - the product page explicitly warns 'THIS DOES NOT SHIP WITH A BATTERY OF ANY KIND' and links a specific third-party battery. Orders over $130 require a delivery signature.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The Fire Weasel carrier PCB and a pre-made wiring harness replace most of the hand-wiring the base HaleHound build needs, but this is still a multi-board RF assembly - vendor states roughly 45 minutes for an experienced builder.",
+  "build_effort": "assembly",
+  "build_note": "Connector/harness-based build around the community-designed Fire Weasel carrier PCB, rather than hand-wiring loose module pins the way the original bare-CYD HaleHound approach requires. Includes a boost converter and a 3.3V buck converter, M3 hardware and a 3D-printed case.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "A HaleHound kit built around the community-designed 'Fire Weasel' carrier PCB, which exists specifically to replace the hand-wiring the original bare-CYD HaleHound build requires: a 3.5-inch exposed-SPI CYD, an E07-class CC1101 sub-GHz module, an nRF24 module, an ATGM336H GPS with ceramic antenna, matched boost/buck converters, and a 3D-printed case, running the same closed HaleHound firmware as every other entry in this line.",
+  "honest_take": "The real engineering here is the Fire Weasel carrier board itself, credited to community designers BkBroiler and Midwest Gadgets/Hamspice rather than to HaleHound's own operator - it turns a build that otherwise needs four separately hand-wired modules into something closer to a harness-and-connector job, a genuine usability improvement over the bare-CYD DIY approach documented elsewhere in this database. The firmware underneath is identical, though, and carries the same caveats: closed source, one maintainer, one flasher domain, CC1101 wiring documented at 300-439MHz (not the full sub-GHz range), and 'jamming' modules that are narrowband nRF24 spam rather than real wideband jamming. The bundled boost and buck converters strongly suggest the CC1101 module here is the amplified E07 PA variant, which needs exactly that separate 3.3V supply per the firmware's own documentation elsewhere - a good sign this kit is wired correctly for it, but that is inference from the parts list, not a vendor claim.",
+  "best_for": [
+   "Buyers who want the full HaleHound module set minus NFC without hand-soldering loose modules",
+   "The fastest DIY build in the HaleHound line, at roughly 45 minutes"
+  ],
+  "not_for": [
+   "NFC/RFID work - no PN532 in this kit",
+   "868/915MHz sub-GHz targets",
+   "Anyone who wants source code they can audit"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (QDtech E32R35T CYD-style board, exact WROOM variant not published)",
+   "mcu_primary_note": "Same class of ESP32-WROOM-32 silicon as the rest of the HaleHound line - 2.4GHz only, no native USB.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101 (E07-C1101 module)",
+     "role": "sub-ghz",
+     "note": "The E07 form factor strongly implies the amplified PA variant documented elsewhere in this firmware family (+20dBm E07-433M20S); the kit's bundled boost+buck converters match that module's documented power requirement. 300-439MHz per the shared firmware documentation."
+    },
+    {
+     "ic": "nRF24L01 (E01-NRF27sx module)",
+     "role": "2.4ghz-proprietary",
+     "note": "MouseJack, spectrum analysis and narrowband 2.4GHz spam per the shared firmware"
+    },
+    {
+     "ic": "ESP32 (integrated)",
+     "role": "wifi-ble",
+     "note": "2.4GHz Wi-Fi and BLE"
+    }
+   ],
+   "display": {
+    "type": "QDtech E32R35T (ST7796-class) exposed-SPI TFT",
+    "size_in": 3.5,
+    "resolution": null,
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": null,
+   "battery_note": "Not included - vendor explicitly warns of this and links a third-party battery",
+   "charging": "USB (via the kit's boost/buck regulation feeding the sub-GHz PA)",
+   "pmic": null,
+   "storage": "microSD (CYD platform standard)",
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth/BLE",
+    "GPS (UART)"
+   ],
+   "gpio": "Fire Weasel carrier PCB with a 4-pin UART wiring harness, replacing point-to-point wiring",
+   "sensors": [
+    "ATGM336H GPS with ceramic antenna"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, included",
+   "notable_physical": [
+    "Fire Weasel carrier PCB and 'Leash' harness cable",
+    "M3x16 case hardware",
+    "Signature required on delivery"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Per shared HaleHound firmware"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-class Wi-Fi is 2.4GHz only"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "GARMR module, per shared firmware"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture to microSD"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Custom beacons/spoofing"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "'Lunatic Fringe' module shared across the line"
+   },
+   "subghz_rx": {
+    "v": "yes",
+    "note": "E07-C1101, 300-439MHz"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same module"
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "subghz_bruteforce": {
+    "v": "yes",
+    "note": "Per shared firmware, includes Tesla charge-port replay"
+   },
+   "subghz_rolling_code": {
+    "v": "partial",
+    "note": "KeeLoq decoding only, not a modern rolling-code defeat"
+   },
+   "subghz_amplified": {
+    "v": "claimed",
+    "note": "Inferred from the E07 module designation and the bundled boost/buck converters matching this firmware family's documented PA power requirement; not stated outright by the listing"
+   },
+   "nrf24_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "mousejack": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "nrf24_jam": {
+    "v": "claimed",
+    "note": "Narrowband nRF24 spam per shared firmware, marketed loosely as jamming"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No PN532 in this kit"
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No PN532 in this kit"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware in this kit"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "ATGM336H included"
+   },
+   "gps_wardrive_log": {
+    "v": "claimed",
+    "note": "Per shared firmware documentation"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No native USB peripheral on this ESP32 class"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "detect_surveillance_cam": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Same profile as the rest of the HaleHound line: jamming modules are a criminal offence to transmit in the US, UK and EU; deauth, evil twin, MouseJack and sub-GHz replay/bruteforce each carry separate legal exposure. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "Fire Weasel Kit",
+   "HaleHound Fire Weasel"
+  ],
+  "sources": [
+   {
+    "url": "https://halehound.com/products/fire-weasel-and-leash-pro-diy-kit",
+    "what": "product listing - parts list, battery warning, 45-minute build estimate, BkBroiler/Midwest Gadgets design credit"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/README.md",
+    "what": "shared firmware module list and documented E07 PA power requirement, reused since this is the same firmware family"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/LICENSE",
+    "what": "proprietary license terms applying to this firmware"
+   },
+   {
+    "url": "https://github.com/cifertech/ESP32-DIV",
+    "what": "upstream MIT-licensed project this firmware derives from"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 module part number not published",
+   "subghz_amplified is inferred from the parts list rather than vendor-confirmed",
+   "Whether 'Leash' refers to a physical tether cable or something firmware-related is not fully clear from the listing"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "biscuit-ultra",
+  "hardware_id": "biscuit-ultra",
+  "name": "Biscuit Ultra",
+  "firmware": "Biscuit (stock)",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Closed source, same as the already-tracked Biscuit Pro - no firmware repository exists; the MIT-licensed flasher on GitHub only downloads prebuilt binaries from the vendor's server. Ultra and Pro share the same firmware build.",
+  "vendor": "The Biscuit Shop",
+  "vendor_url": "https://biscuitshop.us",
+  "product_url": "https://biscuitshop.us/products/biscuit-ultra",
+  "category": "wifi",
+  "subcategory": "dual-band-wifi-recon",
+  "status": "out-of-stock",
+  "released": "2026",
+  "price_usd": 160.0,
+  "price_note": "Sold out. The product page cites a 'drops Friday 6/19/26' restock date - that date has already passed as of this September 2026 check, so current restock status is unclear rather than confirmed for a specific future date.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "No screen and no buttons - everything happens through a phone app over Bluetooth, identical to the Pro.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled in a 3D-printed enclosure. Both MCUs update over the air, or can be reflashed from a Python script pulling signed builds from the vendor's server.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "The larger sibling to the already-tracked Biscuit Pro, sharing its dual-MCU architecture (an ESP32-C5-WROOM-1 doing all Wi-Fi/BLE scanning and attacking, an ESP32-WROOM-32E holding the phone-app Bluetooth link) in a bigger enclosure with a 3200mAh battery, dual external RP-SMA antenna connectors, a microSD slot for autonomous offline PCAP logging, and support for external 'node' devices extending scan coverage - none of which the Pro has.",
+  "honest_take": "The upgrades over the Pro are real and address the Pro's actual weak points rather than being cosmetic: the Pro has no SD card and about a third of the Ultra's claimed battery life, so if you found the Pro's runtime or lack of offline logging frustrating, the Ultra specifically fixes that. But it inherits every one of the Pro's overclaims: 'dual-band scanning 2.4 and 5GHz simultaneously' is not possible with the C5's single radio (it hops channels, per the vendor's own wiki), the WROOM-32E's Bluetooth is 4.2 per Espressif's datasheet despite marketing claiming 'BLE 5.0 + Classic', and there is still no screen, no GPS, no sub-GHz, no NFC and no IR. Same closed firmware, same single-maintainer risk, and a 'do not buy if you have a Nothing 4a pro' compatibility warning on the vendor's own page that should give any buyer pause about how broadly this has been tested against real phones.",
+  "best_for": [
+   "5GHz Wi-Fi recon with meaningfully longer runtime and offline SD logging than the Pro",
+   "Multi-node distributed sensor rigs, using the Ultra as a coordinator for external C5 nodes",
+   "Long unattended wardriving sessions where the Pro's battery and lack of SD card were limiting"
+  ],
+  "not_for": [
+   "Anyone who wants a self-contained device - there is still no screen; it does nothing without the phone app",
+   "Sub-GHz, NFC, RFID or infrared - none of that exists here either",
+   "Buying today - sold out with an unclear restock date",
+   "Nothing 4a Pro owners - the vendor itself warns of unstable BLE with that specific phone"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-C5-WROOM-1-N8R8",
+   "mcu_primary_note": "Single-core RISC-V @240MHz, 8MB flash, 8MB PSRAM. Dual-band 2.4/5GHz Wi-Fi 6, BLE5, 802.15.4. Does all scanning and attacks. No USB-OTG.",
+   "mcu_secondary": "ESP32-WROOM-32E-N8",
+   "mcu_secondary_note": "Dual-core Xtensa, 8MB flash. Holds the BLE GATT link to the phone app and stores Evil Portal HTML. Talks to the C5 over an internal UART. Espressif's ESP32 datasheet specifies Bluetooth v4.2 BR/EDR and LE for this part, not the 'BLE 5.0 + Classic' the vendor's spec table claims.",
+   "radios": [
+    {
+     "ic": "ESP32-C5-WROOM-1",
+     "role": "wifi",
+     "note": "Genuinely dual-band 2.4/5GHz, but one radio hopping channels rather than simultaneous dual-band per the vendor's own wiki"
+    },
+    {
+     "ic": "ESP32-C5-WROOM-1",
+     "role": "bluetooth",
+     "note": "BLE scanning and advertisement attacks"
+    },
+    {
+     "ic": "ESP32-WROOM-32E",
+     "role": "bluetooth",
+     "note": "GATT link to the phone app plus Bluetooth Classic; actually BT v4.2 per Espressif's datasheet, contradicting the vendor's BLE 5.0 claim"
+    }
+   ],
+   "display": {
+    "type": "None",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": 3200,
+   "battery_note": "Rabbit Labs 18650, roughly 3x the Pro's runtime per the vendor's own wiki comparison",
+   "charging": "USB-C via a USB-UART bridge",
+   "pmic": null,
+   "storage": "microSD card slot for autonomous/offline PCAP logging - the Pro has no equivalent",
+   "connectivity": [
+    "USB-C (serial)",
+    "Wi-Fi 2.4/5GHz",
+    "Bluetooth LE + Classic",
+    "802.15.4",
+    "External node coordination (local, not cloud)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "I2C battery fuel gauge"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed ABS-GF, larger than the Pro's enclosure",
+   "notable_physical": [
+    "Dual external RP-SMA antenna connectors (swivel, swappable) - internal-only on the Pro",
+    "No screen and no buttons - phone app only",
+    "RGB NeoPixel status LED, can be switched off"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "AP, station and combined scanning, 1-14"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Documented in the vendor's own wiki with a band filter in the app; not simultaneous with 2.4GHz"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Raw PCAP capture in promiscuous mode across both bands"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Basic and targeted deauthentication"
+   },
+   "wifi_deauth_5": {
+    "v": "unknown",
+    "note": "Not documented in either direction, same as the Pro"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL/PMKID capture on both bands, saved to the new microSD slot"
+   },
+   "wifi_pmkid": {
+    "v": "yes",
+    "note": "Same tool, both bands"
+   },
+   "wifi_evil_twin": {
+    "v": "partial",
+    "note": "Evil Portal with Karma mode; manual channel picker offers only 1/6/11 - 2.4GHz only"
+   },
+   "wifi_captive_portal": {
+    "v": "partial",
+    "note": "2.4GHz only"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Plus RickRoll/probe/bad-message/sleep attacks per the shared Biscuit firmware"
+   },
+   "wifi_karma": {
+    "v": "yes",
+    "note": "In the Evil Portal"
+   },
+   "wifi_wardriving": {
+    "v": "partial",
+    "note": "WiGLE/WDGWars upload; GPS is the phone's, not the device's"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "On the C5"
+   },
+   "ble_spam_apple": {
+    "v": "yes",
+    "note": "Sour Apple"
+   },
+   "ble_spam_android": {
+    "v": "yes",
+    "note": "Google Fast Pair"
+   },
+   "ble_spam_samsung": {
+    "v": "yes",
+    "note": "Samsung pairing spam"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "AirTag/Find My detection"
+   },
+   "ble_tracker_spoof": {
+    "v": "yes",
+    "note": "AirTag cloning/spoofing"
+   },
+   "zigbee": {
+    "v": "partial",
+    "note": "802.15.4 'mesh recon' covering Zigbee/Thread/Matter - detection, not an attack toolkit"
+   },
+   "detect_flipper": {
+    "v": "yes",
+    "note": "Same BLE service-UUID match used across this device class"
+   },
+   "detect_airtag": {
+    "v": "yes",
+    "note": "Apple Find My advertisement matching"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "Wi-Fi Pineapple detection"
+   },
+   "detect_surveillance_cam": {
+    "v": "partial",
+    "note": "Flock camera detector; signature lists Flock has repeatedly invalidated"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD - the specific capability delta versus the Pro, which has none"
+   },
+   "cloud_c2": {
+    "v": "partial",
+    "note": "'Node' rigs coordinate several distributed scanners locally, not via the cloud"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared"
+   },
+   "gps": {
+    "v": "no",
+    "note": "None on board; wardriving borrows the phone's GPS"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Neither MCU presents native USB"
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Phone app over BLE GATT only"
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Closed firmware, no scripting or plugin format"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning it is legal in most places. Deauthentication, the Evil Portal and AirTag spoofing carry the real exposure - deauthenticating networks you don't own is a separate offence in most countries and the US FCC has fined businesses for exactly that. No formal RF certification documentation was found for this product. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Biscuit",
+   "The Biscuit Shop Biscuit Ultra"
+  ],
+  "sources": [
+   {
+    "url": "https://biscuitshop.us/products/biscuit-ultra",
+    "what": "product listing - price, battery, antenna, SD card, multi-node, MCU details, 'do not buy if you have a Nothing 4a pro' warning"
+   },
+   {
+    "url": "https://biscuitshop.us/products.json?limit=50",
+    "what": "live pricing/stock - Biscuit Ultra USD 160.00, available false"
+   },
+   {
+    "url": "https://codehedge.github.io/Biscuit-Wiki/devices/pro.html",
+    "what": "shared architecture documentation (Pro/Ultra split MCU roles), reused since Ultra shares the Pro's core design"
+   },
+   {
+    "url": "https://documentation.espressif.com/esp32_datasheet_en.pdf",
+    "what": "ESP32 datasheet specifying Bluetooth v4.2, contradicting the vendor's 'BLE 5.0 + Classic' claim for the WROOM-32E shared with the Pro"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp32-c5",
+    "what": "ESP32-C5 single-radio dual-band spec, explaining why 2.4/5GHz scanning is not simultaneous"
+   }
+  ],
+  "research_gaps": [
+   "Battery capacity is vendor-stated at 3200mAh but not independently verified",
+   "Whether the restock actually happened around the cited 6/19/26 date, or was delayed/cancelled, could not be confirmed",
+   "No independent teardown or RF measurement found for the Ultra specifically",
+   "Exact physical dimensions and weight not published"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "halehound-diy-35-kit",
+  "hardware_id": "halehound-diy-35-kit",
+  "name": "DIY HaleHound 3.5\" Kit",
+  "firmware": "HaleHound",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/JesseCHale/HaleHound-CYD",
+  "firmware_note": "Same closed-source HaleHound firmware as every other entry in this line.",
+  "vendor": "HaleHound",
+  "vendor_url": "https://halehound.com",
+  "product_url": "https://halehound.com/products/diy-halehound-3-5-kit",
+  "category": "multitool",
+  "subcategory": "rf-multitool",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 149.0,
+  "price_note": "Does not include a battery, antennas (beyond the GPS antenna), or a PN532 NFC reader - the listing states the PN532 'is no longer included' and specifically asks buyers not to contact support about it. A paid build service (Zeek Sec Labs, $60-100, paid separately) is offered for buyers who don't want to assemble it themselves.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "JST-connector wiring harness and the combined Cinder Ferret V2 board reduce this from a loose-module soldering project to mostly plugging harnesses together, per the included PDF build guide.",
+  "build_effort": "assembly",
+  "build_note": "8-pin and 12-pin JST wiring harness connects the display, Cinder Ferret V2 (CC1101+NRF24 combined) board, and GPS module into a 3D-printed case with an embedded NTAG216 tag. Includes boost and 3.3V buck converters and M3x16 hardware.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "The 3.5-inch DIY HaleHound kit: a QDtech E32R35T exposed-SPI CYD touchscreen, a 3D-printed case with an embedded NTAG216 passive NFC tag, a combined CC1101+NRF24 'Cinder Ferret V2' companion board, an ATGM336H GPS with ceramic antenna, and a JST wiring harness - running the same HaleHound firmware as the rest of the line, without a battery or the PN532 NFC reader.",
+  "honest_take": "The embedded NTAG216 in the case is a passive tag, not a reader - without the PN532 this kit no longer includes, the firmware itself cannot read or write any NFC/RFID card; the NTAG216 is presumably there for something like tap-to-identify the unit, not for adding NFC capability to the toolset. That is a meaningful, easy-to-miss downgrade from the Complete Unit above and from the base bare-CYD HaleHound build documented elsewhere in this database, both of which do include a PN532. What you are paying $149 for over that bare-board approach (documented there at roughly $45-65 all-in for the same sub-GHz/2.4GHz/Wi-Fi/BLE feature set) is the combined Cinder Ferret V2 board and pre-made harness replacing loose-module soldering, plus a case and a bundled GPS - genuinely less DIY risk, at roughly 2-3x the parts cost. The firmware itself carries every caveat documented on the base entry: closed source, one maintainer, one flasher domain, 300-439MHz sub-GHz ceiling.",
+  "best_for": [
+   "Buyers who want the HaleHound Wi-Fi/BLE/sub-GHz/2.4GHz/GPS feature set without hand-soldering loose modules or a PN532",
+   "A cheaper 3.5in alternative to the $235 hand-assembled Complete Unit, if you're willing to build it yourself"
+  ],
+  "not_for": [
+   "Any NFC/RFID capability - the PN532 is no longer included and the embedded NTAG216 is a passive tag, not a reader",
+   "868/915MHz sub-GHz targets",
+   "Anyone who wants a battery in the box - none included"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (QDtech E32R35T CYD-style board, exact WROOM variant not published)",
+   "mcu_primary_note": "Same class of ESP32-WROOM-32 silicon as the rest of the HaleHound line - 2.4GHz only, no native USB.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101 (Cinder Ferret V2 board)",
+     "role": "sub-ghz",
+     "note": "Combined with the nRF24 on one companion board. 300-439MHz per the shared firmware documentation."
+    },
+    {
+     "ic": "nRF24L01 (Cinder Ferret V2 board)",
+     "role": "2.4ghz-proprietary",
+     "note": "MouseJack, spectrum analysis and narrowband 2.4GHz spam per shared firmware"
+    },
+    {
+     "ic": "ESP32 (integrated)",
+     "role": "wifi-ble",
+     "note": "2.4GHz Wi-Fi and BLE"
+    }
+   ],
+   "display": {
+    "type": "QDtech E32R35T (ST7796-class) exposed-SPI TFT",
+    "size_in": 3.5,
+    "resolution": null,
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": null,
+   "battery_note": "Not included",
+   "charging": "USB (via the kit's boost/buck regulation)",
+   "pmic": null,
+   "storage": "microSD (CYD platform standard)",
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth/BLE",
+    "GPS (UART)"
+   ],
+   "gpio": "8-pin and 12-pin JST harness to the Cinder Ferret V2 board and GPS module",
+   "sensors": [
+    "ATGM336H GPS with ceramic antenna"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, with an embedded NTAG216 passive NFC tag (not a reader)",
+   "notable_physical": [
+    "Cinder Ferret V2 combined sub-GHz + 2.4GHz board",
+    "PDF build guide included",
+    "Signature required on delivery"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Per shared HaleHound firmware"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-class Wi-Fi is 2.4GHz only"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "GARMR module"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture to microSD"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Custom beacons/spoofing"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "'Lunatic Fringe' module"
+   },
+   "subghz_rx": {
+    "v": "yes",
+    "note": "Cinder Ferret V2 CC1101, 300-439MHz"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same module"
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "subghz_bruteforce": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "subghz_amplified": {
+    "v": "unknown",
+    "note": "Cinder Ferret V2's exact CC1101 module variant/power not specified by the listing"
+   },
+   "nrf24_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "mousejack": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "nrf24_jam": {
+    "v": "claimed",
+    "note": "Narrowband nRF24 spam per shared firmware"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "PN532 no longer included in this kit"
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "PN532 no longer included"
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "PN532 no longer included"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "ATGM336H included"
+   },
+   "gps_wardrive_log": {
+    "v": "claimed",
+    "note": "Per shared firmware documentation"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No native USB peripheral on this ESP32 class"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "detect_surveillance_cam": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Same profile as the rest of the HaleHound line: jamming modules are a criminal offence to transmit in the US, UK and EU; deauth, evil twin, MouseJack and sub-GHz replay/bruteforce each carry separate legal exposure. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "HaleHound 3.5in DIY Kit"
+  ],
+  "sources": [
+   {
+    "url": "https://halehound.com/products/diy-halehound-3-5-kit",
+    "what": "product listing - parts list, PN532 removal notice, Zeek Sec Labs build-service mention, signature-required warning"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/README.md",
+    "what": "shared firmware module list and 300-439MHz CC1101 wiring documentation, reused since this is the same firmware family"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/LICENSE",
+    "what": "proprietary license terms applying to this firmware"
+   },
+   {
+    "url": "https://halehound.com/products/halehound-3-5-complete-unit-limited-small-batch",
+    "what": "comparison point confirming the Complete Unit still includes the PN532 this kit dropped"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 module part number not published",
+   "Cinder Ferret V2's specific CC1101 sub-variant (amplified or not) not specified",
+   "What the embedded NTAG216 tag is actually used for by the firmware/companion app was not found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "halehound-diy-28-kit",
+  "hardware_id": "halehound-diy-28-kit",
+  "name": "DIY 2.8\" HaleHound Kit",
+  "firmware": "HaleHound",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/JesseCHale/HaleHound-CYD",
+  "firmware_note": "Same closed-source HaleHound firmware as every other entry in this line, and the same firmware documented in more detail on the already-tracked bare 2.8in CYD HaleHound entry.",
+  "vendor": "HaleHound",
+  "vendor_url": "https://halehound.com",
+  "product_url": "https://halehound.com/products/diy-halehound-kit",
+  "category": "multitool",
+  "subcategory": "rf-multitool",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 139.0,
+  "price_note": "Does not include a battery, antennas, or a PN532 NFC reader - listing states 'the PN-532 is no longer included' and asks buyers not to contact support about it. A paid build service (Zeek Sec Labs, $60-100) is available.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Same JST-harness, Cinder Ferret V2 approach as the 3.5in kit, just on the smaller 2.8in board.",
+  "build_effort": "assembly",
+  "build_note": "8-pin and 12-pin JST wiring harness connects the display, Cinder Ferret V2 (CC1101+NRF24 combined) board, and GPS module into a 3D-printed case with an embedded NTAG216 tag. Includes boost and 3.3V buck converters and M3x16 hardware.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "The cheapest current HaleHound kit: a QDtech E32R28T exposed-SPI CYD touchscreen, a 3D-printed case with an embedded NTAG216 passive NFC tag, a combined CC1101+NRF24 'Cinder Ferret V2' companion board, an ATGM336H GPS with ceramic antenna, and a JST wiring harness - the same closed HaleHound firmware as the rest of the line, on the smaller 2.8in screen, without a battery or the PN532 NFC reader.",
+  "honest_take": "This is functionally the 3.5in DIY kit on a smaller, cheaper screen - same Cinder Ferret V2 board, same missing PN532 (so no real NFC/RFID capability despite the embedded NTAG216 passive tag in the case), same GPS, same 300-439MHz sub-GHz ceiling documented for this firmware family. The already-tracked bare 2.8in CYD entry in this database documents the same firmware running on an unmounted board for roughly $45-65 all-in with loose modules you source and wire yourself; this $139 kit is that same destination reached with a combined companion board, a pre-made harness, a case and a bundled GPS instead of individual module shopping and wiring. Whether that convenience is worth roughly double the DIY price is a real question worth asking before buying either.",
+  "best_for": [
+   "The cheapest current entry point into the HaleHound firmware line with a proper case and matched connectors",
+   "Buyers who specifically want the 2.8in form factor over the 3.5in"
+  ],
+  "not_for": [
+   "Any NFC/RFID capability - PN532 no longer included",
+   "868/915MHz sub-GHz targets",
+   "Anyone comparing against the raw bare-CYD DIY approach on cost alone - it is meaningfully cheaper if you're willing to source and wire modules yourself"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (QDtech E32R28T CYD-style board, exact WROOM variant not published)",
+   "mcu_primary_note": "Same class of ESP32-WROOM-32 silicon as the rest of the HaleHound line and the already-tracked bare 2.8in CYD entry - 2.4GHz only, no native USB.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101 (Cinder Ferret V2 board)",
+     "role": "sub-ghz",
+     "note": "Combined with the nRF24 on one companion board. 300-439MHz per the shared firmware documentation."
+    },
+    {
+     "ic": "nRF24L01 (Cinder Ferret V2 board)",
+     "role": "2.4ghz-proprietary",
+     "note": "MouseJack, spectrum analysis and narrowband 2.4GHz spam per shared firmware"
+    },
+    {
+     "ic": "ESP32 (integrated)",
+     "role": "wifi-ble",
+     "note": "2.4GHz Wi-Fi and BLE"
+    }
+   ],
+   "display": {
+    "type": "QDtech E32R28T (ILI9341-class) exposed-SPI TFT",
+    "size_in": 2.8,
+    "resolution": "240x320",
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": null,
+   "battery_note": "Not included",
+   "charging": "USB (via the kit's boost/buck regulation)",
+   "pmic": null,
+   "storage": "microSD (CYD platform standard)",
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth/BLE",
+    "GPS (UART)"
+   ],
+   "gpio": "8-pin and 12-pin JST harness to the Cinder Ferret V2 board and GPS module",
+   "sensors": [
+    "ATGM336H GPS with ceramic antenna"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, with an embedded NTAG216 passive NFC tag (not a reader)",
+   "notable_physical": [
+    "Cinder Ferret V2 combined sub-GHz + 2.4GHz board",
+    "PDF build guide included",
+    "Signature required on delivery"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Per shared HaleHound firmware"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-class Wi-Fi is 2.4GHz only"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "GARMR module"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "EAPOL capture to microSD"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Custom beacons/spoofing"
+   },
+   "ble_tracker_detect": {
+    "v": "yes",
+    "note": "'Lunatic Fringe' module"
+   },
+   "subghz_rx": {
+    "v": "yes",
+    "note": "Cinder Ferret V2 CC1101, 300-439MHz"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same module"
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "subghz_bruteforce": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "subghz_amplified": {
+    "v": "unknown",
+    "note": "Cinder Ferret V2's exact CC1101 module variant/power not specified"
+   },
+   "nrf24_scan": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "mousejack": {
+    "v": "yes",
+    "note": "Per shared firmware"
+   },
+   "nrf24_jam": {
+    "v": "claimed",
+    "note": "Narrowband nRF24 spam per shared firmware"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "PN532 no longer included in this kit"
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "PN532 no longer included"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "ATGM336H included"
+   },
+   "gps_wardrive_log": {
+    "v": "claimed",
+    "note": "Per shared firmware documentation"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No native USB peripheral on this ESP32 class"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "detect_surveillance_cam": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   },
+   "detect_skimmer": {
+    "v": "yes",
+    "note": "Shared firmware module"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Same profile as the rest of the HaleHound line: jamming modules are a criminal offence to transmit in the US, UK and EU; deauth, evil twin, MouseJack and sub-GHz replay/bruteforce each carry separate legal exposure. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "HaleHound 2.8in DIY Kit"
+  ],
+  "sources": [
+   {
+    "url": "https://halehound.com/products/diy-halehound-kit",
+    "what": "product listing - parts list, PN532 removal notice, Zeek Sec Labs build-service mention"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/README.md",
+    "what": "shared firmware module list and 300-439MHz CC1101 wiring documentation"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/JesseCHale/HaleHound-CYD/main/LICENSE",
+    "what": "proprietary license terms applying to this firmware"
+   },
+   {
+    "url": "https://randomnerdtutorials.com/esp32-cheap-yellow-display-cyd-pinout-esp32-2432s028r/",
+    "what": "background CYD pinout reference used across the HaleHound line's documentation"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 module part number not published",
+   "Cinder Ferret V2's specific CC1101 sub-variant (amplified or not) not specified",
+   "Direct price/parts comparison against the already-tracked bare 2.8in CYD HaleHound entry was made from that entry's published figures, not a fresh independent costing"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "marauder-double-barrel-5g-c5",
+  "hardware_id": "marauder-double-barrel-5g-c5",
+  "name": "ESP32 Marauder Double Barrel 5G - C5 version",
+  "firmware": "ESP32 Marauder (x2, independent instances)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "Two separate stock ESP32Marauder builds - one on the handheld unit's own MCU, one on the Flipper-driven ESP32-C5 module - rather than one firmware coordinating both radios. No dedicated 'Double Barrel' firmware fork was found; this appears to be a hardware bundle of two standard Marauder targets, not custom firmware engineering.",
+  "vendor": "HoneyHoneyTrading",
+  "vendor_url": "https://honeyhoneylab.com",
+  "product_url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-double-barrel-5g-c5-version/",
+  "category": "multitool",
+  "subcategory": "dual-marauder-combo",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 139.0,
+  "price_note": "V2 (April 2026) is the current version and requires no manual GPIO configuration for the Flipper side; older V1 variants are out of stock. Stock varies by case color (19 white / 1 black at last check).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Two independent Marauder UIs to learn rather than one; mixed customer reviews (1-5 stars) cite a real learning curve and documentation gaps.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled with a 3D-printed case, USB-C cable and a metal stylus for the touchscreen.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "A bundle pairing a standalone ESP32 Marauder handheld (2.8in touchscreen, 800mAh battery, GPS, microSD) with a separate ESP32-C5 module that a Flipper Zero drives over GPIO for dual-band 2.4/5GHz Wi-Fi, plus a CC1101 for 433MHz sub-GHz on the module side. The two Marauder instances run independently and do not coordinate with each other in firmware - the pitch is literally running two single-tasking Marauder units side by side.",
+  "honest_take": "Read past the '5G' in the name - this is 5GHz Wi-Fi via the ESP32-C5's dual-band radio, not cellular 5G, and that ambiguity is exactly the kind of thing casual buyers get wrong. The underlying premise is honest about a real limitation: Marauder genuinely can only do one thing at a time on a single unit (you can't deauth and wardrive simultaneously), and 'Double Barrel' is two off-the-shelf Marauder targets - a handheld and a Flipper-controlled C5 module - sold as a kit rather than special firmware engineering to make them cooperate. You are paying for the convenience of buying both pieces and a case together; you could reach the same functional result from a standalone Marauder board plus a Flipper C5 accessory like the already-tracked Honey Honey Apex 5, for comparable or less money if you already own a Flipper. Mixed 1-to-5-star customer reviews citing documentation gaps and hardware issues suggest this specific bundle is not HoneyHoneyTrading's most polished product.",
+  "best_for": [
+   "Running a deauth/scan operation and a wardrive/GPS log at the same time without juggling one device",
+   "Flipper Zero owners who want a dedicated 5GHz Wi-Fi module plus a standalone handheld in one purchase"
+  ],
+  "not_for": [
+   "Anyone expecting integrated dual-radio firmware - the two halves run independent, uncoordinated Marauder instances",
+   "Cellular/5G network work - there is none, despite the name",
+   "Buyers without a Flipper Zero - half the kit's capability needs one"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-C5",
+   "mcu_primary_note": "Dual-band 2.4/5GHz Wi-Fi 6, driven by a Flipper Zero over GPIO, running Marauder firmware. The main handheld's own MCU is not specified by the listing.",
+   "mcu_secondary": "ESP32 (handheld unit, exact part unconfirmed)",
+   "radios": [
+    {
+     "ic": "ESP32-C5",
+     "role": "wifi",
+     "note": "2.4/5GHz on the Flipper-driven module"
+    },
+    {
+     "ic": "ESP32 (handheld, unconfirmed part)",
+     "role": "wifi",
+     "note": "2.4GHz on the standalone handheld"
+    },
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "433MHz, on the module side per the included antenna list"
+    }
+   ],
+   "display": {
+    "type": "TFT touchscreen (handheld unit)",
+    "size_in": 2.8,
+    "resolution": null,
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": 800,
+   "battery_note": "800mAh in the standalone handheld only; the Flipper-driven C5 module has no battery of its own.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "microSD on the handheld, plus microSD on the C5 module",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi 2.4/5GHz",
+    "Flipper GPIO header",
+    "4x external antennas (2x Wi-Fi, 1x GPS, 1x sub-GHz)"
+   ],
+   "gpio": "Flipper GPIO header on the C5 module; V2 needs no manual pin mapping",
+   "sensors": [
+    "GPS (handheld unit)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, white or black",
+   "notable_physical": [
+    "Metal stylus included for the touchscreen",
+    "V2 adds WarDrive support and removes manual GPIO setup"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Handheld and module, both stock Marauder"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Via the Flipper-driven ESP32-C5 module only; the handheld itself is 2.4GHz"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Stock Marauder promiscuous capture on both units"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Blocked by 802.11w/PMF like every Marauder deployment"
+   },
+   "wifi_deauth_5": {
+    "v": "partial",
+    "note": "C5 module; 5GHz deauth is newer and less tested across the Marauder codebase generally"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Stock Marauder Evil Portal"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Stock Marauder"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Handheld has onboard GPS; V2 explicitly adds WarDrive support per the listing"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Stock Marauder EAPOL capture"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "Not explicitly documented for this bundle, consistent with the ambiguity on the base Marauder v8 entry"
+   },
+   "subghz_rx": {
+    "v": "yes",
+    "note": "433MHz via the module's CC1101"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same CC1101"
+   },
+   "subghz_external_antenna": {
+    "v": "yes",
+    "note": "Dedicated sub-GHz SMA connector"
+   },
+   "subghz_amplified": {
+    "v": "no",
+    "note": "Stock CC1101 power; no PA module mentioned"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Stock Marauder BLE on the C5; BLE-only, no Bluetooth Classic on a C5"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Handheld only"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "V2"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Both units"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware in this bundle"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Not a feature of Marauder or this bundle"
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "The handheld is fully standalone; the C5 module needs the Flipper to operate"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Standard Marauder legal profile - deauth and rogue-AP attacks against networks you don't own are unlawful interference in most jurisdictions (FCC rules in the US); sub-GHz transmission at 433MHz is subject to regional power/duty-cycle limits. Check your local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-04",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Marauder Double Barrel 5G",
+   "Double Barrel C5"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-double-barrel-5g-c5-version/",
+    "what": "product listing - price, included parts, V2 changes, stock levels, customer review ratings"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "the underlying Marauder firmware both halves run; confirms no dedicated 'Double Barrel' fork exists in the main repo"
+   },
+   {
+    "url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-5g-apex-5-module-for-flipper/",
+    "what": "comparison point - the already-tracked Honey Honey Apex 5, a similar Flipper-driven C5 module from the same vendor"
+   },
+   {
+    "url": "https://www.ti.com/product/CC1101",
+    "what": "CC1101 stock output power (+12dBm max), used to assess the subghz_amplified claim"
+   }
+  ],
+  "research_gaps": [
+   "Handheld unit's own MCU part number not published",
+   "No firmware repository specific to 'Double Barrel' found - appears to be stock ESP32Marauder builds on both halves rather than a dedicated fork",
+   "Whether the two Marauder instances share GPS/logging data or operate fully independently could not be confirmed",
+   "Exact sub-GHz frequency range beyond 433MHz not specified"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "hacphone-nexus5x",
+  "hardware_id": "hacphone-nexus5x",
+  "name": "HacPhone - Rooted NetHunter/Kali Nexus 5X",
+  "firmware": "Kali NetHunter",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://gitlab.com/kalilinux/nethunter",
+  "firmware_note": "Kali NetHunter, the free, open-source Kali Linux mobile pentest distribution, pre-rooted and installed on a decade-old Nexus 5X by the seller. It is the same software anyone can flash themselves onto a supported device for free.",
+  "vendor": "Unlimited Coverage (UCShop)",
+  "vendor_url": "https://www.tindie.com/stores/ucshop/",
+  "product_url": "https://www.tindie.com/products/ucshop/hacphone-rooted-nethunterkali-linux-nexus-5x/",
+  "category": "multitool",
+  "subcategory": "pentest-phone",
+  "status": "available",
+  "released": null,
+  "price_usd": 119.99,
+  "price_note": "64GB variant (the default described). Only 5 units in stock at last check - this is refurbished/used hardware with a finite supply, not something the seller can restock indefinitely once the original stock runs out.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Arrives rooted and pre-configured, so no prior experience rooting a phone or installing NetHunter is required, which is the entire value proposition given both are normally a free weekend project for someone already comfortable with Android.",
+  "build_effort": "assembled",
+  "build_note": "Fully pre-configured; ships with a USB-C cable and a setup guide.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "A 2015 Google Nexus 5X, rooted and pre-loaded with Kali NetHunter, sold as a ready-to-use mobile pentest platform: Wi-Fi auditing, Nmap/Wireshark-style network recon, basic web vulnerability testing, and Bluetooth/NFC assessment, all through NetHunter's standard app and chroot environment.",
+  "honest_take": "NetHunter itself is free and open source, and rooting a Nexus 5X and flashing it is a well-documented weekend project - what you are actually paying $120 for is someone else doing that setup, on hardware Google stopped patching in December 2018. That matters here specifically: this is a phone whose Android base has been unpatched for roughly eight years, running as your security-testing device, with all the exposure that implies for the device itself. On top of that, the Nexus 5X's internal Broadcom Wi-Fi chip is not reliably supported for monitor mode and packet injection in the wider NetHunter community's experience with this device class - most guides for phones like this recommend an external USB Wi-Fi adapter (an Alfa or similar RTL8812AU/RT3070-based unit) for real Wi-Fi cracking and deauth work, so 'WiFi cracking and deauthentication' as a bullet point is optimistic marketing rather than a guaranteed internal capability. If you can find any old, cheap, NetHunter-supported phone and 30 minutes of tutorial-following, you get the identical software for the cost of the used hardware alone.",
+  "best_for": [
+   "Buyers who specifically want a pre-configured pentest phone with zero setup",
+   "Learning mobile-platform NetHunter tooling without risking a daily-driver phone"
+  ],
+  "not_for": [
+   "Reliable internal Wi-Fi monitor mode/injection - budget for an external adapter",
+   "Anything where an unpatched, eight-years-EOL Android base is itself a liability",
+   "Long-term support - discontinued hardware with a finite used-unit supply"
+  ],
+  "hardware": {
+   "mcu_primary": "Qualcomm Snapdragon 808",
+   "mcu_primary_note": "Hexa-core (dual Cortex-A57 + quad Cortex-A53), released 2015. 2GB RAM.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "Broadcom Wi-Fi/BT combo chip (exact model unconfirmed)",
+     "role": "wifi-ble",
+     "note": "Nexus 5X internal Wi-Fi is widely reported in the NetHunter community as unreliable for monitor mode/injection; an external USB adapter is the common workaround for this device class"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "32GB or 64GB (64GB is the default/described unit)",
+   "connectivity": [
+    "USB-C",
+    "Wi-Fi",
+    "Bluetooth",
+    "NFC"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Original Nexus 5X body",
+   "notable_physical": [
+    "Fingerprint sensor",
+    "USB-C (unusual for a 2015 phone, one of the first with it)"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard Android/NetHunter Wi-Fi scanning"
+   },
+   "wifi_monitor_mode": {
+    "v": "claimed",
+    "note": "Vendor markets 'WiFi security assessments' generally; internal Broadcom chip monitor-mode support on this device is inconsistent per general NetHunter community experience, external adapter commonly recommended"
+   },
+   "wifi_injection": {
+    "v": "claimed",
+    "note": "Same caveat as monitor mode - deauth/cracking claims are for the NetHunter software stack generally, not confirmed working on this phone's specific internal radio"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "Per listing, same internal-radio caveat applies"
+   },
+   "wifi_scan_5": {
+    "v": "unknown",
+    "note": "Broadcom chip's 5GHz support and NetHunter compatibility not confirmed"
+   },
+   "bt_classic": {
+    "v": "claimed",
+    "note": "'Bluetooth assessment' per listing"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "Per listing"
+   },
+   "hf_1356_read": {
+    "v": "claimed",
+    "note": "'NFC assessment' per listing; NetHunter's NFC tooling is limited compared to a dedicated reader like a Proxmark or Flipper"
+   },
+   "usb_hid_inject": {
+    "v": "unknown",
+    "note": "Not mentioned in the listing"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Wireshark included in the NetHunter chroot"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Full Kali chroot with Nmap and Metasploit-class tooling typical of NetHunter"
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Command-line/app driven, no browser control panel"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Not a dedicated app-store product; standard Android/F-Droid/Kali package access instead"
+   },
+   "sd_logging": {
+    "v": "unknown",
+    "note": "Nexus 5X has no microSD slot; internal storage only"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "Standard phone hardware has no sub-GHz radio"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Standard phone GPS, usable for NetHunter's location-aware tools"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "Nexus 5X has no IR blaster"
+   },
+   "hf_1356_write": {
+    "v": "unknown",
+    "note": "NetHunter's NFC tooling on this device is not confirmed to support writing, only 'assessment' per the listing"
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Standard Android USB storage/MTP access"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully standalone phone; no companion hardware required"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Same as any Wi-Fi/network pentest platform: scanning your own network is fine almost everywhere; deauthing or attacking networks you don't own or lack written authorization for is a computer-misuse offence in most countries. Running unpatched, EOL Android software also carries its own risk if the phone ever handles anything sensitive."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "HacPhone"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/ucshop/hacphone-rooted-nethunterkali-linux-nexus-5x/",
+    "what": "product listing - price, storage options, capability bullet list, stock count, shipping details"
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/Nexus_5X",
+    "what": "release date (Oct 2015), Snapdragon 808/2GB RAM, final Android 8.1 Oreo, last security patch December 2018"
+   },
+   {
+    "url": "https://www.kali.org/docs/nethunter/",
+    "what": "NetHunter project overview and supported-device model, used to confirm this is the standard free distribution rather than a custom build"
+   },
+   {
+    "url": "https://gitlab.com/kalilinux/nethunter",
+    "what": "official NetHunter project repository, confirming this is the standard free/open-source distribution rather than a custom build unique to this seller"
+   }
+  ],
+  "research_gaps": [
+   "Exact Broadcom Wi-Fi chip model on the Nexus 5X not confirmed",
+   "Could not independently verify whether this specific unit's internal radio supports monitor mode/injection - flagged from general community experience with this device class, not a device-specific test",
+   "NetHunter version/kernel build used not specified by the listing",
+   "Whether NFC on NetHunter for this device supports reading/writing or only basic tag detection not confirmed",
+   "Original release date of this specific listing not found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "feberis-pro",
+  "hardware_id": "feberis-pro",
+  "name": "Feberis Pro",
+  "firmware": "n/a (Flipper GPIO accessory; onboard ESP32 ships with Marauder pre-installed)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "The dual CC1101 and nRF24 radios are driven directly by the Flipper's own SubGHz/GPIO apps - no separate firmware for those. The onboard ESP32 ships with ESP32 Marauder pre-installed for the Wi-Fi/BLE side.",
+  "vendor": "SAPSAN, manufactured with Lab401",
+  "vendor_url": "https://sapsan-sklep.pl",
+  "product_url": "https://lab401.com/products/feberis-pro",
+  "category": "accessory",
+  "subcategory": "flipper-multiboard",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 119.0,
+  "price_note": "Lab401's US storefront shows $119 when USD is explicitly selected; it defaults to EUR 90.00 for EU visitors. The Polish manufacturer's own store, sapsan-sklep.pl, lists it at 469 PLN. Prices vary meaningfully by region/retailer for the same board.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Plugs onto the Flipper's GPIO header and needs the right Flipper app/setting for each radio; not a single unified interface the way a phone-app-controlled device is.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled add-on board; no soldering. Physical switches select between the dual CC1101 bands.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A 4-in-1 Flipper Zero GPIO expansion combining two CC1101 radios (one tuned to 433MHz, one to 868MHz), an nRF24 for 2.4GHz, an onboard ESP32 pre-loaded with Marauder for Wi-Fi/BLE, and a GPS module, all on four external antennas with physical band-select switches and status LEDs.",
+  "honest_take": "This is functionally very close to the already-tracked Honey Honey Apex 5 - dual CC1101 (433/868), nRF24, ESP32 running Marauder, GPS, external antennas, all on a Flipper GPIO board - down to the same 868MHz-not-915MHz choice that leaves North American sub-GHz devices outside the matched band. The vendor's '10x performance gains over Flipper's built-in modules' is a plausible but unverified marketing figure with no test methodology published; treat it as 'a real external antenna genuinely outperforms the Flipper's internal one,' not a precise 10x measurement. At $119 (or EUR90 depending which store you land on) it lands in the same bracket as the Apex 5 - worth comparing both feature-for-feature before buying either, since they overlap this closely.",
+  "best_for": [
+   "One board covering sub-GHz (both 433 and 868), 2.4GHz, Wi-Fi/BLE and GPS on a Flipper",
+   "European buyers, since 868MHz is the region-appropriate ISM band"
+  ],
+  "not_for": [
+   "North American 915MHz sub-GHz work - the second CC1101 is matched for 868MHz",
+   "Anyone who wants independently verified RF performance numbers rather than a vendor's '10x' claim"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32 (exact part not published)",
+   "mcu_primary_note": "Pre-loaded with ESP32 Marauder for the Wi-Fi/BLE side; runs from the Flipper's power, no separate battery.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "433MHz channel, dedicated external antenna"
+    },
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "868MHz channel, dedicated external antenna - not useful for US/Canada 915MHz devices"
+    },
+    {
+     "ic": "nRF24L01 (exact variant unconfirmed)",
+     "role": "2.4ghz-proprietary",
+     "note": "IoT/2.4GHz auditing per listing"
+    },
+    {
+     "ic": "ESP32 (integrated)",
+     "role": "wifi-ble",
+     "note": "Runs Marauder; AP scanning, deauth, beacon spoofing, packet capture per listing"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the Flipper GPIO; no independent battery",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper GPIO header",
+    "4x external antennas"
+   ],
+   "gpio": "Flipper GPIO header, 4 configuration switches for band/module select",
+   "sensors": [
+    "GPS (module, part not published)"
+   ],
+   "dimensions_mm": "78 x 76 x 26 (without antennas)",
+   "weight_g": 113,
+   "case": null,
+   "notable_physical": [
+    "7 status LEDs",
+    "4 configuration switches",
+    "3dBi antennas on 433/868/nRF24, 8dBi on WiFi",
+    "Protective GPIO port cover"
+   ]
+  },
+  "capabilities": {
+   "subghz_rx": {
+    "v": "yes",
+    "note": "Two CC1101s, 433 and 868MHz"
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same two CC1101s"
+   },
+   "subghz_external_antenna": {
+    "v": "yes",
+    "note": "Dedicated antenna per band"
+   },
+   "subghz_amplified": {
+    "v": "claimed",
+    "note": "'10x performance gains' claimed by vendor, not independently measured"
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "Via the Flipper's own SubGHz app with the radio set to External"
+   },
+   "nrf24_scan": {
+    "v": "yes",
+    "note": "Per listing"
+   },
+   "mousejack": {
+    "v": "partial",
+    "note": "Chip-capable; 2016-era vulnerabilities largely patched in modern receivers"
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Via onboard Marauder"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Onboard ESP32 part not specified as a C5; no 5GHz claimed"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Via onboard Marauder; blocked by 802.11w/PMF"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "Beacon spoofing/evil-twin per listing"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Standard Marauder capability, onboard"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Onboard Marauder BLE"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Onboard module"
+   },
+   "gps_wardrive_log": {
+    "v": "claimed",
+    "note": "Per listing"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware on this board"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF/RFID hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Not a feature of this accessory"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero for power and for the sub-GHz/nRF24 apps"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Same profile as any Flipper sub-GHz/Wi-Fi/2.4GHz expansion: transmitting on sub-GHz bands without appropriate licensing/power limits, deauthing networks you don't own, and 2.4GHz MouseJack-style attacks against devices you don't own each carry separate legal exposure depending on jurisdiction."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026",
+   "app_store": "Yes - Flipper community apps for sub-GHz/nRF24; the Marauder ecosystem for WiFi",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "FEBERIS PRO"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/feberis-pro",
+    "what": "product listing - modules, antenna gains, warranty, EUR default price"
+   },
+   {
+    "url": "https://lab401.com/products/feberis-pro.json",
+    "what": "raw store data confirming EUR 90.00 as the base-currency price"
+   },
+   {
+    "url": "https://sapsan-sklep.pl/en/products/feberis-pro-en",
+    "what": "manufacturer's own store - 469 PLN price, physical dimensions (7.8x7.6x2.6cm), weight (113g), operating temperature range"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "confirms the onboard ESP32 runs the standard, actively maintained Marauder firmware"
+   },
+   {
+    "url": "https://www.tindie.com/products/honeyhoneytrading/esp32-marauder-5g-apex-5-module-for-flipper/",
+    "what": "comparison point - the already-tracked Honey Honey Apex 5, a near-identical feature set from a different vendor"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 and nRF24 part numbers not published",
+   "GPS module part number not published",
+   "No independent RF measurement of the claimed '10x' antenna performance found",
+   "Relationship between this 2026 SAPSAN-manufactured version and an earlier BPM Circuits 'Feberis' Tindie listing (same core concept, different maker credited in search results) not fully resolved"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "unsurv-offline",
+  "hardware_id": "unsurv-offline",
+  "name": "unsurv offline",
+  "firmware": "unsurv-offline firmware",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/unsurv/unsurv-offline",
+  "firmware_note": "Fully open source - hardware, firmware and case files all in the same repo, which is unusual in this batch; most other 'open source' claims from other vendors here don't hold up under checking.",
+  "vendor": "Unsurv Technologies",
+  "vendor_url": "https://www.crowdsupply.com/unsurv-technologies",
+  "product_url": "https://www.crowdsupply.com/unsurv-technologies/unsurv-offline",
+  "category": "detection-defense",
+  "subcategory": "camera-proximity-logger",
+  "status": "available",
+  "released": "2021",
+  "price_usd": 99,
+  "price_note": "Two tiers seen from the original Crowd Supply campaign: $89 for the board plus NFC antenna, $99 for the kit adding a 3D-printed enclosure; add $8 US / $18 international shipping. The campaign funded in 2021-2022 but backers reported shipping delays into 2023 over Texas Instruments component sourcing for the RF430CL330 NFC chip. Current lead time for a new order in 2026 was not confirmed.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Setup involves loading an OSM-derived camera-location database onto the SD card and pairing with the companion Android app over NFC - not a flash-and-forget device.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled, 45mm x 32mm PCB. Fully open hardware if you would rather build your own from the published KiCad files.",
+  "stealth": "discreet",
+  "form_factor": "pocket",
+  "summary": "A tiny open-source ESP32 board with a real GNSS receiver, an accelerometer and a passive NFC tag interface. It logs a GPS track, cross-references it offline against an OpenStreetMap-derived database of known camera locations stored on its SD card, and produces a daily proximity report read by tapping a phone's NFC reader against it - no data leaves the device to any third party.",
+  "honest_take": "This is a location logger with an offline lookup table, not a camera detector - it does not sense cameras with any sensor of its own; it matches a GPS track against wherever OSM contributors have manually tagged a camera, so its accuracy is entirely a function of how complete and current that crowdsourced tagging is in a given area, which varies enormously by city and is frequently stale or missing entirely for private or newer installations. The privacy design is genuinely good and rare in this category - fully open source, a passive NFC tag rather than an active radio to avoid leaking the device's presence, and everything processed locally rather than phoning home - but don't confuse 'privacy-respecting camera awareness log' with 'camera detector.' It also shipped years late to its original 2021-2022 Crowd Supply backers over component sourcing problems, worth weighing against a small team with no dedicated production line.",
+  "best_for": [
+   "Privacy-conscious commute/route logging against an offline camera database",
+   "Anyone who wants a fully open-source, auditable design in this category rather than a closed app"
+  ],
+  "not_for": [
+   "Real-time camera detection - it does no RF or visual sensing, only offline database lookup against a logged GPS track",
+   "Areas with sparse OSM camera tagging, where the report will simply be incomplete",
+   "Buyers who need it fast - the project has a documented history of significant shipping delays"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-PICO-D4",
+   "mcu_primary_note": "System-in-package ESP32 variant with integrated flash/crystal.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-PICO-D4 (integrated)",
+     "role": "wifi",
+     "note": "Wi-Fi silicon is present on the chip; the product's core camera-matching feature does not use it, per the local-only-processing design"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "LiPo, charged via an MCP73831 controller; exact capacity not published",
+   "charging": "USB (via a CH340 USB-serial bridge)",
+   "pmic": null,
+   "storage": "SD card, holding the offline OSM camera-location database",
+   "connectivity": [
+    "USB",
+    "NFC (passive tag interface read by a phone)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "u-blox CAM-M8C GNSS receiver",
+    "Bosch BMA400 accelerometer"
+   ],
+   "dimensions_mm": "45 x 32",
+   "weight_g": null,
+   "case": "Optional 3D-printed enclosure (the $99 tier; $89 tier is bare board)",
+   "notable_physical": [
+    "TI RF430CL330H dynamic NFC tag chip - a passive tag a phone reads, not an active NFC reader"
+   ]
+  },
+  "capabilities": {
+   "gps": {
+    "v": "yes",
+    "note": "u-blox CAM-M8C GNSS receiver"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "Continuous track logging is the core function"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "SD card holds the camera database and logs"
+   },
+   "detect_surveillance_cam": {
+    "v": "partial",
+    "note": "Not a sensor-based detector - matches a logged GPS track against an offline OpenStreetMap camera-location database on the SD card. Accuracy depends entirely on OSM tagging completeness in a given area."
+   },
+   "detect_generic_ble": {
+    "v": "no",
+    "note": "No BLE-based detection of any kind - detection here is GPS-track-vs-database only"
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not a relay device"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "The RF430CL330H is a passive dynamic NFC tag a phone reads from, not a 13.56MHz reader for other tags"
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Not a card emulator"
+   },
+   "wifi_scan_24": {
+    "v": "unknown",
+    "note": "Chip has Wi-Fi silicon; whether the firmware uses it for anything beyond initial setup is unconfirmed"
+   },
+   "wifi_wardriving": {
+    "v": "claimed",
+    "note": "Vendor materials mention Wi-Fi signal-strength mapping as an additional use case, alongside the core camera-proximity function"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Fully open source; buyer can modify and reflash"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Battery powered, logs independently of a phone; phone only needed to read the NFC report"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Purely a passive logger; no attack or transmit-based feature of any kind"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "No BLE feature documented; ESP32-PICO-D4 has BLE silicon but it is not used for scanning here"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Not a HID device"
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "The onboard NFC chip is a passive tag interface, not a reader capable of attacking other cards"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passive GPS logging and local data processing carry minimal legal exposure anywhere; this is a privacy tool, not an attack tool. Local laws on GPS tracking devices in vehicles you don't own may still apply if used that way."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No - has a dedicated 'unsurv-companion' Android app instead",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Unsurv Offline"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/unsurv/unsurv-offline",
+    "what": "open hardware/firmware repo - ESP32-PICO-D4, u-blox CAM-M8C, RF430CL330H, BMA400, MCP73831, CH340 BOM; 72 stars, 16 forks"
+   },
+   {
+    "url": "https://www.crowdsupply.com/unsurv-technologies/unsurv-offline",
+    "what": "campaign page - pricing tiers ($89/$99), shipping cost, PCB dimensions, NFC daily-report description (fetch blocked by 403; content via search-indexed summary)"
+   },
+   {
+    "url": "https://www.cnx-software.com/2021/12/14/unsurv-offline-esp32-gnss-receiver-board-with-nfc-accelerometer/",
+    "what": "independent coverage of the original 2021 crowdfunding campaign and hardware spec"
+   },
+   {
+    "url": "https://hackaday.io/project/181603-unsurv-offline",
+    "what": "project page cross-reference"
+   }
+  ],
+  "research_gaps": [
+   "Exact battery capacity not published",
+   "Whether it's still actively sold/shipping as of September 2026 or only fulfilling old backer orders could not be confirmed - the Crowd Supply page returned a 403 to automated fetching",
+   "Which specific OSM camera-tag scheme/tag key the database uses (e.g. man_made=surveillance) not confirmed from available sources",
+   "No capability key exists for 'offline OSM database camera-location lookup' as distinct from live camera detection - captured under detect_surveillance_cam with a caveat note instead"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "bluetooth-nugget-esp32s3",
+  "hardware_id": "bluetooth-nugget-esp32s3",
+  "name": "Bluetooth Nugget (ESP32S3)",
+  "firmware": "Nugget",
+  "firmware_kind": "community",
+  "firmware_repo": null,
+  "firmware_note": "Successor to the USB Nugget/WiFi Nugget lineage (originally by Alex Lynd/HakCat), flashed via the browser-based nugget.dev tool. No dedicated firmware repository name could be confirmed for this specific ESP32-S3 Bluetooth build - the HakCat-Tech GitHub org hosts WiFi-Nugget and USB-Nugget repos but nothing found was clearly labelled for the Bluetooth Nugget.",
+  "vendor": "Retia",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/products/bluetooth-nugget-esp32s3",
+  "category": "bluetooth",
+  "subcategory": "nugget-lineage",
+  "status": "out-of-stock",
+  "released": "2026",
+  "price_usd": 80.0,
+  "price_note": "Sold out at last check.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Browser-based flashing via nugget.dev; six physical buttons and an OLED screen for on-device payload selection without needing a laptop connected.",
+  "build_effort": "assembled",
+  "build_note": "Sold assembled, not a kit - contrast with Retia's own 'Solder Your Own Nugget Kit' (also tracked in this batch), which is the unassembled ESP8266/ESP32-S2 sibling.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "The ESP32-S3-based member of the Nugget educational hacking-platform family, adding native Bluetooth/BLE to the Wi-Fi monitor-mode scanning and USB-HID keystroke-injection capability the ESP8266/ESP32-S2 Nuggets had. Dual-core with roughly double the older single-core Nugget's performance, an OLED screen and six buttons for on-device use, and an optional LoRa 'backpack' add-on for Meshtastic.",
+  "honest_take": "The performance-marketing language here ('7-8x faster image processing', 'nearly double the performance') is standard ESP32-S3-vs-S2 chip-spec talk dressed up as a product achievement - it is true of any board that swaps an S2 for an S3, not something Retia specifically engineered. The genuinely new thing is native BLE, which the older Wi-Fi/USB Nuggets did not have, and the publicly demoed BLE pairing-popup spam is a real, if by now well-worn, iOS/Android nuisance attack rather than anything novel. Whether this firmware is open source the way the original WiFi Nugget was is not stated anywhere on the product page, and no dedicated GitHub repo for this specific board was found - worth confirming before assuming it can be audited or forked.",
+  "best_for": [
+   "A single board covering Wi-Fi monitor mode, BLE, and USB-HID injection with a screen and buttons for beginners",
+   "Extending into Meshtastic with the optional LoRa backpack"
+  ],
+  "not_for": [
+   "Buying today - sold out",
+   "Anyone who needs confirmed-open firmware source before buying"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Dual-core Xtensa LX7, native USB OTG (enables the HID injection), Wi-Fi 2.4GHz + BLE5, AI vector instructions the vendor cites for the 'faster image processing' claim.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3 (integrated)",
+     "role": "wifi-ble",
+     "note": "2.4GHz Wi-Fi monitor mode plus native BLE - the BLE radio is new versus the ESP32-S2-based USB Nugget, which has no Bluetooth"
+    }
+   ],
+   "display": {
+    "type": "OLED",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Not stated on the product page",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (native OTG)",
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE",
+    "LoRa (via optional backpack add-on)"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Six buttons for on-screen keyboard/payload navigation",
+    "LoRa Meshtastic backpack sold separately"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Native USB OTG on the S3 makes real keystroke injection possible, unlike the WROOM-32-class boards elsewhere in this batch"
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "'Drag and drop code to a flash drive' per listing"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "In Python per listing"
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Baseline Wi-Fi scanning inherited from the Nugget lineage"
+   },
+   "wifi_deauth_24": {
+    "v": "unknown",
+    "note": "Older WiFi Nugget firmware had a deauth mode; not explicitly restated for this BLE-focused SKU"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-S3 has no 5GHz radio"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Native BLE, new on this board"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Per listing"
+   },
+   "ble_spam_apple": {
+    "v": "claimed",
+    "note": "Publicly demoed pairing-popup spam against nearby phones per listing, not independently verified by us"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "ESP32-S3 has BLE only, no Bluetooth Classic/BR-EDR"
+   },
+   "subghz_rx": {
+    "v": "addon",
+    "note": "Only via the separate LoRa backpack, and LoRa is not sub-GHz ISM in the same sense as a CC1101 - it's a different modulation entirely"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS onboard"
+   },
+   "sd_logging": {
+    "v": "unknown",
+    "note": "Not stated on the product page"
+   },
+   "mesh_lora": {
+    "v": "addon",
+    "note": "LoRa/Meshtastic is explicitly an optional 'backpack' add-on purchased separately, not something the base board carries - the board itself is Wi-Fi/BLE + USB-HID only."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "USB-HID injection against a computer you don't have authorization to test, and BLE pairing-spam against phones you don't own, both carry computer-misuse exposure depending on jurisdiction. Passive Wi-Fi monitor-mode scanning of your own traffic is lower risk."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "BLE Nugget"
+  ],
+  "sources": [
+   {
+    "url": "https://retia.io/products/bluetooth-nugget-esp32s3",
+    "what": "product listing - price, performance claims, BLE features, stock status, nugget.dev flasher reference"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp32-s3",
+    "what": "ESP32-S3 spec confirming dual-core Xtensa LX7, native USB OTG, and BLE-only Bluetooth (no Classic/BR-EDR)"
+   },
+   {
+    "url": "https://nugget.dev/",
+    "what": "the browser-based Nugget flasher this board uses, created by Angelina Tsuboi"
+   },
+   {
+    "url": "https://github.com/HakCat-Tech/USB-Nugget",
+    "what": "predecessor project (ESP32-S2-based USB Nugget) for lineage comparison"
+   }
+  ],
+  "research_gaps": [
+   "No firmware repository found specific to this board",
+   "Whether firmware is open source not confirmed",
+   "Screen resolution not published",
+   "Battery presence/capacity not stated on the product page",
+   "Relationship between Retia and the original HakCat/Alex Lynd/DevKitty Nugget team not stated on Retia's site"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "espboy-diy",
+  "hardware_id": "espboy-diy",
+  "name": "ESPboy:DIY",
+  "firmware": "ESPboy Little Game Engine + module apps",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/ESPboy-edu",
+  "firmware_note": "Fully open source and OSHWA-certified (RU000001) - one of the few genuinely open platforms in this batch, with Arduino IDE compatibility and a separate repo per add-on module (e.g. ESPboy_RFID_NFC, ESPboy_Sub1GHzInspector).",
+  "vendor": "ESPboy (Roman S.)",
+  "vendor_url": "https://www.espboy.com",
+  "product_url": "https://www.tindie.com/products/espboy/espboydiy-homebrew-gadgetdevelopment-platform/",
+  "category": "multitool",
+  "subcategory": "retro-handheld-with-rf-modules",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 79.0,
+  "price_note": "Base unit only - 1 unit left in stock at last check. Each RF/NFC/etc module (CC1101, PN532, nRF24L01, etc.) is a separate purchase on top of this.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Arrives assembled and preloaded with 30+ games, but the security-relevant capability (RFID/NFC, sub-GHz, iButton, BadUSB) requires buying separate modules and, for some, the right firmware sketch flashed via Arduino IDE.",
+  "build_effort": "assembly",
+  "build_note": "Base device ships assembled. Add-on modules connect via a standardized expansion connector with DIP switches for mode selection - no soldering for the modules themselves.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "A retro-gaming-styled ESP8266 handheld (1.44in 128x128 color TFT, 8 buttons, speaker, RGB LED) built around a standardized expansion connector. On its own it is a Little Game Engine console; plugging in separate modules adds Wi-Fi attacks, RFID/NFC read/write/clone/emulate, iButton storage, 433MHz garage/barrier control, GPS, LoRa, and BadUSB-style payloads. Fully open source and OSHWA-certified.",
+  "honest_take": "The gaming branding is doing real work to disguise a genuinely capable multi-protocol platform, and that cuts both ways. As a stealth angle, nothing about this looks like a hacking tool, which is a real advantage over an overtly 'pentest' branded handheld. But 'multi-protocol capability bolted onto a retro-gaming platform' undersells how much extra buying is required: the base $79 unit does none of the RF/RFID/BadUSB tricks by itself - every one of those needs its own separate module purchase, and the ESP8266 at the core has no Bluetooth and no native USB, so any 'BadUSB' claim for this platform almost certainly means a separate USB-capable companion board rather than the ESP8266 itself emulating a keyboard. It is the most genuinely open-source device in this whole batch (OSHWA RU000001, full schematics and code per module on GitHub), which deserves real credit - but only 1 unit was in stock at last check, so availability is a live concern.",
+  "best_for": [
+   "Buyers who want the stealth of a retro-game-shaped device with real RFID/sub-GHz capability underneath, module by module",
+   "Open-source purists who want to read and modify every line of firmware"
+  ],
+  "not_for": [
+   "Anyone expecting full multi-protocol capability out of the box - each protocol is a separate module purchase",
+   "BadUSB/HID work - the ESP8266 has no native USB device peripheral",
+   "Buying today - stock is down to 1 unit"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP8266",
+   "mcu_primary_note": "Xtensa @80/160MHz, 4MB flash, 2.4GHz Wi-Fi only, no Bluetooth, no native USB.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP8266 (integrated)",
+     "role": "wifi",
+     "note": "2.4GHz only"
+    }
+   ],
+   "display": {
+    "type": "TFT",
+    "size_in": 1.44,
+    "resolution": "128x128",
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": "USB (via UART bridge)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4GHz",
+    "Expansion connector for add-on modules"
+   ],
+   "gpio": "Standardized expansion connector with DIP-switch mode selection, shared across all ESPboy add-on modules",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Included, per listing",
+   "notable_physical": [
+    "8 buttons (6 front, 2 side)",
+    "WS2812B RGB LED",
+    "Speaker",
+    "30+ preloaded games"
+   ]
+  },
+  "capabilities": {
+   "games": {
+    "v": "yes",
+    "note": "30+ Little Game Engine titles preloaded"
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Base unit Wi-Fi scanning"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP8266 silicon has no 5GHz radio"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "General 'WiFi attacks' per listing; exact module/feature set not itemized"
+   },
+   "hf_1356_read": {
+    "v": "addon",
+    "note": "ESPboy_RFID_NFC module (PN532), separate purchase"
+   },
+   "hf_1356_write": {
+    "v": "addon",
+    "note": "Same PN532 module"
+   },
+   "hf_1356_emulate": {
+    "v": "addon",
+    "note": "Same PN532 module, per repo description"
+   },
+   "mifare_classic_attacks": {
+    "v": "addon",
+    "note": "Read/write/store/emulate per the module's own repo description"
+   },
+   "ibutton_1wire": {
+    "v": "addon",
+    "note": "iButton read/write/emulate module, separate purchase"
+   },
+   "subghz_rx": {
+    "v": "addon",
+    "note": "ESPboy_Sub1GHzInspector module (CC1101), 300-348/387-464/779-928MHz per its repo description"
+   },
+   "subghz_tx": {
+    "v": "addon",
+    "note": "Same module, used for garage/barrier control per vendor materials"
+   },
+   "nrf24_scan": {
+    "v": "addon",
+    "note": "nRF24L01 module, separate purchase"
+   },
+   "gps": {
+    "v": "addon",
+    "note": "GPS navigator module, separate purchase"
+   },
+   "ir_tx": {
+    "v": "addon",
+    "note": "IR remote module, separate purchase"
+   },
+   "usb_hid_inject": {
+    "v": "unknown",
+    "note": "'BadUSB' is claimed for the platform, but the ESP8266 core has no native USB device peripheral - unclear which module or companion hardware actually provides it"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "ESP8266 has no Bluetooth radio"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "No Bluetooth radio"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Arduino IDE compatible, fully open source"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No centralized app store; firmware per module via GitHub"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Legal exposure scales with which modules are bought and used - sub-GHz transmission, Wi-Fi deauth and RFID cloning each carry separate exposure depending on jurisdiction and target. The base unit alone (games, Wi-Fi scanning) carries minimal risk."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "ESPboy"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/espboy/espboydiy-homebrew-gadgetdevelopment-platform/",
+    "what": "product listing - price, display/button specs, stock count, preloaded games"
+   },
+   {
+    "url": "https://github.com/ESPboy-edu/ESPboy_RFID_NFC",
+    "what": "RFID/NFC module repo - PN532-based, read/write/store/emulate MIFARE 1k/4k/Ultralight/DESFire, ISO14443-4, FeliCa"
+   },
+   {
+    "url": "https://github.com/ESPboy-edu/ESPboy_Sub1GHzInspector",
+    "what": "sub-GHz module repo - CC1101, 300-348/387-464/779-928MHz scan/decode/store"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp8266",
+    "what": "ESP8266 spec confirming no Bluetooth and no native USB device peripheral, informing the BadUSB research gap"
+   }
+  ],
+  "research_gaps": [
+   "Exact release year not confirmed",
+   "Which specific module (if any) provides the claimed 'BadUSB' capability - the ESP8266 core has no native USB device peripheral",
+   "U2F module technical details not found",
+   "Current stock/restock plans beyond '1 unit remaining' not confirmed"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "newsheen-cat-lamp",
+  "hardware_id": "newsheen-cat-lamp",
+  "name": "Newsheen Hacker Smart Cat Lamp Kit (pre-assembled)",
+  "firmware": "Stock lamp firmware (default); reflashable to Meshtastic/Meshcore/Reticulum or custom",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Ships as a working smart lamp; 'hacker firmware access' means the ESP32-S3 is user-flashable, not that it ships with any security-testing firmware. No offensive or defensive security capability is built in.",
+  "vendor": "Retia (base hardware OEM'd as 'Newsheen')",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/products/newsheen-hacker-smart-cat-lamp-kit-pre-assembled",
+  "category": "accessory",
+  "subcategory": "hackable-iot",
+  "status": "out-of-stock",
+  "released": "2026",
+  "price_usd": 75.0,
+  "price_note": "Sold out at last check.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Works as a plain smart lamp immediately. Turning it into a mesh node or anything else needs ESP32 flashing knowledge Retia doesn't teach on this product page.",
+  "build_effort": "assembled",
+  "build_note": "Pre-assembled, per the listing title.",
+  "stealth": "covert",
+  "form_factor": "desktop",
+  "summary": "A squishy cat-shaped desk lamp built on a Newsheen-brand ESP32-S3 smart-lighting reference board, resold by Retia with the microcontroller left open for reflashing. Out of the box it is a Wi-Fi/Bluetooth smart light; owners can reflash the same ESP32-S3 into an audio-reactive light, an internet radio, or a Meshtastic/Meshcore/Reticulum mesh node.",
+  "honest_take": "Be clear about what this is: a smart lamp with a reflashable chip, not a security tool. There is no scanning, no attack capability, no detection feature, and nothing in Retia's own description claims one - the 'hacker' branding refers entirely to the fact that a buyer can put their own firmware on it, the same as any bare ESP32-S3 dev board would allow. Its only real relevance to this comparison is as the cheapest, most disguised possible carrier for a Meshtastic/Meshcore mesh node - genuinely excellent cover if that's the goal, since nothing about a cat lamp on a desk draws attention - but if the goal is actual Wi-Fi/BLE security capability, this ships with none, and a buyer would be writing all of that themselves.",
+  "best_for": [
+   "The most disguised possible enclosure for a covert Meshtastic/Meshcore mesh node",
+   "A genuinely functional smart lamp that happens to be reflashable"
+  ],
+  "not_for": [
+   "Any out-of-box security testing capability - there is none",
+   "Anyone who wants vendor-supported hacking firmware rather than a bare, reflashable ESP32-S3"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Dual-core Xtensa LX7, native USB, Wi-Fi 2.4GHz + BLE5.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3 (integrated)",
+     "role": "wifi-ble",
+     "note": "Stock lamp firmware uses this for app control; Meshtastic itself primarily needs a LoRa radio for actual mesh range, which this board does not have onboard"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Wi-Fi 2.4GHz",
+    "Bluetooth LE"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed case plus silicone cat topper",
+   "notable_physical": [
+    "Squishy cat-shaped silicone exterior",
+    "Desk-lamp light diffuser"
+   ]
+  },
+  "capabilities": {
+   "rgb_backlight": {
+    "v": "yes",
+    "note": "Stock function: smart light"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Fully reflashable ESP32-S3"
+   },
+   "wifi_scan_24": {
+    "v": "unknown",
+    "note": "Chip capable; not a feature of the stock lamp firmware"
+   },
+   "ble_scan": {
+    "v": "unknown",
+    "note": "Chip capable; not a feature of the stock lamp firmware"
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "No attack firmware ships on this product; would require the buyer to write and flash their own"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Not a feature of the stock or documented reflash options"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio; Meshtastic needs an add-on LoRa module not included"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS onboard"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Runs as a plugged-in lamp independent of any phone/app for basic light function"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF/RFID hardware"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "mousejack": {
+    "v": "no",
+    "note": "No nRF24/2.4GHz-proprietary radio beyond the ESP32-S3's own Wi-Fi/BLE"
+   },
+   "detect_generic_wifi": {
+    "v": "no",
+    "note": "No scanning/detection feature of any kind ships on the stock firmware"
+   },
+   "wifi_monitor_mode": {
+    "v": "no",
+    "note": "Stock lamp firmware has no monitor-mode feature; would require the owner's own firmware"
+   },
+   "mesh_lora": {
+    "v": "unknown",
+    "note": "Retia's own listing says the ESP32-S3 can be reflashed into a Meshtastic/Meshcore/Reticulum node, but Meshtastic fundamentally requires a LoRa radio chip, and this record's own research_gaps couldn't confirm whether the lamp actually carries one onboard or whether that reflash option needs a separate LoRa add-on - the ESP32-S3 itself has no LoRa radio (Wi-Fi/BLE only)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "As shipped, it's a smart lamp - no meaningful legal exposure. Risk only arises from whatever firmware the owner chooses to write and run on it themselves."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "poor",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Hacker Cat Lamp"
+  ],
+  "sources": [
+   {
+    "url": "https://retia.io/products/newsheen-hacker-smart-cat-lamp-kit-pre-assembled",
+    "what": "full product description - ESP32-S3 base, reflash options (audio-reactive light, internet radio, Meshtastic/Meshcore/Reticulum), stock status, included parts"
+   },
+   {
+    "url": "https://www.espressif.com/en/products/socs/esp32-s3",
+    "what": "ESP32-S3 spec - confirms Wi-Fi/BLE only, no onboard LoRa, informing the Meshtastic hardware-requirement caveat"
+   },
+   {
+    "url": "https://meshtastic.org/docs/hardware/devices/",
+    "what": "Meshtastic's supported-hardware list, confirming virtually all supported devices carry a LoRa radio the ESP32-S3 alone does not have"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32-S3 module/variant not specified",
+   "No dedicated firmware repository found for the 'hacker' reflash options described",
+   "Whether Meshtastic mesh range is actually available out of the box or requires a separate LoRa add-on is not addressed on the product page",
+   "No capability key exists for 'audio-reactive light' or 'internet radio' - noted in summary only, not security-relevant"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "nugget-solder-kit",
+  "hardware_id": "nugget-solder-kit",
+  "name": "Solder Your Own Nugget Kit",
+  "firmware": "Wi-Fi Nugget (ESP8266) or USB Nugget (ESP32-S2), builder's choice",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/HakCat-Tech/WiFi-Nugget",
+  "firmware_note": "Builds into either the already-tracked WiFi Nugget (using the included D1 Mini ESP8266) or a USB Nugget (using the included S2 Mini ESP32-S2) - the choice of which microcontroller gets soldered in decides which device results. Both MCU boards ship pre-flashed and tested.",
+  "vendor": "Retia",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/products/diy-s2-wifi-nugget-kit-unassembled",
+  "category": "wifi",
+  "subcategory": "nugget-lineage-diy",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 70.0,
+  "price_note": "Sold out at last check. An add-on ESP32-S3 Mini board is offered but the listing states firmware support for it isn't available yet.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Vendor describes it as 'easy to moderate' for soldering beginners - through-hole and some surface-mount with large pads.",
+  "build_effort": "soldering",
+  "build_note": "Requires soldering to complete, per the listing's own warning. No returns if a part is damaged while soldering.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An unassembled kit - PCB, SH1106 OLED, four buttons, a neopixel and a 3D-printed case - plus a pre-flashed D1 Mini ESP8266 and a pre-flashed S2 Mini ESP32-S2, so a buyer solders together either a Wi-Fi Nugget or a USB Nugget depending on which microcontroller they use. It is a soldering-practice packaging of the same hardware/firmware already covered under the WiFi Nugget entry elsewhere in this database, sold by a different current vendor (Retia) than the board's original makers.",
+  "honest_take": "This is not a new device - built with the D1 Mini, it is the already-tracked WiFi Nugget, with the same limitations noted there: ESP8266-only means 2.4GHz and no Bluetooth, and the deauth is the same PMF/WPA3-defeated management-frame trick as everything else. What's genuinely notable is that it exists as a current, purchasable product at all: the already-tracked WiFi Nugget entry in this database describes the original maker's storefront as dead (payment-required errors, an unresolving domain) as of the same week this kit was checked - Retia is evidently now selling and shipping Nugget-derived hardware and running the nugget.dev flasher, which that entry did not account for. Retia's own site does not explain its relationship to the original HakCat/Alex Lynd/DevKitty team, so treat this as a currently-available packaging of the same open design rather than confirmation the original project has a maintainer again.",
+  "best_for": [
+   "A cheap, current way to build the (otherwise hard-to-buy) WiFi Nugget or USB Nugget today",
+   "Soldering practice with a forgiving, well-documented board"
+  ],
+  "not_for": [
+   "Anyone expecting new capability beyond the already-tracked WiFi Nugget - this is the same hardware/firmware, unassembled",
+   "5GHz or Bluetooth work on the ESP8266/WiFi Nugget build - neither exists on that chip",
+   "Anything beyond basic 2.4GHz recon and deauth"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP8266 (D1 Mini) or ESP32-S2 (S2 Mini), builder's choice",
+   "mcu_primary_note": "D1 Mini build = Wi-Fi Nugget (2.4GHz only, no Bluetooth, no native USB). S2 Mini build = USB Nugget (native USB OTG for DuckyScript HID injection, 2.4GHz Wi-Fi, no Bluetooth - the ESP32-S2 has no BLE radio either).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP8266 or ESP32-S2 depending on build",
+     "role": "wifi",
+     "note": "2.4GHz only either way; neither chip has Bluetooth"
+    }
+   ],
+   "display": {
+    "type": "SH1106 OLED",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4GHz"
+   ],
+   "gpio": "8 pin headers included",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed, included",
+   "notable_physical": [
+    "4 buttons",
+    "1 neopixel",
+    "Requires soldering through-hole and SMD components with large pads"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Nugget Invader-family firmware, either build"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Neither ESP8266 nor ESP32-S2 has a 5GHz radio"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Via Nugget Invader-family firmware; blocked by 802.11w/PMF, defeated on WPA3"
+   },
+   "wifi_beacon_spam": {
+    "v": "unknown",
+    "note": "Not confirmed specifically for this kit's current firmware version"
+   },
+   "usb_hid_inject": {
+    "v": "partial",
+    "note": "Only if built with the S2 Mini (USB Nugget) - the D1 Mini/WiFi Nugget build has no native USB device capability"
+   },
+   "usb_mass_storage": {
+    "v": "unknown",
+    "note": "Not confirmed for either build"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Neither ESP8266 nor ESP32-S2 has a Bluetooth radio"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Neither chip has Bluetooth"
+   },
+   "detect_deauth": {
+    "v": "claimed",
+    "note": "HaxxDetector-family firmware mode documented on the already-tracked WiFi Nugget lineage"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware in this kit"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz hardware in this kit"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No infrared hardware"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS"
+   },
+   "web_ui": {
+    "v": "unknown",
+    "note": "Older Nugget firmware had a config web UI; not confirmed current for this kit's firmware version"
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No centralized app store"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Same as the WiFi Nugget/USB Nugget lineage generally - deauth and HID injection against systems not owned or lacking authorization are computer-misuse offences in most jurisdictions."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "DIY S2 WiFi Nugget Kit"
+  ],
+  "sources": [
+   {
+    "url": "https://retia.io/products/diy-s2-wifi-nugget-kit-unassembled",
+    "what": "product listing - included parts, D1 Mini/S2 Mini dual-build option, soldering difficulty, stock status"
+   },
+   {
+    "url": "https://github.com/HakCat-Tech/WiFi-Nugget",
+    "what": "WiFi Nugget firmware org/repo confirming the ESP8266-based lineage this kit builds into"
+   },
+   {
+    "url": "https://github.com/HakCat-Tech/USB-Nugget",
+    "what": "USB Nugget firmware repo confirming the ESP32-S2-based, native-USB alternative build"
+   },
+   {
+    "url": "https://nugget.dev/",
+    "what": "current flashing tool referenced for the Nugget family, created by Angelina Tsuboi"
+   }
+  ],
+  "research_gaps": [
+   "Retia's relationship to the original WiFi Nugget/USB Nugget maker (Alex Lynd/HakCat/DevKitty) is not stated anywhere found",
+   "This directly conflicts with the already-tracked WiFi Nugget record's 'effectively dead, nowhere to buy' honest_take - flagging for reconciliation since Retia currently sells and ships this",
+   "Whether the S2 Mini build's USB Nugget firmware is actively maintained or the same 2021-2022 codebase referenced elsewhere was not confirmed"
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

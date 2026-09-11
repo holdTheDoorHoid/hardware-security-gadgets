@@ -170,7 +170,8 @@
    "No capability key exists for automotive CAN bus sniff/inject/ELM327-emulation as a category distinct from generic hardware-debug buses - the closest keys (uart/i2c/jtag_swd) don't fit and packet_capture is a stretch used here for CAN frames specifically",
    "Exact release date / first-commit date not confirmed",
    "No published current-draw or transceiver part recommendation beyond 'SN65HVD-class or similar 3.3V compatible'"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "pikvm-v4-plus-hardware-rat",
@@ -345,7 +346,8 @@
   "research_gaps": [
    "Whether Lab401's specific unit ships with any modem pre-installed (their own page is ambiguous on this point) could not be confirmed independently of the official PiKVM documentation, which says modems are separate",
    "No independent teardown found confirming exact microSD capacity or RAM variant of the CM4 used"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "multipick-kronos-epg",
@@ -483,7 +485,8 @@
    "No SCHEMA.md category or capability key models physical lock-picking tools at all; filed under hardware-debug as the least-wrong existing bucket. A dedicated 'physical-access' category and picking-specific capability keys (e.g. pin_tumbler_pick, high_security_pick) would fit this device and similar tools far better",
    "Exact motor part number and precise stroke-force spec not published by the manufacturer",
    "Single-purpose device: the capability matrix is deliberately short rather than padded with unrelated 'no' entries."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "lilygo-t-deck-plus",
@@ -680,7 +683,8 @@
    "Exact GPS chip part number not published by LILYGO (some resellers call it 'Ulbox GPS', not a recognized chip family name)",
    "GPIO expansion header pinout not confirmed",
    "Whether any third-party offensive firmware (Bruce, Marauder-class) has been ported to this specific board was not confirmed"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "glytch-gps-mod-pager",
@@ -813,7 +817,8 @@
    "No capability key exists for 'accessory requiring a specific named host device' as a formal relationship - this record states the WiFi Pineapple Pager dependency only in prose and hardware/build notes",
    "Exact physical connector/mounting mechanism (USB-A plug directly, or a cable) not confirmed beyond 'attach to the Pager's USB port'",
    "This is a genuinely single-function accessory (GNSS only) - the sparse capability list reflects that, not incomplete research"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "yubikey-neo",
@@ -958,7 +963,8 @@
    "Exact secure-element chip part number not published",
    "Precise end-of-sale date not confirmed beyond community/Wikipedia sourcing to ~2018",
    "The capability-key list has no keys for OTP/FIDO/PIV/OpenPGP authentication functions specifically - hf_1356_emulate and usb_hid_inject are used here as the closest approximations, but neither captures the actual U2F/PIV/OpenPGP cryptographic functions this device performs"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "rabbit-labs-masta-blasta",
@@ -1097,7 +1103,8 @@
   "research_gaps": [
    "Exact LED part number, forward current and radiant intensity not published",
    "No independently measured range or beam angle figure found, only vendor marketing language ('turn on/off devices without pointing directly at them')"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "rabbit-labs-original-ir-blaster",
@@ -1236,7 +1243,8 @@
   "research_gaps": [
    "No independent range measurement found; the ~100m figure is vendor marketing",
    "Exact LED part number and forward current not published"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "electroniccats-flipper-modbus",
@@ -1378,7 +1386,8 @@
    "Exact RS485 transceiver IC not named in vendor documentation",
    "Which specific Modbus function codes the sender app supports was not itemized in available sources",
    "No capability key exists for industrial/ICS protocol sniff-and-inject as a category distinct from generic UART - flagged here using 'uart: partial' as the closest approximation"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "evilapplejuice-esp32",
@@ -1532,7 +1541,8 @@
   "research_gaps": [
    "COSCUP 2025 presentation referenced in the original lead could not be independently located/confirmed",
    "No independent measurement of real-world range beyond the author's own 9dBm TX power note"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "chimerable-esp32",
@@ -1690,7 +1700,8 @@
   "research_gaps": [
    "Very early-stage repo (commit history described as minimal); real-world reliability and false-positive rate of the device fingerprinting not independently tested",
    "No capability key exists that distinguishes 'active MITM by impersonation' from true passive connection-following sniffing - ble_sniff is marked 'no' here specifically to avoid overstating what this device does, but a dedicated key for active BLE MITM would be more accurate than reusing ble_scan/ble_advertise to describe it"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "bluetooth-ducky-esp32",
@@ -1837,7 +1848,8 @@
   "research_gaps": [
    "Whether auto-reconnect survives across target reboots, or requires the target to still show the device as a known/trusted peripheral, was not confirmed",
    "No independent third-party test of success rate against modern OS Bluetooth pairing confirmation dialogs (Windows 11 / macOS Sonoma+) was found"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "hackgnar-ble-ctf",
@@ -1984,7 +1996,8 @@
   "research_gaps": [
    "Exact release year of the original project not confirmed",
    "Whether pre-compiled binaries are distributed via GitHub Releases or must always be built from source was not fully confirmed"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "osmocombb-calypso",
@@ -2146,6 +2159,7 @@
    "No capability key exists for cellular/GSM functions at all (passive IMSI catching, control-channel sniffing, cell scanning) - sdr_rx/tx are used here only to explicitly rule out SDR framing, not to describe what the device actually does; a dedicated cellular category and keys (e.g. gsm_2g_only, imsi_catch_passive, cell_scan) are needed for this and any future cellular tool in the database",
    "Whether any currently-manufactured phone still uses a Calypso-compatible chipset was not found - this appears to depend entirely on 15-20-year-old discontinued secondhand hardware, which is itself a supply-risk finding worth flagging",
    "Precise list of which of the ~70 countries with 2G phase-out plans have already gone dark versus still pending as of September 2026 was not itemized country-by-country"
-  ]
+  ],
+  "_staged_by": "integrate.py"
  }
 ]

@@ -1,0 +1,2239 @@
+[
+ {
+  "id": "fpga-nfc",
+  "hardware_id": "fpga-nfc",
+  "name": "FPGA-NFC",
+  "firmware": "Stock (WangXuan95, Verilog source)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/WangXuan95/FPGA-NFC",
+  "firmware_note": "The Verilog is the entire product - there is no separate firmware/hardware split. It targets any FPGA (Altera Cyclone IV by default for the 81.36MHz PLL primitive; other vendors need a substitute clock IP).",
+  "vendor": "WangXuan95 (independent developer)",
+  "vendor_url": "https://github.com/WangXuan95",
+  "product_url": "https://github.com/WangXuan95/FPGA-NFC",
+  "category": "rfid-nfc",
+  "subcategory": "hf-reader-diy",
+  "status": "diy-only",
+  "released": "2022",
+  "price_usd": 20,
+  "price_note": "No product exists to buy - $20 is a rough BOM estimate for the NFC_BreakoutBoard (AD7276B ADC, FDV301N MOSFET, coil, passives) via the linked OSHWHub gerbers, and does not include the FPGA dev board itself (any board with a spare clock, 4 GPIO and a UART bridge works; a cheap Cyclone IV board runs $15-40 more).",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "You are writing and debugging the ISO14443A PHY and MAC layers yourself in Verilog, then soldering an analogue front end and tuning a 4-turn antenna coil by hand. This is an RF and digital-logic project, not a 'buy and flash' tool.",
+  "build_effort": "full-diy",
+  "build_note": "Fabricate the NFC_BreakoutBoard PCB from the provided gerbers, hand-solder the AD7276B ADC and analogue front end, wire it to any FPGA dev board's GPIO (ADC_SCK runs at up to 40.68MHz, so the README explicitly warns against Dupont jumper wires), then synthesize and load the Verilog.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A from-scratch ISO14443A card reader built entirely in FPGA logic and a handful of discrete parts (a 3Msps AD7276B ADC, an FDV301N MOSFET, a diode envelope detector and a 4-turn coil) instead of a dedicated NFC chip like the PN532 or ST25R3916. It talks to a host PC over a plain 9600-baud serial line and has been demonstrated reading MIFARE Classic (M1) cards. It's a teaching/hobby project by a single developer, not a product.",
+  "honest_take": "This does exactly one useful thing that a $9 PN532 breakout doesn't: it proves the NFC PHY layer isn't magic - carrier generation, ASK demodulation via envelope detection, and the ISO14443A frame format are all implemented in visible, readable Verilog. But as a tool it is strictly worse than a PN532 or Proxmark3 for any practical RFID work: no write support beyond the protocol layer, no anti-collision beyond basic REQA/ANTICOLL, no MIFARE Classic crypto attacks, and a carrier that auto-shuts-off after 1.2 seconds of serial inactivity. Buy this only if the point is learning FPGA-based RF signal processing; buy a PN532 if the point is reading cards.",
+  "best_for": [
+   "Learning how ISO14443A's ASK envelope detection and framing actually work at the signal level",
+   "FPGA/Verilog practice with a real RF front end",
+   "Demonstrating that dedicated NFC silicon isn't required for basic 13.56MHz reading"
+  ],
+  "not_for": [
+   "Anyone who just wants to read/clone/emulate NFC cards - buy a PN532 or Proxmark3 instead",
+   "MIFARE Classic key-recovery attacks (nested/darkside/hardnested) - not implemented",
+   "Any use requiring tag emulation - this project only implements the PCD (reader) role"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU. Protocol logic, DSP, and UART framing all run as Verilog RTL inside the FPGA fabric (any FPGA large enough for a small UART+DSP design; author used an Altera Cyclone IV).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "AD7276B",
+     "role": "nfc",
+     "note": "3Msps 12-bit SPI ADC (confirmed against the Analog Devices datasheet), used to sample the 847.5kHz subcarrier envelope from the PICC-to-PCD response, not the 13.56MHz carrier directly."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None. Powered from the FPGA board's USB/external supply plus a separate 7-9V rail for the antenna drive circuit (J1 on the breakout board).",
+   "charging": null,
+   "pmic": null,
+   "storage": "None - all logic is synthesized into FPGA fabric, no persistent storage",
+   "connectivity": [
+    "UART (via the FPGA board's own USB-UART bridge, e.g. FT232/CP2102/CH340)"
+   ],
+   "gpio": "4 FPGA GPIO pins used: ADC_CSN, ADC_SCLK, ADC_SDATA, CARRIER_OUT, at 3.3V or 2.5V logic",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "4-turn hand-wound antenna coil on the breakout PCB",
+    "Separate 7-9V supply input for the carrier drive MOSFET",
+    "Onboard status LEDs for PLL lock, carrier-on, and RX-complete"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "Full ISO14443A PHY/MAC in Verilog; demonstrated reading MIFARE Classic (M1) cards including door-control cards and blank white cards."
+   },
+   "hf_1356_write": {
+    "v": "partial",
+    "note": "README states the protocol layer supports send/receive framing, but no ready-made write/format application is provided - you'd write the M1 write commands yourself over serial."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Only implements the PCD (reader) role, not PICC (card) emulation."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No key-recovery or crypto attacks implemented - this is a bare reader, not a Proxmark-style attack tool."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "No DESFire (ISO14443-4/T=CL) support - the frame handler only implements the plain ISO14443A/MIFARE Classic path described in the README."
+   },
+   "nfc_type4_ndef": {
+    "v": "no",
+    "note": "No NDEF/Type 4 application layer implemented - only raw ISO14443A frame send/receive over serial."
+   },
+   "emv_read": {
+    "v": "no",
+    "note": "No ISO14443-4/APDU layer, which EMV contactless requires - not implemented."
+   },
+   "iso15693": {
+    "v": "partial",
+    "note": "README says the analogue hardware supports ISO15693, but the Verilog protocol layer for it was never written ('I haven't write its protocol in FPGA')."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Not implemented - project is ISO14443A-only at the protocol level."
+   },
+   "magspoof": {
+    "v": "no",
+    "note": "No magnetic-stripe hardware - this is a 13.56MHz reader only."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Single-sided reader design; no second PICC-emulation stage exists to relay a session."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No 125kHz front end at all - hardware is tuned exclusively for the 13.56MHz HF band."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Plain-text hex-over-serial protocol at 9600 baud, one command/response per line - trivial to script from any language."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC sending serial commands; the FPGA auto-cuts the carrier 1.2s after the last command with nothing to reissue it."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Serial terminal only ('Serial Assistant' recommended over Putty); no web or GUI interface shipped."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Single-developer Verilog repo; no companion app ecosystem."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage of any kind on the board - all captured data goes out over the live serial link."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bare-metal 13.56MHz reader you build and program yourself. Owning and reading cards you're authorized to read (your own access cards, your own tags) is not restricted in most jurisdictions. Reading or cloning someone else's access credentials without authorization is a separate legal question wherever you are - check local law before pointing it at a card that isn't yours."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "good",
+   "last_release": "2024-01",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "FPGA NFC (RFID)",
+   "NFC_BreakoutBoard"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/WangXuan95/FPGA-NFC",
+    "what": "full README: block diagram, part numbers (AD7276B, FDV301N, 1N4148), serial protocol, M1 card interaction log, ISO15693 hardware-only caveat"
+   },
+   {
+    "url": "https://oshwhub.com/wangxuan/rfid_nfc_iso14443a_iso15693_breakoutboard",
+    "what": "OSHWHub page hosting the NFC_BreakoutBoard PCB design referenced from the README"
+   },
+   {
+    "url": "https://www.analog.com/media/en/technical-documentation/data-sheets/AD7276_7277_7278.pdf",
+    "what": "Analog Devices official datasheet confirming AD7276B is a 12-bit, up-to-3MSPS SPI ADC, independently corroborating the README's ADC claim"
+   }
+  ],
+  "research_gaps": [
+   "No documented TX field strength or read range in mm/cm - author reports successful reads but not a measured distance.",
+   "No independent teardown or third-party reproduction found; all technical claims trace back to the single author's own README beyond the ADC datasheet cross-check."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "rfid-hf-repeater-large",
+  "hardware_id": "rfid-hf-repeater-large",
+  "name": "RFID HF Repeater Large",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Midwest Gadgets",
+  "vendor_url": "https://midwestgadgets.com",
+  "product_url": "https://hackerwarehouse.com/product/rfid-hf-repeater-large/",
+  "category": "rfid-nfc",
+  "subcategory": "field-relay-accessory",
+  "status": "available",
+  "released": null,
+  "price_usd": 20,
+  "price_note": "$20.00 at Hacker Warehouse (SKU MWG-V3L). A competing passive booster of the same kind (Lab401's 62mm 'large' range booster) sells for EUR22 (~$24); Midwest Gadgets also sells smaller 28mm versions in 4-packs on Tindie for less per unit, so $20 for a large single card is in line with the rest of the category rather than an outlier.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "It's a passive card-sized resonator - place it between the obstruction and the reader. No configuration, no firmware, no electronics knowledge needed.",
+  "build_effort": "assembled",
+  "build_note": "Fully passive, ready to use out of the box - nothing to assemble or program.",
+  "stealth": "covert",
+  "form_factor": "pocket",
+  "summary": "A passive, unpowered 13.56MHz resonant coil in a 3x3 inch card, sold to relay a reader's HF field through an obstruction (a wallet, a bag, a thin door panel) and recover a few millimeters of lost read range. Hacker Warehouse's own listing quotes an example gain of 5-9mm of extra read distance; a same-technology competing product (Lab401's range booster line) claims up to double the read range on cards/fobs, which gives a sense of how wide the real-world variance is depending on target tag size and reader geometry.",
+  "honest_take": "This is a tuned LC resonator, not an amplifier - it has no battery and no active gain stage, so it cannot make a card readable from meters away or defeat a Faraday-shielded wallet; it only recovers some of the range an obstruction otherwise costs you, and how much (Hacker Warehouse quotes single-digit millimeters, a competing seller quotes up to 2x) depends entirely on how well its resonant frequency and coupling geometry happen to match your reader and card. For genuine long-range HF field manipulation (the kind used in real relay/ghost-and-leech attacks) you want an active repeater built from two coupled reader/emulator stages with real amplification, not a passive card like this one.",
+  "best_for": [
+   "Recovering a few mm of NFC/RFID read range lost to a phone case, wallet or thin door panel",
+   "Physical pentest kits where a slightly thicker badge holder is defeating quick taps"
+  ],
+  "not_for": [
+   "Long-range relay attacks (meters, not millimeters) - needs an active two-stage repeater, not a passive card",
+   "Defeating RFID-blocking (Faraday) wallets or sleeves - a passive resonator cannot punch through shielding"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None. Fully passive resonant LC circuit - no active components.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "hf-repeater",
+     "note": "Passive printed/etched coil tuned to 13.56MHz, no dedicated IC - just a resonant loop antenna and matching network, consistent with how competing sellers describe the same product class ('extremely thin PCBs that have an antenna on each side, both perfectly tuned to 13.56MHz')."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - fully passive, no power source of any kind.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "76 x 76 x 5 (3 x 3 x 0.2 in per vendor listing)",
+   "weight_g": 91,
+   "case": "Laminated card",
+   "notable_physical": [
+    "Card form factor, placed flat between reader and obstruction"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Not a reader itself - a passive field relay placed between an existing reader and a card to recoup lost coupling distance."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No active circuitry of any kind - cannot write to tags."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Passive resonator only, does not emulate a card."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "Tuned exclusively to 13.56MHz; does nothing for 125kHz LF systems."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Not a reader - has no protocol awareness of any kind, MIFARE or otherwise."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Passively boosts coupling distance on one hop; it is not a two-sided active relay/MITM device."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive antenna accessory with no transmitter of its own - it does not generate RF energy, only relays an existing reader's field, so it isn't a separate radio device under most regulatory schemes. Using it to improve your own card's read reliability is unremarkable; using it covertly to improve unauthorized access to a card reader you don't own is the same legal territory as any other unauthorized-access tool in your jurisdiction."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "RFID Field Repeater",
+   "HF Repeater Large"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/rfid-hf-repeater-large/",
+    "what": "product listing: price, dimensions, weight, SKU, example 5-9mm range gain, vendor Midwest Gadgets"
+   },
+   {
+    "url": "https://lab401.com/products/13-56mhz-rfid-range-boosters",
+    "what": "competing product in the same passive-booster category: confirms the general two-sided-tuned-antenna mechanism and gives an independent range-gain figure (up to 2x, +10mm) and price point (EUR10-22) for comparison"
+   },
+   {
+    "url": "https://www.tindie.com/products/hamspiced/1356mhz-nfc-amplifierrepeater-small-v21s/",
+    "what": "Midwest Gadgets' own maker-side Tindie listing for the same product family, corroborating vendor identity and the passive-repeater framing independent of the Hacker Warehouse reseller listing"
+   }
+  ],
+  "research_gaps": [
+   "This is a genuinely single-purpose passive accessory with one job (relay a field a few millimeters) - the short capability list above is a finding about the device, not a research gap.",
+   "No schematic or coil design published by Midwest Gadgets specifically - resonant frequency tuning and Q factor are unverifiable claims from retail listings alone."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "mellon-osdp",
+  "hardware_id": "mellon-osdp",
+  "name": "Mellon",
+  "firmware": "Stock (Bishop Fox)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/BishopFox/mellon",
+  "firmware_note": "A Python proof-of-concept toolkit, not firmware for a fixed device - it runs on a laptop and drives generic USB-to-RS485 adapters.",
+  "vendor": "Bishop Fox",
+  "vendor_url": "https://bishopfox.com",
+  "product_url": "https://github.com/BishopFox/mellon",
+  "category": "rfid-nfc",
+  "subcategory": "osdp-attack-tool",
+  "status": "diy-only",
+  "released": "2023",
+  "price_usd": 15,
+  "price_note": "The code is free; $15 is a rough estimate for one generic USB-to-RS485 adapter. A full active man-in-the-middle setup needs three adapters per the README (roughly $30-45 total) plus a breadboard, not counting the laptop you run the Python on.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You need to understand OSDP wiring (RS485 A/B, controller vs. reader roles), physically tap or insert into the wiring between a door controller and a reader, and interpret raw protocol captures - this is not a point-and-click tool.",
+  "build_effort": "full-diy",
+  "build_note": "No enclosure or kit - wire up to three USB-to-RS485 adapters on a breadboard per Bishop Fox's own setup and run the Python scripts (attack_osdp.py) against the physical RS485 bus, or against the included vulnserver.py to practice without hardware.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "Bishop Fox's reference proof-of-concept toolkit for attacking OSDP (Open Supervised Device Protocol), the RS485 protocol that connects most modern access-control card readers to their door controllers. It implements the five attacks from their 2023 Black Hat/DEF CON research 'Badge of Shame': passive eavesdropping of unencrypted card numbers, forcing an encryption downgrade, extracting the shared key during install mode, capturing keys sent during a key-rotation, and brute-forcing weak/default keys. It's a research tool released alongside the talk, not a commercial product, and it deliberately does not read or clone RFID/NFC cards itself - it attacks the wire between the reader and the controller.",
+  "honest_take": "Mellon is the reference implementation behind real, disclosed OSDP weaknesses - not marketing. The catch is that most of its attacks (downgrade, install-mode key extraction, weak-key brute force) require physical access to the RS485 wire between reader and controller, which usually means opening a reader or getting inside a wiring closet; this is a wired-access-control research tool, not a wireless card-cloning tool like a Proxmark or Flipper - it has zero RFID/NFC card-reading capability of its own, which is easy to assume given the category it's filed under. Independent commentary (IPVM) has since pushed back that the practical exploitation bar is higher than the DEF CON framing implied, since several attacks need sustained physical bus access most attackers won't have. The single most common misconception is treating this as a plug-and-play badge cloner - it attacks the wire, not the card.",
+  "best_for": [
+   "Physical penetration testers validating whether a client's OSDP install actually uses Secure Channel encryption",
+   "Learning OSDP's actual wire-level weaknesses from the tool that demonstrated them",
+   "Practicing against the bundled vulnserver.py without needing real access-control hardware"
+  ],
+  "not_for": [
+   "Wireless/contactless card cloning - this attacks the RS485 wire between reader and controller, not the card-to-reader RF link, and has no NFC/RFID read capability at all",
+   "Anyone without RS485/OSDP wiring knowledge or physical access to the reader-controller cable"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None built-in. Mellon is software; it depends on off-the-shelf USB-to-RS485 adapters (the README names generic units, not a specific chipset) to reach the physical bus.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - runs on a laptop; the RS485 adapters are USB-bus powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (to RS485 adapters)",
+    "RS485 (to the OSDP bus)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "No dedicated hardware - a breadboard of up to three generic USB-RS485 adapters wired to the OSDP bus for full MITM"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "Speaks RS485/OSDP directly over the wire via USB-to-RS485 adapters - not UART in the microcontroller-debug sense, but the same serial family; no capability key exists for RS485/OSDP specifically."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Pure Python; attack_osdp.py implements the attacks and vulnserver.py provides an intentionally-vulnerable OSDP controller for offline testing."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Despite being filed under RFID/NFC (the closest existing category), Mellon has no card-reading hardware or code at all - it attacks the OSDP wire between an existing reader and controller, not the card itself."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No card-write capability."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No card-emulation capability."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware or code - not applicable to a wire-protocol attack tool."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "Not applicable."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "Not applicable."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Does not target card crypto at all - OSDP sits between the reader and controller, downstream of whatever card technology is in use."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not a card relay; Mellon's 'MITM' is on the RS485 bus, not the RF link between card and reader."
+   },
+   "magspoof": {
+    "v": "no",
+    "note": "No magnetic-stripe capability."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a laptop running the Python scripts; the USB-RS485 adapters have no independent logic of their own."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Command-line Python scripts only, no GUI or web dashboard."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Research code on GitHub, not a maintained product with an app ecosystem."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage - captured OSDP traffic is only as persistent as whatever the operator's laptop does with stdout/logs."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "The code itself is a legal research tool, published openly by a security firm alongside a conference talk. Actually wiring into an OSDP bus you don't own or control - to eavesdrop on card numbers, downgrade encryption, or extract keys from someone else's access-control system - is unauthorized access to a security system in most jurisdictions, independent of how the eavesdropping is technically done. Only use it against systems you own or have written authorization to test."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2023-08",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Mellon OSDP Attack Tool",
+   "Badge of Shame toolkit"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/BishopFox/mellon",
+    "what": "README: attack list, USB-RS485 adapter count for full MITM, vulnserver.py test harness, license"
+   },
+   {
+    "url": "https://bishopfox.com/blog/breaking-into-secure-facilities-with-osdp",
+    "what": "Bishop Fox 'Badge of Shame' research writeup naming the five OSDP attacks Mellon implements"
+   },
+   {
+    "url": "https://media.defcon.org/DEF%20CON%2031/DEF%20CON%2031%20presentations/Dan%20Petro%20David%20Vargas%20-%20Badge%20of%20Shame%20Breaking%20into%20Secure%20Facilities%20with%20OSDP.pdf",
+    "what": "DEF CON 31 slide deck detailing the attacks and Mellon's role as the PoC tool"
+   },
+   {
+    "url": "https://ipvm.com/reports/osdp-badge",
+    "what": "independent industry analysis pushing back on how easily the disclosed attacks translate into real-world exploitation - used to balance the vendor/researcher framing in honest_take"
+   }
+  ],
+  "research_gaps": [
+   "No specific USB-to-RS485 adapter chipset (e.g. FTDI vs CH340) is named as required or recommended in the README.",
+   "No capability key exists for wired reader-to-controller (RS485/OSDP) bus attacks specifically - 'uart' is used here as the closest physical-layer analog; the actual attack surface (encryption downgrade, install-mode key extraction, weak-key brute force) is described in summary/honest_take rather than any existing key."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "rfidetector",
+  "hardware_id": "rfidetector",
+  "name": "RFIDetector",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/wh201906/RFIDetector",
+  "firmware_note": null,
+  "vendor": "wh201906 (independent developer)",
+  "vendor_url": "https://github.com/wh201906",
+  "product_url": "https://github.com/wh201906/RFIDetector",
+  "category": "rfid-nfc",
+  "subcategory": "field-detector",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 15,
+  "price_note": "No retail listing exists anywhere - $15 is an unverified low estimate for a credit-card-sized PCB with two coils, a handful of Schottky diodes and LEDs. Treat this figure as a guess, not a sourced price.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Small SMD passive/diode design - buildable by anyone comfortable hand-soldering fine-pitch parts, but you're fabricating the PCB yourself from KiCad files with no vendor to buy it assembled.",
+  "build_effort": "soldering",
+  "build_note": "CERN-OHL-S licensed KiCad hardware (schematic + PCB, revision history rev0.1 through rev0.22) with no assembled option - order the boards yourself and hand-solder the parts.",
+  "stealth": "covert",
+  "form_factor": "pocket",
+  "summary": "A small open-hardware PCB (CERN-OHL-S licensed) that indicates whether it is sitting in an active LF (125kHz) or HF (13.56MHz) RFID reader field. Direct inspection of the rev0.22 KiCad schematic shows it is a purely passive/analogue design - two tuned coils, nine 1N5819WS Schottky diodes for envelope detection on each band, and three status LEDs, with solder-jumper pads to select modes - not a microcontroller-based device.",
+  "honest_take": "This is a passive field-presence indicator, not a reader or a security scanner: it tells you 'something nearby is generating an LF or HF field,' not what protocol, what data, or whose reader it is. It has no microcontroller, no logging, and no way to distinguish a legitimate access-control reader from a skimmer or from your own Flipper Zero sitting in your pocket. With 3 GitHub stars and a single contributor it is effectively a personal project shared as open hardware, not a maintained product - expect to debug your own PCB order.",
+  "best_for": [
+   "Quickly confirming a suspected reader/skimmer is actually emitting an LF or HF field before further investigation",
+   "Learning passive envelope-detection RFID sensing circuit design from real KiCad source"
+  ],
+  "not_for": [
+   "Identifying what protocol or data a reader is using - it only distinguishes LF vs HF presence",
+   "Any kind of card reading, cloning, or logging - it has no data-capture capability at all"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None. Schematic inspection (rev0.22) shows a purely discrete/analogue circuit: two tuned coils, nine 1N5819WS Schottky diodes for envelope detection, ~10uF caps, and solder-jumper mode-select pads - no microcontroller anywhere on the board.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "lf-125khz",
+     "note": "Passive tuned coil + diode envelope detector, LED-only indication, no data decode."
+    },
+    {
+     "ic": null,
+     "role": "hf-1356",
+     "note": "Passive tuned coil + diode envelope detector, LED-only indication, no data decode."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Not documented; no battery holder visible in the schematic bill of materials found. Likely coin-cell or field-powered - unconfirmed.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [],
+   "gpio": null,
+   "sensors": [
+    "LF/HF field-presence (via envelope-detector diodes, LED indication only)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Three status LEDs",
+    "Solder-jumper pads for mode selection",
+    "Two separate tuned antenna coils (LF and HF) on one PCB"
+   ]
+  },
+  "capabilities": {
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "Detects field presence only via diode envelope detection and an LED - does not decode or display tag data."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "Fully passive detector; no write capability of any kind."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "No active circuitry - cannot emulate a tag."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Same - field-presence indication only, no data decode."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "Fully passive; no write capability."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No active circuitry - cannot emulate a tag."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No protocol awareness at all - it only detects the presence of a carrier field."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "Detects field presence only; has no protocol decode of any kind, ISO15693 included."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Same - no protocol decode capability."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully self-contained field-presence indicator - no host PC or app needed, just its own LEDs."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No microcontroller and no data interface - nothing to script against."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage; a detection event is only ever an LED lighting up in real time."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion software of any kind."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive receive-only indicator with no transmitter and no data capture. Owning or building one raises no meaningful legal concern in most jurisdictions; it does not read, store, or transmit any card data."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "sparse",
+   "last_release": "2024-03",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/wh201906/RFIDetector",
+    "what": "repo README (purpose statement, CERN-OHL-S-2.0 license) and file tree (hardware/rev0.1-0.22, simulation, tuner)"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/wh201906/RFIDetector/master/hardware/rev0.22/RFIDetector.kicad_sch",
+    "what": "KiCad schematic (rev0.22) inspected directly: confirms 1N5819WS diode envelope detectors, LEDs, solder-jumper mode select, and absence of any MCU"
+   },
+   {
+    "url": "https://api.github.com/repos/wh201906/RFIDetector",
+    "what": "GitHub API metadata: 3 stars, 1 fork, CERN-OHL-S-2.0 license, last push 2024-03-22, confirming the project's low-traction/dormant status"
+   }
+  ],
+  "research_gaps": [
+   "This device is genuinely single-purpose (field presence, LF vs HF only) - the near-total 'no' capability list above is a finding about a deliberately minimal passive circuit, verified directly against its schematic, not a gap in research effort.",
+   "No documented detection range or sensitivity threshold.",
+   "No confirmed real-world sale price - the $15 figure is an unverified estimate, not a vendor quote.",
+   "Could not determine intended power source (battery type, if any) from available files."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "simple-rfid",
+  "hardware_id": "simple-rfid",
+  "name": "simple_rfid",
+  "firmware": "Stock (zosko)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/zosko/simple_rfid",
+  "firmware_note": "Arduino sketch is the entire firmware; no alternate builds exist.",
+  "vendor": "zosko (independent developer)",
+  "vendor_url": "https://github.com/zosko",
+  "product_url": "https://github.com/zosko/simple_rfid",
+  "category": "rfid-nfc",
+  "subcategory": "lf-125khz-reader-diy",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 10,
+  "price_note": "Rough BOM estimate: an Arduino Nano clone (~$3-5) plus an RDM6300 125kHz reader module (~$3-5). PCB manufacturing through the linked PCBWay project adds a few dollars per board in small quantities on top of that.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Off-the-shelf Arduino Nano + RDM6300 module wired per the schematic and flashed with the provided sketch - straightforward for anyone who has done basic Arduino projects, no RF design of your own required.",
+  "build_effort": "soldering",
+  "build_note": "Schematic and PCB layout provided (with a PCBWay fabrication link); solder the Nano and RDM6300 module to the board and flash the Arduino sketch from the firmware folder.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "A DIY 125kHz LF RFID reader/cloner/emulator built from an Arduino Nano and an off-the-shelf RDM6300 reader module, with open schematic, PCB layout and firmware. It targets the same basic EM4100/T5577-class tags as any generic 125kHz copier - the RDM6300 module does the actual RF demodulation, the Arduino handles UID capture, storage and re-transmission.",
+  "honest_take": "The README describes this in one line as an 'emulator/cloner/reader' with no further technical detail on how writing or emulation is actually implemented - and that claim deserves real skepticism, because the RDM6300's own datasheet documents it purely as a 125kHz receive module (UART UID output only), not a writer. Genuine T5577 rewriting normally needs either a stronger dedicated write driver or a documented trick to repurpose the RDM6300's own coil in reverse, and this project's one-paragraph README doesn't say which it uses. The chip underneath is the same cheap part found in countless sub-$10 generic 125kHz copier kits already on the market - this project's real value is that it's open source and buildable from raw parts, not that it does anything those kits don't. It only covers 125kHz LF (EM4100/T5577-class) tags - it has no HF/13.56MHz capability at all, so it can't touch MIFARE or any modern access card.",
+  "best_for": [
+   "Learning how a 125kHz reader/cloner actually works by building one from an Arduino and a commodity reader module",
+   "Cheap DIY alternative to a sealed generic 125kHz copier for basic EM4100/T5577 cloning"
+  ],
+  "not_for": [
+   "Any 13.56MHz/HF card (MIFARE, DESFire, NFC phones) - this is LF-only",
+   "Rolling-code or encrypted credentials - RDM6300-based readers only handle plain fixed-ID LF tags",
+   "Anyone who needs confirmed, documented write/clone behaviour - the README does not explain the write path and the underlying module is natively read-only"
+  ],
+  "hardware": {
+   "mcu_primary": "ATmega328P (Arduino Nano)",
+   "mcu_primary_note": "Standard Arduino Nano board handling UID storage and control logic.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "RDM6300",
+     "role": "lf-125khz",
+     "note": "Off-the-shelf 125kHz reader module. Per its own datasheet: EM4001/EM4100/EM4200/TK4100-compatible, 9600 baud TTL UART output, 20-50mm read distance, and documented as a reader, not a writer - the project's 'writer/emulator' claims are not explained by this module's own spec sheet."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Not specified - USB or external 5V supply typical for this class of Arduino+RDM6300 build.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Arduino onboard EEPROM/flash for storing captured UIDs (typical for this class of project; not explicitly detailed in available README excerpt)",
+   "connectivity": [
+    "USB (Arduino Nano programming/serial)"
+   ],
+   "gpio": "Arduino Nano digital/analog pins, mostly consumed by the RDM6300 UART link",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "RDM6300 module with its own LF antenna coil (46x33x3mm loop per datasheet)",
+    "PCB and schematic files, PCBWay fabrication link"
+   ]
+  },
+  "capabilities": {
+   "lf_125khz_read": {
+    "v": "yes",
+    "note": "Via the RDM6300 module; reads standard EM4001/EM4100/EM4200/TK4100-class 125kHz tags per the module's own datasheet."
+   },
+   "lf_125khz_write": {
+    "v": "claimed",
+    "note": "README calls the project a 'cloner' implying write-capable target tags (e.g. T5577), but the RDM6300's own datasheet describes it as a read-only receiver module - the write mechanism is not documented anywhere in the repo, so this is an unverified claim, not a confirmed feature."
+   },
+   "lf_125khz_emulate": {
+    "v": "claimed",
+    "note": "README calls it an 'emulator' but does not document the emulation circuit or driving mechanism; unverifiable from available source."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No HF hardware present - RDM6300 is LF-only, and no 13.56MHz front end is included in this design."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No HF hardware present."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No HF hardware present."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "MIFARE Classic is an HF/13.56MHz technology; this device has no HF hardware."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "HF-only protocol; not applicable to this LF-only design."
+   },
+   "felica": {
+    "v": "no",
+    "note": "HF-only protocol; not applicable."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "HF-only protocol; not applicable."
+   },
+   "emv_read": {
+    "v": "no",
+    "note": "HF-only protocol; not applicable."
+   },
+   "magspoof": {
+    "v": "no",
+    "note": "No magnetic-stripe hardware in this design."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Single reader/cloner design, no relay capability."
+   },
+   "nfc_type4_ndef": {
+    "v": "no",
+    "note": "HF/NDEF concept; not applicable to an LF-only reader."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card in the bill of materials - Arduino Nano and RDM6300 module only."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app; interaction is via the Arduino's own serial/UART link."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface documented."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "A DIY LF RFID reader/cloner is legal to own and build in most jurisdictions - it's functionally similar to any generic 125kHz copier already sold openly. Using it to read or clone an access card you don't own or aren't authorized to duplicate is a separate matter, governed by local unauthorized-access and fraud law rather than by anything specific to the hardware."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": "2025-01",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Simple RFID Emulator / Cloner"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/zosko/simple_rfid",
+    "what": "repo description ('Simple RFID Emulator / Cloner'), file structure (Electronic/, firmware/), PCBWay link, 32 stars, last push 2025-01-09"
+   },
+   {
+    "url": "https://www.handsontec.com/dataspecs/module/RDM6300.pdf",
+    "what": "RDM6300 manufacturer datasheet: 9600 baud UART output, 20-50mm read distance, EM4001/4100/4200/TK4100 compatibility, and that the module is documented as a reader rather than a writer - used to flag the 'cloner' claim as unverified"
+   },
+   {
+    "url": "https://api.github.com/repos/zosko/simple_rfid",
+    "what": "GitHub API metadata confirming star count, push date and repository activity level independent of the README's own framing"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for the distinction between 'basic 125kHz UID passthrough' and 'true T5577 rewrite' - noting it here since write/emulate claims could not be independently verified beyond the project's own one-line description, and the underlying RDM6300 module's datasheet does not document a write path at all.",
+   "Battery/power arrangement and onboard storage method not confirmed from available README excerpts."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "hiletgo-pn532-kit",
+  "hardware_id": "hiletgo-pn532-kit",
+  "name": "HiLetgo PN532 NFC RFID Module Kit",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "HiLetgo",
+  "vendor_url": null,
+  "product_url": "https://www.amazon.com/s?k=PN532+NFC+RFID+module+reader+writer",
+  "category": "rfid-nfc",
+  "subcategory": "hf-reader-module",
+  "status": "available",
+  "released": null,
+  "price_usd": 8.99,
+  "price_note": "$8.99 is a representative Amazon marketplace price for a PN532 breakout of this class; HiLetgo and near-identical clone boards from other brands (Elechouse, generic) commonly sell in the $8-15 range depending on antenna size and included accessories.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "A bare breakout board - you wire it to a microcontroller or SBC over I2C/SPI/UART and run libnfc or a vendor SDK yourself; no standalone app.",
+  "build_effort": "assembly",
+  "build_note": "No soldering typically required beyond header pins (often pre-soldered); wire to a Raspberry Pi, Arduino or similar host and install libnfc or an equivalent driver.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A breakout board for NXP's PN532, the NFC controller chip found in the overwhelming majority of phones and consumer NFC readers, exposing I2C, SPI and UART (HSU) interfaces. It reads and writes NFC Type 1-4 tags and MIFARE Classic/Ultralight, and can do ISO18092 peer-to-peer and limited card emulation - it is the standard low-cost building block behind countless libnfc, Arduino and Raspberry Pi RFID projects.",
+  "honest_take": "This is genuinely the same silicon inside a large share of commercial NFC readers, not a toy chip - the PN532's read/write/P2P feature set is real, and NXP's own PN532 User Manual (UM0701-02) confirms full FeliCa support. But three things are commonly assumed and wrong: it does not do ISO15693 (a different chip family, e.g. ST25R3916, handles that); its 'card emulation' mode does not implement the MIFARE Classic authentication sequence as a target, so it can present static data but not fully impersonate an authenticating card; and DESFire (7-byte UID) detection is inconsistent across PN532 board variants - libnfc bug reports show Adafruit's version reliably sees DESFire/Ultralight/Jewel tags while cheaper Elechouse-style clones (which HiLetgo's board resembles) often see only 4-byte-UID MIFARE Classic cards. If you want a point-and-use device rather than a module to wire up yourself, a Flipper Zero or ACR122U is the better buy; if you're building your own project on a Pi or microcontroller, this is the standard part to reach for, just budget time for clone-board quirks.",
+  "best_for": [
+   "DIY NFC projects on Arduino/Raspberry Pi/ESP32 via libnfc or vendor libraries",
+   "Reading/writing NDEF, MIFARE Classic/Ultralight tags on a budget",
+   "Peer-to-peer NFC experiments (ISO18092)"
+  ],
+  "not_for": [
+   "Standalone use without a host microcontroller/SBC and your own code",
+   "MIFARE Classic key-recovery attacks - the PN532 alone doesn't implement nested/darkside/hardnested attacks; you'd need to build that on top in software",
+   "ISO15693 tags - the PN532 does not support that protocol family at all",
+   "Reliable production use without budgeting time for clone-board I2C/antenna quality issues"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None onboard beyond the PN532 itself, which contains its own internal 80C51 microcontroller core (per NXP's PN532 datasheet) but is not separately user-programmable on these breakouts.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "PN532",
+     "role": "nfc",
+     "note": "NXP's NFC controller: ISO14443A (MIFARE Classic/Ultralight), ISO14443B, FeliCa (up to 424kbit/s per NXP's UM0701-02 manual), and ISO18092 peer-to-peer, 13.56MHz, reader/writer and limited card-emulation modes."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - powered from the host (3.3-5V depending on board variant).",
+   "charging": null,
+   "pmic": null,
+   "storage": "None onboard",
+   "connectivity": [
+    "I2C",
+    "SPI",
+    "UART (HSU)"
+   ],
+   "gpio": "Standard 0.1in header pins for interface selection jumpers and IRQ/RSTPDN lines",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Onboard tuned stripline PCB antenna",
+    "Interface-select jumpers/switch for I2C/SPI/UART mode"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "Via PN532 hardware, reads ISO14443A/MIFARE and FeliCa cards; requires host code (libnfc, Adafruit PN532 library, etc.)."
+   },
+   "hf_1356_write": {
+    "v": "yes",
+    "note": "Standard PN532 write support for MIFARE Classic/Ultralight and NDEF-formatted tags via libnfc/vendor libraries."
+   },
+   "hf_1356_emulate": {
+    "v": "partial",
+    "note": "PN532 hardware supports a target/card-emulation mode (TgInitAsTarget), but per NXP's own UM0701-02 manual this does not implement the MIFARE Classic authentication sequence as a target - it can present static NDEF-style responses, not a full authenticating card impersonation."
+   },
+   "nfc_type4_ndef": {
+    "v": "yes",
+    "note": "NDEF read/write supported via libnfc/Adafruit-style libraries."
+   },
+   "felica": {
+    "v": "yes",
+    "note": "PN532 natively supports FeliCa at up to 424kbit/s per the official NXP user manual."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "The PN532 chip does not implement key-recovery attacks itself; that logic would have to be built in host software on top of it, unlike a Proxmark3 or Chameleon."
+   },
+   "mifare_desfire": {
+    "v": "partial",
+    "note": "DESFire (7-byte UID) support is chip-capable but reported inconsistent in practice: libnfc issue reports show it depends heavily on the specific board/antenna implementation - some PN532 breakouts (e.g. Adafruit's) reliably detect DESFire/Ultralight/Jewel, cheaper clone boards of the type HiLetgo sells often only reliably see 4-byte-UID MIFARE Classic cards."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "The PN532 does not support ISO15693 - that protocol family needs a different chip (e.g. ST25R3916). A common and reasonable buyer assumption to correct."
+   },
+   "emv_read": {
+    "v": "partial",
+    "note": "The PN532 can exchange ISO14443-4/APDU frames with an EMV contactless card at the transport level via libnfc, but has no built-in EMV application logic - reading meaningful payment data requires you to implement the EMV command set yourself."
+   },
+   "magspoof": {
+    "v": "no",
+    "note": "No magnetic-stripe hardware - PN532 is a 13.56MHz NFC controller only."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not designed or documented for two-sided relay/MITM use; that's a Proxmark3/Chameleon use case."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "PN532 module has no 125kHz LF hardware at all."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs a host microcontroller/SBC and your own code - it is a bare module, not a standalone tool."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No vendor app ecosystem; relies on community libraries (libnfc, Adafruit CircuitPython/Arduino libs)."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No interface of its own - whatever UI exists is whatever you build on the host."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Well-supported by libnfc (Linux/Mac/Windows via FTDI-style serial) and numerous Arduino/Python/CircuitPython libraries."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A generic, widely-sold NFC reader/writer module identical in function to the chip inside most phones and payment terminals - owning and using one to read/write tags you have rights to is unremarkable almost everywhere. Reading or duplicating access credentials or payment cards you don't own or lack authorization for is the legal risk, and depends on local unauthorized-access and fraud law, not on the hardware itself."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No - relies on libnfc and community libraries rather than a vendor app store",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "PN532 NFC/RFID breakout",
+   "PN532 V3 kit"
+  ],
+  "sources": [
+   {
+    "url": "https://www.nxp.com/docs/en/user-guide/141520.pdf",
+    "what": "NXP official PN532 User Manual (UM0701-02): confirms FeliCa support up to 424kbit/s and the card-emulation-mode limitation (TgInitAsTarget does not handle the MIFARE Classic authentication sequence as a target)"
+   },
+   {
+    "url": "https://learn.adafruit.com/adafruit-pn532-rfid-nfc/overview",
+    "what": "Adafruit's own PN532 breakout documentation, used as independent corroboration of PN532 chip capabilities (protocols, interfaces, libnfc support) since HiLetgo is a rebadge of the same reference design"
+   },
+   {
+    "url": "https://github.com/nfc-tools/libnfc/issues/352",
+    "what": "libnfc community bug report documenting inconsistent DESFire/7-byte-UID detection across different PN532 board implementations (Adafruit vs. Elechouse-style clones)"
+   },
+   {
+    "url": "https://nfc-tools.github.io/resources/chips/pn53x/",
+    "what": "community technical reference page on the PN53x chip family's supported protocols, used to cross-check the ISO15693 absence"
+   },
+   {
+    "url": "https://www.amazon.com/s?k=PN532+NFC+RFID+module+reader+writer",
+    "what": "representative marketplace listing/pricing for HiLetgo-branded PN532 V3 kit"
+   }
+  ],
+  "research_gaps": [
+   "HiLetgo does not maintain its own spec page; exact PCB antenna size and read-range figures are taken from the general PN532 reference design (via Adafruit) rather than a HiLetgo-specific datasheet.",
+   "Could not confirm whether the 'V3 Kit' branding includes any bundled accessories (tags, cables) beyond the bare module.",
+   "Could not directly test HiLetgo's specific board for the DESFire-detection inconsistency documented for 'Elechouse-style' clones in general - noted as a category-level risk, not a confirmed HiLetgo-specific defect."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "macobox",
+  "hardware_id": "macobox",
+  "name": "MACOBOX",
+  "firmware": "Stock (Mindstorm Security)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/mindstormsecurity/MACOBOX",
+  "firmware_note": "Docker Compose stack running in kiosk mode on an Orange Pi Zero3; open-sourced on GitHub with 19 stars and 2 commits as of research date, i.e. very early public-repo activity relative to the product's price and marketing.",
+  "vendor": "Mindstorm Security",
+  "vendor_url": "https://mindstormsecurity.com",
+  "product_url": "https://lab401.com/products/macobox-hardware-pentest-platform/",
+  "category": "hardware-debug",
+  "subcategory": "integrated-pentest-platform",
+  "status": "available",
+  "released": null,
+  "price_usd": 11000,
+  "price_note": "Lab401 lists it at $11,000 USD. The vendor's own EUR9,700 price for the full 12-month-support bundle converts close to that figure, so treat $11,000 as the all-in package price (hardware + a year of support), not a bare-hardware price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Built for professional hardware pentest engagements - rapid multi-interface firmware extraction (UART/SPI/JTAG/I2C/SWD) assumes you already know how to identify and wire test points on unknown PCBs.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a complete kit: the MACOBOX unit itself plus a Sensepeek PCBite probe kit, an AllSocket eMMC reader, a multimeter, SOP flash sockets, SPI clips, connectors, a precision screwdriver set, jumper kit and portable carrying plate.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "A self-contained hardware-pentest lab-in-a-box from Mindstorm Security: an Orange Pi Zero3 (Cortex-A53, 1.5GHz, 4GB RAM) single-board Linux computer with a touchscreen, running a Dockerized web interface in kiosk mode, bundled with a full physical toolkit (PCBite probes, eMMC reader, SOP flash sockets, SPI clips) for connecting to and dumping firmware from UART, SPI, JTAG, I2C and SWD interfaces on unknown target boards. Marketing describes an integrated 'AI' for log analysis and component photo identification; the project's own open-source GitHub repo describes this more modestly as integration with third-party firmware-analysis tools rather than a proprietary in-house model.",
+  "honest_take": "Two things to know before paying $11k. First, this is priced and positioned as a subscription service wrapped around hardware, not a one-time tool purchase - the headline price buys you a year of engineering support, hardware replacement and a cloud analysis pipeline, and it's unclear what the device is worth once that year lapses without renewing. Second, the 'integrated AI' marketing (demoed across several YouTube videos) is, per Mindstorm's own GitHub README, actually 'integration with third-party firmware analysis tools' running on a $20-class Orange Pi Zero3 SBC - not a bespoke model, and the open-source companion repo has only 19 stars and 2 commits, suggesting the software side is much less mature than the polished demo videos imply. Every physical interface it exposes (UART, SPI, JTAG, I2C, SWD) is also covered by tools costing a tiny fraction of $11k - a Tigard, Bus Pirate 5, or JTAGulator plus a laptop covers the same protocols for well under $200 combined, with a far larger open community behind them. The case for MACOBOX is workflow speed, a pre-assembled probe kit, and vendor support in a professional engagement where billable hours matter more than hardware cost, not raw capability you can't get elsewhere.",
+  "best_for": [
+   "Professional hardware pentest teams who bill by the hour and want a single supported kit instead of assembling and maintaining a toolbox of point tools",
+   "Engagements needing fast FCC-ID-driven target identification and a managed cloud vulnerability pipeline"
+  ],
+  "not_for": [
+   "Hobbyists or anyone price-sensitive - a Tigard/Bus Pirate/JTAGulator combination covers the same protocols for a fraction of the cost",
+   "Anyone who doesn't want an ongoing vendor support relationship - the price bundles 12 months of subscription-style service",
+   "Anyone expecting a proprietary in-house AI model - the open-source repo describes third-party tool integration, not a bespoke analysis engine"
+  ],
+  "hardware": {
+   "mcu_primary": "Orange Pi Zero3 SBC (Allwinner H618, Cortex-A53 quad-core @1.5GHz)",
+   "mcu_primary_note": "Confirmed via the project's own GitHub README, which flags the SBC choice as 'subject to change in future versions.' 4GB RAM, 256GB onboard storage per the vendor listing.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "Touchscreen",
+    "size_in": null,
+    "resolution": null,
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": 10000,
+   "battery_note": "Vendor-listed as '10mAh internal battery' - almost certainly a typo for 10,000mAh given the form factor; flagged as an unverified vendor figure either way.",
+   "charging": "Included power supply",
+   "pmic": null,
+   "storage": "256GB onboard",
+   "connectivity": [
+    "4x USB",
+    "LAN (Ethernet)",
+    "Wi-Fi",
+    "Bluetooth",
+    "UART",
+    "SPI",
+    "I2C",
+    "JTAG",
+    "SWD"
+   ],
+   "gpio": "Multiple logic-level-selectable I/O (1.8V/2.5V/3.3V/5V) across the bundled probing accessories",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "220 x 180 x 50",
+   "weight_g": null,
+   "case": "3D-printed portable enclosure with carrying plate",
+   "notable_physical": [
+    "Bundled Sensepeek PCBite probe kit",
+    "AllSocket eMMC reader",
+    "SOP flash sockets and SPI clips",
+    "Precision screwdriver and jumper kit",
+    "Custom internal PCBs handling battery/USB routing"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "One of the five natively supported interfaces per vendor listing and GitHub README."
+   },
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Supported directly, plus bundled SOP flash sockets and SPI clips for chip-off-style dumping without desoldering."
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "Listed as a supported interface."
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "Both JTAG and SWD explicitly listed as supported interfaces."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not included in the base kit - the vendor lists logic analysers as a possible future modular addon board, not a current feature."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection/glitching capability mentioned anywhere in vendor materials or the GitHub repo."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Confirmed via GitHub: a Dockerized web dashboard running in kiosk mode on the unit's own touchscreen, not just a cloud portal."
+   },
+   "scriptable": {
+    "v": "claimed",
+    "note": "Runs a Linux/Docker stack on an Orange Pi Zero3, which strongly implies scripting access, but no documented API or CLI was found in the available repo excerpt."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app-store ecosystem; software is a fixed Docker Compose stack plus vendor cloud service."
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "256GB onboard storage per vendor spec, used to hold dumped firmware and session data."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Battery-powered, touchscreen-equipped Linux box designed to be carried and used in the field without a separate laptop."
+   },
+   "gps": {
+    "v": "no",
+    "note": "Not listed among the unit's connectivity (Wi-Fi/BLE/LAN/USB only)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A professional diagnostic/pentest platform sold openly to security firms - owning and using it on hardware you own or are contractually authorized to test carries no special legal exposure beyond ordinary hardware-pentest engagement terms. Dumping firmware from a device you don't own or lack authorization to test is the same legal issue it would be with any debug tool."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No - proprietary cloud analysis platform, not a public app store",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "MACOBOX Hardware Pentest Platform"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/macobox-hardware-pentest-platform/",
+    "what": "full product listing: interfaces (UART/SPI/JTAG/I2C/SWD), kit contents, Cortex-A53/4GB/256GB specs, EUR9,700 12-month support bundle pricing, Mindstorm Security as manufacturer"
+   },
+   {
+    "url": "https://github.com/mindstormsecurity/MACOBOX",
+    "what": "official open-source companion repo: reveals Orange Pi Zero3 SBC choice, Docker Compose kiosk deployment, 'integrates with third-party firmware analysis tools' language (vs. marketing's 'AI'), 19 stars/2 commits at research date"
+   },
+   {
+    "url": "https://mindstormsecurity.com/product/macobox/",
+    "what": "manufacturer's own product page, corroborating the Lab401 reseller listing"
+   },
+   {
+    "url": "https://www.youtube.com/watch?v=GHLmtduVlUE",
+    "what": "Lab401 demo video ('Discover the hardware pentesting revolution: The MACOBOX') - vendor marketing, used only to confirm the specific AI/photo-ID feature claims being made publicly, cited as a last-resort marketing source per the schema's source-priority guidance"
+   }
+  ],
+  "research_gaps": [
+   "Exact Allwinner H618 vs. other Orange Pi Zero3 SKU variant not confirmed beyond the GitHub README's general SBC description.",
+   "Could not confirm whether the device functions at all (or in a reduced mode) after the bundled 12-month support period lapses without renewal.",
+   "Battery capacity figure ('10mAh') is almost certainly a vendor typo; true capacity unconfirmed.",
+   "Could not determine which specific third-party firmware-analysis tools are integrated (the README references this generically)."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "chipshover",
+  "hardware_id": "chipshover",
+  "name": "ChipSHOVER",
+  "firmware": "Stock (NewAE, open source)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/newaetech/ChipShover",
+  "firmware_note": "Marlin2-based stepper-control firmware, open source; the same repo also documents a lower-precision DIY build path NewAE chose not to sell as a product.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/chipshover",
+  "category": "hardware-debug",
+  "subcategory": "positioning-stage",
+  "status": "available",
+  "released": "2024",
+  "price_usd": 10000,
+  "price_note": "$10,000 direct from NewAE for the assembled 'PS1' kit (medium-resolution stage + ChipShover-One controller + power supply + accessories), quoted with a 2-week lead time. NewAE's own open-source repo documents a much cheaper low-resolution DIY path: a ~$500 off-the-shelf CNC frame plus an ~$180 open-source Archim2 controller board (~$680 total), which NewAE explicitly says it does not sell as a product because the precision/cost tradeoff isn't 'worth carrying' for them.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "A precision robotics platform for automated EM fault-injection mapping across a die surface - assumes you already understand fault injection and side-channel methodology; the ChipSHOVER only automates the physical positioning.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled as the PS1 kit; controlled via onboard LCD for manual jogging or a Python API for scripted scans. NewAE's GitHub repo also documents a self-build low-resolution alternative for those willing to assemble a CNC frame and a $180 Archim2 controller themselves.",
+  "stealth": "overt",
+  "form_factor": "desktop",
+  "summary": "A motorized 3-axis XYZ positioning stage from NewAE built to automate scanning an EM fault-injection probe or side-channel sensor across a chip's surface - something normally done by hand with a manual micromanipulator. The commercial PS1 kit uses a medium-resolution stage (156.25nm step size, ~3um backlash/repeatability) with NewAE's own ChipShover-One controller board; the open-source ChipShover GitHub repo also documents a cheaper, lower-precision DIY variant (781.25nm step, 50-100um backlash) built around a widely-available ~$500 CNC frame and an open ~$180 Archim2 controller, which NewAE deliberately doesn't sell as a finished product. It includes a direct mounting adapter for NewAE's own ChipSHOUTER EM fault-injection tool, and is controlled either from its onboard LCD or scripted over USB via Python.",
+  "honest_take": "Despite the name similarity to the ChipSHOUTER, this is a completely different product - the ChipSHOUTER is the EM pulse generator itself, the ChipSHOVER is the robot arm that moves it (or any other probe) around a chip automatically. It does not inject faults or do side-channel capture on its own; you still need a ChipSHOUTER, an EM probe, or other sensing hardware to actually do the work, this just automates the tedious manual XY-scanning that fault-injection research otherwise requires. The bigger finding: NewAE open-sourced the whole design, including a DIY low-resolution build path (a common CNC frame plus an ~$180 open controller, roughly $680 all-in) that they explicitly chose not to productize because the precision is ~5x worse (781nm vs 156nm steps) and backlash is far higher (50-100um vs 3um). If your fault-injection work can tolerate that lower precision, building the DIY variant from NewAE's own open repo saves roughly $9,300 over the $10k PS1 kit - a genuinely rare case of a vendor publishing the cheap path around their own flagship product.",
+  "best_for": [
+   "Automating EM fault-injection surface scans across a die that would otherwise require hours of manual micromanipulator repositioning",
+   "Research labs running repeatable, scripted EMFI or side-channel sweeps who need the PS1 kit's sub-micron repeatability",
+   "Budget-conscious labs willing to self-build the ~$680 low-resolution DIY variant from NewAE's own open-source repo if 50-100um backlash is tolerable"
+  ],
+  "not_for": [
+   "Anyone without a ChipSHOUTER or other EM/side-channel probe already - the ChipSHOVER only positions a probe, it doesn't include one",
+   "One-off fault injection on a single known location - a manual micromanipulator is far cheaper for that",
+   "Buyers who didn't check the open-source repo first and might have built the ~$680 DIY version instead of the $10k kit"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "ChipShover-One controller board (NewAE's own design): 3 endstops per axis, swappable stepper drivers, USB/Ethernet API, ~2.4A drive current, E-stop button, LCD interface. The DIY path in the same repo instead uses an open-source Archim2 controller board (~$180, ~1um resolution, mechanical endstop-only homing).",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "LCD control panel",
+    "size_in": null,
+    "resolution": null,
+    "color": null,
+    "touch": null
+   },
+   "battery_mah": null,
+   "battery_note": "Mains/bench-powered; not battery operated.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (Python control)",
+    "Ethernet (ChipShover-One controller API)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none built-in - designed to carry external EM/side-channel probes"
+   ],
+   "dimensions_mm": "450 x 450 x 400 (default configuration)",
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Medium-resolution PS1 stage: 5cm travel per axis, 156.25nm step size, ~3um backlash/repeatability",
+    "Low-resolution DIY alternative (documented, not sold): ~$500 CNC frame, 781.25nm step size, 50-100um backlash",
+    "Adapter for mounting a ChipSHOUTER EMFI probe",
+    "Onboard LCD for manual jog control"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "addon",
+    "note": "The ChipSHOVER itself only positions a probe; EM fault injection requires a separately-purchased ChipSHOUTER (or equivalent) mounted on it via the included adapter."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Python API over USB (or Ethernet via the ChipShover-One controller) for automated XYZ scan control, alongside onboard LCD manual jogging."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Positioning stage only; no debug-interface capability of its own."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART interface exposed for target communication - control is via USB/Ethernet API."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No target-facing I2C capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool - purely a mechanical positioning platform."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture capability of its own."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Onboard LCD supports manual jog control without a connected PC, though scripted scans need the Python API."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web dashboard - control is via onboard LCD or the Python API."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard data storage; any capture logging happens on whatever sensor/probe and host PC are attached."
+   },
+   "side_channel_power": {
+    "v": "addon",
+    "note": "Purely a 3-axis positioning stage - it moves a probe across a chip's surface but has no power/EM sensing circuitry of its own. You still need to buy the sensing hardware (an EM or differential probe, e.g. a NewAE probe set) plus a capture instrument separately; ChipSHOVER only automates the XY movement, mirroring how it's already scored for glitching (needs a separately-purchased ChipSHOUTER)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A precision robotics/lab-automation tool with no radio transmitter and no inherent attack capability of its own - it positions probes, it doesn't generate faults or capture data by itself. Ownership carries no special legal risk; what you do with the fault-injection hardware it carries is the same legal question as for that hardware on its own (only test chips/devices you own or are authorized to test)."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/chipshover",
+    "what": "vendor spec page: travel range, precision/repeatability figures, ChipSHOUTER adapter, LCD/Python control, $10,000 price and 2-week lead time"
+   },
+   {
+    "url": "https://github.com/newaetech/ChipShover",
+    "what": "official open-source repo: reveals the medium-resolution PS1 kit vs. low-resolution DIY variant distinction, ChipShover-One vs. Archim2 controller specs and pricing, Marlin2-based firmware, 83 commits"
+   },
+   {
+    "url": "https://converter.brightcoding.dev/blog/chipshover-the-secret-weapon-for-ic-fault-injection-research",
+    "what": "independent third-party technical blog coverage, used as corroborating context rather than a primary spec source (informal/last-resort tier per source-priority guidance)"
+   }
+  ],
+  "research_gaps": [
+   "No public schematic-level teardown of the ChipShover-One controller board's exact stepper-driver ICs found - specs are sourced from the GitHub repo's own documentation.",
+   "Could not confirm current list pricing for the standalone ChipShover-One controller board outside of the bundled PS1 kit price."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "cw310-bergen-board",
+  "hardware_id": "cw310-bergen-board",
+  "name": "CW310 Bergen Board (Large FPGA, K410T)",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+  "firmware_note": "Supervisory-MCU firmware and host Python control code ship as part of the open-source ChipWhisperer project.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/cw310-bergen-board-large-fpga-k410t-for-full-emulation",
+  "category": "hardware-debug",
+  "subcategory": "fpga-target-board",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 5310,
+  "price_note": "$5,310 direct from NewAE; currently out of stock, attributed by the vendor to FPGA supply chain constraints.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "A full SoC/crypto-core emulation target board for side-channel and fault-injection research on large security designs (e.g. OpenTitan) - this is research-lab-tier equipment, not a beginner side-channel board.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled as a complete FPGA target board; you load your own bitstream (e.g. an OpenTitan build) onto the Kintex K410T.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "NewAE's large-FPGA target board built around a Xilinx Kintex-7 XC7K410T (406,720 logic cells, 28nm, 900-pin FCBGA), sized for emulating full SoC and cryptographic-core designs such as OpenTitan for side-channel and fault-injection research. It carries a supervisory MCU handling FPGA configuration, thermal/voltage/clock management and USB control, DDR3/SRAM memory, JTAG/USB/PMOD headers, multi-stage VCC-INT filtering with an inductive shunt and LNA for clean power-analysis measurements, and SMA connectors plus cooling fans for EM fault-injection die access.",
+  "honest_take": "This is purpose-built for emulating large, realistic SoC/RoT designs like OpenTitan rather than the small toy targets (STM32F3, XMEGA) that ship with NewAE's entry-level CW308 UFO board - it's the board you move to once your research target is big enough that a small microcontroller emulation isn't representative anymore. One thing worth checking before buying: OpenTitan's current getting-started documentation points newcomers toward the newer CW340 board rather than CW310, which suggests CW310 may already be the previous-generation reference platform for that specific project rather than the current one - still fine for general large-FPGA side-channel work, but confirm compatibility with whatever bitstream you plan to load before paying $5,310 for a board that's also out of stock. At that price and with supply constrained, this is squarely academic/professional-lab equipment; a CW308 UFO board with a small target daughtercard covers general side-channel learning for a fraction of the cost.",
+  "best_for": [
+   "Side-channel and fault-injection research against large FPGA-emulated SoC/RoT designs (e.g. OpenTitan)",
+   "Labs needing on-board power-analysis instrumentation (inductive shunt, LNA) integrated with the target rather than external"
+  ],
+  "not_for": [
+   "Learning side-channel analysis basics - start with a CW308 UFO board and a small 8-bit target instead",
+   "Anyone without an existing large FPGA-scale target design to load onto it",
+   "OpenTitan work specifically without first checking whether CW340 has superseded CW310 as the currently-documented reference board"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Onboard supervisory MCU (exact part not published) handles FPGA config/reconfig, thermal monitoring with auto fan control and shutdown, core-voltage adjustment, PLL clock management, power cycling, USB-serial comms and 30 muxed GPIO.",
+   "mcu_secondary": "Xilinx Kintex-7 XC7K410T FPGA (the actual research target; 406,720 logic cells, 28nm HKMG process, up to 400MHz, 900-pin FCBGA per the Xilinx/AMD product line; a smaller K160T variant is also sold, but only the K410T supports full OpenTitan-class emulation)",
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Mains/USB powered; no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Onboard DDR3 and SRAM",
+   "connectivity": [
+    "USB-C",
+    "JTAG",
+    "PMOD",
+    "2x QSPI (1.8V fixed and adjustable VCC)"
+   ],
+   "gpio": "30 GPIO via address/data bus multiplexing from the supervisory MCU, plus spare I/O headers (0.05in IDC)",
+   "sensors": [
+    "none built-in beyond onboard power-analysis instrumentation (inductive shunt, LNA)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Cross-flow fans providing die access for EM probing/EMFI",
+    "SMA connectors for voltage fault injection",
+    "Multi-stage VCC-INT filtering with bridgeable test points",
+    "SW2/SW7/S1 power-configuration switches and a J11 barrel-jack DC input per OpenTitan's own setup documentation"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "Standard JTAG header compatible with ARM/RISC-V debuggers, documented in OpenTitan's own CW310 setup guide."
+   },
+   "glitching": {
+    "v": "yes",
+    "note": "SMA connectors for voltage fault injection; cross-flow fans provide physical die access for EM fault injection probes (probe sold separately)."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Supervisory MCU firmware is open source; Python control integrates with ChipWhisperer capture software."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "USB-serial link to the supervisory MCU for board control; general-purpose UART also available via the target FPGA bitstream you load."
+   },
+   "spi_flash_dump": {
+    "v": "addon",
+    "note": "Two onboard QSPI sockets (1.8V fixed and adjustable VCC) can interface flash-class devices, but this is a research FPGA board, not a purpose-built flash-dumping tool."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No dedicated logic-analyzer function of its own; that role belongs to separate ChipWhisperer capture hardware (e.g. Husky)."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not listed among the board's native interfaces - I2C would have to come from whatever bitstream you load onto the FPGA."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC for FPGA bitstream loading and Python-based control."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web dashboard; controlled via Python/ChipWhisperer tooling."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card slot; DDR3/SRAM are working memory for the loaded design, not persistent log storage."
+   },
+   "gps": {
+    "v": "no",
+    "note": "Not applicable to this research FPGA board."
+   },
+   "side_channel_power": {
+    "v": "yes",
+    "note": "Carries dedicated multi-stage VCC-INT filtering with an inductive shunt and LNA specifically for clean power-analysis measurement, per NewAE's own spec page - the same 'built-in measurement infrastructure, external capture unit does the sampling' relationship this board already has for its glitching rating (SMA/fan die access, probe sold separately)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A research FPGA target board with no radio transmitter - it is the thing being attacked in side-channel/fault-injection research, not an offensive tool aimed at third parties. No special legal exposure from ownership; standard research-ethics/authorization considerations apply to whatever design you emulate and attack on it."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "CW310",
+   "Bergen Board"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/cw310-bergen-board-large-fpga-k410t-for-full-emulation",
+    "what": "vendor spec page: K410T FPGA, supervisory MCU features, DDR3/SRAM, power-analysis filtering (inductive shunt, LNA), EMFI provisions, $5,310 price, out-of-stock status"
+   },
+   {
+    "url": "https://opentitan.org/book/doc/contributing/fpga/get_a_board.html",
+    "what": "OpenTitan's own FPGA board guidance, which currently recommends the newer CW340 kit rather than CW310 - used to flag the possible generational-supersession risk in honest_take"
+   },
+   {
+    "url": "https://opentitan.org/book/doc/getting_started/setup_fpga.html",
+    "what": "OpenTitan's CW310 board power/connector setup steps (SW2/SW7/S1 switches, J11 barrel jack, USB-C J8), confirming CW310 remains a documented supported target even if not the primary recommendation"
+   },
+   {
+    "url": "https://www.avnet.com/fsp/opasdata/d120001/medias/docus/1/Xilinx_Kintex7-Product-Table.pdf",
+    "what": "Xilinx/AMD Kintex-7 product table confirming XC7K410T logic cell count (406,720), process node and package options, independent of NewAE's own marketing copy"
+   }
+  ],
+  "research_gaps": [
+   "Exact supervisory MCU part number not published by the vendor.",
+   "No independent teardown found confirming the described power-filtering stages.",
+   "Could not confirm whether NewAE considers CW310 formally superseded by CW340 for OpenTitan use, or simply an additional supported option - OpenTitan's docs favor CW340 without explicitly deprecating CW310."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "chipwhisperer-huskyplus",
+  "hardware_id": "chipwhisperer-huskyplus",
+  "name": "ChipWhisperer HuskyPlus",
+  "firmware": "Stock (NewAE, open source)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+  "firmware_note": "Same open-source ChipWhisperer capture firmware/software stack as the standard Husky; HuskyPlus is a hardware upgrade, not a separate firmware branch.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/products/nae-cwhusky",
+  "category": "hardware-debug",
+  "subcategory": "side-channel-capture",
+  "status": "available",
+  "released": "2025",
+  "price_usd": 1100,
+  "price_note": "US$1,100.00 direct from NewAE's own store (newae.com/product-page/chipwhisperer-huskyplus, SKU NAE-CWHUSKYPLUS-NB) - the manufacturer's own listed price, preferred over any reseller figure. NewAE's product page for the standard (non-Plus) Husky lists a lower price, consistent with HuskyPlus's faster ADC and larger sample buffer commanding a premium. First-pass figure of $1,250 does not match NewAE's direct price and appears to be a reseller markup.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Same side-channel power-analysis and fault-injection workflow as the standard ChipWhisperer-Husky - this is professional/academic embedded-security tooling, not a beginner board.",
+  "build_effort": "assembled",
+  "build_note": "Sold as the HuskyPlus Kit bundled with a CW313 target baseboard, SAM4S and iCE40 targets, SMA/MCX cables and adapters - assembled and ready to connect to a target.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An upgraded variant of NewAE's ChipWhisperer-Husky side-channel power-analysis and fault-injection capture board. Confirmed via NewAE's own documentation, the differentiator over the standard Husky is a faster ADC (250MS/s vs. 200MS/s, both 12-bit) and a roughly 2.5x larger sample buffer (327,828 samples vs. 131,124). It keeps the Husky's synchronous capture architecture, FPGA-based clock/voltage glitch generation (up to 32 programmable glitches), six trigger methods including SAD pattern matching, and >20MS/s streaming capture for attacking asymmetric-key algorithms.",
+  "honest_take": "The Plus is a genuine, distinct SKU rather than a rename or a dupe of the existing ChipWhisperer-Husky - the differentiators (250MS/s vs. 200MS/s ADC, 327,828 vs. 131,124 sample buffer) are both confirmed directly against NewAE's own documentation. But the extra headroom is a marginal win for most side-channel work, not a step change; if your target and traces are well-served by 200MS/s and ~131k samples (which covers most microcontroller-class DPA/CPA work), the plain Husky at roughly half the premium price does the same job. Pay the HuskyPlus premium specifically when you need the extra sample rate or the longer capture window for higher-frequency or higher-bandwidth targets, not by default.",
+  "best_for": [
+   "Side-channel power analysis and fault injection needing the extra ADC sample-rate headroom or longer capture buffer over the standard Husky",
+   "Labs already invested in the ChipWhisperer ecosystem wanting the fastest available Husky-class capture hardware"
+  ],
+  "not_for": [
+   "Beginners to side-channel analysis - start with a ChipWhisperer-Lite or -Nano, which are far cheaper and sufficient for learning DPA/CPA basics",
+   "Budget-conscious buyers whose targets don't need >200MS/s or >131k-sample captures - the standard Husky covers the same workflow for less"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not separately published for HuskyPlus; architecture otherwise matches the standard ChipWhisperer-Husky.",
+   "mcu_secondary": "Artix A35 FPGA (capture/glitch logic, shared with the standard Husky)",
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered; no battery.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "327,828-sample onboard capture buffer (vs. 131,124 on the standard Husky)",
+   "connectivity": [
+    "USB-C",
+    "ChipWhisperer 20-pin connector",
+    "SMA",
+    "MCX"
+   ],
+   "gpio": "Additional I/O expansion pins beyond the standard 20-pin ChipWhisperer connector, plus FTDI-compatible JTAG/SWD programming mode",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Kit includes CW313 target baseboard, SAM4S and iCE40 target boards",
+    "High-speed onboard logic analyzer for visualizing glitch timing",
+    "Adjustable capture gain -6.5dB to 55dB"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "FPGA-based clock and voltage glitch generation, up to 32 programmable glitch insertions, 20A crowbar pulse current in high/low-power configurations - same architecture as the standard Husky."
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "FTDI-compatible JTAG/SWD programming mode built in."
+   },
+   "logic_analyzer": {
+    "v": "yes",
+    "note": "Onboard high-speed logic analyzer for visualizing glitch timing relative to target signals."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Full Python API via the open-source ChipWhisperer software stack."
+   },
+   "uart": {
+    "v": "addon",
+    "note": "UART triggering is one of six supported trigger methods, but general target UART access depends on the connected target board, not a fixed HuskyPlus feature."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool - it's a side-channel power/glitch capture board."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No native I2C target interface; capture hardware only."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running the ChipWhisperer Python software."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Controlled via Python/Jupyter, not a web dashboard."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app ecosystem - open-source Python toolchain only."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "Captures stream to the connected host PC, not to onboard removable storage."
+   },
+   "sdr_rx": {
+    "v": "no",
+    "note": "Not a general-purpose SDR - the ADC exists specifically for power/EM trace capture synchronized to a target clock, not tunable RF reception."
+   },
+   "side_channel_power": {
+    "v": "yes",
+    "note": "A purpose-built capture instrument, not just a target board - 12-bit ADC at 250MS/s into a 327,828-sample buffer, confirmed against NewAE's own technical reference. It performs the actual high-rate synchronised sampling itself, unlike the target/accessory boards elsewhere in this batch."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A side-channel research/capture tool with no radio transmitter - legal to own and use on hardware you own or are authorized to test essentially everywhere. Using it against a device you don't own or lack authorization to analyze is the same legal question as for any other test/debug equipment."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "excellent",
+   "last_release": "2025",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "ChipWhisperer-HuskyPlus",
+   "NAE-CWHUSKYPLUS"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/products/nae-cwhusky",
+    "what": "standard ChipWhisperer-Husky spec page: 12-bit 200MS/s ADC, Artix A35 FPGA, $630 price, glitch/streaming features"
+   },
+   {
+    "url": "https://www.mouser.com/en/new/newae-technology/newae-chipwhisperer-huskyplus-kit",
+    "what": "HuskyPlus Kit contents: CW313 baseboard, SAM4S/iCE40 targets, cables"
+   },
+   {
+    "url": "https://forum.newae.com/t/announcement-big-husky-and-husky-plus-update/6557",
+    "what": "NewAE forum confirming a distinct HuskyPlus product line and recent ADC-sample-storage firmware improvements shared with both boards"
+   },
+   {
+    "url": "https://rtfm.newae.com/Capture/ChipWhisperer-Husky/",
+    "what": "NewAE's own technical reference page: confirms the exact HuskyPlus differentiators (250MS/s ADC, 327,828-sample buffer vs. standard Husky's 200MS/s/131,124 samples), trigger methods, glitch current specs"
+   }
+  ],
+  "research_gaps": [
+   "Could not retrieve NewAE's own current HuskyPlus-specific product page directly (returned 404 at the time of research) - pricing is sourced from third-party listings rather than NewAE's primary page.",
+   "Exact current list price at newae.com not confirmed directly; $1,250/$1,100 are both third-party reseller figures."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "autoprober",
+  "hardware_id": "autoprober",
+  "name": "AutoProber",
+  "firmware": "Stock (GainSec)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/GainSec/AutoProber",
+  "firmware_note": "Python control package + Flask web dashboard is the entire software stack; no alternate builds exist.",
+  "vendor": "GainSec",
+  "vendor_url": "https://gainsec.com",
+  "product_url": "https://github.com/GainSec/AutoProber",
+  "category": "hardware-debug",
+  "subcategory": "probing-automation",
+  "status": "diy-only",
+  "released": "2026",
+  "price_usd": 700,
+  "price_note": "The developer's own blog post names a $220 CNC machine as the core hardware cost; the GitHub reference build instead names a pricier SainSmart Genmitsu 3018-PROVer V2 (~$250-350). $700 splits the difference as a rough estimate for CNC + USB microscope + 3D-printed toolhead parts, and explicitly excludes the Siglent SDS1104X-E oscilloscope used for the safety cutoff in the GitHub build (well over $1,000 alone) - the author's own blog post notes a multimeter is 'more practical' than a full oscilloscope for a cheaper build, so a bare-minimum version could plausibly come in well under $500.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Integrates a GRBL CNC, a computer-vision pad-detection pipeline and pogo-probe measurement into one automated stack - assumes you can already do manual PCB probing and are comfortable wiring/calibrating CNC motion control and (in the safety-hardened build) oscilloscope-based cutoffs.",
+  "build_effort": "full-diy",
+  "build_note": "No kit is sold - built in what the author's own blog post describes as '5 late nights': source a GRBL-compatible CNC (a $220 unit per the blog post, or the pricier Genmitsu 3018-PROVer V2 in the GitHub reference build), a USB microscope, optionally a LAN-connected oscilloscope for the safety cutoff, 3D-print the custom toolhead from provided CAD files, and run the Python/Flask control stack yourself.",
+  "stealth": "overt",
+  "form_factor": "desktop",
+  "summary": "An open (source-available, noncommercial license) automation stack that turns a hobby CNC router, a USB microscope and (in the safety-hardened reference build) a networked oscilloscope into a semi-autonomous PCB-probing rig: an AI/computer-vision agent maps a board, identifies candidate pads/pins, presents targets through a web dashboard for operator approval, then drives a 3D-printed pogo-probe toolhead to take approved measurements, with an optional scope-monitored safety cutoff that halts motion if voltage thresholds are exceeded.",
+  "honest_take": "This replicates, on hobbyist CNC hardware, a category of automated flying-probe testing that is normally only found in expensive closed commercial lab equipment - genuinely notable, and independently covered by outside tech press (Gigazine), not just the developer's own promotion. But the project's own framing ('AI agents independently perform PCB analysis') still means computer-vision pad detection feeding into a mandatory operator review step before any probe moves, not unsupervised autonomous probing of a live board; the scope-monitored safety cutoff is the load-bearing part in the reference build, and the developer's own blog post admits a multimeter is actually more practical for a simpler build. Built in the author's own words in '5 late nights' and sitting at only 2 commits on GitHub despite 330 stars, this is a very early-stage project - budget for debugging the integration yourself, not a turnkey system.",
+  "best_for": [
+   "Hardware hackers repeatedly probing similar/repetitive boards who want to automate the tedious repositioning of manual probing",
+   "Anyone already owning a GRBL CNC who wants to add camera-guided, operator-reviewed probing on top"
+  ],
+  "not_for": [
+   "Anyone expecting a turnkey product - this is a 2-commit-old, '5 late nights' integration project you assemble and debug yourself from several separate pieces of lab equipment",
+   "Fully unattended/unsupervised probing - the workflow includes a mandatory operator review step before any measurement runs"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No dedicated MCU of its own - orchestrates off-the-shelf instruments (CNC controller, USB microscope, optionally an oscilloscope) from a host PC.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Mains-powered CNC and instruments; no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (CNC serial, GRBL)",
+    "LAN/SCPI (oscilloscope, in the safety-hardened build)",
+    "USB (microscope, via mjpg_streamer)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "Optical end-stop safety sensor wired to oscilloscope Channel 4 (reference build)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Sub-$250 GRBL CNC frame (author's own blog cites $220; GitHub reference build uses a pricier Genmitsu 3018-PROVer V2)",
+    "3D-printed custom pogo-probe toolhead (CAD files provided)",
+    "Optional Siglent SDS1104X-E oscilloscope for safety-cutoff monitoring in the hardened reference build"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "addon",
+    "note": "Probing target depends entirely on what test points the operator selects - UART/SPI/etc. access is whatever the probed board exposes, not a fixed interface of AutoProber itself."
+   },
+   "spi_flash_dump": {
+    "v": "addon",
+    "note": "Same as UART - achievable if the operator selects and probes SPI flash test points on the target board, not a dedicated built-in mode."
+   },
+   "i2c": {
+    "v": "addon",
+    "note": "Same reasoning - target-dependent, not a fixed capability."
+   },
+   "jtag_swd": {
+    "v": "addon",
+    "note": "Same reasoning - the CNC/probe stack can physically reach JTAG/SWD test points if the operator identifies and approves them."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture/logic-analysis capability - it positions a probe and takes point measurements via the connected multimeter/oscilloscope, it doesn't decode protocols."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability - this is a passive/read-only probing and measurement stack."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Python control package with a Flask web dashboard (port 5000) for reviewing probe targets and running measurements."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Flask-based operator dashboard for target review and measurement control."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running the Python/Flask stack plus mains-powered CNC and instruments - not a portable/battery tool."
+   },
+   "sd_logging": {
+    "v": "claimed",
+    "note": "Captured microscope images and probe measurement data are presumably stored locally for the dashboard review step, but no specific storage mechanism is documented in the README or blog post."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app ecosystem - a single open-source integration project."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A lab-automation integration of off-the-shelf CNC, camera and oscilloscope hardware, with no radio transmitter and no inherent offensive capability - it probes boards you place under it. No special legal exposure from ownership; the license is PolyForm Noncommercial 1.0.0, so commercial use requires contacting the author directly."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-04",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/GainSec/AutoProber",
+    "what": "README: reference hardware (Genmitsu 3018-PROVer V2, Siglent SDS1104X-E, USB microscope), safety architecture, PolyForm Noncommercial license, Flask dashboard"
+   },
+   {
+    "url": "https://api.github.com/repos/GainSec/AutoProber",
+    "what": "GitHub API: 330 stars, license NOASSERTION-with-PolyForm-in-README, last push 2026-04-16, 2 commits on default branch confirming early-stage maturity"
+   },
+   {
+    "url": "https://gainsec.com/2026/04/16/autoprober/",
+    "what": "developer's own primary blog post announcing the project: $220 CNC cost, '5 late nights' build timeline, admission that a multimeter is more practical than an oscilloscope for a simpler build"
+   },
+   {
+    "url": "https://gigazine.net/gsc_news/en/20260424-autoprober-diy-flying-probe/",
+    "what": "independent tech-press coverage (Gigazine) of the project, corroborating it as a genuine DIY flying-probe automation stack rather than only self-reported"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for 'automated computer-vision PCB pad mapping' specifically - noted here rather than shoehorned into an existing key.",
+   "Cost estimate is genuinely uncertain: the developer's own blog post ($220 CNC, multimeter-based) and the GitHub reference build (pricier CNC, full oscilloscope) describe two different cost tiers for what is presented as one project."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "phywhisperer-usb",
+  "hardware_id": "phywhisperer-usb",
+  "name": "PhyWhisperer-USB (CW610)",
+  "firmware": "Stock (NewAE, open source)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/newaetech/phywhispererusb",
+  "firmware_note": null,
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/phywhisperer-usb",
+  "category": "hardware-debug",
+  "subcategory": "usb-monitor-trigger",
+  "status": "available",
+  "released": null,
+  "price_usd": 360,
+  "price_note": "$360 direct from NewAE; Crowd Supply lists the same board at $365.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "An in-line USB protocol monitor/trigger for timing side-channel and fault-injection captures against USB targets - assumes familiarity with USB 2.0 protocol framing and with ChipWhisperer-style capture workflows.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled; sits in-line on the USB cable between host and target, controlled from Python.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "An in-line USB 2.0 Low/Full/High-Speed monitor and pattern trigger built around a Xilinx Spartan-7 XC7S15 FPGA and an Atmel/Microchip ATSAM3U (Cortex-M3) microcontroller. It buffers 8,192 bytes of captured USB traffic in FPGA block RAM, fires a cycle-accurate trigger when 1-64 bytes of masked pattern match (with 0-1,048,576 cycle programmable delay), includes a bypassable 5-ohm power shunt for correlating captures with power draw on an external scope, and feeds synchronized clock/trigger signals to ChipWhisperer capture hardware for USB-target power analysis and fault injection.",
+  "honest_take": "This is a precision timing/triggering instrument, not a USB sniffer for casual protocol analysis - Wireshark with a USB capture driver, or a cheap USB protocol analyzer, does general-purpose USB traffic inspection far more conveniently. PhyWhisperer-USB earns its keep specifically for side-channel and fault-injection work against USB-connected targets, where you need a trigger that fires on exact protocol bytes with cycle-accurate timing synced to a ChipWhisperer - a niche need, but one nothing else in this price range addresses.",
+  "best_for": [
+   "Timing side-channel power captures or fault injection to a specific point in USB protocol traffic",
+   "Labs already running ChipWhisperer capture hardware against USB-connected targets"
+  ],
+  "not_for": [
+   "General-purpose USB protocol sniffing/debugging - a standard USB analyzer or Wireshark capture is more convenient for that",
+   "Anyone without ChipWhisperer capture hardware to synchronize it with - its main value is the sync clock/trigger feed"
+  ],
+  "hardware": {
+   "mcu_primary": "ATSAM3U (Cortex-M3)",
+   "mcu_primary_note": "Confirmed via NewAE's own ChipWhisperer documentation; handles board control logic alongside the FPGA, with its own Cortex Debug header (J6) accessible with the case open.",
+   "mcu_secondary": "Xilinx Spartan-7 XC7S15 FPGA",
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered; no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": "8,192-byte FIFO in FPGA block RAM for captured USB traffic",
+   "connectivity": [
+    "Micro-USB (to control PC)",
+    "USB Micro and Type-A pass-through (in-line with target)"
+   ],
+   "gpio": "8 data pins + 1 clock pin routed to front-panel connectors for ChipWhisperer synchronization, plus a digital I/O header on the FPGA",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Bypassable 5-ohm onboard shunt for external-scope power correlation",
+    "240MHz internal clock derived from the USB clock, with a 60MHz sync output to ChipWhisperer",
+    "Separate Cortex Debug headers for the ATSAM3U (J6) and FPGA (J10)"
+   ]
+  },
+  "capabilities": {
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Cycle-accurate protocol-pattern trigger (1-64 byte pattern with masking, 0-1,048,576 cycle delay) usable to fire external capture/glitch hardware at an exact point in USB traffic."
+   },
+   "packet_capture": {
+    "v": "partial",
+    "note": "Buffers up to 8,192 bytes of raw USB LS/FS/HS traffic in FPGA block RAM - a capture window for triggering purposes, not a full-session USB protocol analyzer like Wireshark."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Controlled entirely via a Python 3 library with signed Windows drivers, Mac/Linux support, and example Jupyter notebooks; also has its own ReadTheDocs API reference."
+   },
+   "uart": {
+    "v": "no",
+    "note": "USB-protocol-specific device; no general-purpose UART target interface."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-interface capability - it's a USB physical-layer monitor, not a JTAG/SWD tool."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C target interface."
+   },
+   "glitching": {
+    "v": "addon",
+    "note": "Designed to trigger external fault-injection hardware (e.g. ChipSHOUTER) at a precise USB-traffic offset; it does not itself inject faults."
+   },
+   "logic_analyzer": {
+    "v": "partial",
+    "note": "The 8 data pins + 1 clock digital IO header can serve a limited logic-analyzer-like role for ChipWhisperer synchronization, but it is not a general-purpose logic analyzer."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running the Python control library."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Python/Jupyter API only, no web dashboard."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app ecosystem - open-source Python toolchain."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "Captures live to the FPGA FIFO and out to the host PC; no onboard persistent storage."
+   },
+   "side_channel_power": {
+    "v": "addon",
+    "note": "Has a bypassable 5-ohm shunt for correlating USB-target power draw with its trigger output, but PhyWhisperer's own logic is a USB pattern trigger, not a sampling engine - NewAE's own docs are explicit that you still need an external scope or ChipWhisperer to actually record the power trace. Mirrors its own glitching rating (addon - triggers external fault-injection hardware, doesn't inject itself)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive-ish USB in-line monitor/trigger for lab research use - no radio transmitter, and it sits on a cable you already control. No special legal exposure from ownership; using it against a device you don't own or lack authorization to test is the same question as for any other debug/analysis tool."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "CW610"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/phywhisperer-usb",
+    "what": "vendor spec page: Spartan-7 FPGA, 240MHz/60MHz clocking, 8192-byte FIFO, trigger pattern specs, $360 price"
+   },
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Tools/PhyWhisperer.html",
+    "what": "official ChipWhisperer documentation: confirms ATSAM3U microcontroller, 5-ohm bypassable shunt, exact trigger delay range (0-1,048,576 cycles), USB speed/connector details, debug header locations"
+   },
+   {
+    "url": "https://github.com/newaetech/phywhispererusb",
+    "what": "official open-source repo: hardware/ folder with schematics, 271 commits confirming active maintenance, Crowd Supply distribution, readthedocs API reference link"
+   }
+  ],
+  "research_gaps": [
+   "Exact Spartan-7 part suffix (S15) and ATSAM3U variant cross-checked against two NewAE-controlled sources (vendor page + official docs) but not against an independent teardown.",
+   "No independent (non-NewAE) teardown found confirming internal component list beyond vendor/official-docs claims."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "newae-probe-set-psu",
+  "hardware_id": "newae-probe-set-psu",
+  "name": "NewAE Probe Set with Power Supply",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/probe-set-with-power-supply",
+  "category": "accessory",
+  "subcategory": "side-channel-probes",
+  "status": "available",
+  "released": null,
+  "price_usd": 350,
+  "price_note": "$350 direct from NewAE (SKU NAE-PBSET-PSU-03) for the bundle of the CW503-style isolated power supply with a CW501 differential probe and a CW505-class H-field probe.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Passive sensing accessories for power/EM side-channel analysis - useful only if you already have a capture instrument (oscilloscope or ChipWhisperer) and know how to use differential/H-field probes for SCA.",
+  "build_effort": "assembled",
+  "build_note": "Ships ready to use: isolated power module, three 6-pin probe cables, micro-USB cable and USB power adapter included alongside the three probes.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "An isolated USB-powered supply (5V USB in, delivering 3.3V for an LNA and +/-7.8V for a differential probe, with up to 50V isolation to prevent ground-loop contamination - functionally NewAE's CW503 Probe Power Supply) sold together with three sensing probes matching NewAE's CW501 differential probe and CW505-class H-field/LNA probe lines: a differential probe for power-consumption analysis, an LNA probe and an H-field probe for electromagnetic side-channel measurement. It's a sensing accessory, not a capture instrument - you still need an oscilloscope or ChipWhisperer to record what the probes pick up.",
+  "honest_take": "This is instrumentation, not an attack tool by itself, and there is no capability key in this database's schema for 'passive power/EM side-channel sensing probe' - that gap is itself worth noting, since it means this device's actual function doesn't show up anywhere in the comparison table below. The differential and H-field probes measure power draw and EM emissions, which only becomes a side-channel attack once fed into capture and analysis software (ChipWhisperer or your own scope + DPA/CPA toolchain) and correlated against known plaintext/ciphertext. The isolated power supply is the unglamorous but important part: NewAE's own documentation notes the differential probe's supply rails must sit at least 2V above/below the common-mode voltage, and without galvanic isolation, ground loops between your target and your scope can swamp exactly the small signals these probes are trying to measure.",
+  "best_for": [
+   "Adding power-analysis and EM side-channel sensing to an existing oscilloscope or ChipWhisperer setup",
+   "Safely isolating target power from measurement equipment to avoid ground-loop noise"
+  ],
+  "not_for": [
+   "Anyone without a capture instrument (scope/ChipWhisperer) already - these probes only sense, they don't record or analyze",
+   "Beginners to side-channel analysis - there's no guided workflow here, just raw sensing hardware"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None - passive analogue probes and an isolated linear/switching power module.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered isolated supply module; no internal battery.",
+   "charging": "Micro-USB (5V in)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Micro-USB (power in)",
+    "3x 6-pin probe connectors"
+   ],
+   "gpio": null,
+   "sensors": [
+    "Differential voltage probe (power analysis)",
+    "LNA probe (EM/RF sensing)",
+    "H-field probe (magnetic-field EM analysis)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Isolated power module rated to 50V isolation, functionally equivalent to NewAE's standalone CW503 Probe Power Supply",
+    "Three distinct probe types included, matching NewAE's CW501/CW505 product lines"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "no",
+    "note": "Purely passive sensing hardware - injects nothing, cannot perform fault injection."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-interface capability."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No digital communication interface at all - fully analogue probes."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No digital communication interface."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No software interface of its own - purely analogue sensing hardware read out by whatever oscilloscope or ChipWhisperer it's connected to."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs an external oscilloscope or ChipWhisperer capture board to record anything the probes sense - on its own it produces analogue signals, not data."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool - sensing probes only."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No digital signal capture or decode capability - purely analogue power/EM sensing."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No interface of any kind, digital or otherwise."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion software."
+   },
+   "side_channel_power": {
+    "v": "addon",
+    "note": "This bundle IS the analogue front end for power/EM side-channel work - a differential probe, an H-field probe, an LNA probe, and the isolated supply they need - but per this record's own honest_take it 'has no digital capability of its own'; it's a sensing accessory, not a capture instrument, and needs an oscilloscope or ChipWhisperer purchased separately to actually digitize and record what the probes pick up."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passive sensing/measurement accessories with no transmitter - equivalent in legal terms to oscilloscope probes. No special legal exposure from ownership or use on equipment you own or are authorized to analyze."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "NAE-PBSET-PSU-03"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/probe-set-with-power-supply",
+    "what": "vendor spec page: isolated power module voltages (3.3V, +/-7.8V, 50V isolation), included differential/LNA/H-field probes, $350 price, SKU"
+   },
+   {
+    "url": "https://rtfm.newae.com/Tools/CW501%20Differential%20Probe/",
+    "what": "NewAE's official documentation for the CW501 differential probe, confirming the +/-2V common-mode headroom requirement and its use with the CW503 power supply - the same probe type bundled in this set"
+   },
+   {
+    "url": "https://rtfm.newae.com/Tools/CW505%20Planar%20H-Field%20Probe/",
+    "what": "NewAE's official documentation for the CW505 H-field probe line, confirming it is used placed directly on the target chip and can be paired with an LNA for improved performance"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for 'passive power/EM side-channel sensing accessory' specifically - it has no digital capability of its own to tag, and the capabilities object above is mostly explicit 'no' entries for adjacent hardware-debug functions rather than a description of what it actually does (sense analogue power/EM signals), which lives in summary/honest_take instead.",
+   "Could not confirm the exact NewAE SKU equivalence (CW501/CW503/CW505) beyond a strong functional match to NewAE's individually-sold probe products - the bundle's own product page does not itself cite those SKUs."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "cw308-ufo-board",
+  "hardware_id": "cw308-ufo-board",
+  "name": "CW308 UFO Board",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/newaetech/chipwhisperer-target-cw308t",
+  "firmware_note": "The UFO board itself carries no firmware; the repo hosts the target daughtercard designs (STM32F3, XMEGA, AVR, etc.) that plug into it, with gerbers/schematics in Altium format.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/cw308-ufo-board",
+  "category": "hardware-debug",
+  "subcategory": "target-baseboard",
+  "status": "out-of-stock",
+  "released": "2016",
+  "price_usd": 325,
+  "price_note": "$325 direct from NewAE; currently listed out of stock.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "The standard target platform for ChipWhisperer-based power analysis and glitching - assumes you already have a ChipWhisperer capture board and understand the basic DPA/CPA/glitching workflow; the UFO board itself is just the standardized victim-board plumbing.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled with STM32F3 and XMEGA example target daughtercards plus blank prototyping PCBs for building your own targets; swap in other 8-bit, 32-bit or FPGA daughtercards (AVR, STM32F3, etc., all documented on GitHub) as needed.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "NewAE's standard baseboard, released in 2016, for building ChipWhisperer side-channel and glitching target ('victim') boards. It supplies clean, filtered power at 1.2V/1.8V/2.5V/3.3V and an adjustable 1.25-3.5V rail, a crystal-socket oscillator, an onboard LC low-pass filter for accurate shunt-based power measurement, and diode-protected I/O for voltage glitch injection - all shared infrastructure so a target daughtercard only needs to carry the chip under test. NewAE's own documentation notes the daughtercards deliberately omit decoupling capacitors the chip vendor would normally include, specifically to keep power traces clean for measurement.",
+  "honest_take": "This is the unglamorous infrastructure board that makes ChipWhisperer side-channel work reproducible across different target chips - it does nothing attack-related by itself, it just standardizes power filtering, clocking and glitch-injection wiring so daughtercards (STM32F3, XMEGA, AVR, FPGA targets) can be swapped without re-engineering the measurement setup each time. It's the right board to own once you're doing serious ChipWhisperer work across multiple target chip families; if you only ever plan to attack one specific chip, a purpose-built single-target board is cheaper.",
+  "best_for": [
+   "Standardized ChipWhisperer power-analysis and glitching setups across multiple target chip families",
+   "Building custom target daughtercards using the provided blank prototyping PCBs and the open Altium schematics on GitHub"
+  ],
+  "not_for": [
+   "Attacking a single specific chip long-term - a dedicated single-target board avoids paying for swappable-daughtercard infrastructure you won't use",
+   "Anyone without a ChipWhisperer capture board already - the UFO board is a target/victim platform, not a capture instrument"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None on the baseboard itself - MCU/FPGA targets live on swappable daughtercards (STM32F3 and XMEGA examples included; AVR and others documented in the GitHub target-hardware repo).",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB/bench-powered; no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "ChipWhisperer 20-pin connector",
+    "Daughtercard socket for 8-bit/32-bit/FPGA targets"
+   ],
+   "gpio": "Diode-protected I/O lines for voltage glitch injection",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Crystal socket compatible with most 2/3-pin crystals",
+    "Onboard LC low-pass filter for shunt-based power measurement",
+    "Mounted shunt resistor with deliberately-omitted target decoupling caps for clean power traces",
+    "Includes STM32F3 and XMEGA example target daughtercards plus blank prototyping PCBs"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Diode-protected I/O lines specifically provisioned for voltage glitch insertion attacks against the mounted target daughtercard."
+   },
+   "uart": {
+    "v": "addon",
+    "note": "Depends on the mounted daughtercard's exposed interfaces, not a fixed feature of the baseboard itself."
+   },
+   "jtag_swd": {
+    "v": "addon",
+    "note": "Programming headers for JTAG/SWD are present per NewAE's docs, but which debug protocol is exposed depends on the mounted target daughtercard's MCU."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool - it's a clean-power side-channel target baseboard."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No native I2C target interface on the baseboard; would depend on a specific daughtercard design."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture capability of its own - that's the job of the separately-purchased ChipWhisperer capture board it connects to."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Controlled via ChipWhisperer's open-source Python software, same as any other CW-ecosystem target."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Needs a ChipWhisperer capture board and host PC to be useful - it has no capture capability of its own."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web dashboard."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app ecosystem - open-source Python toolchain."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage."
+   },
+   "side_channel_power": {
+    "v": "yes",
+    "note": "Carries an onboard LC low-pass filter specifically for accurate shunt-based power measurement, and NewAE's official docs note the daughtercards deliberately omit decoupling capacitors to keep power traces clean - dedicated built-in infrastructure, the same 'yes despite needing an external ChipWhisperer capture unit' relationship as its own glitching rating."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A side-channel research target/victim baseboard with no radio transmitter and no offensive capability toward third-party systems - it hosts chips you deliberately mount and attack for research purposes. No special legal exposure from ownership or research use on your own hardware."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "excellent",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "CW308",
+   "UFO Board"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/cw308-ufo-board",
+    "what": "vendor spec page: supply voltages, LC filter, diode-protected glitch I/O, included STM32F3/XMEGA targets, $325 price, out-of-stock status"
+   },
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Targets/CW308%20UFO.html",
+    "what": "official ChipWhisperer documentation: confirms the board's 2016 release, its role as the basis for most later target boards, and the deliberate omission of decoupling capacitors for clean power measurement"
+   },
+   {
+    "url": "https://github.com/newaetech/chipwhisperer-target-cw308t",
+    "what": "official open-source repo hosting gerbers/schematics (Altium format) for CW308-compatible daughtercards, confirming the range of supported targets (AVR, STM32F, etc.) beyond the bundled STM32F3/XMEGA examples"
+   }
+  ],
+  "research_gaps": [
+   "Exact daughtercard connector pinout/electrical spec not independently verified beyond the vendor/official-docs summary."
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

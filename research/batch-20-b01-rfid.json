@@ -1,0 +1,2403 @@
+[
+ {
+  "id": "uhfkill",
+  "hardware_id": "uhfkill",
+  "name": "UHFKill",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "NFCKill (Info Wise Limited)",
+  "vendor_url": "https://nfckill.com",
+  "product_url": "https://lab401.com/products/uhfkill",
+  "category": "rfid-nfc",
+  "subcategory": "uhf-tag-deactivator",
+  "status": "available",
+  "released": null,
+  "price_usd": 1650,
+  "price_note": "US$1,650 direct from NFCKill (listed sold out on nfckill.com at check time). Lab401 stocks it at EUR1,495 (~US$1,738 at the EUR/USD rate on price_checked date), made-to-order, ~5 day dispatch. An 'Embedded' variant for micro-tags baked into eyewear/plastic goods is EUR1,950 (~US$2,267) at Lab401. First-pass figure of $1,750 is close to the Lab401-converted price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Point, hold 5cm from the tag for the pulse duration, done - no protocol knowledge needed. The judgment call is knowing which tags in a shipment are UHF vs the HF/LF tags a standard NFC Kill handles.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a complete mains-powered unit; no assembly. It is not a device you flash or configure.",
+  "stealth": "overt",
+  "form_factor": "desktop",
+  "summary": "A mains-powered electromagnetic-pulse emitter that permanently disables passive UHF RFID tags (800-960MHz, EPC Gen1/Gen2) used for retail inventory and supply-chain tracking, at up to 5cm range. It is the UHF sibling of the same company's HF/LF 'NFC Kill' deactivator, built for the specific case - apparel, footwear, eyewear - where a UHF tag is sewn or moulded in and cannot be cut out.",
+  "honest_take": "This is a bench tool, not a pocket gadget: 2.5kg, mains-powered at up to 15kW instantaneous pulse power, and it needs to sit within 5cm of the tag. It does not 'jam' or block UHF reads - it physically burns out the tag's antenna-to-chip bond with an induced pulse, which is irreversible and detectable (the tag is dead, not hidden). NFCKill's own claim is ~98% coverage of common antenna geometries, not 100%, so a rack of unusual tags may need the reader/verification step (Lab401 pairs it with the Industrial Handheld UHF Reader for exactly this). The obvious misconception is that this is a covert shoplifting tool - it is loud, requires a power outlet, and is marketed and priced for legitimate supply-chain/loss-prevention/returns-processing workflows, not something you carry into a store. It also does nothing at all to HF/LF tags - that is a different product from the same maker.",
+  "best_for": [
+   "Retailers and returns-processing centres deactivating UHF EAS tags before resale or recycling",
+   "Verifying UHF EAS/anti-theft tag designs during product development",
+   "Security researchers auditing UHF RFID supply-chain deployments"
+  ],
+  "not_for": [
+   "Covert or portable use - it is a 2.5kg mains-powered bench unit, not concealable",
+   "HF/LF tags (access badges, most payment cards) - use the standard NFC Kill instead",
+   "Guaranteed 100% tag coverage - some antenna geometries are missed"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published. This is a pulse-generation power circuit (coil driver), not a microcontroller-driven radio.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "uhf-pulse-emitter",
+     "note": "Discrete pulse-driven coil/antenna assembly generating a strong transient EM field at UHF (800-960MHz range) to induce a destructive overcurrent in a tag's antenna-chip bond. Vendor does not publish a driver IC part number."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Mains powered only (10-14VDC external PSU, EU plug included at Lab401); no battery.",
+   "charging": "n/a - external 10-14VDC power supply",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "245 x 85 x 80 (antenna 160 x 150)",
+   "weight_g": 2500,
+   "case": "Plastic enclosure",
+   "notable_physical": [
+    "Wing-style flat antenna head",
+    "Rated 10,000 operation cycles",
+    "5Hz max pulse rate"
+   ]
+  },
+  "capabilities": {
+   "hardware_destruct": {
+    "v": "yes",
+    "note": "Purpose-built function: an induced pulse permanently burns out a UHF tag's antenna-chip bond at up to 5cm range. Irreversible - this is destruction, not jamming or blocking."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No 13.56MHz front end at all. This device only emits a destructive UHF pulse; it cannot read any card."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Not a reader/emulator of any kind."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No 125kHz hardware - UHFKill is UHF-only. Use the same maker's standard 'NFC Kill' for LF/HF deactivation instead."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "Not applicable - destructive-only device."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Not a reader; has no protocol-level card interaction of any kind."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No HF reader hardware present."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not a relay device."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires mains power (10-14VDC PSU); not battery-powered or field-portable."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No firmware, no interface to script - it is a fixed-function pulse emitter with a trigger."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network connectivity or UI beyond physical controls."
+   },
+   "uhf_rfid_read": {
+    "v": "no",
+    "note": "Pure EM-pulse destroyer with no reader front end at all - it burns out a tag's antenna-chip bond, it never reads the tag's data. The same maker's Industrial Handheld UHF Reader is a separate product for that."
+   },
+   "uhf_rfid_write": {
+    "v": "no",
+    "note": "No write capability either - destruction is the entire function; there is no protocol stack here to write EPC memory banks with."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Deactivating UHF tags on goods you own or are authorised to process (returns, recycling, retail operations, research) is not itself restricted in most jurisdictions - this is a supply-chain tool sold openly to retailers. It becomes a legal problem the same way any tool does when used to facilitate theft (defeating an anti-theft device on merchandise that is not yours to deactivate). Check local retail-loss-prevention and consumer-protection law if deploying commercially."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "NFCKill UHF",
+   "UHF Kill"
+  ],
+  "sources": [
+   {
+    "url": "https://nfckill.com/products/nfckill-uhf",
+    "what": "manufacturer spec page: mechanism (EM pulse), frequency coverage 800-960MHz, 5cm range, 98% antenna-format coverage claim"
+   },
+   {
+    "url": "https://nfckill.com/products/nfckill-uhf",
+    "what": "manufacturer price ($1,650) and dimensions/weight/power draw specs"
+   },
+   {
+    "url": "https://lab401.com/products/uhfkill",
+    "what": "reseller listing: EUR pricing, Embedded variant for micro-tags, 5-day made-to-order dispatch, 10,000-cycle lifecycle rating"
+   },
+   {
+    "url": "https://nfckill.com/",
+    "what": "confirms NFCKill/Info Wise Limited (Hong Kong) as the actual manufacturer, and that the company sells no RFID readers of its own"
+   },
+   {
+    "url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+    "what": "confirms the pairing workflow: Lab401 markets this UHF reader specifically as the verification companion to UHFKill"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for UHF (800-960MHz) read/write/emulate in the current schema - only LF 125kHz and HF 13.56MHz keys exist. This device is UHF-only, so most RFID/NFC keys are correctly 'no', but a dedicated 'uhf_read'/'uhf_deactivate' style key would describe it more precisely than borrowing 'hardware_destruct'.",
+   "Exact pulse circuit / driver IC not published by the manufacturer.",
+   "Release year not found in any source checked; third-party videos referencing the wider NFC Kill product line date to 2021, but that is not a confirmed UHFKill launch date specifically."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "lab401-industrial-handheld-uhf-reader",
+  "hardware_id": "lab401-industrial-handheld-uhf-reader",
+  "name": "Industrial Handheld UHF Reader",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Unbranded/white-label industrial Android handheld (rebranded by Lab401); OEM/ODM not disclosed",
+  "vendor_url": null,
+  "product_url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+  "category": "rfid-nfc",
+  "subcategory": "uhf-reader",
+  "status": "available",
+  "released": null,
+  "price_usd": 1263,
+  "price_note": "US$1,263.00 - Lab401's own USD-market price (their storefront's currency selector shows this directly, tax included), not a straight 1.08x conversion of their EUR975 default listing (975 x 1.08 = ~US$1,053). No independent manufacturer storefront exists for this white-label/rebranded reader, so Lab401 is the only available direct-purchase price. First-pass figure of $1,263 matches Lab401's live USD price exactly; the prior $1,134 figure came from converting the EUR price instead of using Lab401's actual USD listing.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "It is a rugged Android phone with a UHF reader built in - point, scan, read the screen. The skill is in interpreting tag data during a sweep, not operating the device.",
+  "build_effort": "assembled",
+  "build_note": "Turnkey industrial handheld; no setup beyond normal Android device provisioning.",
+  "stealth": "overt",
+  "form_factor": "handheld",
+  "summary": "A rugged Android industrial handheld computer with an integrated long-range UHF RFID reader module (865-928MHz band coverage spanning EU/US/China allocations), sold by Lab401 as the verification/location companion to UHFKill: sweeping a carton or rack to find every embedded UHF tag and confirm deactivation worked, rather than to attack anything.",
+  "honest_take": "This is not a bespoke security tool - it is a category of industrial UHF inventory reader (the kind warehouses use for stocktaking) that Lab401 has picked up and repositioned for a red-team/loss-prevention audience. The 10m+ read range and 1300 tags/sec figures are standard for this reader class, not something unique to this SKU. If you already have any commercial UHF handheld (Zebra, Chainway, Impinj-based readers all exist at similar or lower prices from industrial suppliers), it will do the same job; you are paying Lab401 for curation and pairing with the UHFKill workflow, not for unique hardware. It is also UHF-only - it will not touch the 125kHz or 13.56MHz badges most access-control and payment work involves.",
+  "best_for": [
+   "Locating embedded UHF tags in cartons, garments or products before/after deactivation",
+   "Full-carton inventory sweeps",
+   "Confirming a UHFKill pass actually killed every tag in a batch"
+  ],
+  "not_for": [
+   "Covert use - it is a large handheld scanner with an obvious antenna, not a concealed tool",
+   "HF/LF (125kHz or 13.56MHz) reading - this is UHF-only hardware",
+   "Buyers who already own a commercial UHF inventory scanner - this adds no capability over one"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Android SoC, exact chipset not published by the reseller.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "uhf-rfid-reader",
+     "note": "865-868 / 902-928 / 920-925 MHz UHF RFID reader module, exact IC not disclosed. Rated 10m+ outdoor read range, up to 1300 tags/sec, antenna sizes 3x5mm to 130x42mm."
+    },
+    {
+     "ic": null,
+     "role": "wifi-cellular-gps",
+     "note": "WiFi, 2G/3G/4G/5G, BLE and GPS as a standard Android handheld radio stack."
+    }
+   ],
+   "display": {
+    "type": "IPS LTPS LCD",
+    "size_in": 5.2,
+    "resolution": "1920x1080",
+    "color": true,
+    "touch": true
+   },
+   "battery_mah": 8000,
+   "battery_note": "Removable/internal 8000mAh, capacity not independently verified beyond the listing.",
+   "charging": "USB (type not specified by vendor)",
+   "pmic": null,
+   "storage": "Not specified",
+   "connectivity": [
+    "WiFi",
+    "Bluetooth LE",
+    "2G/3G/4G/5G cellular",
+    "GPS"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none disclosed"
+   ],
+   "dimensions_mm": "177 x 88.6 x 145.8",
+   "weight_g": 654,
+   "case": "Rugged industrial polymer housing",
+   "notable_physical": [
+    "Pistol-grip trigger scan button (typical of this reader class)",
+    "UID Focus Mode for locating a specific tag",
+    "Continuous scan with audible alert"
+   ]
+  },
+  "capabilities": {
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "UHF-only reader hardware; no 125kHz front end."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "UHF-only; no 13.56MHz front end. Will not read MIFARE, iCLASS, or any NFC-A/B/F/V tag."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Not an emulator of any kind - passive inventory reader only."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No HF hardware; irrelevant to this device."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No HF hardware."
+   },
+   "felica": {
+    "v": "no",
+    "note": "No HF hardware."
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Standard Android GPS, present as part of the handheld's normal radio stack rather than for any RFID-specific purpose."
+   },
+   "gps_wardrive_log": {
+    "v": "unknown",
+    "note": "GPS hardware is present but no vendor documentation confirms tag-location logging tied to GPS coordinates."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Full Android handheld with its own battery, cellular and WiFi - operates independent of a host PC."
+   },
+   "sd_logging": {
+    "v": "unknown",
+    "note": "Internal storage exists (Android OS) but expandable SD support and scan-log export are not documented by the reseller."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "Runs Android, so third-party UHF SDK apps likely exist, but no SDK or app store details are published for this specific white-label unit."
+   },
+   "web_ui": {
+    "v": "unknown",
+    "note": "Not documented - likely a bundled native Android scanning app rather than a web interface, but this is not confirmed."
+   },
+   "uhf_rfid_read": {
+    "v": "yes",
+    "note": "Integrated 865-928MHz UHF reader module doing EPC Gen2 inventory/location scanning at 10m+ range, 1300 tags/sec - confirmed core function, marketed specifically as the read/verification companion to UHFKill."
+   },
+   "uhf_rfid_write": {
+    "v": "unknown",
+    "note": "Lab401's spec sheet documents read/inventory scanning only; no write-to-EPC-memory feature is mentioned anywhere in the listing, and the underlying OEM reader module/chip isn't disclosed, so it can't be confirmed either way. Many industrial UHF handhelds of this class do support write, but that isn't established for this specific SKU."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A UHF inventory reader has no meaningful restriction on ownership or use in most jurisdictions - it is the same class of device used openly in retail and logistics. CE/FCC certified per the listing."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "Standard Android app ecosystem",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+    "what": "spec sheet: frequency bands, read range/rate, antenna size support"
+   },
+   {
+    "url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+    "what": "battery (8000mAh), display (5.2in 1920x1080 IPS), dimensions, weight, connectivity, CE/FCC certification, price"
+   },
+   {
+    "url": "https://lab401.com/products/industrial-handheld-uhf-reader",
+    "what": "feature list: continuous scan, audible alert, screen freeze, UID Focus Mode; relationship to UHFKill workflow"
+   },
+   {
+    "url": "https://nfckill.com/",
+    "what": "cross-check confirming NFCKill/Lab401's UHF ecosystem does not itself manufacture readers, supporting the white-label OEM conclusion"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for UHF read/inventory in the current schema, only LF/HF keys - this device's core function (UHF EPC Gen2 inventory scanning) has no dedicated key to mark 'yes' against.",
+   "Underlying OEM/ODM manufacturer and exact SoC/reader-chip part numbers not disclosed by Lab401 and could not be identified from the spec sheet alone.",
+   "Release year unknown.",
+   "Whether the bundled software is a native app, web UI, or both was not confirmed."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ppe-iclass-r90se-longrange-capture",
+  "hardware_id": "ppe-iclass-r90se-longrange-capture",
+  "name": "Long-range iCLASS RFID Capture System",
+  "firmware": "Doppelgänger (Core/Pro tier, pre-installed)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/mwgroup-io/Doppelganger_Core",
+  "firmware_note": "Runs a variant of PPE's Doppelganger_Core ESP32-S3 firmware (the same firmware family as the standalone 'Doppelganger Core' dev board already in this database), pre-flashed and pre-wired inside a commercial reader shell. It decodes Wiegand output from the host reader and pushes captured credentials to the phone-based 'Doppelganger Assistant' UI; deeper card-format coverage (MIFARE, Corporate 1000, etc.) sits behind paid firmware tiers exactly as it does on the bare Core board.",
+  "vendor": "Mayweather Group (PPE - Physical Exploitation)",
+  "vendor_url": "https://store.physicalexploit.com/",
+  "product_url": "https://lab401.com/products/ppe-iclass-longrange-rfid-capture-system",
+  "category": "rfid-nfc",
+  "subcategory": "long-range-badge-capture",
+  "status": "available",
+  "released": null,
+  "price_usd": 845,
+  "price_note": "US$845 direct from PPE's own store (store.physicalexploit.com), the manufacturer. Lab401 resells the same unit at EUR895 (~US$1,041 at the EUR/USD rate on price_checked date) plus a EUR-priced power supply add-on. First-pass figure of $895 appears to have taken the Lab401 euro price as if it were dollars.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Operating the reader-in-a-bag is trivial via the phone app; getting useful results requires understanding iCLASS's legacy/SE/SEOS split and knowing the target site's configuration well enough to plan a brush-by.",
+  "build_effort": "assembled",
+  "build_note": "Ships fully built: a genuine HID iCLASS R90SE industrial reader with the Doppelgänger Core module pre-installed and wired to its Wiegand output, in a protective case meant for bag carry.",
+  "stealth": "covert",
+  "form_factor": "box",
+  "summary": "A genuine HID iCLASS R90SE industrial-grade reader with a Doppelgänger Core capture module wired into its Wiegand line, built to be carried in a bag or backpack and read iCLASS badges off people's belts or bags from up to ~45cm. It is the productised, ready-to-carry version of the same Doppelgänger Core hardware already tracked in this database as a bare implant board - here bolted to real long-range reader hardware and cased for field use.",
+  "honest_take": "The read range comes entirely from the HID R90SE being genuine long-range industrial reader hardware, not from any trick in the Doppelgänger firmware - you could build the same thing yourself for less by buying an R90SE and a bare Doppelgänger Core board (~$60) and wiring them together, which is exactly what this product is. What it captures for iCLASS SE/SEOS cards is the card's identity/CSN, not a working key - PPE's own downgrade-attack language and the wider iCLASS research (including this database's Proxmark3 entry) both note there is no card-only attack on properly configured SE/SEOS; a captured SEOS card only clones cleanly if the site's readers still accept legacy/downgraded credentials. On plain iCLASS Legacy or HID Prox it works exactly as advertised.",
+  "best_for": [
+   "Physical red-team engagements auditing whether staff badges can be brushed in a corridor or lobby",
+   "Sites confirmed or suspected to run iCLASS Legacy or downgrade-vulnerable SE/SEOS",
+   "Teams who want a turnkey long-range capture rig without building one from a bare Doppelgänger board"
+  ],
+  "not_for": [
+   "Properly configured iCLASS SEOS deployments with legacy mode disabled - there is no card-only key-recovery attack for that",
+   "Anyone without written engagement authorisation - a bag-carried covert credential skimmer is squarely in unauthorised-interception territory otherwise",
+   "MIFARE Classic/DESFire key recovery - the reader front end captures UID/identity data only, it does not run cryptanalytic attacks"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3-MINI-1-N8",
+   "mcu_primary_note": "Dual-core Xtensa LX7 up to 240MHz, 8MB QSPI flash, no PSRAM - this is the Doppelgänger Core module's MCU, confirmed from the firmware repo, not the HID reader's own internals (HID does not publish the R90SE's MCU).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "rfid-hf",
+     "note": "HID iCLASS R90SE reader front end, 13.56MHz, rated by PPE for up to ~45cm real-world read range on iCLASS credentials - genuine industrial reader silicon, not disclosed by part number."
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi-ble",
+     "note": "Doppelgänger Core's own radio for the management app/notification egress; separate from the RFID reader path."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Not specified by the vendor for the base unit; PPE sells a 92Wh external power pack as a recommended field accessory (sold separately).",
+   "charging": "n/a (external power pack accessory)",
+   "pmic": null,
+   "storage": "Onboard credential log (capacity not published)",
+   "connectivity": [
+    "Wi-Fi",
+    "Wiegand tap to reader"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Protective carry case (included)",
+   "notable_physical": [
+    "Full-size HID R90SE reader head",
+    "Designed for reader-in-bag or drive-by capture"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "iCLASS Legacy, SE and SEOS identity/CSN read via the R90SE front end at up to ~45cm claimed range; MIFARE UID-only capture also supported."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "This unit only captures; writing happens on a separately paired Proxmark3, not on the capture device itself."
+   },
+   "hf_1356_emulate": {
+    "v": "addon",
+    "note": "Cloning/emulation happens via a paired Proxmark3 RDV4 over the BlueShark Bluetooth module, one-click from the Doppelgänger Assistant app - the capture unit itself does not emulate."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Captures MIFARE UID only via the Wiegand tap; no on-device key-recovery attack runs here (that requires a Proxmark3)."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "Not attempted on-device; DESFire key recovery is not a published capability of this product or any device in this database."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "R90SE is an iCLASS/ISO14443B-family reader; not documented as reading ISO15693/NFC-V tags."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Not a supported format for this reader."
+   },
+   "emv_read": {
+    "v": "no",
+    "note": "Not an EMV-capable reader; iCLASS access-control focus only."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "13.56MHz-only reader hardware (R90SE). Use the MaxiProx sibling product for 125kHz capture."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Captures and forwards to a Proxmark for cloning; it does not perform a live reader-to-card relay."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Cross-platform Doppelgänger Assistant WebUI/app for managing captures, tagging, and exfiltrating credential data."
+   },
+   "cloud_c2": {
+    "v": "addon",
+    "note": "ATLAS platform (separate paid annual licence, per the sibling Doppelgänger Core database entry) adds team-wide real-time alerting."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Runs the capture side standalone; cloning requires pairing with a separate Proxmark3 RDV4."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No documented scripting/CLI interface; managed entirely through the Doppelgänger Assistant app."
+   },
+   "wiegand_tap": {
+    "v": "yes",
+    "note": "The Doppelganger Core capture module is wired directly into the genuine HID R90SE reader's Wiegand output line - it captures whatever the R90SE already decoded, not the RF air interface itself. That's why it works on iCLASS Legacy/Prox without incident but only gets a SEOS card's CSN, not a working key, per this record's own honest_take."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "This is a covert long-range credential skimmer, sold explicitly for penetration testing. Capturing badge credentials from people who have not consented, at a site you are not authorised to test, is unauthorised access/interception in essentially every jurisdiction - a signed, site-specific scope of work is the only thing that makes use of this device defensible."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-01",
+   "app_store": "No - Doppelgänger Assistant app/WebUI",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "PPE iCLASS R90SE Longrange Data Interpreter",
+   "iCLASS Longrange Capture System"
+  ],
+  "sources": [
+   {
+    "url": "https://store.physicalexploit.com/products/hid-iclass-r90se-longrange-weigand-data-interpreter",
+    "what": "manufacturer price ($845), what's included, product description"
+   },
+   {
+    "url": "https://lab401.com/products/ppe-iclass-longrange-rfid-capture-system",
+    "what": "reseller spec page: 45cm range claim, Doppelgänger Assistant workflow, BlueShark/Proxmark3 integration, EUR pricing"
+   },
+   {
+    "url": "https://lab401.com/products/ppe-iclass-longrange-rfid-capture-system",
+    "what": "protocol coverage: iCLASS Legacy/SE/SEOS, MIFARE UID capture, downgrade-attack/legacy-mode language"
+   },
+   {
+    "url": "https://github.com/mwgroup-io/Doppelganger_Core",
+    "what": "Doppelgänger Core firmware repo: ESP32-S3-MINI-1-N8 target, license, release cadence (v1.2.3, 2026-01-10)"
+   },
+   {
+    "url": "https://store.physicalexploit.com/collections/all",
+    "what": "confirms this SKU and the related Doppelgänger PCB / power-supply accessories on the manufacturer's own storefront"
+   }
+  ],
+  "research_gaps": [
+   "HID R90SE's own reader-chip part number is not published by HID or PPE.",
+   "Release year of this specific bundled product (as distinct from the R90SE reader itself) not found.",
+   "Exact battery/runtime figures for field use without the optional 92Wh pack not published.",
+   "No capability key exists to represent 'captures via Wiegand tap on a legitimate host reader' as distinct from 'independently defeats the card protocol' - this device family relies entirely on that distinction and it is currently only expressible in prose."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ppe-maxiprox-5375-longrange-capture",
+  "hardware_id": "ppe-maxiprox-5375-longrange-capture",
+  "name": "Long-range MaxiProx 5375 125KHz Capture System",
+  "firmware": "Doppelgänger (Core/Pro tier, pre-installed)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/mwgroup-io/Doppelganger_Core",
+  "firmware_note": "Runs a variant of PPE's Doppelganger_Core ESP32-S3 firmware (the same firmware family as the standalone 'Doppelganger Core' dev board already in this database), pre-flashed and pre-wired inside a commercial reader shell. It decodes Wiegand output from the host reader and pushes captured credentials to the phone-based 'Doppelganger Assistant' UI; deeper card-format coverage (MIFARE, Corporate 1000, etc.) sits behind paid firmware tiers exactly as it does on the bare Core board.",
+  "vendor": "Mayweather Group (PPE - Physical Exploitation)",
+  "vendor_url": "https://store.physicalexploit.com/",
+  "product_url": "https://lab401.com/products/long-range-maxiprox-5375-125khz-capture-system",
+  "category": "rfid-nfc",
+  "subcategory": "long-range-badge-capture",
+  "status": "available",
+  "released": null,
+  "price_usd": 875,
+  "price_note": "US$875 direct from PPE's own store (SKU HID-MPROX-LWDI-001), the manufacturer. Lab401 resells the same unit at EUR825 (~US$959 at the EUR/USD rate on price_checked date) - here the direct-from-maker price is actually higher than the EU reseller's, unusually. First-pass figure of $825 appears to have taken the Lab401 euro price as if it were dollars.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Same as the iCLASS sibling: trivial to operate, but you need to know the target site is still running unauthenticated 125kHz HID Prox before this is worth carrying, since that is the entire reason it works.",
+  "build_effort": "assembled",
+  "build_note": "Ships fully built: a genuine HID MaxiProx 5375 long-range industrial reader with the Doppelgänger Core module pre-wired to its Wiegand output, cased for bag carry.",
+  "stealth": "covert",
+  "form_factor": "box",
+  "summary": "A genuine HID MaxiProx 5375 - a reader designed for vehicle-gate and long-corridor access control, with up to 60cm rated range on standard 125kHz cards - fitted with a Doppelgänger Core capture module on its Wiegand line and cased for reader-in-bag or drive-by credential capture. It is the LF sibling of the iCLASS capture system in the same product line.",
+  "honest_take": "125kHz HID Prox, Indala, AWID and the other formats this reads are unauthenticated by design - the card broadcasts its ID to anything that energises it, and that has been true since these formats existed. This device's entire value is repackaging that known weakness into genuine long-range industrial reader hardware you can carry in a bag; there is no clever attack here, and a site that has moved to iCLASS SE/SEOS or another authenticated credential is completely immune to it. The 60cm range figure is HID's own spec for the MaxiProx reading a standard ProxCard II, not a guaranteed real-world figure for every card format or badge holder orientation - PPE's own listing quotes shorter ranges (15-24 inches) for several other Wiegand formats.",
+  "best_for": [
+   "Auditing sites still running 125kHz HID Prox, Indala or AWID with no rolling authentication",
+   "Drive-by or reader-in-bag physical red-team collection at vehicle gates and long corridors",
+   "Pairing with the iCLASS capture system to cover both major badge technologies in one engagement"
+  ],
+  "not_for": [
+   "Sites already migrated to iCLASS SE/SEOS, MIFARE DESFire or any mutually-authenticated credential",
+   "Anyone without a written, site-specific pentest authorisation",
+   "Short-range or pocket use - the MaxiProx head is a large industrial reader, not discreet up close"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3-MINI-1-N8",
+   "mcu_primary_note": "Doppelgänger Core module's MCU - see the iCLASS sibling entry. The MaxiProx reader itself is HID hardware with its own undisclosed internals.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "rfid-lf",
+     "note": "HID MaxiProx 5375AGN00 long-range 125kHz reader front end. HID rates it up to 60cm on ProxCard II/ProxPass II; PPE quotes shorter ranges (15-24in) for several other Wiegand card formats."
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi-ble",
+     "note": "Doppelgänger Core radio for the management app; independent of the LF reader path."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Not specified for the base unit; requires 12VDC input per the manufacturer listing. A 7,000mAh/76.65Wh external power pack is sold separately for field use.",
+   "charging": "n/a (external power pack accessory)",
+   "pmic": null,
+   "storage": "Onboard credential log (capacity not published)",
+   "connectivity": [
+    "Wi-Fi",
+    "Wiegand tap to reader"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Protective carry case (included)",
+   "notable_physical": [
+    "Full-size HID MaxiProx 5375 reader head - noticeably larger than a standard badge reader",
+    "12V DC input"
+   ]
+  },
+  "capabilities": {
+   "lf_125khz_read": {
+    "v": "yes",
+    "note": "HID H10301/2804 Wiegand/ATS/ADT/D10202/H10306/Corporate 1000/S12906/H10304/H800002 and other Wiegand-era 125kHz formats, per the manufacturer's format list, up to a claimed 60cm on standard ProxCard II."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "Captures only; writing/cloning is done on a separately paired Proxmark3, not on this unit."
+   },
+   "lf_125khz_emulate": {
+    "v": "addon",
+    "note": "Cloning/emulation via a paired Proxmark3 RDV4 over BlueShark, one-click from the Doppelgänger Assistant app; the capture unit itself only captures."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "This is the 125kHz LF sibling - it does not read iCLASS/13.56MHz. Use the R90SE-based iCLASS capture system for that."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No HF hardware present."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No HF reader; not applicable."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No HF hardware."
+   },
+   "magspoof": {
+    "v": "no",
+    "note": "Not a magstripe device; RFID-only."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Captures and forwards for later cloning; not a live relay."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Doppelgänger Assistant cross-platform app for capture management and Proxmark3 cloning workflow."
+   },
+   "cloud_c2": {
+    "v": "addon",
+    "note": "Optional ATLAS platform subscription for team-wide alerting across deployed units."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Capture runs standalone; cloning needs a separate paired Proxmark3 RDV4."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No documented CLI/scripting; app-managed only."
+   },
+   "wiegand_tap": {
+    "v": "yes",
+    "note": "The Doppelganger Core module is fitted to the genuine HID MaxiProx 5375's Wiegand line, capturing the reader's already-decoded output - the device's entire value rides on 125kHz Prox/Indala/AWID formats being unauthenticated and broadcasting in the clear."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "A covert long-range LF credential skimmer sold for penetration testing. Capturing badge data from people without consent, or at a site you are not authorised to test, is unauthorised access/interception in essentially every jurisdiction - only defensible under a signed, site-specific engagement scope."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-01",
+   "app_store": "No - Doppelgänger Assistant app/WebUI",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "HID MaxiProx 5375 Longrange Data Interpreter",
+   "MaxiProx Longrange Capture System"
+  ],
+  "sources": [
+   {
+    "url": "https://store.physicalexploit.com/products/hid-maxiprox-5375-longrange-wiegand-data-interpreter",
+    "what": "manufacturer price ($875), SKU, what's included, format list"
+   },
+   {
+    "url": "https://store.physicalexploit.com/products/hid-maxiprox-5375-longrange-wiegand-data-interpreter",
+    "what": "12V DC power requirement, 'fully assembled with clean power distribution' claim"
+   },
+   {
+    "url": "https://lab401.com/products/long-range-maxiprox-5375-125khz-capture-system",
+    "what": "reseller spec page: 60cm range claim, workflow description, EUR pricing"
+   },
+   {
+    "url": "https://github.com/mwgroup-io/Doppelganger_Core",
+    "what": "Doppelgänger Core firmware repo details shared with the iCLASS sibling product"
+   },
+   {
+    "url": "https://store.physicalexploit.com/products/7-000mah-76-65wh-power-supply",
+    "what": "confirms the field power-pack accessory and its capacity, sold separately from the manufacturer's own store"
+   }
+  ],
+  "research_gaps": [
+   "HID MaxiProx 5375's internal reader-chip part number not published.",
+   "Release year of this bundled product not found.",
+   "Battery runtime without the optional external pack not published.",
+   "No capability key distinguishes 'unauthenticated LF format capture via genuine reader hardware' from an active attack - this device's entire function rides on that nuance, currently only expressible in prose."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ppe-stealth-decoy-reader-sdr-v2",
+  "hardware_id": "ppe-stealth-decoy-reader-sdr-v2",
+  "name": "Stealth Decoy Reader (SDR v2)",
+  "firmware": "Doppelgänger (Core/Pro tier, pre-installed)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/mwgroup-io/Doppelganger_Core",
+  "firmware_note": "Runs a variant of PPE's Doppelganger_Core ESP32-S3 firmware (the same firmware family as the standalone 'Doppelganger Core' dev board already in this database), pre-flashed and pre-wired inside a commercial reader shell. It decodes Wiegand output from the host reader and pushes captured credentials to the phone-based 'Doppelganger Assistant' UI; deeper card-format coverage (MIFARE, Corporate 1000, etc.) sits behind paid firmware tiers exactly as it does on the bare Core board.",
+  "vendor": "Mayweather Group (PPE - Physical Exploitation)",
+  "vendor_url": "https://store.physicalexploit.com/",
+  "product_url": "https://lab401.com/products/stealth-decoy-reader",
+  "category": "rfid-nfc",
+  "subcategory": "decoy-credential-harvester",
+  "status": "available",
+  "released": null,
+  "price_usd": 375,
+  "price_note": "US$375 direct from PPE's store for the 'Stealth Decoy Reader (SDR) v2' with a genuine reader housing (one of three variants: HID multiCLASS SE RP40, HID Signo 20TKS, or Paxton P75). PPE also sells the bare Doppelganger board alone for $60. Lab401 lists the same product line under two separate SKUs that this record merges: a generic 'Stealth Decoy Reader' spanning EUR125 (module only) to EUR685 (full reader), and a 'Dual Mode Paxton Long Range / Stealth Decoy Reader' at a flat EUR475 (~US$552) which is simply the Paxton P75 configuration of this same product sold as its own listing. Treat any Lab401 price between EUR125 and EUR685 as a configuration of this one item.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Installing a convincing decoy at a real door and not getting caught is the actual skill; operating the capture app once it is placed is trivial.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a genuine commercial reader (HID multiCLASS SE RP40, HID Signo 20TKS, or Paxton P75, selectable) with the Doppelgänger module pre-installed inside, or as the bare module for building your own housing. Mounts with the included magnetic plate and adhesive strips.",
+  "stealth": "implant",
+  "form_factor": "box",
+  "summary": "A genuine commercial access-control reader - HID multiCLASS SE, HID Signo, or a Paxton Net2-specific model - with a Doppelgänger Core credential-capture module hidden inside, meant to be mounted beside or in place of a real reader so anyone who badges it hands over their credential. It is the 'looks completely legitimate' counterpart to the bag-carried long-range capture units in the same PPE product line, and the Paxton-specific configuration that some resellers list separately as the 'Dual Mode Paxton Long Range / Stealth Decoy Reader' is the same base product.",
+  "honest_take": "This device only works because it looks exactly like the reader already on the wall - the entire attack is social engineering plus physical access, not a technical exploit. It supports a long protocol list (iCLASS SE/SEOS/SR, MIFARE Classic/DESFire EV1, HID Prox, AWID, EM4102, T5577, Indala on Signo readers, Paxton Net2), but as with every other device in this batch, supporting a protocol in the Wiegand-tap sense means capturing whatever the real reader already decoded - it does not defeat DESFire or SEOS cryptography, it just sits downstream of a reader that already did the legitimate authentication and taps the wire carrying the result. The 4+ hour battery figure is for the module alone; a full engagement mounting it near an entrance for days needs mains power or repeat battery swaps, neither of which the covert framing advertises. This is, bluntly, a physical-access wiretap wearing a badge reader's clothes.",
+  "best_for": [
+   "Authorised physical red-team engagements testing whether a fake reader gets noticed or reported",
+   "Sites where the specific target reader model (multiCLASS SE, Signo, or Paxton P75) is known in advance",
+   "Demonstrating credential-capture risk to a client in a controlled, scoped test"
+  ],
+  "not_for": [
+   "Anything without an explicit, signed, site-named engagement scope - installing this on a wall you do not control is straightforwardly an unauthorised-interception/burglary-adjacent offence",
+   "Defeating DESFire or SEOS cryptography - it captures what the real reader already decoded, it does not break the crypto",
+   "Long unattended deployments without a mains tap - the onboard battery is rated ~4 hours"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3-MINI-1-N8",
+   "mcu_primary_note": "Doppelgänger Core module, same as the other PPE capture products in this line.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "rfid-lf-hf",
+     "note": "Whatever the host reader shell contains (HID multiCLASS SE RP40 / HID Signo 20TKS / Paxton P75) - the module itself does not read RF, it taps the host reader's decoded Wiegand output."
+    },
+    {
+     "ic": "ESP32-S3",
+     "role": "wifi-ble",
+     "note": "Doppelgänger Core radio for the management app and notification egress."
+    }
+   ],
+   "display": null,
+   "battery_mah": 1800,
+   "battery_note": "3.7V 1800mAh LiPo with an integrated 12V boost circuit; PPE rates it at 4+ hours continuous runtime.",
+   "charging": "Not specified (module-level charging, likely USB)",
+   "pmic": "Integrated 12V boost circuit for reader power",
+   "storage": "Onboard credential log (capacity not published)",
+   "connectivity": [
+    "Wi-Fi",
+    "Wiegand tap to host reader"
+   ],
+   "gpio": "Wiegand D0/D1 tap",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Genuine commercial reader housing (variant-dependent) or bare module with magnetic rear plate and adhesive hook-and-pile strips",
+   "notable_physical": [
+    "Indistinguishable from the genuine reader it is built from",
+    "Magnetic mount for rapid, non-destructive placement"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "Captures decoded output for iCLASS SE/SEOS/SR/Legacy and MIFARE Classic/DESFire EV1 - via whichever host reader (multiCLASS SE, Signo) is fitted; it taps the reader's own decode, it does not independently break any of these protocols."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "Capture-only device; writing/cloning happens on a separately paired Proxmark3."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No emulation on the decoy unit itself."
+   },
+   "lf_125khz_read": {
+    "v": "yes",
+    "note": "HID Prox, AWID, EM4102, T5577, Indala (Signo-hosted variant only), captured the same Wiegand-tap way."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "Capture-only; no write path on this device."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "Captures decoded UID/credential data from the host reader; does not itself run key-recovery attacks."
+   },
+   "mifare_desfire": {
+    "v": "partial",
+    "note": "Host reader (multiCLASS SE) can decode DESFire EV1 traffic it is configured to trust; the decoy module captures that output. No DESFire key recovery is performed - see the honest_take."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "Not in the documented format list for any of the three reader variants."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Captures and stores for later cloning via Proxmark3; not a live relay."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Doppelgänger Assistant app/WebUI with instant capture notifications."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Runs unattended off its own battery once mounted; ~4 hours rated."
+   },
+   "cloud_c2": {
+    "v": "addon",
+    "note": "ATLAS platform (separate paid annual licence) adds team-wide real-time alerting across multiple deployed units."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No documented CLI/scripting interface; app-managed only."
+   },
+   "wiegand_tap": {
+    "v": "yes",
+    "note": "A genuine commercial reader (HID multiCLASS SE/Signo or Paxton Net2) with a hidden Doppelganger Core module tapping its Wiegand output - captures whatever the host reader already decoded (iCLASS SE/SEOS/SR, MIFARE, Prox, AWID, etc.), not a protocol-level card attack."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "A decoy reader designed to be mistaken for the real one is a covert interception device by construction. Installing it anywhere you do not have explicit written authorisation naming the site is, in most jurisdictions, unauthorised access, wiretapping/interception, and potentially trespass or burglary-adjacent offences simultaneously."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-01",
+   "app_store": "No - Doppelgänger Assistant app/WebUI, optional ATLAS subscription platform",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Dual Mode Paxton Long Range / Stealth Decoy Reader",
+   "SDR v2",
+   "Ghost Reader",
+   "PPE Stealth Decoy Reader"
+  ],
+  "sources": [
+   {
+    "url": "https://store.physicalexploit.com/products/ghost-reader",
+    "what": "manufacturer price ($375), SDR v2 naming, reader variant options, battery spec, supported formats"
+   },
+   {
+    "url": "https://store.physicalexploit.com/products/ghost-reader",
+    "what": "mounting method (magnetic plate, adhesive strips) and 4+ hour runtime claim"
+   },
+   {
+    "url": "https://lab401.com/products/stealth-decoy-reader",
+    "what": "reseller page confirming EUR125-685 configuration range and that Paxton/HID variants are configurations of one product"
+   },
+   {
+    "url": "https://lab401.com/products/dual-mode-paxton-long-range-stealth-decoy-reader",
+    "what": "the Paxton-specific listing this record treats as the same product's Paxton P75 configuration"
+   },
+   {
+    "url": "https://github.com/mwgroup-io/Doppelganger_Core",
+    "what": "shared firmware repo and MCU details"
+   },
+   {
+    "url": "https://store.physicalexploit.com/products/doppelganger-pcb",
+    "what": "confirms the $60 bare Doppelganger board price referenced in price_note"
+   }
+  ],
+  "research_gaps": [
+   "Could not independently confirm from a primary PPE source that the Lab401 'Dual Mode Paxton' listing and the base 'Stealth Decoy Reader' listing are billed as literally the same SKU rather than a closely related but separately numbered product - treating them as one is the best-supported reading of the available pages, not a certainty.",
+   "Paxton Net2 active-keyfob range (quoted elsewhere as 2.5m vs 10cm for cards) not independently verified.",
+   "Release year not found.",
+   "No capability key exists for 'decoy device mistaken for a legitimate reader' as a stealth mechanism distinct from a passive skimmer - currently only expressible via the stealth:'implant' field and prose."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ics-decoder-icopy-x",
+  "hardware_id": "ics-decoder-icopy-x",
+  "name": "iCS Decoder for iCopy-X",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "ICopyX",
+  "vendor_url": null,
+  "product_url": "https://hackerwarehouse.com/product/ics-decoder-for-icopy-x/",
+  "category": "rfid-nfc",
+  "subcategory": "cloning-accessory",
+  "status": "available",
+  "released": null,
+  "price_usd": 450,
+  "price_note": "US$450 direct at Hacker Warehouse. Lab401 sells the identical accessory (same function, same iCopy-X requirement, same included legacy-blank cards) as 'iCS Decoder for iCLASS SE/SEOS' at EUR425 (~US$494 at the EUR/USD rate on price_checked date) - this record merges what the first pass listed as two separate devices, since they are the same USB-C accessory module sold by two resellers under slightly different names.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Plugging it in is trivial; understanding which target readers are actually running in the legacy-compatible mode this decoder depends on requires real iCLASS SE/SEOS knowledge.",
+  "build_effort": "assembly",
+  "build_note": "Plug-in USB-C accessory for an iCopy-X (sold separately, already tracked in this database as iCopy-XS). No soldering.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A USB-C decoder dongle that plugs into an iCopy-X/iCopy-XS and extends its cloning ability to HID iCLASS SE and SEOS cards - previously the two formats no consumer-grade cloner could touch. It decodes the target card's data and lets the iCopy-X write a new card using legacy iCLASS encoding, provided the destination reader still accepts legacy-compatible credentials.",
+  "honest_take": "The catch is buried in the vendor's own coverage figure: this works on iCLASS SE/SEOS readers 'configured to accept legacy cards,' which the vendor estimates covers about 85% of deployments - it is a downgrade attack against backward-compatibility, not a break of SE/SEOS's actual AES cryptography. A site that has disabled legacy mode (which HID explicitly supports and recommends) is unaffected by this device entirely, and there is no independent confirmation of that 85% figure beyond the seller's own claim. It is real and it is the only consumer-accessible way to touch these formats at all, but it is not 'iCLASS SE/SEOS cracked.'",
+  "best_for": [
+   "iCopy-XS owners auditing sites that might still have iCLASS SE/SEOS legacy compatibility enabled",
+   "Confirming whether a client's 'we upgraded to SEOS' claim actually disabled legacy mode"
+  ],
+  "not_for": [
+   "Sites with legacy mode disabled on their iCLASS SE/SEOS readers - this decoder has nothing to attack there",
+   "Any other card format - it is iCLASS SE/SEOS specific",
+   "Anyone without an iCopy-X/iCopy-XS already - it is an accessory, not a standalone device"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published. Sold as a plug-in decoder dongle; internal chip not disclosed by ICopyX.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the iCopy-X over USB-C; no internal battery.",
+   "charging": "n/a - USB-C powered via host iCopy-X",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB-C to iCopy-X"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Small plastic dongle",
+   "notable_physical": [
+    "Includes 3 blank compatible cards (iCL legacy, iCE elite, iCS SE/SEOS) and a USB-C cable"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "addon",
+    "note": "Extends the host iCopy-X's read/decode capability to iCLASS SE and SEO-S specifically; requires the iCopy-X to function at all."
+   },
+   "hf_1356_write": {
+    "v": "addon",
+    "note": "Enables writing a decoded SE/SEOS card's data to a legacy-encoded blank via the iCopy-X, when the target reader still accepts legacy credentials."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "A decoder, not an emulator - it produces a physical cloned card via the iCopy-X, it does not emulate a card in place."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "iCLASS SE/SEOS-specific accessory; no MIFARE functionality of its own (the host iCopy-X handles MIFARE separately)."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "Not a supported format for this decoder."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "Not a supported format; iCLASS SE/SEOS only."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Not a supported format."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "13.56MHz-only accessory."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "13.56MHz-only accessory."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "13.56MHz-only accessory."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Cannot function without the host iCopy-X; it is not a standalone device."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No documented interface beyond plugging into the iCopy-X's own UI."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Cloning an access badge you are not authorised to duplicate is a computer-misuse/access-device offence in most jurisdictions regardless of which card format is involved. Owning the decoder itself carries no special restriction beyond what already applies to the iCopy-X it plugs into."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "iCS Decoder for iCLASS SE/SEOS",
+   "iCS Decoder"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/ics-decoder-for-icopy-x/",
+    "what": "US price, what's included, ~85% legacy-mode coverage claim"
+   },
+   {
+    "url": "https://hackerwarehouse.com/product/ics-decoder-for-icopy-x/",
+    "what": "target audience framing (pentesters/law enforcement) and 'previously impossible' cloning claim"
+   },
+   {
+    "url": "https://lab401.com/products/ics-decoder-iclass-se-seos-cloner-decoder",
+    "what": "identical product listed under a different name, EUR price, confirms it is the same USB-C accessory"
+   },
+   {
+    "url": "https://lab401.com/collections/rfid-tools",
+    "what": "confirms this SKU's product slug alongside the rest of the Lab401 RFID catalogue, cross-checking it is a distinct listed product rather than a placeholder"
+   }
+  ],
+  "research_gaps": [
+   "The 85% legacy-mode-coverage figure is the vendor's own claim, not independently verified.",
+   "Internal decoder chip/mechanism not published.",
+   "Release year not found.",
+   "No capability key exists for 'downgrade-attack decode of a higher-security format via backward compatibility' - this accessory's entire function is that mechanism, currently only expressible in prose plus the honest_take."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "hydranfc-shield-v2",
+  "hardware_id": "hydranfc-shield-v2",
+  "name": "HydraNFC Shield v2",
+  "firmware": "HydraFW (official)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/hydrabus/hydrafw_hydranfc_shield_v2",
+  "firmware_note": "Open-source (Apache-2.0) firmware dedicated to HydraBus v1 + HydraNFC Shield v2, actively maintained (commits as recent as November 2025). Implements reader/writer for NFC-A/B/F/V, NFC-A/F card emulation, P2P, a real-time sniffer mode with a PulseView/DSView decoder, and low-level access for custom/MIFARE Classic work.",
+  "vendor": "HydraBus (Benjamin Vernoux)",
+  "vendor_url": "https://hydrabus.com",
+  "product_url": "https://hydrabus.com/buy-online/",
+  "category": "rfid-nfc",
+  "subcategory": "research-platform-shield",
+  "status": "available",
+  "released": "2020",
+  "price_usd": 231,
+  "price_note": "EUR199 (converted ~US$231 at the EUR/USD rate on price_checked date) was the last confirmed shield-only price found (shield + antenna + 2 SMA cables), via a hydrabus.com announcement snippet. The live hydrabus.com shop page and the specific product page both failed to load during this research (shop showed no products, product page 404'd, Amazon.de returned a server error), so this figure could not be reconfirmed against a live listing - treat as dated. It requires a separate HydraBus v1 host board (sold at Digi-Key and via hydrabus.com resellers, price not confirmed here) to function; it is a shield, not a standalone device. First-pass figure of $215 is in the same range.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Command-line HydraBus console driving raw NFC frames; there is no app or GUI. You need to already understand ISO14443/15693 framing to get anything useful out of it.",
+  "build_effort": "assembly",
+  "build_note": "Plugs directly onto a HydraBus v1 board (no soldering for the shield itself); flashing HydraFW to the HydraBus is a standard DFU/ST-Link process.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An open-source 13.56MHz NFC shield built around ST25R3916 - the same NFC chipset used in the Proxmark3 RDV4.01 and other reference platforms - that plugs onto a HydraBus v1 multi-tool board. It reads/writes/emulates ISO14443A, ISO14443B, FeliCa and ISO15693, and includes a genuine real-time RF sniffer mode with a dedicated PulseView decoder, at claimed 12cm+ (ISO14443A) and 16cm+ (ISO15693) ranges.",
+  "honest_take": "This is not a Flipper-style all-in-one - it is a bare shield that does nothing without a separate HydraBus v1 host, and the whole stack is console-driven with no app. Where it earns its place next to a Proxmark3 is the same ST25R3916 chipset giving genuinely comparable RF performance at a fraction of the price, plus a real hardware sniffer mode most cheap NFC tools lack entirely. What it does not have is a Proxmark3's library of ready-made MIFARE Classic key-recovery attacks (darkside/nested/hardnested) - the firmware gives you raw frame access and expects you to build that yourself. The catch is availability: the official storefront was effectively non-functional when checked (empty shop listing, 404 product page), so budget for the possibility this is easier to find via Digi-Key or an EU reseller than direct from the maker.",
+  "best_for": [
+   "Learning raw ISO14443/15693 protocol framing on genuinely capable reader silicon at low cost",
+   "Sniffing card-reader exchanges with the dedicated PulseView/DSView decoder",
+   "Anyone who already owns or wants a HydraBus for other protocols (SPI/I2C/UART/1-Wire/etc.) and wants NFC added"
+  ],
+  "not_for": [
+   "Anyone without a HydraBus v1 already - the shield alone does nothing",
+   "Users who want a phone app or GUI - this is command-line only",
+   "MIFARE Classic key-recovery attacks - the firmware exposes low-level access but does not ship darkside/nested/hardnested implementations the way a Proxmark3 does",
+   "125kHz LF work of any kind - there is no LF hardware on this shield at all"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The shield itself has no MCU - all processing happens on the host HydraBus v1's STM32F405 (2MB flash, 192KB RAM Cortex-M4). The shield is the NFC front end only.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ST25R3916",
+     "role": "nfc",
+     "note": "STMicroelectronics NFC transceiver. NFC-A/ISO14443A and NFC-B/ISO14443B up to 848kbit/s, NFC-F/FeliCa up to 424kbit/s, NFC-V/ISO15693 up to 53kbit/s. 1.6W output at 5V. 512-byte FIFO, SPI up to 10Mbit/s."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the host HydraBus over its own USB connection; no separate battery on the shield.",
+   "charging": "n/a (shield draws power from HydraBus host)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Stacks onto HydraBus v1 header"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB shield, no enclosure",
+   "notable_physical": [
+    "SMA connectors for the included antenna cables",
+    "27.12MHz +/-20ppm crystal"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "ISO14443A/B, FeliCa, ISO15693 read, claimed 12cm+ (14443A) / 16cm+ (15693) range via ST25R3916."
+   },
+   "hf_1356_write": {
+    "v": "partial",
+    "note": "Writer functionality exists via low-level protocol access; a fully guided write workflow like a Proxmark3's per-tag commands is not part of the firmware's documented feature set."
+   },
+   "hf_1356_emulate": {
+    "v": "yes",
+    "note": "NFC-A and NFC-F card emulation modes implemented in HydraFW."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No darkside/nested/hardnested implementation in this firmware; it exposes low-level frame access for custom/MIFARE Classic work but does not ship key-recovery attacks out of the box."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "Not a documented feature of this firmware."
+   },
+   "iso15693": {
+    "v": "yes",
+    "note": "NFC-V/ISO15693 reader/writer and codec support, claimed 16cm+ range."
+   },
+   "felica": {
+    "v": "yes",
+    "note": "NFC-F/FeliCa reader support up to 424kbit/s and card emulation mode."
+   },
+   "emv_read": {
+    "v": "no",
+    "note": "No EMV kernel documented in this firmware."
+   },
+   "nfc_type4_ndef": {
+    "v": "unknown",
+    "note": "Low-level frame access could support Type 4/NDEF handling, but no dedicated NDEF command set is documented."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware on this shield at all - it is 13.56MHz only, unlike a Proxmark3 or Chameleon which also cover 125kHz."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "nfc_relay": {
+    "v": "unknown",
+    "note": "Raw frame access could theoretically support a relay built across two units, but no such mode is documented in the firmware."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "Inherited from the HydraBus host, which exposes UART among its other protocol modes; not specific to the NFC shield itself."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Console command set over the HydraBus UART/USB, scriptable from any host language that can talk serial."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a HydraBus host and typically a PC terminal session; not a standalone field device."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning an open reader/writer/sniffer platform is legal in most countries. Reading, cloning or sniffing a card or reader exchange you are not authorised to test is a separate offence in most jurisdictions - check local law."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2025-11",
+   "app_store": "No - console command set only",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "HydraNFC v2",
+   "HydraBus + HydraNFC Shield v2"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/hydrabus/hydrafw_hydranfc_shield_v2",
+    "what": "firmware repo: ST25R3916 confirmation, protocol coverage, Apache-2.0 license"
+   },
+   {
+    "url": "https://hydrabus.com/hydranfc-shield-v2-specifications/",
+    "what": "official spec page: chip, ranges, FIFO, SPI speed, output power"
+   },
+   {
+    "url": "https://hydrabus.com/buy-online/",
+    "what": "current reseller list (Digi-Key), no live price found"
+   },
+   {
+    "url": "https://hydrabus.com/product/hydrabus-v1-0-rev1-5-hydranfc-shield-v2-r1-5/",
+    "what": "attempted product/price page, returned 404 during this research"
+   },
+   {
+    "url": "https://github.com/hydrabus/hydranfc",
+    "what": "the older v1 hardware repo (TRF7970A-based); checked to confirm it is NOT the v2 shield covered by this record, since the first-pass researcher's source URL pointed here"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm a current, live shield-only price - the vendor's shop and product pages were unreachable during research; the EUR199 figure used is from a cached search snippet, not a page load.",
+   "HydraBus v1 host board price (required separately) not confirmed.",
+   "Exact release year of the v2 shield (as distinct from the original v1/TRF7970A-based shield) is approximate.",
+   "Whether Type 4/NDEF handling and cross-unit relay are genuinely supported could not be confirmed either way from the documentation checked."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "odiin-nfc-emulator",
+  "hardware_id": "odiin-nfc-emulator",
+  "name": "Odiin",
+  "firmware": "Odiin (official, prototype)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/cmdwtf/Odiin",
+  "firmware_note": "Open source (0BSD licensed) and explicitly labelled a prototype by its own creator: 'the firmware itself is not by any means finished, and there's very likely a fair amount of bugs.'",
+  "vendor": "cmd; wtf? (Chris Marc Dailey)",
+  "vendor_url": "https://cmd.wtf/",
+  "product_url": "https://www.tindie.com/products/cmd/odiin-nfc-tag-emulation-toolkit/",
+  "category": "rfid-nfc",
+  "subcategory": "tag-emulator",
+  "status": "out-of-stock",
+  "released": "2020",
+  "price_usd": 169,
+  "price_note": "US$169 was the last listed Tindie price; the seller's page currently reads 'This seller is taking a break' with no active listing. Hardware and firmware designs are fully open source, so a DIY build from the published BOM is the fallback if you cannot buy one assembled.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Drag-and-drop tag dump files onto it like a USB drive and tap it to a reader - simple in concept, but the firmware is an acknowledged unfinished prototype, so expect to troubleshoot.",
+  "build_effort": "assembled",
+  "build_note": "Sold assembled when in stock; hardware (Biifrost) and firmware repos are both public for anyone who wants to build their own instead of waiting for restock.",
+  "stealth": "discreet",
+  "form_factor": "handheld",
+  "summary": "A small nRF52840-based handheld with a colour LCD that emulates NFC-A tags - NTAG213/215/216 well, MIFARE Ultralight C in rudimentary form - by loading dump files from an onboard drive exposed over USB-C, then presenting the selected tag to a reader like a real NFC-A card. Comparable in concept to a Flipper Zero's NFC-emulation slice, but purpose-built and open source, with hardware and firmware both public.",
+  "honest_take": "The maker's own description is the most honest one available: 'absolutely a prototype,' with acknowledged bugs and unfinished write handling. MIFARE Classic emulation and NDEF payload formatting are listed as planned, not shipped. As of this research the seller is not actively selling it - 'taking a break' - so this is currently a buy-if-you-can-find-one-secondhand-or-build-it-yourself device rather than something you can order today. If NFC tag emulation is the only thing you need, a Flipper Zero or Chameleon Ultra are both actively sold, actively maintained, and more capable out of the box; Odiin's appeal is being small, open, and hackable rather than being the most capable emulator available.",
+  "best_for": [
+   "Hobbyists who want a fully open hardware+firmware NFC emulator to build or modify themselves",
+   "NTAG213/215/216 emulation from dump files",
+   "Anyone comfortable working around an acknowledged-unfinished prototype firmware"
+  ],
+  "not_for": [
+   "Buyers who need to purchase one today - the seller is currently not shipping",
+   "MIFARE Classic emulation or tag writing - both are listed as unimplemented/planned, not working",
+   "Anyone wanting a polished, supported product - the maker is explicit this is a rough prototype",
+   "Reading or LF work of any kind - it is emulation-only and HF-only"
+  ],
+  "hardware": {
+   "mcu_primary": "nRF52840",
+   "mcu_primary_note": "ARM Cortex-M4F with FPU, 1MB internal flash + 8MB external QSPI flash, 256KB RAM. Also carries BLE/mesh/Thread/Zigbee radio capability, largely unused by the current NFC-focused firmware.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "nRF52840 NFC-A tag peripheral",
+     "role": "nfc",
+     "note": "On-die NFC-A tag emulation, same class of peripheral used by the Chameleon Ultra for its HF emulation."
+    }
+   ],
+   "display": {
+    "type": "ILI9341 SPI LCD",
+    "size_in": null,
+    "resolution": "320x240",
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": 500,
+   "battery_note": "500mAh rechargeable LiPo with onboard charging over USB-C.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": "Onboard drive exposed over USB-C for drag-and-drop tag dump files",
+   "connectivity": [
+    "USB-C",
+    "Bluetooth (hardware present, not the emulator's primary interface)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed case available as a paid add-on",
+   "notable_physical": [
+    "5-way navigation switch plus two extra buttons",
+    "WS2812B RGB LED plus a second internal discrete RGB LED"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_emulate": {
+    "v": "partial",
+    "note": "NFC Forum Type 2 tags, NTAG213/215/216 solidly; MIFARE Ultralight C emulation described by the maker as 'rudimentary'. MIFARE Classic emulation is a planned, not-yet-shipped feature."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No reader front end - Odiin only emulates from pre-loaded dump files, it does not capture cards itself."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "Write handling and saving is explicitly listed as unfinished/planned in the firmware."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No reader hardware and no attack tooling; MIFARE Classic support of any kind is unimplemented."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "Not a supported format."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "nRF52840's NFC peripheral is NFC-A only; no ISO15693 support."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Not a supported format."
+   },
+   "nfc_type4_ndef": {
+    "v": "partial",
+    "note": "NDEF payload formatting is listed as a planned feature, not confirmed complete."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF hardware on this device at all - HF/NFC-A only."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "No LF hardware present."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not a documented or implemented feature."
+   },
+   "sd_logging": {
+    "v": "partial",
+    "note": "No SD card; tag files load via the onboard USB-C mass-storage-style drive instead."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Battery-powered handheld; can emulate without being tethered to a host once tags are loaded."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "BLE radio hardware exists on the nRF52840 but the shipping firmware does not implement BLE scanning or any BLE feature - NFC only."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No documented CLI or scripting interface; operated via onboard buttons and drag-and-drop file loading."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning an NFC tag emulator is legal in most places. Emulating a credential or tag you are not authorised to use is a separate matter - check local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Odiin NFC Tag Emulation Toolkit"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/cmd/odiin-nfc-tag-emulation-toolkit/",
+    "what": "price, current out-of-stock status ('taking a break'), hardware spec, prototype disclaimer"
+   },
+   {
+    "url": "https://www.tindie.com/products/cmd/odiin-nfc-tag-emulation-toolkit/",
+    "what": "supported/planned tag types (NTAG21x, Ultralight C, MIFARE Classic planned), GitHub links, shipping origin"
+   },
+   {
+    "url": "https://github.com/cmdwtf/Odiin",
+    "what": "firmware repo: 0BSD license, star count (135), project status"
+   },
+   {
+    "url": "https://www.hackster.io/news/chris-dailey-s-odiin-is-a-self-contained-nrf52840-powered-nfc-tag-emulator-gadget-98e9bdf44985",
+    "what": "third-party coverage corroborating the nRF52840 architecture and general project timeline (~2020)"
+   }
+  ],
+  "research_gaps": [
+   "No confirmed date for the most recent firmware commit.",
+   "Whether any units remain available secondhand or the seller intends to resume sales is unknown.",
+   "Release year (2020) is based on an early prototype demo video and Hackster.io coverage, not an explicit vendor-stated launch date.",
+   "Whether the BLE radio is genuinely unused or partially wired up for some non-NFC purpose was not confirmed beyond the absence of documented BLE features."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "dl533n-xl",
+  "hardware_id": "dl533n-xl",
+  "name": "Long Range RFID Reader/Writer DL533N XL",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "D-Logic",
+  "vendor_url": "https://www.d-logic.com",
+  "product_url": "https://lab401.com/products/long-range-rfid-reader-writer-dl533n-xl",
+  "category": "rfid-nfc",
+  "subcategory": "reader-writer",
+  "status": "available",
+  "released": null,
+  "price_usd": 101.52,
+  "price_note": "EUR94.00 direct from D-Logic (webshop.d-logic.com), the manufacturer, for the bare XL OEM board - converted at 1 EUR = 1.08 USD = US$101.52. Lab401 resells the identical board at EUR129 default (US$168.00 on Lab401's own USD-market storefront, tax included) - roughly 65% more than buying direct. First-pass figure of $168 matches the Lab401 reseller's own USD price, not the cheaper manufacturer-direct price used here per the preference for direct-from-maker figures.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "LibNFC-compatible, so anyone comfortable with nfc-mfclassic/mfoc/mfcuk on the command line can drive it immediately; no proprietary software to learn.",
+  "build_effort": "assembled",
+  "build_note": "USB reader/writer, plug-and-play with libnfc on Windows/macOS/Linux/Android; no assembly.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "A large-antenna variant of D-Logic's PN533-based DL533N reader/writer, trading a normal-size card-reader footprint for an oversized 178x178mm built-in antenna that extends read/write range to about 18cm - enough to sit under a desk or inside a bag rather than needing the card presented directly to it. It is fully libnfc-compatible, so it plugs directly into the standard open-source MIFARE tooling (nfc-mfclassic, mfoc, mfcuk) rather than requiring vendor software.",
+  "honest_take": "The extra range comes entirely from a bigger antenna coil, not from more powerful silicon - it uses the same NXP PN533 chip as D-Logic's pocket-sized DL533N and DL533N CS models, so anything it can do those smaller (and cheaper) readers can also do, just at 2-3x the range. At 18cm it is meaningfully better than a standard USB reader for a 'reader under a desk/bag' scenario, but it is nowhere near the 40-120cm a tuned Proxmark3 HF antenna or the 45-60cm the PPE long-range capture systems in this same batch claim - PN533 is a fixed-function reader IC, not the reconfigurable RF frontend a Proxmark's FPGA gives you. Buying through Lab401 costs roughly 40% more than ordering the same board directly from D-Logic.",
+  "best_for": [
+   "Covert reader-under-furniture or reader-in-bag setups needing more range than a pocket reader but not full long-range skimmer hardware",
+   "libnfc-based MIFARE Classic/Ultralight/DESFire auditing and scripting",
+   "Anyone already using libnfc tooling who wants a drop-in range upgrade"
+  ],
+  "not_for": [
+   "125kHz/LF badges - this is a 13.56MHz-only HF reader",
+   "Long-range (40cm+) covert capture - a tuned Proxmark3 or the PPE long-range systems in this batch go much further",
+   "MIFARE Classic key recovery on its own - it needs to be paired with mfoc/mfcuk-style host tooling; the reader itself does not run attacks"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not a general-purpose MCU platform; built around the PN533 reader/writer IC directly.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "NXP PN533",
+     "role": "nfc",
+     "note": "13.56MHz reader/writer/P2P IC. Confirmed on D-Logic's own product page and a public GitHub SDK example repository. Drives an oversized 178x178mm built-in antenna for extended range vs the standard-size DL533N."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered; no battery.",
+   "charging": "n/a - USB bus powered, 5V",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "RS232",
+    "UART (TTL)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "178 x 178 x 5",
+   "weight_g": 104,
+   "case": "Slim flat PCB, no enclosure (156g including commercial packaging)",
+   "notable_physical": [
+    "Flat, thin form factor designed to sit unnoticed under a surface",
+    "'No dead spots' large-coil antenna design"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "yes",
+    "note": "ISO14443A/B via PN533; range up to 180mm per D-Logic's own spec, confirmed independently by the reseller listing."
+   },
+   "hf_1356_write": {
+    "v": "yes",
+    "note": "Full write support for MIFARE Classic/Ultralight/NTAG via libnfc tools (nfc-mfclassic, nfc-mfsetuid)."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "PN533 supports a card-emulation mode in principle, but D-Logic's own materials for this SKU document reader/writer/P2P use only - no card-emulation feature is advertised or documented for the DL533N XL specifically."
+   },
+   "mifare_classic_attacks": {
+    "v": "addon",
+    "note": "Not built into the reader itself; achieved by pairing with host-side libnfc tools mfoc (known-key-assisted) and mfcuk (darkside-style, no known key) which the vendor explicitly lists as compatible."
+   },
+   "mifare_desfire": {
+    "v": "partial",
+    "note": "DESFire is in D-Logic's supported card list (Light/2K/4K/8K/EV1/EV2), meaning the PN533 can exchange ISO14443-4 frames with one; no DESFire key-recovery capability exists on this or any device."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "PN533 is an ISO14443/FeliCa/NFC-DEP chip; ISO15693/NFC-V is not in D-Logic's supported list for this reader."
+   },
+   "felica": {
+    "v": "yes",
+    "note": "Listed in D-Logic's supported card families for the DL533N XL."
+   },
+   "emv_read": {
+    "v": "unknown",
+    "note": "PN533 can carry ISO14443-4 APDUs so an EMV read is plausible via custom libnfc-based scripting, but no EMV-specific tooling or claim is documented by D-Logic for this device."
+   },
+   "nfc_type4_ndef": {
+    "v": "unknown",
+    "note": "PN533's P2P/NDEF capability is general-purpose but no NDEF-specific tooling is documented for this SKU beyond libnfc's generic frame access."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "13.56MHz-only reader; no LF hardware."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "13.56MHz-only reader; no LF hardware."
+   },
+   "lf_125khz_emulate": {
+    "v": "no",
+    "note": "13.56MHz-only reader; no LF hardware."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "USB-tethered reader; requires a host PC/phone running libnfc, not a standalone field device."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Fully libnfc-compatible across Windows/macOS/Linux/Android, which is inherently scriptable via the standard libnfc/nfc-tools CLI utilities."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning a libnfc-compatible reader/writer is legal in most jurisdictions - it is standard security-research hardware. Reading, writing or cloning a card you are not authorised to access is a separate offence in most places; the extended range and thin form factor here are explicitly marketed for covert placement, which raises the stakes of unauthorised use compared to an ordinary desktop reader."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No - libnfc/nfc-tools CLI ecosystem",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "DL533N XL",
+   "DL533N XL OEM"
+  ],
+  "sources": [
+   {
+    "url": "https://www.d-logic.com/nfc-rfid-reader-sdk/products/dl533n-xl-nfc-reader-oem/",
+    "what": "manufacturer spec page: 180mm range, dimensions, weight, supported card families (MIFARE/NTAG/FeliCa/DESFire/picoPass/EMVCo 2.1), connectivity (USB/RS232/UART)"
+   },
+   {
+    "url": "https://webshop.d-logic.com/dl533n-xl",
+    "what": "manufacturer direct price (EUR94)"
+   },
+   {
+    "url": "https://lab401.com/products/long-range-rfid-reader-writer-dl533n-xl",
+    "what": "reseller price (EUR129), libnfc compatibility, compatible tool list (nfc-mfclassic, nfc-mfsetuid, nfc-mfultralight, mfoc, mfcuk), covert-placement framing"
+   },
+   {
+    "url": "https://github.com/nfc-rfid-reader-sdk/DL533N",
+    "what": "confirms PN533 as the chip via an official D-Logic example-script repository for this reader family"
+   },
+   {
+    "url": "https://lab401.com/products/usb-rfid-reader-writer-dl533n",
+    "what": "cross-check against the standard (non-XL) DL533N model to confirm the XL variant's differentiator is antenna size/range, not a different chipset"
+   }
+  ],
+  "research_gaps": [
+   "Whether card-emulation mode is technically present but simply undocumented for this SKU vs genuinely absent in D-Logic's firmware configuration could not be confirmed either way.",
+   "Release year not found.",
+   "EMV and NDEF handling are plausible given the PN533's general capability but neither is affirmatively documented by D-Logic for this specific reader."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "proxmark3-rdv4-blueshark-module",
+  "hardware_id": "proxmark3-rdv4-blueshark-module",
+  "name": "Bluetooth + Battery Module for Proxmark3 RDV4 (Blue Shark)",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No firmware of its own; the module is a passive Bluetooth/battery add-on that the Proxmark3's own Iceman firmware (already tracked in this database) talks to. It is what makes several of that firmware's ~40 standalone modes actually usable away from a laptop.",
+  "vendor": "RFID Research Group (ProxGrind)",
+  "vendor_url": "https://proxmark.com",
+  "product_url": "https://hackerwarehouse.com/product/proxmark3-rdv4-bluetooth-battery-module/",
+  "category": "rfid-nfc",
+  "subcategory": "proxmark-accessory",
+  "status": "available",
+  "released": null,
+  "price_usd": 100,
+  "price_note": "US$100 direct at Hacker Warehouse. Lab401 sells the identical 'Blue Shark' module under two listing names - 'Proxmark 3 RDV4 - BlueShark Standalone Module' and the RDV4 standalone-kit product page - both at EUR99 (~US$115 at the EUR/USD rate on price_checked date). This record merges what the first pass listed as two separate devices ('BlueShark Standalone Module' at $129 and 'Bluetooth + Battery Module' at $100); they are the same physical accessory. The Proxmark3 RDV4.01 record already in this database references this module's price as an add-on cost, consistent with the figures here.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Clips onto the RDV4 with no soldering; the skill required is entirely in using the standalone modes it enables, not installing the module.",
+  "build_effort": "assembly",
+  "build_note": "Drop-in module: Bluetooth 2.0 EDR radio, rechargeable Li-Po, aluminium case/heatsink and tempered-glass cover, attaching to a Proxmark3 RDV4 (sold separately, already tracked in this database). No soldering.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "The official RRG/ProxGrind battery-and-Bluetooth add-on for the Proxmark3 RDV4, commonly called 'Blue Shark'. It supplies a 400mAh Li-Po and a Bluetooth 2.0 EDR radio (~6m range at 4dBm), which is what turns the RDV4 from a USB-tethered bench tool into something that can run its standalone offline sniffing/reading/simulation modes untethered in the field.",
+  "honest_take": "This module adds no RFID capability of its own - every read/write/emulate/attack capability lives in the Proxmark3 RDV4 it clips onto, which is already tracked separately in this database. What it actually buys you is a name for something the RDV4 could technically do already via its onboard SPI flash and standalone-mode firmware: run away from a laptop. Without this (or an equivalent Proxmark5 wireless module) the RDV4's ~40 standalone modes are a checkbox feature nobody can use in the field. Bluetooth 2.0 EDR at 4dBm/~6m range is dated compared to BLE, and the module is a genuine RDV4-specific fit - it will not clip onto a Proxmark3 Easy or a Proxmark 5, which use different connectors and wireless standards entirely (the Proxmark 5's equivalent module is a separate SKU in this same batch).",
+  "best_for": [
+   "RDV4 owners who want to run standalone modes (key brute-force, sniffing, simulation) away from a laptop",
+   "Field engagements where carrying a laptop tethered to the Proxmark is impractical or conspicuous"
+  ],
+  "not_for": [
+   "Proxmark3 Easy or Proxmark 5 owners - this module is RDV4-specific hardware",
+   "Anyone expecting it to add new RFID protocols or attacks - it is purely power+radio, zero card capability of its own",
+   "Long-range Bluetooth control - ~6m EDR range is short"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No microcontroller of its own beyond whatever manages the Bluetooth EDR radio and battery charging; the Proxmark3 RDV4's own AT91SAM7S512 does all RFID processing.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "bluetooth",
+     "note": "Bluetooth 2.0 EDR, 4dBm transmit power, ~6m rated range. Not BLE - classic Bluetooth."
+    }
+   ],
+   "display": null,
+   "battery_mah": 400,
+   "battery_note": "400mAh Li-Po, ~2.5 hour charge time per the vendor spec.",
+   "charging": "Via the host Proxmark3 RDV4's own USB micro-B",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Bluetooth 2.0 EDR",
+    "Physical connector to Proxmark3 RDV4"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "54.4 x 29.4 x 13.5",
+   "weight_g": 24,
+   "case": "Aluminium case with heatsink and tempered-glass cover",
+   "notable_physical": [
+    "Clip-on fit specific to the RDV4 body",
+    "Heatsink doubles as part of the enclosure"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "no",
+    "note": "The module itself has no RFID front end - all card capability belongs to the host Proxmark3 RDV4, already tracked separately in this database."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No RFID hardware of its own - purely power and Bluetooth."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No RFID hardware of its own; emulation is entirely the host RDV4's function."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware on the module itself."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "No RFID hardware on the module itself."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "This module adds no attack capability - key-recovery attacks run on the host RDV4's firmware/client, unaffected by whether this module is fitted."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No RFID hardware of its own."
+   },
+   "felica": {
+    "v": "no",
+    "note": "No RFID hardware of its own."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "No RFID hardware of its own; any relay capability belongs to the host RDV4."
+   },
+   "bt_classic": {
+    "v": "yes",
+    "note": "Bluetooth 2.0 EDR, 4dBm, ~6m rated range - the module's core added function."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Bluetooth 2.0 EDR is classic Bluetooth, not BLE; no BLE capability."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "This module's entire purpose: it is what makes the RDV4's onboard standalone modes (offline sniffing, reading, simulation) usable without a tethered PC."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage of its own; the RDV4's own 256KB SPI flash (documented on that device's own record) handles standalone-mode data, not this module."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web/app interface of its own; standalone data is retrieved back through the Proxmark client once reconnected, not through a UI on the module."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No scripting interface of its own; all scripting happens through the host Proxmark3's client."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "A power/Bluetooth accessory carries no legal exposure of its own beyond whatever applies to the Proxmark3 RDV4 it is attached to - see that device's record for the relevant legal notes on RFID reading/cloning."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Blue Shark",
+   "BlueShark Module",
+   "Proxmark 3 RDV4 BlueShark Standalone Module"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/proxmark3-rdv4-bluetooth-battery-module/",
+    "what": "US price ($100) and 'Blue Shark' codename"
+   },
+   {
+    "url": "https://hackerwarehouse.com/product/proxmark3-rdv4-bluetooth-battery-module/",
+    "what": "battery capacity (400mAh) and standalone-mode (offline sniffing/reading/simulation) framing"
+   },
+   {
+    "url": "https://lab401.com/products/proxmark-3-rdv4-standalone-kit",
+    "what": "EUR price (99) and full component list: Bluetooth 2.0 EDR, Li-Po, aluminium case/heatsink, glass cover"
+   },
+   {
+    "url": "https://lab401.com/products/proxmark-3-rdv4-standalone-kit",
+    "what": "2.5hr charge time, 4dBm/~6m Bluetooth range spec, dimensions (54.4x29.4x13.5mm), weight (24g)"
+   },
+   {
+    "url": "https://lab401.com/products/proxmark-3-rdv4",
+    "what": "cross-check confirming this module is listed as a separate RDV4 accessory rather than a bundled component, and that RDV4-specific fit is genuine; also the source for this database's existing RDV4 record's own Blue Shark price reference"
+   }
+  ],
+  "research_gaps": [
+   "Whether the two Lab401 listings referencing this module (the 'standalone kit' product and the collection-page 'BlueShark Standalone Module' entry at a higher first-pass price of $129) are identically priced or the $129 figure reflects a since-changed price could not be fully reconciled - the EUR99 figure found on the live product page is used here as the most current.",
+   "No microcontroller/Bluetooth chipset part number published by RRG/ProxGrind.",
+   "Release year not found."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "proxmark5-wireless-battery-module",
+  "hardware_id": "proxmark5-wireless-battery-module",
+  "name": "Proxmark 5 - Wireless + Battery Module",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No firmware of its own; talks to whatever pre-release firmware is running on the host Proxmark 5. RRG's own Iceman firmware repo (referenced in this database's Proxmark3 RDV4 record) explicitly warns Proxmark 5 firmware 'is not stable at the moment.'",
+  "vendor": "RFID Research Group (ProxGrind)",
+  "vendor_url": "https://proxmark.com",
+  "product_url": "https://lab401.com/products/proxmark-5-wireless-battery-module",
+  "category": "rfid-nfc",
+  "subcategory": "proxmark-accessory",
+  "status": "available",
+  "released": null,
+  "price_usd": 110,
+  "price_note": "US$110.00 - Lab401's own USD-market price (currency selector), confirmed live; not a straight 1.08x conversion of their EUR99 default listing (99 x 1.08 = ~US$106.92). No independent RRG/ProxGrind storefront exists apart from resellers like Lab401. First-pass figure of $110 matches Lab401's live USD price exactly.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Installation is a two-minute drop-in fit, but the Proxmark 5 platform it attaches to runs pre-release firmware the maintainers themselves call unstable - this is not a beginner-friendly combination.",
+  "build_effort": "assembly",
+  "build_note": "Drop-in connector fit to a Proxmark 5's PCB, no modification to the standard housing, clicks into place. Requires a Proxmark 5 (not yet separately tracked in this database as of this research) to attach to.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "The official wireless/battery add-on for the newer Proxmark 5 platform, adding BLE and WiFi plus an internal battery so the reader can run untethered and phone-driven in the field. Two modules can be paired for a wireless relay audit - one unit reads a card, the second opens a door - directly from two Proxmark 5 units.",
+  "honest_take": "The vendor's own listing carries a real warning: it ships with 'pre-release firmware' and is 'currently unsupported', with Lab401 explicitly recommending the Proxmark 3 RDV4.01 instead if you need stable, out-of-the-box functionality. This is early-adopter hardware for a next-generation platform that has not yet matured, not a safe default purchase - the RDV4.01's Blue Shark module (also in this batch) is the proven equivalent for anyone who actually needs a working tool today. The two-device wireless-relay capability (one unit reads, a second opens the door) is a genuinely new trick this module enables that the RDV4/Blue Shark combination does not do as directly, but it is only as reliable as the unstable firmware underneath it.",
+  "best_for": [
+   "Early adopters of the Proxmark 5 platform who want untethered/phone-driven operation",
+   "Experimenting with two-device wireless relay audits (read on one unit, open on a paired second unit)"
+  ],
+  "not_for": [
+   "Anyone who needs stable, dependable field results today - use the Proxmark3 RDV4.01 + Blue Shark instead, per the vendor's own recommendation",
+   "Proxmark3 RDV4/Easy owners - this module is Proxmark 5-specific hardware",
+   "Production/client-facing engagements where a firmware crash mid-audit is unacceptable"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published; module-level BLE/WiFi radio and battery management chipset undisclosed.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-ble",
+     "note": "BLE and WiFi combined radio, exact chipset not published by the vendor."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Internal battery included; capacity not specified by the vendor.",
+   "charging": "Via the host Proxmark 5's own connector (exact method not specified)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "BLE",
+    "WiFi",
+    "Drop-in PCB connector to Proxmark 5"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Fits inside the standard Proxmark 5 housing without modification",
+   "notable_physical": [
+    "Two-minute drop-in install",
+    "Enables two-unit wireless relay pairing"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "no",
+    "note": "The module has no RFID front end of its own; all card capability belongs to the host Proxmark 5."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No RFID hardware of its own - power and wireless only."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "No RFID hardware of its own; emulation is entirely the host Proxmark 5's function."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware on the module itself."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "No RFID hardware on the module itself."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "This module adds no attack capability; that lives entirely in the host Proxmark 5's (pre-release) firmware."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No RFID hardware of its own."
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "Vendor states BLE connectivity is added; not independently confirmed against a specific chipset or range spec."
+   },
+   "wifi_ap_mode": {
+    "v": "claimed",
+    "note": "Vendor states WiFi functionality is added ('phone-driven audits'); exact mode (AP vs client) and range not independently confirmed."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Core purpose of the module: untethered, phone-driven field operation of a Proxmark 5."
+   },
+   "nfc_relay": {
+    "v": "claimed",
+    "note": "Vendor describes pairing two Proxmark 5 units (each with this module) for a wireless relay audit - one reads a card, the other opens a door. Not independently verified beyond the vendor's own description."
+   },
+   "sd_logging": {
+    "v": "unknown",
+    "note": "Not documented whether the module or the Proxmark 5 host provides onboard storage for standalone captures."
+   },
+   "web_ui": {
+    "v": "unknown",
+    "note": "Vendor describes 'phone-driven audits' implying some app/web interface, but no specific UI is documented for this module."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No scripting interface of its own; scripting happens through whatever pre-release Proxmark 5 client/firmware is installed."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "A power/wireless accessory carries no legal exposure of its own beyond whatever applies to the RFID reading/cloning performed by the Proxmark 5 host it is attached to."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "PM5 Wireless Module"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/proxmark-5-wireless-battery-module",
+    "what": "price (EUR99) and BLE+WiFi+battery feature description"
+   },
+   {
+    "url": "https://lab401.com/products/proxmark-5-wireless-battery-module",
+    "what": "two-minute drop-in install process and two-unit wireless relay pairing capability (one reads, one opens)"
+   },
+   {
+    "url": "https://lab401.com/products/proxmark-5-wireless-battery-module",
+    "what": "explicit 'pre-release firmware... currently unsupported' warning and recommendation to use the Proxmark 3 RDV4.01 for stable functionality"
+   },
+   {
+    "url": "https://proxmark.com/proxmark-3-hardware/proxmark-5/",
+    "what": "cross-check on the Proxmark 5 platform itself (AT32F435 MCU, Gowin FPGA) which this module attaches to, corroborating this database's existing Proxmark3 RDV4 record's research_gaps note about the Proxmark 5"
+   },
+   {
+    "url": "https://proxmark.com/proxmark-news/proxmark-5-released/",
+    "what": "corroborates the Proxmark 5 platform's recent/early-stage release status, supporting the 'pre-release firmware' caveat on this accessory"
+   }
+  ],
+  "research_gaps": [
+   "Exact BLE/WiFi chipset not published.",
+   "Battery capacity not published.",
+   "The Proxmark 5 host device itself is not yet a separate tracked record in this database as of this research batch - this accessory record should be cross-referenced once it is added.",
+   "Release year not found."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "lab401-1356mhz-field-strength-meter",
+  "hardware_id": "lab401-1356mhz-field-strength-meter",
+  "name": "13.56MHz RFID Field Strength Meter",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Lab401",
+  "vendor_url": "https://lab401.com",
+  "product_url": "https://lab401.com/products/13-56mhz-rfid-field-strength-meter",
+  "category": "rfid-nfc",
+  "subcategory": "field-diagnostic-tool",
+  "status": "available",
+  "released": null,
+  "price_usd": 95,
+  "price_note": "US$95.00 - Lab401's own USD-market price (currency selector), confirmed live; not a straight 1.08x conversion of their EUR80 default listing (80 x 1.08 = ~US$86.40). Lab401 is the vendor of record for this item, with no separate OEM/manufacturer storefront identified. First-pass figure of $95 matches Lab401's live USD price exactly.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Hold it in a field, read the LED colour - no setup, no interpretation beyond the printed ISO-compliance key.",
+  "build_effort": "assembled",
+  "build_note": "Fully passive, ready to use out of the box.",
+  "stealth": "discreet",
+  "form_factor": "keychain",
+  "summary": "A fully passive, credit-card-sized diagnostic card that harvests power from a 13.56MHz RF field and lights one of 15 colour-coded LEDs to give a quantitative, ISO 10373-7 calibrated reading of field strength - used to verify a reader complies with ISO14443/ISO15693 field-strength requirements, rather than to read or clone anything.",
+  "honest_take": "This does one thing and nothing else: it is a passive field-strength indicator, not a reader, writer, sniffer or emulator, and it cannot tell you what protocol or data a reader is using, only how strong its field is. It is the right tool for compliance testing or diagnosing a reader that intermittently fails to power cards, and the wrong tool for literally any offensive RFID task - for that you want an actual reader like the DL533N XL or a Proxmark3, both elsewhere in this batch/database. At EUR80 it is priced like a niche calibration instrument, which is exactly what it is.",
+  "best_for": [
+   "Verifying a reader's field strength meets ISO14443/ISO15693 compliance during audits or reader manufacturing QA",
+   "Diagnosing why a reader intermittently fails to power certain cards",
+   "Quick field-strength comparison between multiple readers"
+  ],
+  "not_for": [
+   "Reading, writing, cloning or sniffing any card data - it has no data capability whatsoever",
+   "Anything beyond 13.56MHz - no LF or UHF sensing",
+   "Determining which protocol or card format a reader is using - it only measures raw field strength"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None - fully passive analog circuit, no microcontroller.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "field-strength-sensor",
+     "note": "Passive LC coil + LED ladder circuit, powered entirely by the RF field it is measuring. No active transmit or receive of card data - it is a sensor, not a reader."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - entirely field-powered, no battery required.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [],
+   "gpio": null,
+   "sensors": [
+    "13.56MHz field-strength sensing coil"
+   ],
+   "dimensions_mm": "86.0 x 54.0 (ISO 7810 card size)",
+   "weight_g": 10,
+   "case": "Credit-card-format plastic laminate",
+   "notable_physical": [
+    "15 colour-coded LEDs",
+    "ISO 10373-7 calibration",
+    "Includes protective carrying case"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Not a reader - it has no protocol decoding capability, only a passive field-strength sensor and LED ladder."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No write capability - fully passive diagnostic device."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Cannot emulate a card - it has no digital logic, only analog field sensing."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No card-interaction capability at all."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "13.56MHz-only sensor; no LF sensing."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "Measures field strength relevant to ISO15693 compliance testing, but does not read/write/decode ISO15693 data."
+   },
+   "felica": {
+    "v": "no",
+    "note": "No data-level capability of any kind."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not applicable - passive sensor only."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Entirely self-contained and field-powered; no host device or battery needed."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage or logging capability - instantaneous LED readout only."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No digital interface of any kind to script against."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive field-strength meter has no data-capture or cloning capability and carries no meaningful legal restriction on ownership or use in any jurisdiction checked."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "RFID Field Strength Meter"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/13-56mhz-rfid-field-strength-meter",
+    "what": "price (EUR80) and ISO 10373-7 calibration claim"
+   },
+   {
+    "url": "https://lab401.com/products/13-56mhz-rfid-field-strength-meter",
+    "what": "15-LED colour-coded readout mechanism and passive/battery-free operation"
+   },
+   {
+    "url": "https://lab401.com/products/13-56mhz-rfid-field-strength-meter",
+    "what": "dimensions (ISO 7810 card size), weight (10g), included carrying case"
+   },
+   {
+    "url": "https://lab401.com/collections/rfid-tools",
+    "what": "confirms this product's slug and listing alongside the rest of Lab401's RFID diagnostic catalogue, including the related 'RFID Field Detector Ultra' it should not be confused with"
+   }
+  ],
+  "research_gaps": [
+   "Only the Lab401 listing could be found describing this specific product - no manufacturer/OEM datasheet, teardown, or independent review was located, so several claims (ISO 10373-7 calibration, exact LED count) rest on the reseller's own description alone. All source entries above are therefore drawn from that one listing/collection, split by the specific fact each supports rather than genuinely independent corroboration.",
+   "This is a genuinely single-purpose passive sensor with no protocol, read/write or emulation capability by design - the sparse capability matrix above is a finding about the device, not a research gap in coverage.",
+   "Manufacturer/OEM of the underlying board (vs Lab401 as brand) not identified.",
+   "Release year not found."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "chameleon-lite",
+  "hardware_id": "chameleon-lite",
+  "name": "Chameleon Lite",
+  "firmware": "ChameleonUltra (official)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/RfidResearchGroup/ChameleonUltra",
+  "firmware_note": "Shares the same firmware/wiki/repo as the Chameleon Ultra already tracked in this database - RRG documents Ultra, Devkit and Lite as hardware SKUs of one project, not separate firmware lines. Capability differences between Lite and Ultra come from what hardware is stuffed on the board, not from different firmware.",
+  "vendor": "RFID Research Group (ProxGrind)",
+  "vendor_url": "https://github.com/RfidResearchGroup/ChameleonUltra",
+  "product_url": "https://lab401.com/products/chameleon-lite",
+  "category": "rfid-nfc",
+  "subcategory": "card-emulator",
+  "status": "available",
+  "released": null,
+  "price_usd": 77,
+  "price_note": "US$77.00 - Lab401's own USD-market price (currency selector), confirmed live; not a straight 1.08x conversion of their EUR59 default listing (59 x 1.08 = ~US$63.72). RRG/ProxGrind (the designer) has no direct-to-consumer storefront of its own - Lab401 is the primary retail channel. First-pass figure of $77 matches Lab401's live USD price exactly.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Same MTools app and slot-based workflow as the Chameleon Ultra; the only added skill is knowing in advance that you cannot read/write a card with this unit, only emulate one you already have a dump for.",
+  "build_effort": "assembled",
+  "build_note": "Works out of the box over USB-C/BLE with the MTools app, same as the Ultra; firmware updates via DFU.",
+  "stealth": "discreet",
+  "form_factor": "keychain",
+  "summary": "The cut-down, emulation-only member of the Chameleon Ultra family: same nRF52840-class firmware and 8 HF + 8 LF slot structure, but with the MFRC522 reader chip removed entirely and the larger LiPo swapped for a coin cell. It is not a smaller Chameleon Ultra with reduced range - it physically cannot read or write any card, HF or LF; it can only emulate cards whose data you already have (captured elsewhere, e.g. with a Proxmark3 or the Ultra).",
+  "honest_take": "This is NOT simply a budget Chameleon Ultra, and the first-pass 'possible duplicate of Chameleon Ultra' flag is wrong in the way that matters most: the Ultra can independently capture a card via its onboard MFRC522, while the Lite cannot read or write anything at all, on either HF or LF - it is a pure playback device for dumps sourced elsewhere. If you already own a Proxmark3 or a Chameleon Ultra to do the capturing, the Lite is a genuinely reasonable $69 keychain emulator to carry the resulting dumps around without risking your primary tool. If it is your only RFID device, it is close to useless on its own - you have no way to get a card's data onto it in the first place beyond typing a known UID/key by hand.",
+  "best_for": [
+   "Carrying emulated cards from a primary capture tool (Proxmark3, Chameleon Ultra) on a cheap, disposable keychain unit",
+   "Long-term engagements where losing or confiscating the emulator is an acceptable risk and you don't want to risk the pricier Ultra",
+   "MFKEY32-style nonce logging in the field, same detection-mode mechanism as the Ultra"
+  ],
+  "not_for": [
+   "Anyone without a separate reader (Proxmark3, Chameleon Ultra, etc.) - the Lite cannot capture a card's data on its own",
+   "Any HF or LF read/write task whatsoever - the reader silicon (MFRC522) simply is not on this board",
+   "Long deployments away from a charger - the coin cell is far smaller capacity than the Ultra's 90mAh LiPo"
+  ],
+  "hardware": {
+   "mcu_primary": "nRF52840",
+   "mcu_primary_note": "Inferred from the shared ChameleonUltra firmware/wiki repo, which documents the Lite as a hardware variant of the same nRF52840-based platform as the Ultra; not independently confirmed by a Lite-specific datasheet or teardown.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "nRF52840 NFC-A tag peripheral",
+     "role": "nfc",
+     "note": "13.56MHz ISO14443A card emulation only, identical mechanism to the Chameleon Ultra's HF emulation."
+    },
+    {
+     "ic": null,
+     "role": "rfid-lf",
+     "note": "125kHz LF emulation front end, no read/write capability. Vendor does not publish a part number, matching the Ultra's undisclosed LF front end."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Button/coin cell, capacity not published - explicitly smaller than the Ultra's 90mAh LiPo per RRG's own hardware wiki.",
+   "charging": "USB Type-C",
+   "pmic": null,
+   "storage": "16 slots total (8 HF, 8 LF), same structure as the Ultra",
+   "connectivity": [
+    "USB Type-C",
+    "Bluetooth"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "61 x 36 x 8.8",
+   "weight_g": 8,
+   "case": "Single-PCB blue plastic housing, not designed for disassembly (unlike the Ultra's two-PCB sandwich)",
+   "notable_physical": [
+    "No MFRC522 reader chip - the single biggest hardware difference from the Ultra",
+    "Slot-selector buttons, same UX as the Ultra"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_emulate": {
+    "v": "yes",
+    "note": "ISO14443A emulation via the nRF52840's on-die NFC-A tag peripheral: MIFARE Classic, Ultralight, NTAG, same mechanism as the Chameleon Ultra. 8 HF slots."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No MFRC522 or any other reader IC on this board - confirmed by RRG's own hardware wiki. Cannot read any HF card, full stop."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No reader/writer silicon present; cannot write to any HF card or blank."
+   },
+   "lf_125khz_emulate": {
+    "v": "yes",
+    "note": "125kHz emulation from pre-loaded dumps, same 8-slot LF structure as the Ultra."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No LF reader front end confirmed - the vendor's own product copy describes 'low-frequency emulation only (no LF reading/writing)'."
+   },
+   "lf_125khz_write": {
+    "v": "no",
+    "note": "No LF write capability - emulation-only device."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No reader hardware, so no MFKEY32/nested/hardnested capture is possible on-device - detection-mode nonce logging during emulation is the one exception (see standalone_untethered note)."
+   },
+   "mifare_desfire": {
+    "v": "no",
+    "note": "No reader hardware; cannot even attempt a DESFire exchange the way the Ultra's low-bit-rate emulation can."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "Same limitation as the Ultra - the underlying NFC-A peripheral does not cover ISO15693/NFC-V, and this board has no reader chip regardless."
+   },
+   "felica": {
+    "v": "no",
+    "note": "Not supported - same reasoning as the Ultra, compounded by having no reader hardware at all."
+   },
+   "nfc_relay": {
+    "v": "no",
+    "note": "Not a documented feature, and unlikely given the lack of reader hardware."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "16 slots selectable with onboard buttons, no phone/laptop needed once dumps are loaded via USB-C or BLE."
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Same Python CLI, JS library and MTools app ecosystem as the Ultra for loading slot data; no on-device scripting."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning a card emulator is legal in most countries. Emulating a credential you are not authorised to use is not, and the keychain form factor makes it easy to carry and use covertly - get written scope before using it on any engagement. Check local law."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No - shares the Chameleon Ultra's official CLI, MTools apps and community JS library",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Chameleon Lite RRG"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/chameleon-lite",
+    "what": "price (EUR59), 16-slot structure, battery/dimensions/weight, 'low-frequency emulation only (no LF reading/writing)' limitation"
+   },
+   {
+    "url": "https://github.com/RfidResearchGroup/ChameleonUltra/wiki/hardware",
+    "what": "confirms the Lite omits the MFRC522 present on the Ultra/Devkit, cannot read/write HF tags, and uses a coin cell instead of the Ultra's LiPo"
+   },
+   {
+    "url": "https://lab401.com/products/chameleon-ultra",
+    "what": "this database's own existing Chameleon Ultra record cites the Lite's EUR59 price and MFRC522-omission as a cross-reference, corroborating the figures used here"
+   },
+   {
+    "url": "https://lab401.com/collections/rfid-tools",
+    "what": "confirms Chameleon Lite's product slug/listing alongside Chameleon Ultra on the same storefront collection"
+   }
+  ],
+  "research_gaps": [
+   "MCU part number (nRF52840) is inferred from the shared firmware repo covering Ultra/Devkit/Lite as hardware variants, not confirmed by a Lite-specific teardown or datasheet.",
+   "Exact coin-cell part number/capacity not published.",
+   "LF analog front-end part number not published, same gap as on the Ultra.",
+   "Release year not found.",
+   "This is confirmed NOT a duplicate of the Chameleon Ultra despite the first-pass flag - it lacks the Ultra's MFRC522 reader entirely and is a strictly emulation-only device; both are kept as separate records."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "rfid-hf-extender-pro",
+  "hardware_id": "rfid-hf-extender-pro",
+  "name": "RFID HF Extender Pro",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Midwest Gadgets",
+  "vendor_url": null,
+  "product_url": "https://hackerwarehouse.com/product/rfid-hf-extender-pro/",
+  "category": "rfid-nfc",
+  "subcategory": "passive-range-extender",
+  "status": "available",
+  "released": null,
+  "price_usd": 65,
+  "price_note": "US$65 direct at Hacker Warehouse, matching the first-pass figure exactly.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "No electronics knowledge required - it is two coils and a cable, placed by hand.",
+  "build_effort": "assembled",
+  "build_note": "Fully passive; no firmware, no configuration, nothing to flash or pair.",
+  "stealth": "covert",
+  "form_factor": "cable",
+  "summary": "Two coupled 13.56MHz HF/NFC antennas - one 60mm, one 27mm - joined by a 30cm IPEX cable. Placed one coil against a reader and the other where you actually want the card presented, the pair passively relays the reader's field (and the card's response) across the cable, physically repositioning where a badge needs to be tapped without moving the reader itself.",
+  "honest_take": "This sits right on the line the brief for this database explicitly excludes ('plain cables and antennas') - and functionally, that is almost exactly what it is: two passive coils and a cable, with no active circuitry, amplification or protocol handling anywhere in it. It works by simple magnetic coupling, not by decoding and re-transmitting a signal, so it is not a true active NFC relay attack tool (compare to a genuine two-device relay built from two SDRs or NFC readers with a network link between them, which can span arbitrary distances) - it only repositions a reader's existing field by the length of its 30cm cable. The single legitimate niche it fills is exactly what the vendor's own copy admits: freeing a reader from an awkward fixed mounting position during a physical test, not extending range or enabling a long-distance relay attack.",
+  "best_for": [
+   "Repositioning where a badge needs to be presented when a reader is mounted somewhere physically inconvenient to test from",
+   "Short-range (cable-length) covert placement during an authorised physical assessment"
+  ],
+  "not_for": [
+   "Long-distance relay attacks - it is a passive coupler, not an active repeater; range is the 30cm cable length, not metres",
+   "Amplifying or extending actual read range beyond a normal reader's native field - it relays the field, it does not boost it",
+   "Any protocol-level interaction - it is transparent to whatever the reader and card are already doing"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "None - fully passive coupled-coil device, no active electronics.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "hf-passive-relay",
+     "note": "Two coupled HF/NFC antenna coils (60mm and 27mm) joined by a 30cm IPEX cable, passively relaying a 13.56MHz field between reader and card by magnetic coupling. No active amplification, demodulation or re-transmission."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - fully passive, no power required.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "IPEX cable, 30cm, between the two antenna coils"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare coils, no enclosure",
+   "notable_physical": [
+    "60mm 'reader-side' coil, 27mm 'card-side' coil",
+    "30cm IPEX cable link"
+   ]
+  },
+  "capabilities": {
+   "hf_1356_read": {
+    "v": "no",
+    "note": "Not a reader itself - it is a passive coupler that relays whatever reader it is attached to; it has no decoding capability of its own."
+   },
+   "hf_1356_write": {
+    "v": "no",
+    "note": "No active circuitry; cannot write anything on its own."
+   },
+   "hf_1356_emulate": {
+    "v": "no",
+    "note": "Not an emulator - purely a passive field coupler."
+   },
+   "nfc_relay": {
+    "v": "partial",
+    "note": "Performs a passive, cable-length (30cm) magnetic relay between a reader and a card position - not an active, distance-independent relay attack of the kind built from two networked reader/SDR devices."
+   },
+   "mifare_classic_attacks": {
+    "v": "no",
+    "note": "No protocol-level capability of any kind - transparent to whatever the attached reader is already doing."
+   },
+   "iso15693": {
+    "v": "no",
+    "note": "No protocol handling at all; purely a passive analog coupler agnostic to the data format riding on the field."
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "13.56MHz HF-only coil design; no LF coupling."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Must be physically attached to a host reader to function; not a standalone device."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No digital interface of any kind - it is two coils and a cable."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage or logging capability."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "A passive antenna coupler is not itself restricted for ownership. Using it to reposition a reader's field for an unauthorised card presentation - i.e. as part of an actual attack rather than a scoped physical test - carries the same unauthorised-access exposure as any other RFID interception tool. Check local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/rfid-hf-extender-pro/",
+    "what": "vendor (Midwest Gadgets), price ($65), coil sizes (60mm/27mm), 30cm IPEX cable, intended use case description"
+   },
+   {
+    "url": "https://hackerwarehouse.com/product-category/rfid/",
+    "what": "confirms this listing's live price and identifies neighbouring passive-relay products (RFID HF Repeater Large, RFID HF Field Generator) in the same reseller category, supporting that this is a recognised product type rather than a one-off"
+   },
+   {
+    "url": "https://lab401.com/products/13-56mhz-rfid-range-boosters",
+    "what": "corroborating context from a different vendor's similar-purpose passive coupling product line, used to confirm the general 'passive field relay/booster, no active amplification' mechanism this category of device uses and to distinguish it from an active range-extending 'Range Extender' product Lab401 sells separately"
+   }
+  ],
+  "research_gaps": [
+   "No independent teardown or manufacturer datasheet for this specific SKU was located; corroboration comes from the reseller's own category listing and a comparable product line from a different vendor rather than an independent technical source.",
+   "Whether this borders on the project's explicit 'plain cables and antennas' exclusion is a genuine judgment call, noted here rather than resolved - it was kept in scope because it has a specific RFID-relay purpose beyond being a generic antenna, per the first-pass researcher's own reasoning, but a reviewer may reasonably decide otherwise.",
+   "No coupling-efficiency or effective-range-change measurement found; the vendor does not quantify how much (if any) effective range is gained or lost through the relay versus tapping the reader directly.",
+   "Release year not found."
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

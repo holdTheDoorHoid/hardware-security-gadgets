@@ -1,0 +1,2294 @@
+[
+ {
+  "id": "spidriver",
+  "hardware_id": "spidriver",
+  "name": "SPIDriver",
+  "firmware": "Stock (ExCamera Labs)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/jamesbowman/spidriver",
+  "firmware_note": "Single fixed firmware; not user-reflashable with alternate firmware. Open BSD-licensed hardware/firmware/host tools.",
+  "vendor": "ExCamera Labs",
+  "vendor_url": "https://excamera.com",
+  "product_url": "https://spidriver.com/",
+  "category": "hardware-debug",
+  "subcategory": "protocol-bridge",
+  "status": "available",
+  "released": "2019",
+  "price_usd": 29.0,
+  "price_note": "$29.00 direct from spidriver.com (official vendor site). Adafruit sells it at $29.95; Lab401 lists it around EUR-converted $34.95-37.80 as a EU reseller.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Conceptually simple (one protocol, a live display of what's on the wire) but you still need to understand SPI framing and chip-select behaviour to use it productively.",
+  "build_effort": "assembled",
+  "build_note": "Bare open-hardware PCB, no case. Plug in over USB and drive it from the GUI, CLI or Python bindings - nothing to solder.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A dedicated single-protocol SPI bus probe: a small open-hardware board built around an FTDI USB-serial chip and a Silicon Labs EFM8 controller, with a built-in display that shows live SPI traffic, voltage and current as you probe a target. Adafruit's own listing describes it as 'kinda like a Bus Pirate with a display and great Python support.' It is the SPI-only sibling to the I2CDriver from the same maker.",
+  "honest_take": "This is a narrower, more expensive way to talk to SPI devices than a Bus Pirate or a $5 FTDI/CH552 adapter - the entire value proposition is the live display and the clean host tooling (GUI, CLI, Python/C bindings), not raw capability. 500 Kbps sustained SPI is fine for flash chips and sensors but slow next to a real logic analyzer or a dedicated SPI programmer, and it has zero debug-port (JTAG/SWD) or I2C support - buy the I2CDriver or a Bus Pirate 5 if you need those too. If you already own a Bus Pirate or a Glasgow, this adds nothing you don't have; it earns its keep specifically for people who want a purpose-built, always-on SPI monitor on the bench rather than a general multi-protocol tool.",
+  "best_for": [
+   "Watching live SPI traffic on the bench while developing a driver",
+   "Dumping/writing SPI flash with clean host-side tooling",
+   "A dedicated always-connected SPI monitor separate from a general debug tool"
+  ],
+  "not_for": [
+   "High-speed SPI capture - 500 Kbps sustained is slow next to a real logic analyzer",
+   "Any protocol other than SPI - buy the I2CDriver or a Bus Pirate instead",
+   "JTAG/SWD debugging - it has no debug-port support at all"
+  ],
+  "hardware": {
+   "mcu_primary": "Silicon Labs EFM8 (automotive-grade)",
+   "mcu_primary_note": "Exact EFM8 part number not published by the vendor or by Adafruit's reseller listing. Paired with a standard FTDI USB-serial adapter chip for the host link.",
+   "mcu_secondary": "FTDI USB-to-serial adapter",
+   "radios": [],
+   "display": {
+    "type": "Built-in live traffic display",
+    "size_in": null,
+    "resolution": null,
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "USB 2.0 (micro-USB)"
+   ],
+   "gpio": "SPI signals plus two auxiliary GPIO (A/B), two GND, two 3.3 V and two 5 V power outs, all color-coded; signals are 3.3 V and 5 V tolerant",
+   "sensors": [
+    "USB line voltage monitor (to 0.01 V)",
+    "Target high-side current measurement (to 5 mA)",
+    "Onboard temperature"
+   ],
+   "dimensions_mm": "61 x 49 x 6",
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure",
+   "notable_physical": [
+    "Built-in 3.3 V and 5 V target power supplies with current monitoring",
+    "Color-coded jumper wiring",
+    "Live display of bus state, uptime and running CRC of traffic"
+   ]
+  },
+  "capabilities": {
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Core function; sustained SPI transfers at 500 Kbps with onboard 3.3/5 V power for the target."
+   },
+   "logic_analyzer": {
+    "v": "partial",
+    "note": "Live color display of SPI signal lines and traffic on the device itself, plus a running CRC, but this is a protocol monitor, not a general-purpose multi-channel logic analyzer with buffered capture."
+   },
+   "uart": {
+    "v": "no",
+    "note": "SPI only - no UART mode."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "SPI only. The I2CDriver is the equivalent product for I2C."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port support of any kind."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection hardware - it is a passive/active bus probe, not a glitcher."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "GUI, command-line, and C/C++ and Python 2/3 host bindings provided for Windows, Mac and Linux."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered over USB; the display shows state but the device does not operate without a host driving it."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion mobile app or app catalog - desktop GUI/CLI/library only."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web-based interface; control is via desktop GUI, CLI or the Python/C bindings."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage on the device; all data is streamed live to the connected host."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive bench probe with no radio - legal to own and use everywhere. As with any bus probe, reading data off a device you do not own or lack authorization to inspect can raise anti-circumvention (DMCA 1201) or computer-misuse issues depending on jurisdiction; this is about the target, not the tool."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://spidriver.com/",
+    "what": "official spec sheet: EFM8 + FTDI, 500 Kbps SPI, power/current monitoring, $29.00 price, 61x49x6mm, USB 2.0 micro-USB"
+   },
+   {
+    "url": "https://github.com/jamesbowman/spidriver",
+    "what": "official open-source firmware/host-tools repo, BSD license, GUI/CLI/C/Python bindings"
+   },
+   {
+    "url": "https://www.adafruit.com/product/4268",
+    "what": "reseller listing confirming $29.95 price, 'kinda like a Bus Pirate with a display' framing, FTDI chip with no special drivers, included jumper cables"
+   },
+   {
+    "url": "https://lab401.com/collections/hardware-audit",
+    "what": "EU reseller listing at EUR-converted price, corroborating the batch's original $37.80/$34.95 price observations"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact EFM8 part number, display resolution, or last firmware release date from public sources - neither the vendor nor Adafruit's listing publishes it."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "i2cdriver",
+  "hardware_id": "i2cdriver",
+  "name": "I2CDriver",
+  "firmware": "Stock (ExCamera Labs)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/jamesbowman/i2cdriver",
+  "firmware_note": "Single fixed firmware; open hardware/firmware/tools under BSD license.",
+  "vendor": "ExCamera Labs",
+  "vendor_url": "https://excamera.com",
+  "product_url": "https://i2cdriver.com/",
+  "category": "hardware-debug",
+  "subcategory": "protocol-bridge",
+  "status": "available",
+  "released": "2019",
+  "price_usd": 29.0,
+  "price_note": "$29.00 direct from i2cdriver.com. Adafruit sells it at $29.95; Lab401 lists it around $35 as a EUR-converted reseller price. A cheaper I2CMini variant also exists from the same maker for a stripped-down single-port version.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Straightforward to wire up (three ready-made ports with jumpers included) but you still need to understand I2C addressing, pull-ups and clock stretching to interpret what it shows you.",
+  "build_effort": "assembled",
+  "build_note": "Bare open-hardware PCB, no case. Three sets of color-coded jumpers included; no soldering.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "The I2C-only counterpart to the SPIDriver: a small open-hardware USB probe with a live display of bus traffic (including a live address map of every device it sees on the bus), programmable auto-tuning pull-up resistors, and three identical I2C ports so you can probe several devices without rewiring. Built around the same FTDI + Silicon Labs EFM8 combination.",
+  "honest_take": "The programmable, auto-tuning pull-up resistors are the genuinely useful part - getting pull-up values wrong is a classic source of flaky I2C bugs, and this tool removes the guesswork, as does the live address map that shows every device answering on the bus. But like the SPIDriver, it is a single-protocol tool at multi-protocol-tool pricing: a Bus Pirate 5 costs roughly twice as much but adds SPI, UART and 1-Wire on top of I2C, and this device has zero JTAG/SWD or SPI capability of its own. Buy this specifically if I2C is most of your bench work and you want the nicest possible I2C-only experience, not as a general hardware-hacking tool.",
+  "best_for": [
+   "Debugging flaky I2C buses where pull-up values are suspect",
+   "Probing multiple I2C devices at once via the three ports",
+   "Clean, well-documented host tooling for driver development"
+  ],
+  "not_for": [
+   "Any protocol other than I2C",
+   "JTAG/SWD debugging",
+   "Hobbyists who want one tool that does everything - see Bus Pirate 5 instead"
+  ],
+  "hardware": {
+   "mcu_primary": "Silicon Labs EFM8 (automotive-grade)",
+   "mcu_primary_note": "Exact EFM8 part number not published by the vendor or Adafruit's reseller listing. Paired with a dedicated FTDI USB-serial adapter chip.",
+   "mcu_secondary": "FTDI USB-to-serial adapter",
+   "radios": [],
+   "display": {
+    "type": "Built-in live traffic display",
+    "size_in": null,
+    "resolution": null,
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "USB 2.0 (micro-USB)"
+   ],
+   "gpio": "Three identical I2C ports, each with power and I2C signal lines; 3.3 V output, all 5 V tolerant",
+   "sensors": [
+    "USB line voltage monitor (to 0.01 V)",
+    "Target high-side current measurement (to 5 mA)",
+    "Onboard temperature"
+   ],
+   "dimensions_mm": "61 x 49 x 6",
+   "weight_g": null,
+   "case": "Bare PCB, no enclosure",
+   "notable_physical": [
+    "Three color-coded I2C ports with jumpers included",
+    "Programmable, auto-tuning I2C pull-up resistors",
+    "Live display of bus state, address map, uptime and running CRC"
+   ]
+  },
+  "capabilities": {
+   "i2c": {
+    "v": "yes",
+    "note": "Sustained transfers at 400 and 100 kHz; supports 7- and 10-bit addressing, clock stretching and bus arbitration; programmable auto-tuning pull-ups; live address map of devices on the bus."
+   },
+   "logic_analyzer": {
+    "v": "partial",
+    "note": "Live graphical display of I2C signal lines and decoded traffic on the device itself, not a general multi-channel capture tool."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "I2C only - see the SPIDriver for SPI."
+   },
+   "uart": {
+    "v": "no",
+    "note": "I2C only."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port support."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection hardware."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "GUI, command-line, and C/C++ and Python 2/3 host bindings for Windows, Mac and Linux."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered over USB."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion mobile app - desktop tooling only."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web-based interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage; data streams live to the host."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive bench probe with no radio - legal to own and use everywhere. The legal exposure sits with the target device, not this tool."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://i2cdriver.com/",
+    "what": "official spec sheet: EFM8 + FTDI, 400/100 kHz I2C, three ports, auto-tuning pullups, $29.00 price, 61x49x6mm"
+   },
+   {
+    "url": "https://github.com/jamesbowman/i2cdriver",
+    "what": "official open-source firmware/host-tools repo, BSD license"
+   },
+   {
+    "url": "https://www.adafruit.com/product/4267",
+    "what": "reseller listing confirming $29.95 price, live address-map display, high-side current meter, programmable pull-ups"
+   },
+   {
+    "url": "https://lab401.com/collections/hardware-audit",
+    "what": "EU reseller listing at EUR-converted price"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact EFM8 part number or display resolution from public sources."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "termdriver-2",
+  "hardware_id": "termdriver-2",
+  "name": "TermDriver 2",
+  "firmware": "Stock (ExCamera Labs, CircuitPython-based)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/jamesbowman/termdriver2",
+  "firmware_note": "Runs standard CircuitPython under the hood; firmware and PCB design are open source (BSD 3-clause) and field-upgradeable, but it ships as a fixed serial-console appliance, not a platform you reprogram for other tasks.",
+  "vendor": "ExCamera Labs",
+  "vendor_url": "https://excamera.com",
+  "product_url": "https://www.termdriver.com/",
+  "category": "hardware-debug",
+  "subcategory": "serial-console-display",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 24.0,
+  "price_note": "$24.00 direct from termdriver.com (official vendor site). Lab401 sells it as a EUR-converted reseller at roughly $29.95-29.99 (EUR29.00 list, EUR34.95 compare-at).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "It is a USB-to-serial adapter with a screen; if you already know how to use a UART console, there is nothing new to learn.",
+  "build_effort": "assembled",
+  "build_note": "Ready to use over micro-USB; a 0.1\" header is also provided for standalone (non-USB) operation as a console.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A USB-to-serial adapter with a built-in 240x240 IPS display that renders the serial stream as a live ANSI terminal, so you can read a device's boot/debug console without a laptop attached. It can also run standalone off header power as a permanent console for an embedded system.",
+  "honest_take": "This solves a specific annoyance - tailing serial console output without dedicating a laptop screen to a terminal window - and it does that well with real ANSI color and cursor support, not just a scrolling text dump. It is not a logic analyzer, protocol sniffer, or debug probe of any kind: it is a single UART endpoint, full stop, with no SPI, I2C or JTAG/SWD capability at all. At $24 it is priced for the display and RP2040-driven terminal emulation, not for any hacking capability beyond what a $3 USB-UART cable already gives you. If you just need to talk to a serial console with a laptop already open, a bare adapter is cheaper; buy this specifically for the standalone-display use case.",
+  "best_for": [
+   "Watching boot logs / debug console output on a small always-on screen",
+   "A standalone serial console for headless embedded systems (e.g. next to a Raspberry Pi)",
+   "Reading ANSI-colored terminal output without a laptop attached"
+  ],
+  "not_for": [
+   "Protocol analysis or sniffing - it is a UART endpoint, not a bus tap",
+   "Anything beyond serial - no SPI/I2C/JTAG capability",
+   "Situations where a $3 bare USB-UART adapter would already do the job"
+  ],
+  "hardware": {
+   "mcu_primary": "Raspberry Pi RP2040",
+   "mcu_primary_note": "Dual-core Cortex-M0+ at 133 MHz, 264 KB SRAM, 2 MB onboard flash.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "IPS LCD",
+    "size_in": null,
+    "resolution": "240x240",
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB or header powered; can run off an external 3.3 V supply for standalone use.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None beyond onboard flash for firmware",
+   "connectivity": [
+    "micro-USB",
+    "0.1\" header for serial + power"
+   ],
+   "gpio": "TX/RX plus RTS/DTR control-signal monitoring on a 0.1\" header; supplies up to 350 mA at 3.3 V",
+   "sensors": [
+    "Live RTS/DTR signal state"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Custom bezel, one-piece rugged design",
+   "notable_physical": [
+    "230 PPI all-angle IPS display",
+    "32 KB hardware input buffer for zero data loss",
+    "Can be powered and used without a USB host"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "110 bps to 2,000,000 bps, with a 32 KB hardware input buffer so bursts are not dropped; live RTS/DTR monitoring."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not a bus analyzer - single UART endpoint only."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI support."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C support."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port support."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection hardware."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Presents as a standard USB CDC ACM serial device; no dedicated scripting API beyond talking to the COM/tty port."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Can run off header power as a console display without a USB host attached."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card or onboard storage for the terminal history - the 32 KB buffer is RAM-based for zero-loss display, not persistent logging."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive serial console display with no radio - legal to own and use everywhere."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2026",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "TermDriver2"
+  ],
+  "sources": [
+   {
+    "url": "https://www.termdriver.com/",
+    "what": "official spec sheet: RP2040, 110bps-2Mbps, 32KB buffer, 240x240 IPS 230PPI, BSD-3-clause open firmware/PCB, $24.00 price"
+   },
+   {
+    "url": "https://lab401.com/products/termdriver2",
+    "what": "EUR reseller listing (Shopify product JSON: EUR29.00, compare-at EUR34.95) confirming the batch's converted price"
+   },
+   {
+    "url": "https://github.com/jamesbowman/termdriver2",
+    "what": "open-source firmware and PCB design repo"
+   },
+   {
+    "url": "https://blog.adafruit.com/2026/02/25/new-product-termdriver-2-by-excamera-labs",
+    "what": "independent product-announcement coverage corroborating the RP2040/IPS-display spec and February 2026 release timing"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact release date beyond February 2026 blog coverage, or the physical board dimensions."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ibdap",
+  "hardware_id": "ibdap",
+  "name": "IBDAP - CMSIS-DAP JTAG/SWD Debug Adapter",
+  "firmware": "Stock (IBDAP open-source CMSIS-DAP firmware)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/ibdap/ibdap-cmsis-dap",
+  "firmware_note": "Official open-source CMSIS-DAP firmware for the LPC11U35 target; the upstream repo shows only 2 commits total, i.e. it was published essentially complete and has not been iterated on since.",
+  "vendor": "Armstart",
+  "vendor_url": "https://www.tindie.com/stores/Armstart/",
+  "product_url": "https://www.tindie.com/products/Armstart/ibdap-cmsis-dap-jtagswd-debug-adapter/",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe",
+  "status": "out-of-stock",
+  "released": "2015",
+  "price_usd": 35.95,
+  "price_note": "Listed price is $35.95, but the Tindie listing is currently out of stock (schema.org availability: OutOfStock) and the seller's page reads 'this seller is taking a break' with only a restock-notification signup - not a normal temporary sellout.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "A standard CMSIS-DAP probe - if you already use OpenOCD or Keil with any other CMSIS-DAP adapter, this behaves the same way.",
+  "build_effort": "assembled",
+  "build_note": "Ready-to-use USB adapter, no assembly - when it is actually in stock.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An open-hardware CMSIS-DAP debug adapter built on an NXP LPC11U35 Cortex-M0 running at 48 MHz, giving JTAG and SWD access to ARM Cortex targets from multiple vendors (Nordic, Atmel, NXP, Freescale, TI) plus UART/I2C/SPI/ADC/GPIO breakout. Functionally a from-scratch alternative to a DAPLink or ST-Link for Cortex-M debugging, with more general peripheral breakout than most dedicated probes in this comparison.",
+  "honest_take": "This is a competent, fully open CMSIS-DAP probe on paper, with more peripheral breakout (I2C, dual SPI, 8-channel ADC) than any other debug probe in this batch - but the listing is currently unbuyable. The seller's own page says they are 'taking a break', not just sold out, and the upstream firmware repo has had exactly two commits since it was published, so treat this as effectively dormant rather than an active product. At the price point where this normally sits ($35.95), a Mini DAPLink or an XDS110-class probe from an actively-stocked seller is the safer buy right now; there is nothing IBDAP does for JTAG/SWD that a current CMSIS-DAP probe does not, and its extra peripheral breakout is a bonus you can't currently purchase.",
+  "best_for": [
+   "Historical/reference example of an open CMSIS-DAP design (LPC11U35-based)",
+   "Cortex-M debugging via OpenOCD/Keil/GDB/IAR, if you can actually source one",
+   "General peripheral breakout (I2C/SPI/ADC/GPIO) alongside debug access, more than most dedicated probes offer"
+  ],
+  "not_for": [
+   "Buying today - currently unavailable with no restock date",
+   "Anyone who needs a probe with an active maintainer",
+   "Fault injection or side-channel work - no such hardware"
+  ],
+  "hardware": {
+   "mcu_primary": "NXP LPC11U35FHI33/501",
+   "mcu_primary_note": "ARM Cortex-M0 at 48 MHz, 64 KB flash, 12 KB RAM, 2 KB EEPROM.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None beyond onboard flash for firmware",
+   "connectivity": [
+    "USB 2.0"
+   ],
+   "gpio": "1x USART, 1x I2C, 2x SPI, 8x 10-bit ADC, 26x GPIO exposed alongside the JTAG/SWD debug signals",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare board",
+   "notable_physical": [
+    "Broad peripheral breakout beyond just the debug port"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "Fully CMSIS-DAP compliant JTAG and SWD; works with Keil, OpenOCD, GNU GDB and IAR; supports Cortex-M targets from Nordic, Atmel, NXP, Freescale and TI."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "One USART broken out on the LPC11U35."
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "One I2C peripheral broken out."
+   },
+   "spi_flash_dump": {
+    "v": "partial",
+    "note": "Two SPI peripherals broken out on the MCU, but this is a general peripheral breakout, not a dedicated flash-dumping tool with matched software."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not a logic analyzer."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection hardware."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "No dedicated scripting API documented beyond standard debugger toolchain use."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered debug probe."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bench debug probe with no radio - legal to own and use everywhere. Debugging or dumping firmware from a device you do not own or lack authorization for can raise anti-circumvention (DMCA 1201) or computer-misuse issues; that is about the target, not this tool."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "sparse",
+   "last_release": "2015",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "IBDAP CMSIS-DAP"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/Armstart/ibdap-cmsis-dap-jtagswd-debug-adapter/",
+    "what": "listing: LPC11U35FHI33/501 48MHz Cortex-M0, 64KB flash/12KB RAM, JTAG/SWD, UART/I2C/2xSPI/8xADC/26xGPIO, $35.95, schema.org OutOfStock, 'this seller is taking a break'"
+   },
+   {
+    "url": "https://github.com/ibdap/ibdap-cmsis-dap",
+    "what": "official firmware repo description confirms it as 'The Official IBDAP CMSIS-DAP Firmware Source Code'; only 2 commits total"
+   },
+   {
+    "url": "https://github.com/ARMmbed/DAPLink/issues/379",
+    "what": "ARM's own DAPLink project issue tracker requesting IBDAP support, corroborating it as a real independent CMSIS-DAP hardware design recognized by the mbed/DAPLink ecosystem"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm current firmware version or whether Armstart intends to restock; treat availability as unreliable."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "lab401-flashing-multi-tool",
+  "hardware_id": "lab401-flashing-multi-tool",
+  "name": "Lab401 Flashing Multi-tool for Proxmark & Chameleon",
+  "firmware": "n/a (passive breakout board)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "Lab401",
+  "vendor_url": "https://lab401.com",
+  "product_url": "https://lab401.com/products/proxmark-3-rdv4-flash-support",
+  "category": "accessory",
+  "subcategory": "rfid-tool-flashing-adapter",
+  "status": "available",
+  "released": "2018",
+  "price_usd": 32.39,
+  "price_note": "EUR29.99 (compare-at EUR34.95) direct from lab401.com, converted at time of check to roughly $32.39. KSEC Worldwide sells the same product at GBP34.99. Both are EU/UK-based resellers; check current FX rates.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Trivial to use once wired - the whole point is removing the need to solder pogo-pin or wire jigs - but you need to already know how to drive a Segger J-Link or an AVR ISP mkII.",
+  "build_effort": "assembly",
+  "build_note": "Solder-free: headers and pins are pre-placed for both target families. No soldering needed on this board itself.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A passive breakout adapter (11 x 8 x 1.5 cm, 8-9 g) that pre-wires the JTAG/ICSP headers needed to reflash a Proxmark 3 RDV4/4.01 or a ChameleonMini RevE/RevG without building your own jig. It is not itself a programmer - it just routes a Segger J-Link (for the Proxmark) or an AVR ISP mkII (for the Chameleon) to the right pins. Intended for brick recovery and switching between major firmware branches; routine firmware updates over USB do not need it.",
+  "honest_take": "The name overstates what you are buying: this is a header-routing adapter, not a programmer. You still need to separately own a Segger J-Link and/or an AVR ISP mkII - both sold separately and each costing as much or more than this board - before it does anything. Its entire value is saving you from hand-wiring pogo pins to a Proxmark or Chameleon's debug pads, which is a real but narrow convenience specifically for brick recovery and firmware-branch switching (not routine updates, which work fine over USB alone). If you already have proper jigs or don't mind wiring your own, skip it; if you regularly reflash both device families and don't want to fight tiny test points every time, it earns its price.",
+  "best_for": [
+   "Owners of both a Proxmark 3 RDV4 and a ChameleonMini/Tiny who reflash either regularly",
+   "Recovering a bricked Proxmark or Chameleon after a failed firmware update",
+   "Avoiding hand-soldered pogo-pin jigs for recovery flashing"
+  ],
+  "not_for": [
+   "Anyone without a Segger J-Link or AVR ISP mkII already - this adapter does nothing on its own",
+   "Routine firmware updates - those work over USB without this tool",
+   "One-time recovery flashing - a borrowed jig or direct wiring is cheaper for a single use"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Passive PCB - no microcontroller, no active components. It is a header/pin router only.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Unpowered; draws power from whichever programmer is attached.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "Header inputs for Segger J-Link and AVR ISP mkII",
+    "Header outputs matched to Proxmark 3 RDV4/4.01 and ChameleonMini RevE/RevG/ChameleonTiny footprints"
+   ],
+   "gpio": "Fixed pinout matched to the two target device families - not general purpose",
+   "sensors": [],
+   "dimensions_mm": "110 x 80 x 15",
+   "weight_g": 9,
+   "case": "Bare PCB",
+   "notable_physical": [
+    "Two programmer input headers (J-Link and AVR ISP mkII)",
+    "Pre-aligned pin rows for both target families"
+   ]
+  },
+  "capabilities": {
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a programmer itself - it is a passive pin router for a Segger J-Link or AVR ISP mkII, both sold separately."
+   },
+   "jtag_swd": {
+    "v": "addon",
+    "note": "Routes an externally supplied Segger J-Link's JTAG/SWD lines to the Proxmark 3 debug header; the J-Link itself is not included."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART breakout - JTAG/ICSP programming headers only."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not applicable - this is a JTAG/ICSP programming adapter, not a general bus probe."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No analysis capability - pure passive pin routing."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No firmware or software of its own to script - it is a passive header adapter."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires an external programmer (J-Link or AVR ISP mkII) to function at all."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive adapter board with no radio and no independent function - legal to own and use everywhere. Any legal exposure belongs to what you flash onto the connected Proxmark or Chameleon, not to this board."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "n/a",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Proxmark 3 RDV4 Flash Support",
+   "Multi-Flash Adaptor"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/proxmark-3-rdv4-flash-support",
+    "what": "official product listing (Shopify product JSON): EUR29.99 price, compatible with Proxmark 3 RDV4 & 4.01 and ChameleonMini RevE/RevG + ChameleonTiny, requires a separately-sold Segger J-Link and AVR ISPmkII"
+   },
+   {
+    "url": "https://labs.ksec.co.uk/product/flashing-multi-tool-for-proxmark-chameleon/",
+    "what": "UK reseller listing corroborating: GBP34.99 price, 11x8x1.5cm, 8g, JTAG/ICSP header exposure, solder-free design, use case is brick recovery / firmware-branch switching (not routine USB updates)"
+   },
+   {
+    "url": "https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/jtag_notes.md",
+    "what": "official Proxmark3 project documentation for the exact J-Link JTAG recovery procedure this adapter is built to simplify, including the pin mapping and the note that the RDV4's JTAG header is small enough that 'a convenient adapter from Proxgrind' or pogo-pin clips are recommended - independently corroborating the real pain point this product solves"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact board manufacture year beyond the 2018 listing-creation date, or whether it is compatible with the newest Proxmark/Chameleon hardware revisions released after 2024."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "cw312t-rp2350",
+  "hardware_id": "cw312t-rp2350",
+  "name": "CW312T-RP2350",
+  "firmware": "n/a (bare target board)",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/newaetech/chipwhisperer-target-cw308t",
+  "firmware_note": "The board itself ships blank; you load your own test/victim firmware onto the RP2350 via the ChipWhisperer toolchain to build side-channel or fault-injection test targets.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/cw312t-rp2350",
+  "category": "hardware-debug",
+  "subcategory": "side-channel-target-board",
+  "status": "available",
+  "released": "2025",
+  "price_usd": 30.0,
+  "price_note": "$30.00 direct from newae.com.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "This is a target, not a capture tool - using it for real side-channel or glitch work assumes you already know how to run a ChipWhisperer capture session.",
+  "build_effort": "assembled",
+  "build_note": "Ready-to-use CW312-format target board; no soldering, but it does nothing on its own.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A CW312-standard target board carrying a Raspberry Pi RP2350 (dual Cortex-M33 + Hazard3 RISC-V), with the chip's internal voltage regulator bypassed in favour of an external LDO so a ChipWhisperer capture unit can cleanly measure and glitch its 1.0 V core supply. It exists purely to give ChipWhisperer owners a current-generation MCU to practice power analysis and fault injection against.",
+  "honest_take": "This is not a standalone tool - it is a victim board. It plugs into NewAE's CW312 connector standard and needs a separate ChipWhisperer capture device (Nano, Lite or Husky) to do anything at all; budget for that if you don't already own one, since none of the glitching, power-analysis or debug capability lives on this board itself. The value here is specifically that it is a current, real-world MCU family (the RP2350/Pico 2 line) rather than the older toy targets bundled with entry kits, so glitch-detector and power-analysis practice transfers better to real hardware.",
+  "best_for": [
+   "ChipWhisperer owners who want a modern RP2350 target for power analysis practice",
+   "Testing glitch-detector circuits against a current-generation MCU",
+   "Coursework/training that wants to go beyond the bundled STM32F0/F3 targets"
+  ],
+  "not_for": [
+   "Anyone without a ChipWhisperer capture device - it has no capture hardware of its own",
+   "Attacking a real product's RP2350 - this is a bare dev target, not your product's board"
+  ],
+  "hardware": {
+   "mcu_primary": "Raspberry Pi RP2350",
+   "mcu_primary_note": "Dual-core, switchable between 2x Arm Cortex-M33 and 2x Hazard3 RISC-V cores.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered via the CW312 connector / capture device.",
+   "charging": null,
+   "pmic": "External LDO regulator supplying a fixed 1.0 V to the RP2350 core, replacing the chip's internal regulator so power delivery can be measured and manipulated externally.",
+   "storage": "RP2350 onboard flash (size not published for this variant)",
+   "connectivity": [
+    "CW312 standard target connector"
+   ],
+   "gpio": "Exposed via the CW312 connector to the attached ChipWhisperer capture unit",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare board",
+   "notable_physical": [
+    "External core-voltage LDO for clean power measurement/glitching",
+    "CW312 standard footprint shared across NewAE's current target line"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "partial",
+    "note": "Provides the target-side hardware (bypassed regulator) needed for voltage glitching; the glitch generation itself comes from an attached ChipWhisperer capture device, sold separately."
+   },
+   "jtag_swd": {
+    "v": "unknown",
+    "note": "The RP2350 exposes SWD, but whether it is broken out on this specific CW312 board's connector was not confirmed in available documentation."
+   },
+   "uart": {
+    "v": "unknown",
+    "note": "Not confirmed whether UART is broken out on the CW312 connector for this target."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool - it is a glitch/power-analysis target board."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C bridge function - target board only."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No analysis capability of its own; measurement is performed by the attached ChipWhisperer capture unit."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "The board itself has no host interface; scripting happens through the ChipWhisperer Python API against the attached capture device, not this target."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a ChipWhisperer capture device to be useful for anything beyond bare-board bring-up."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage."
+   },
+   "side_channel_power": {
+    "v": "partial",
+    "note": "The RP2350's internal voltage regulator is bypassed for an external LDO so a ChipWhisperer capture unit can cleanly measure its 1.0V core supply - real target-side design for the purpose, but (mirroring this record's own glitching rating of 'partial') the board has no capture engine of its own; a separately-purchased ChipWhisperer Nano/Lite/Husky does the actual sampling."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bare development/target board with no radio - legal to own and use everywhere. Side-channel and fault-injection attacks against a device you do not own can raise anti-circumvention or computer-misuse issues; this board ships blank and is meant for your own test targets."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2025",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/cw312t-rp2350",
+    "what": "official product page: RP2350 dual Arm+RISC-V, external LDO bypassing internal regulator for 1.0V core, CW312 format, $30.00, standalone target requiring a ChipWhisperer capture unit"
+   },
+   {
+    "url": "https://github.com/newaetech/chipwhisperer-target-cw308t",
+    "what": "NewAE's open-source target-board firmware/hardware organization pattern for the CW3xx target line, corroborating that targets in this family ship without pre-loaded attack firmware"
+   },
+   {
+    "url": "https://www.newae.com/products/chipwhisperer",
+    "what": "NewAE's ChipWhisperer product line page, confirming the CW312 connector standard is shared across NewAE's Nano/Lite/Husky capture devices, which this target requires"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm whether SWD/UART are broken out on the CW312 connector for this specific board, or the onboard flash size."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "teensy4vfi",
+  "hardware_id": "teensy4vfi",
+  "name": "teensy4vfi",
+  "firmware": "SKGleba teensy4vfi (early-stage, DIY)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/SKGleba/teensy4vfi",
+  "firmware_note": "Bare-metal firmware for the Teensy 4.0/4.1's own NXP i.MX RT1060 chip, turning the board's GPIO into a voltage-glitch trigger/controller. Author explicitly labels the project 'in its very early stages' and a personal exercise in bare-metal SoC programming.",
+  "vendor": "SKGleba",
+  "vendor_url": "https://github.com/SKGleba/teensy4vfi",
+  "product_url": "https://github.com/SKGleba/teensy4vfi",
+  "category": "hardware-debug",
+  "subcategory": "voltage-glitcher-firmware",
+  "status": "diy-only",
+  "released": "2024",
+  "price_usd": 21.49,
+  "price_note": "Not a sold product - the firmware is free. Estimated cost is a bare Teensy 4.0 board, currently $21.49 from SparkFun (which now manufactures Teensy boards); a Teensy 4.1 costs more. You also need whatever crowbar/switching hardware you wire to the target's power rail, which is not included or specified in the repo.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "The repository ships as raw firmware with almost no documentation ('Docs, readme, measurements, etc.' is listed as an open TODO); you are expected to read and modify the source to use it for a real target.",
+  "build_effort": "flash-only",
+  "build_note": "Compiles with the ARM GNU Toolchain and a Makefile; flashes to a Teensy 4.0/4.1 with the standard teensy-loader tool. No external hardware requirements are documented in the README, though a real glitch attack on a target chip will need you to wire the Teensy's GPIO to that target's power/reset lines yourself.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "Open-source firmware that repurposes a Teensy 4.0/4.1 (an off-the-shelf i.MX RT1060 dev board) as a voltage fault-injection controller, with a Python RPC script for host-side control. It is an early, actively-underdocumented research project rather than a finished glitching tool.",
+  "honest_take": "The author's own README calls this 'very early stages' and a personal learning project, and that shows: there is no documentation of what external glitch-injection circuit (if any) is needed to actually hit a target's power rail, no measurements, and no published successful attack against a real chip. Compare this squarely against the ChipWhisperer-Nano ($50, ready-to-run with a built-in target and a mature Python/Jupyter course) - that is the safer choice if you are learning voltage glitching for the first time. teensy4vfi is worth watching only if you specifically want to build your own glitcher on hardware you already own and are comfortable filling in the undocumented parts yourself.",
+  "best_for": [
+   "Experienced researchers who want a from-scratch, Teensy-based glitch controller to build on",
+   "Learning bare-metal i.MX RT1060 programming alongside fault-injection concepts"
+  ],
+  "not_for": [
+   "Anyone learning voltage glitching for the first time - use a ChipWhisperer-Nano instead",
+   "Reproducible, documented attacks - no measurements or target write-ups are published",
+   "Turnkey use - expect to read and patch the source"
+  ],
+  "hardware": {
+   "mcu_primary": "NXP i.MX RT1060 (on the Teensy 4.0/4.1 board)",
+   "mcu_primary_note": "600 MHz Cortex-M7. This is the Teensy board's own chip; teensy4vfi is firmware for it, not a companion device.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered (Teensy board).",
+   "charging": null,
+   "pmic": null,
+   "storage": "Teensy onboard flash",
+   "connectivity": [
+    "USB (Teensy)",
+    "GPIO wired by the user to the glitch target"
+   ],
+   "gpio": "Uses the Teensy's own GPIO for glitch triggering/timing; exact pin mapping is in source, not documented in the README",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Whatever the user's Teensy board comes as - bare board by default",
+   "notable_physical": [
+    "Runs entirely on an unmodified, off-the-shelf Teensy 4.0/4.1"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "partial",
+    "note": "Implements voltage-glitch triggering/timing logic on the Teensy's own GPIO; the project documents no specific successful attack, no timing/jitter figures, and does not specify what external switching circuit connects the GPIO to a target's power rail."
+   },
+   "uart": {
+    "v": "partial",
+    "note": "Host control is via a Python RPC script over the Teensy's USB-serial link, not a general-purpose UART bridge to a third-party target."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Controlled via an included Python RPC script (teensy_rpc.py) over the Teensy's serial link."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port capability - this is a glitch controller, not a debug probe."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash-dumping function."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No capture/analysis function - trigger and timing only."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Driven from a host via the RPC script."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage or logging documented."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "DIY firmware for a bench glitching tool with no radio - legal to own and build everywhere. Fault-injection attacks against a chip you do not own, to extract secrets or bypass protections, can raise anti-circumvention (DMCA 1201) or computer-misuse issues depending on jurisdiction and target."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "poor",
+   "last_release": "2025-01",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/SKGleba/teensy4vfi",
+    "what": "official repo README: 'very early stages', MIT license, no external-hardware documentation, TODO list includes 'critical bug fixes' and 'docs, readme, measurements, etc.', compiled with ARM GNU Toolchain + teensy-loader"
+   },
+   {
+    "url": "https://api.github.com/repos/SKGleba/teensy4vfi",
+    "what": "GitHub API: MIT license, 14 stars, last push 2025-01-07"
+   },
+   {
+    "url": "https://www.sparkfun.com/teensy-4-0.html",
+    "what": "current Teensy 4.0 board price ($21.49) used as the parts-cost estimate, since PJRC no longer sells the board directly"
+   },
+   {
+    "url": "https://www.pjrc.com/store/teensy40.html",
+    "what": "PJRC's own Teensy 4.0 page, confirming board manufacturing/sales moved to SparkFun"
+   }
+  ],
+  "research_gaps": [
+   "No documentation found of what external circuit (if any) couples the Teensy's GPIO to a target's power rail for an actual glitch, or of any successful attack the firmware has produced against real silicon."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "omg-programmer-usb-ac",
+  "hardware_id": "omg-programmer-usb-ac",
+  "name": "O.MG Programmer USB A+C",
+  "firmware": "Stock (MG.LOL / Hak5)",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "MG.LOL, sold via Hak5",
+  "vendor_url": "https://o.mg.lol/",
+  "product_url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+  "category": "accessory",
+  "subcategory": "implant-programmer-recovery-tool",
+  "status": "available",
+  "released": "2022",
+  "price_usd": 25.0,
+  "price_note": "$25.00 direct from shop.hak5.org, confirmed via the store's own Shopify product JSON (price:2500 = $25.00).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug-and-flash via the O.MG GUI/companion tooling - the programmer itself requires no special skill; the skill requirement lives in the O.MG cable/plug/adapter payloads you write with it.",
+  "build_effort": "assembled",
+  "build_note": "Ready-to-use USB dongle with both A and C ports; no assembly.",
+  "stealth": "overt",
+  "form_factor": "usb-stick",
+  "summary": "The required companion programmer for the entire O.MG implant line (Cable, Plug, Adapter, UnBlocker): it handles initial provisioning, firmware updates, recovery after a self-destruct event, forensic dumps/backups, and batch firmware installs for bulk deployments. One unit covers every device in the family via its combined USB-A and USB-C ports.",
+  "honest_take": "This is not an attack tool itself - it is the maintenance dongle every O.MG device eventually needs, and Hak5/MG.LOL made it effectively mandatory rather than optional: several O.MG devices ship without a way to be reprovisioned or recovered except through this programmer. If you own or plan to own more than one O.MG product, budget for this alongside them; it is a sunk cost of the ecosystem, not an add-on capability, and it has no debug-probe or bus-analysis function of its own - it only talks to O.MG silicon.",
+  "best_for": [
+   "Owners of any O.MG Cable, Plug, Adapter or UnBlocker who need to reflash, recover or forensically image it",
+   "Bulk/batch provisioning of multiple O.MG devices for a deployment"
+  ],
+  "not_for": [
+   "Standalone use - it has no function without an O.MG device attached",
+   "Anyone who does not already own (or plan to own) an O.MG product",
+   "General-purpose debugging - it only speaks to O.MG's own devices, not arbitrary JTAG/SWD/SPI/I2C targets"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published by the vendor.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "Unknown - used to hold forensic dumps/backups pulled from O.MG devices",
+   "connectivity": [
+    "USB-A port",
+    "USB-C port"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Molded USB dongle",
+   "notable_physical": [
+    "Combined USB-A and USB-C ports so one unit covers both cable generations"
+   ]
+  },
+  "capabilities": {
+   "usb_exfil": {
+    "v": "no",
+    "note": "Not itself an exfiltration tool - it is the programmer/support dongle for the O.MG implant family."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No general-purpose JTAG/SWD debug function - it only programs O.MG's own proprietary devices."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No general-purpose SPI flash access."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C function."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No general-purpose UART bridge function documented."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No analysis capability."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "O.MG's own GUI/CLI tooling is used for provisioning and dumps; no independent API documentation was found for the programmer itself."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a connected O.MG device and a host running the O.MG software to do anything."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No mobile app; uses desktop O.MG companion software."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface documented for the programmer itself."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No removable-storage logging documented."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "The programmer itself has no offensive capability - it flashes and images other devices. Legal risk attaches entirely to the O.MG Cable/Plug/Adapter/UnBlocker payloads you write and deploy with it, which are already covered separately in this database."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "O.MG Cable Programmer USB A+C"
+  ],
+  "sources": [
+   {
+    "url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+    "what": "official listing: $25.00 (confirmed via Shopify product JSON price field), supports initial setup, firmware upgrades, recovery from self-destruct, forensic dumps/backups and batch install across the O.MG Cable/Plug/Adapter/UnBlocker family, dual USB-A/USB-C"
+   },
+   {
+    "url": "https://labs.ksec.co.uk/product/hak5-o-mg-programmer-usb-ac/",
+    "what": "independent UK reseller listing corroborating it as a 'dual-port programmer for O.MG devices'"
+   },
+   {
+    "url": "https://sapsan-sklep.pl/en/products/o-mg-programator-kabla-hak5-usb-a",
+    "what": "independent EU reseller listing corroborating 'install firmware, update firmware, recover from self-destruct' function across O.MG Cable/Adapter/Plug; also carries the vendor marketing claim that it makes the device 'impossible to brick', which is treated here as an unverified claim rather than fact"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm the programmer's own internal MCU or onboard storage capacity."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "xds110-debugger-muselab",
+  "hardware_id": "xds110-debugger-muselab",
+  "name": "XDS110 Debugger",
+  "firmware": "Stock (MuseLab)",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "MuseLab",
+  "vendor_url": "https://www.tindie.com/stores/johnnywu/",
+  "product_url": "https://www.tindie.com/products/johnnywu/xds110-debugger/",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 15.0,
+  "price_note": "$15.00 on Tindie for the base unit with a DuPont cable; a bundle with an additional 1.5 m USB cable is also offered.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Plug-and-play with TI's own tools (Code Composer Studio, UniFlash) but using it via OpenOCD requires the usual manual target/adapter configuration.",
+  "build_effort": "assembled",
+  "build_note": "Small cased USB probe, no assembly.",
+  "stealth": "overt",
+  "form_factor": "pocket",
+  "summary": "A compact third-party debug probe implementing TI's XDS110 protocol, for debugging TI microcontrollers and DSPs - the C2000 series and ARM Cortex-A/Cortex-M parts - over JTAG, cJTAG, SWD or UART. It is meant as a cheaper alternative to TI's own XDS110-based launchpad debuggers (TI's official standalone XDS110 units, like the TMDSEMU110-U, sell well above $100) for people who already own the target board but not a spare probe.",
+  "honest_take": "TI silicon debugging is a narrow niche most general-purpose probes (Mini DAPLink, ST-Link, generic CMSIS-DAP adapters) do not cover well, so this fills a real gap at $15 rather than TI's own $100+ standalone XDS110 units. The listing does not publish which chip drives the probe itself, so treat any specific throughput claims as unverified; buy it for TI-target compatibility with CCS/UniFlash, not as a general-purpose Cortex debugger - it has no I2C or SPI flash-dumping function, and a Mini DAPLink is the better and cheaper choice for non-TI ARM targets.",
+  "best_for": [
+   "Debugging TI C2000 DSPs or SimpleLink/Cortex parts without buying a TI-branded probe",
+   "Working with Code Composer Studio, UniFlash or OpenOCD against TI silicon"
+  ],
+  "not_for": [
+   "Non-TI Cortex-M targets - a Mini DAPLink or ST-Link is cheaper and better supported there",
+   "High-speed trace/logic-analyzer work - it is a debug/flash probe only",
+   "I2C or SPI peripheral access - not broken out on this probe"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The internal controller driving the probe is not published by MuseLab.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered, 5 V in.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "USB",
+    "JTAG/cJTAG/SWD/UART target header"
+   ],
+   "gpio": "Target I/O at 3.3 V; selectable 5 V or 3.3 V target power output",
+   "sensors": [],
+   "dimensions_mm": "70 x 24 x 12",
+   "weight_g": null,
+   "case": "Molded plastic enclosure",
+   "notable_physical": [
+    "Overcurrent and ESD protection on the target lines",
+    "Field-upgradeable firmware"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "Supports JTAG, cJTAG and SWD; works with CCS, Keil, UniFlash and OpenOCD on Windows, Linux and Mac."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "UART bridge included alongside the debug interface."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-memory programmer; it is a chip-debug probe."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C breakout."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer function."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "Driven through standard TI/OpenOCD toolchains; no separate scripting API documented."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered debug probe."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bench debug probe with no radio - legal to own and use everywhere. Debugging or extracting firmware from a chip you do not own or lack authorization for can raise anti-circumvention (DMCA 1201) or computer-misuse issues; that is about the target, not this tool."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/johnnywu/xds110-debugger/",
+    "what": "listing: JTAG/cJTAG/SWD/UART for TI C2000 and Cortex-A/M targets, 5V in with selectable 3.3/5V out, 3.3V I/O, works with CCS/Keil/UniFlash/OpenOCD, 70x24x12mm, $15.00, 9998+ units in stock"
+   },
+   {
+    "url": "https://www.digikey.tw/htmldatasheets/production/2373170/0/0/1/tmdsemu110-u.html",
+    "what": "TI's own XDS110 emulator (TMDSEMU110-U) datasheet listing, used as a reference point for what the official XDS110 protocol/hardware costs and implements versus this third-party probe"
+   },
+   {
+    "url": "https://e2e.ti.com/support/processors-group/processors/f/processors-forum/976056/tmdx654idkevm-how-to-design-xds110-debugger",
+    "what": "TI's own E2E engineer forum discussing how to design an XDS110-compatible debugger, corroborating that XDS110 is a protocol/reference design third parties can implement, not TI-exclusive silicon"
+   }
+  ],
+  "research_gaps": [
+   "Could not identify the internal controller/chip that implements the XDS110 protocol on this specific probe, or confirm a maximum JTAG/SWD clock speed."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "sparkfun-microsd-sniffer",
+  "hardware_id": "sparkfun-microsd-sniffer",
+  "name": "SparkFun microSD Sniffer",
+  "firmware": "n/a (passive interposer)",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/sparkfun/MicroSD_Sniffer",
+  "firmware_note": null,
+  "vendor": "SparkFun Electronics",
+  "vendor_url": "https://www.sparkfun.com",
+  "product_url": "https://www.sparkfun.com/sparkfun-microsd-sniffer.html",
+  "category": "hardware-debug",
+  "subcategory": "bus-interposer",
+  "status": "available",
+  "released": "2011",
+  "price_usd": 13.5,
+  "price_note": "$13.50 direct from SparkFun, in stock, with volume discounts down to $11.48 at 100+ units.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The board itself is trivial (insert card, insert into host) but you supply your own logic analyzer or MCU to actually capture and decode what it exposes.",
+  "build_effort": "assembled",
+  "build_note": "No soldering - insert a microSD card into the onboard socket and insert the whole assembly into the target device's microSD slot.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "A passive interposer PCB that sits between a microSD card and its host socket (camera, dashcam, router, IoT device), breaking every physical microSD pad out to an 8-pin 0.1\" header so an external logic analyzer or MCU can passively capture the traffic. SparkFun's own product copy describes it as being for viewing SPI traffic 'whether for hacking or debugging.'",
+  "honest_take": "This is just a physical tap - it captures nothing on its own. You need to supply the logic analyzer (or MCU + firmware) and, more importantly, do the protocol decoding yourself: SparkFun's documentation frames this specifically around watching SPI-mode traffic, and most embedded hosts that use microSD in full 4-bit SDIO mode (rather than the simpler SPI mode) will need you to decode DAT1-DAT3 yourself with tooling this board does not provide. At $13.50 it is a fair price for a bare tap, but budget separately for a real logic analyzer and expect to write your own decoder for anything beyond SPI-mode traffic.",
+  "best_for": [
+   "Passively tapping microSD traffic in cameras, dashcams, routers and IoT devices for forensic or hacking work",
+   "A cheap physical interposer to feed a logic analyzer you already own"
+  ],
+  "not_for": [
+   "Turnkey traffic decoding - it is a passive tap, not an analyzer",
+   "Hosts using full 4-bit SDIO mode without your own DAT1-3 decode tooling"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Passive PCB - no active components.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Unpowered; draws power through-pass from the host device.",
+   "charging": null,
+   "pmic": null,
+   "storage": "n/a - pass-through only",
+   "connectivity": [
+    "8-pin 0.1\" header breakout",
+    "microSD socket (accepts the actual card) on one side, microSD card-shaped edge (inserts into host) on the other"
+   ],
+   "gpio": "All microSD signal pins broken out to the header",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB shaped to fit a microSD slot",
+   "notable_physical": [
+    "Open-source Eagle design files published on GitHub"
+   ]
+  },
+  "capabilities": {
+   "spi_flash_dump": {
+    "v": "partial",
+    "note": "Exposes SPI-mode microSD traffic for external capture; SparkFun's own documentation frames the board around SPI-mode viewing specifically."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Passive tap only - you must supply your own logic analyzer or MCU to capture and decode anything."
+   },
+   "uart": {
+    "v": "no",
+    "note": "Not applicable - microSD bus only."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not applicable - microSD bus only."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port function - storage bus tap only."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Purely passive hardware - no firmware or software of its own."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires an external capture device to do anything."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "It taps an SD card's traffic; it does not itself log to storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive bus interposer with no radio - legal to own and use everywhere. Intercepting storage traffic from a device you do not own or lack authorization to inspect can raise wiretap, computer-misuse or anti-circumvention issues depending on jurisdiction and use; that is about the target, not this board."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "sparse",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "TOL-09419"
+  ],
+  "sources": [
+   {
+    "url": "https://www.sparkfun.com/sparkfun-microsd-sniffer.html",
+    "what": "official listing: 8-pin 0.1\" header breakout, $13.50, in stock, volume pricing"
+   },
+   {
+    "url": "https://github.com/sparkfun/MicroSD_Sniffer",
+    "what": "official open-source Eagle design repo, confirms TOL-09419 product code and open-source licensing"
+   },
+   {
+    "url": "https://learn.sparkfun.com/tutorials/microsd-sniffer-hookup-guide/introduction",
+    "what": "official SparkFun Learn hookup guide, confirms the interposer concept and 0.1\" header breakout approach"
+   },
+   {
+    "url": "https://cpc.farnell.com/sparkfun-electronics/tol-09419/microsd-sniffer/dp/MK00651",
+    "what": "independent distributor listing corroborating the TOL-09419 part number"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm the exact per-pin header mapping (which of the 8 pins is which signal) from public documentation - schematic is on GitHub but was not rendered in this pass."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "sparkfun-sd-sniffer",
+  "hardware_id": "sparkfun-sd-sniffer",
+  "name": "SD Sniffer",
+  "firmware": "n/a (passive interposer)",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/sparkfun/SD_Sniffer",
+  "firmware_note": null,
+  "vendor": "SparkFun Electronics",
+  "vendor_url": "https://www.sparkfun.com",
+  "product_url": "https://www.sparkfun.com/sd-sniffer.html",
+  "category": "hardware-debug",
+  "subcategory": "bus-interposer",
+  "status": "available",
+  "released": "2013",
+  "price_usd": 12.5,
+  "price_note": "$12.50 direct from SparkFun, in stock, with volume discounts down to $10.63 at 100+ units.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Same as the microSD version - the board is trivial, the capture and decode work is on you.",
+  "build_effort": "assembled",
+  "build_note": "No soldering - insert a full-size SD card into the onboard holder and insert the assembly into the host's SD socket.",
+  "stealth": "covert",
+  "form_factor": "board",
+  "summary": "The full-size-SD sibling of SparkFun's microSD Sniffer: a passive interposer that sits between an SD card and its host socket, exposing bus signals to an external header. The official repository is explicit that this board is 'for use whether hacking or debugging' the SPI signals between socket and card.",
+  "honest_take": "SparkFun's own GitHub README describes this in one sentence: it lets you 'view SPI signals between an SD socket and SD card' - so despite a full-size SD card physically carrying DAT1-DAT3 lines for 4-bit SDIO mode, the board and its documentation are built and described around SPI-mode sniffing. If your target host talks to the card in 4-bit mode (many cameras and higher-throughput embedded hosts do), you're on your own for decoding those extra lines even though the pins may be physically present on the header. Functionally identical value proposition to the microSD Sniffer, just for full-size cards, and it shares the same complete absence of debug-port, I2C or glitching capability.",
+  "best_for": [
+   "Passively tapping full-size SD card traffic in cameras, dashcams and embedded hosts",
+   "A cheap physical interposer to feed your own logic analyzer"
+  ],
+  "not_for": [
+   "Turnkey traffic decoding - passive tap only",
+   "Hosts using 4-bit SDIO mode without your own decode tooling"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Passive PCB - no active components.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Unpowered; draws power through-pass from the host device.",
+   "charging": null,
+   "pmic": null,
+   "storage": "n/a - pass-through only",
+   "connectivity": [
+    "Header breakout of SD/SPI bus signals",
+    "SD card holder on one side, SD-card-shaped edge for the host slot on the other"
+   ],
+   "gpio": "SD/SPI bus signal pins broken out to the header",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB shaped to fit an SD slot",
+   "notable_physical": [
+    "Open-source Eagle design files, CC BY-SA 4.0 licensed"
+   ]
+  },
+  "capabilities": {
+   "spi_flash_dump": {
+    "v": "partial",
+    "note": "Official repo describes it explicitly as exposing SPI signals between an SD socket and card - documented for SPI-mode viewing, not full 4-bit SDIO decoding."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Passive tap only - supply your own capture/decode hardware."
+   },
+   "uart": {
+    "v": "no",
+    "note": "Not applicable - SD bus only."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not applicable - SD bus only."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port function - storage bus tap only."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Purely passive hardware."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires an external capture device to do anything."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "It taps an SD card's traffic; it does not itself log to storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive bus interposer with no radio - legal to own and use everywhere. Intercepting storage traffic from a device you do not own or lack authorization to inspect can raise wiretap, computer-misuse or anti-circumvention issues depending on jurisdiction and use."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "sparse",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "TOL-11468"
+  ],
+  "sources": [
+   {
+    "url": "https://www.sparkfun.com/sd-sniffer.html",
+    "what": "official listing: $12.50, in stock, volume pricing"
+   },
+   {
+    "url": "https://github.com/sparkfun/SD_Sniffer",
+    "what": "official repo README: 'The SD Sniffer allows you to hook up an external device to view SPI signals between an SD socket and SD card', CC BY-SA 4.0, confirms TOL-11468 product code"
+   },
+   {
+    "url": "https://github.com/sparkfun/SD_Sniffer/blob/master/README.md",
+    "what": "same repo README, cited directly for the exact 'view SPI signals between an SD socket and SD card' wording used to determine SPI-mode-only documentation scope"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm the exact header pinout or whether DAT1-3 lines are physically broken out despite the SPI-focused documentation."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "dirtyjtag",
+  "hardware_id": "dirtyjtag",
+  "name": "DirtyJTAG",
+  "firmware": "DirtyJTAG (open source, community)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/dirtyjtag/DirtyJTAG",
+  "firmware_note": "Turns ~$2 ST-Link v2 clones, STM32 'blue pill'/'black pill' boards or an Olimex STM32-H103 into a USB JTAG adapter; Raspberry Pi Pico and Tang Nano 20k support exist only as separate external forks, not the official project.",
+  "vendor": "dirtyjtag",
+  "vendor_url": "https://github.com/dirtyjtag/DirtyJTAG",
+  "product_url": "https://github.com/dirtyjtag/DirtyJTAG",
+  "category": "hardware-debug",
+  "subcategory": "jtag-adapter-firmware",
+  "status": "diy-only",
+  "released": "2016",
+  "price_usd": 5,
+  "price_note": "Not a sold product. Estimated cost is a ~$2-5 ST-Link v2 clone or STM32 'blue pill' board from AliExpress-type sellers; the firmware itself is free.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Flashing the firmware onto an ST-Link clone or blue pill is a documented, well-trodden process, but you are working with unbranded clone hardware and a project whose own author calls the JTAG implementation imperfect.",
+  "build_effort": "flash-only",
+  "build_note": "Flash the DirtyJTAG firmware onto a cheap ST-Link v2 clone, STM32 blue/black pill, or Olimex STM32-H103 - official install guides exist for each. Pi Pico and Tang Nano 20k support requires separate third-party forks.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "Open-source firmware that turns dirt-cheap ST-Link v2 clones and STM32 'blue pill' boards into a generic USB JTAG adapter, filling the role of the old LPT Wiggler cable for a few dollars of hardware. It speaks a simple USB protocol (VID 0x1209 / PID 0xC0CA) that UrJTAG, openFPGAloader and flashrom already support natively.",
+  "honest_take": "The project's own README is refreshingly blunt: 'DirtyJTAG is dirty and dirt cheap, but is not fast nor a perfect implementation of the JTAG protocol.' Independent testing has found its TCK clock effectively capped around 1 MHz no matter what speed you request in software - call it an order of magnitude slower than a real J-Link or even a decent CMSIS-DAP probe. OpenOCD support has existed only as an out-of-tree patch under review rather than a merged feature (check current status before assuming it works out of the box), and the flashy 'runs on a Pi Pico or Tang Nano too' claim is true only via separate community forks, not the official project. It also has no SWD support at all - JTAG only. Buy it for what it is: a way to turn a $2-5 clone board you already have lying around into a slow-but-usable JTAG cable for UrJTAG/openFPGAloader/flashrom, not a fast general debug probe.",
+  "best_for": [
+   "Turning a spare $2 ST-Link clone or blue pill into a usable JTAG adapter for UrJTAG, openFPGAloader or flashrom",
+   "Cheap JTAG boundary-scan or FPGA programming where speed doesn't matter"
+  ],
+  "not_for": [
+   "Fast JTAG/SWD debugging - TCK is effectively capped around 1 MHz regardless of the requested speed, and there is no SWD support at all",
+   "OpenOCD workflows, unless you confirm the current merge status of its patch",
+   "Raspberry Pi Pico or Tang Nano use via the 'official' project - that support is in separate third-party forks"
+  ],
+  "hardware": {
+   "mcu_primary": "STM32F101/F103 (on blue pill/black pill/Olimex targets) or the ST-Link clone's own STM32",
+   "mcu_primary_note": "DirtyJTAG is firmware for existing cheap STM32-based boards, not a device of its own; hardware varies by which host board you flash.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered (host board dependent).",
+   "charging": null,
+   "pmic": null,
+   "storage": "Host board's onboard flash",
+   "connectivity": [
+    "USB (VID 0x1209 / PID 0xC0CA)"
+   ],
+   "gpio": "JTAG signal pins on the host board's existing SWD/JTAG header",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Whatever the host clone board ships as - usually a small dongle or bare board",
+   "notable_physical": [
+    "Registered open-source USB PID via pid.codes"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "partial",
+    "note": "JTAG only, no SWD. Author-acknowledged imperfect implementation; TCK effectively capped around 1 MHz regardless of the software-requested clock speed per independent testing."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-memory programmer; JTAG/boundary-scan only."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART bridge."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer function."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Driven through UrJTAG, openFPGAloader and flashrom command-line tools; OpenOCD support exists only as an unmerged patch under review as of the last check."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered adapter, driven by UrJTAG/openFPGAloader/flashrom on a PC."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage or logging function."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "DIY firmware for a bench JTAG adapter with no radio - legal to own and build everywhere. Using JTAG to extract or modify firmware on a device you do not own can raise anti-circumvention (DMCA 1201) or computer-misuse issues depending on jurisdiction and target."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-03",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/dirtyjtag/DirtyJTAG",
+    "what": "official README: supported boards, self-described speed/quality limitations, USB VID/PID, UrJTAG/openFPGAloader/flashrom support dates, OpenOCD patch status, Pi Pico/Tang Nano as external forks"
+   },
+   {
+    "url": "https://api.github.com/repos/dirtyjtag/DirtyJTAG",
+    "what": "MIT license, 629 stars, last push 2026-03-10, not archived"
+   },
+   {
+    "url": "https://github.com/jeanthom/openocd-dirtyjtag/issues/3",
+    "what": "secondary source (GitHub issue discussion) reporting DirtyJTAG TCK effectively capped around 1 MHz regardless of configured adapter speed - marked as an independent/community finding, not primary vendor documentation"
+   },
+   {
+    "url": "https://review.openocd.org/c/openocd/+/7344",
+    "what": "the actual OpenOCD Gerrit review referenced by the README, used to confirm the patch's unmerged status rather than taking the README's characterization on faith"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm current merge status of the OpenOCD support patch at time of writing - README described it as 'in review'."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ch552-daplink",
+  "hardware_id": "ch552-daplink",
+  "name": "CH552-DAPLink",
+  "firmware": "wagiminator CH552-DAPLink (open source, DIY)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/wagiminator/CH552-DAPLink",
+  "firmware_note": "Firmware derived from Ralph Doncaster's DAPLink port for CH55x microcontrollers and Deqing Sun's CH55xduino, implementing CMSIS-DAP SWD/JTAG plus a virtual COM port on the sub-$1 CH552 chip.",
+  "vendor": "wagiminator",
+  "vendor_url": "https://github.com/wagiminator/CH552-DAPLink",
+  "product_url": "https://github.com/wagiminator/CH552-DAPLink",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe-diy",
+  "status": "diy-only",
+  "released": "2021",
+  "price_usd": 5,
+  "price_note": "Not a sold product - a bare-PCB, solder-it-yourself design. Estimated cost is a sub-$1 CH552 chip plus passives and a small custom PCB (design files provided as EasyEDA/Eagle); a batch of boards from a fab typically runs a few dollars per unit.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You are ordering a PCB, hand-soldering an 8051-family chip and passives, and compiling firmware with the SDCC toolchain yourself - this is a build project, not a purchase.",
+  "build_effort": "soldering",
+  "build_note": "Design files (EasyEDA) are provided but there is no assembled option from the author - order the PCB, solder the CH552 and passives, then compile and flash the firmware with SDCC and Python 3.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A DIY, from-scratch CMSIS-DAP debug probe built around the CH552, an 8-bit 8051-core microcontroller from WCH (Nanjing Qinheng) that costs under $1 in single quantities. It implements SWD and JTAG plus a virtual COM port, making it one of the cheapest possible ways to get a working ARM Cortex debug probe if you're willing to solder and compile it yourself.",
+  "honest_take": "The headline appeal is the sub-$1 chip, but the CH552's 8051 core is doing everything - CMSIS-DAP framing, SWD/JTAG bit-banging and the USB stack - on an architecture with none of the bit-banging throughput of an ARM Cortex-M0+ (like the RP2040 in a Mini DAPLink) or the LPC11U35 in an IBDAP. Expect it to be the slowest probe in this comparison, not the cheapest-per-performance one; nobody publishes a benchmark number for it, which is itself telling. It also has no I2C, SPI flash-dumping or glitching capability - it is SWD/JTAG plus UART, nothing more. It is a genuinely good learning project - real open firmware you compile yourself, on real Cortex-M silicon - but not a build you'd choose over a $4.80 pre-assembled Mini DAPLink if raw debugging speed or your own time matters.",
+  "best_for": [
+   "Learning how CMSIS-DAP and SWD/JTAG bit-banging actually work by building your own probe",
+   "Absolute rock-bottom BOM cost when you're already ordering PCBs and have SDCC set up"
+  ],
+  "not_for": [
+   "Anyone who wants a ready-to-use probe today - see Mini DAPLink at $4.80 assembled instead",
+   "Debug speed - the 8051 core is the slowest architecture among the probes in this batch",
+   "I2C, SPI or glitching work - none of that is implemented"
+  ],
+  "hardware": {
+   "mcu_primary": "WCH CH552",
+   "mcu_primary_note": "8-bit 8051-core MCU with integrated USB 2.0 full-speed device controller; costs well under $1 in single-unit pricing. Not an ARM chip.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "CH552 onboard flash",
+   "connectivity": [
+    "USB",
+    "SWD/JTAG target header",
+    "Virtual COM port (UART, 8N1 only)"
+   ],
+   "gpio": "SWD/JTAG signal pins plus a UART TX/RX pair",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB, self-fabricated from provided design files",
+   "notable_physical": [
+    "Designed around one of the cheapest USB-capable MCUs available"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "CMSIS-DAP compliant SWD and JTAG; works with OpenOCD and pyOCD, and integrates with Arduino IDE as a programmer option for SAMD boards. Bit-banged on an 8-bit 8051 core, so expect materially slower throughput than ARM-core probes in this comparison - no benchmark figures are published."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "Virtual COM port included, 8N1 only."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No flash-memory programming mode - debug probe only."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer function."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "Used through standard OpenOCD/pyOCD toolchains; no separate scripting API documented."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered debug probe."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage or logging function."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "DIY bench debug probe with no radio - legal to build and use everywhere. Debugging or extracting firmware from a chip you do not own can raise anti-circumvention or computer-misuse issues depending on jurisdiction and target."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2025-06",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/wagiminator/CH552-DAPLink",
+    "what": "official repo: CH552 8051-based MCU, CMSIS-DAP SWD/JTAG, virtual COM port (8N1), derived from Ralph Doncaster's DAPLink-for-CH55x and Deqing Sun's CH55xduino, SDCC + Python3 build toolchain, EasyEDA design files, CC-BY-SA-3.0-style license"
+   },
+   {
+    "url": "https://api.github.com/repos/wagiminator/CH552-DAPLink",
+    "what": "GitHub API: 52 stars, last push 2025-06-02"
+   },
+   {
+    "url": "https://github.com/wagiminator/CH552-picoDAP",
+    "what": "the same author's related CH552-based probe project, used to corroborate that wagiminator's CH55x-DAPLink family is an established, repeated design pattern rather than a one-off"
+   }
+  ],
+  "research_gaps": [
+   "No published benchmark of actual SWD/JTAG throughput on the CH552's 8051 core versus ARM-based probes; exact license terms shown as GitHub license key 'other' rather than a standard SPDX identifier."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "stm32f1-picopwner",
+  "hardware_id": "stm32f1-picopwner",
+  "name": "stm32f1-picopwner",
+  "firmware": "CTXz stm32f1-picopwner (open source, DIY)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/CTXz/stm32f1-picopwner",
+  "firmware_note": "Raspberry Pi Pico firmware implementing a published power-glitch plus Flash Patch and Breakpoint (FPB) attack to bypass STM32F1 Read-Out Protection (RDP) Level 1 and dump flash contents over serial.",
+  "vendor": "CTXz",
+  "vendor_url": "https://github.com/CTXz/stm32f1-picopwner",
+  "product_url": "https://github.com/CTXz/stm32f1-picopwner",
+  "category": "hardware-debug",
+  "subcategory": "glitching-exploit-implementation",
+  "status": "diy-only",
+  "released": "2023",
+  "price_usd": 4,
+  "price_note": "Not a sold product. Estimated cost is a Raspberry Pi Pico (roughly $4-5) plus an ST-Link V2 clone (a few dollars) and the STM32F1 target board itself; the firmware is free.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "This is a ready-made implementation of a published academic attack, not a beginner tool - you need to wire power, reset, boot and USART lines precisely between the Pico and the target, and understand why the timing-dependent SRAM-retention trick works to troubleshoot it.",
+  "build_effort": "assembly",
+  "build_note": "No soldering strictly required (jumper wires to power, reset, BOOT0/BOOT1, and USART TX between the Pico and target board, plus a pull-up resistor on BOOT1), but precise wiring and an ST-Link V2 for the initial setup phase are required.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A ready-to-run implementation, on a $4 Raspberry Pi Pico, of a published academic power-glitch attack that bypasses STM32F1 Read-Out Protection Level 1 by keeping exploit code alive in SRAM across a power cycle, then using the Flash Patch and Breakpoint unit to redirect execution and dump the protected flash over serial.",
+  "honest_take": "This turns a peer-reviewed, previously-manual RDP bypass into something you can run with a Pico and some jumper wires, which is genuinely valuable - but know its limits before relying on it. It only affects RDP Level 1 (not Level 2, which is designed to be unrecoverable), and the technique is reported to have been closed in STM32F1 silicon revisions from 2020 onward, so it will not work against a current-production chip. It is also STM32F1-specific - it has no JTAG/SWD debugging function of its own beyond the exploit's use of an external ST-Link, and no I2C or general bus-probe capability. Treat this as a tool for older STM32F1 stock or legacy-device forensics, not a general 'unlock any STM32' button - and note the repo carries no explicit license, so redistribution terms are unclear.",
+  "best_for": [
+   "Extracting flash from older (pre-2020) STM32F1 chips locked at RDP Level 1",
+   "Reproducing the Obermaier/Schink/Moczek WOOT research hands-on",
+   "Legacy-device forensics where a chip predates the RDP1 fix"
+  ],
+  "not_for": [
+   "RDP Level 2 - not affected by this or any known glitch bypass",
+   "Current-production STM32F1 chips - reportedly patched in revisions from 2020 onward",
+   "Any STM32 family other than F1 - this targets F1-specific RDP behaviour",
+   "General-purpose debugging - it is a single exploit, not a debug probe"
+  ],
+  "hardware": {
+   "mcu_primary": "Raspberry Pi RP2040 (on the Pico)",
+   "mcu_primary_note": "The Pico is the glitch controller; the STM32F1 target is the victim chip, supplied separately by the user.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered (Pico).",
+   "charging": null,
+   "pmic": null,
+   "storage": "None beyond the Pico's onboard flash for the exploit firmware",
+   "connectivity": [
+    "USB (Pico)",
+    "Wired GPIO to target: power, reset, BOOT0/BOOT1, USART TX"
+   ],
+   "gpio": "Power-cycling and monitoring lines to the target's reset pin, boot-mode pins and USART for dumped data",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare Pico board plus jumper wiring to the target",
+   "notable_physical": [
+    "Requires an ST-Link V2 probe for the initial exploit-loading phase, separate from the Pico"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Implements a documented power-glitch attack exploiting SRAM data retention across a power cycle to bypass STM32F1 RDP Level 1 and preserve exploit code."
+   },
+   "jtag_swd": {
+    "v": "addon",
+    "note": "An external ST-Link V2 (not included) is required for the initial phase, to load exploit firmware into the target's SRAM before the glitch. The Pico itself has no independent debug-probe function."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Dumps the target's internal flash over its own USART using the FPB-redirected exploit code, not an SPI flash reader."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "The recovered flash contents are exfiltrated over the target's own USART TX line to the Pico."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C function - this is a single-purpose exploit for one attack, not a general bus tool."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No capture/analysis function."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "No dedicated host-side automation/API documented beyond the firmware and wiring instructions in the repo."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires host interaction to trigger and read out the dump."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card or persistent storage on the Pico for dumped data - output goes to the host over serial."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "A bench glitching tool with no radio - legal to build and use on your own hardware everywhere. Bypassing read-out protection to extract firmware from a chip you do not own is squarely the kind of act anti-circumvention law (DMCA 1201 in the US) and computer-misuse statutes are written to cover; this is intended for your own devices or authorized research."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2024-04",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "STM32F1 Pico Pwner"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/CTXz/stm32f1-picopwner",
+    "what": "official repo README: three-phase attack description (SRAM-retention power glitch + FPB patch + serial dump), hardware wiring requirements, RDP Level 1 scope, reported patch in STM32F1 revisions from 2020 onward, credits the Obermaier/Schink/Moczek USENIX WOOT research"
+   },
+   {
+    "url": "https://api.github.com/repos/CTXz/stm32f1-picopwner",
+    "what": "GitHub API: 322 stars, last push 2024-04-01, no license field set"
+   }
+  ],
+  "research_gaps": [
+   "Repository has no explicit license field, so redistribution/reuse terms are unclear.",
+   "Could not independently confirm the exact silicon revision date at which STM32F1 closed this RDP1 bypass, or locate the original USENIX WOOT paper directly to verify the citation beyond the repo's own credit.",
+   "Only two sources found for this device - a third independent corroboration (e.g. a security-research blog write-up of the same technique) was not located in this pass."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "flipper-zero-spi-adapter-board-jcmk",
+  "hardware_id": "flipper-zero-spi-adapter-board-jcmk",
+  "name": "Flipper Zero SPI Adapter Board",
+  "firmware": "n/a (passive adapter)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": null,
+  "vendor": "JustCallMeKoko LLC (JCMK)",
+  "vendor_url": "https://justcallmekokollc.com",
+  "product_url": "https://justcallmekokollc.com/products/flipper-zero-spi-adapter-board",
+  "category": "accessory",
+  "subcategory": "gpio-breakout",
+  "status": "out-of-stock",
+  "released": "2023",
+  "price_usd": 5.0,
+  "price_note": "$5.00 direct from justcallmekokollc.com; the listing is currently marked 'Sold out' with a restock-notification signup only.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "It is a passive pass-through board - plug it onto the Flipper's GPIO header and plug your SPI module into it.",
+  "build_effort": "assembly",
+  "build_note": "No soldering - plugs directly onto the Flipper Zero's GPIO header.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small passive breakout board that exposes the Flipper Zero's SPI pins on its GPIO header, so external SPI-capable modules such as CC1101 or NRF24 add-on boards can be connected without wiring individual jumpers. It has no MCU, radio or active circuitry of its own - it is purely a pinout adapter.",
+  "honest_take": "There is nothing to evaluate technically here - it is a $5 pass-through PCB with no chip on it, sold specifically so JCMK's own SubGHz and NRF24 modules (and other third-party SPI boards) have a clean connector instead of loose jumper wires to the Flipper's header. Worth buying only if you already own or plan to own an SPI add-on module for the Flipper; it does nothing by itself, has no debug, capture or storage function of any kind, and is currently sold out with no restock date given.",
+  "best_for": [
+   "Cleanly connecting an SPI-capable Flipper Zero add-on (CC1101, NRF24, etc.) without loose jumper wires"
+  ],
+  "not_for": [
+   "Anyone without an SPI add-on module to connect - it has no function on its own",
+   "Buying today - currently sold out",
+   "Any use case beyond the Flipper Zero's own GPIO header - it is not a general SPI breakout"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Passive adapter - no MCU, no radio, no active components of any kind.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Unpowered; passes through power from the Flipper Zero's GPIO header.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header (pass-through)"
+   ],
+   "gpio": "Breaks out the SPI-relevant pins from the Flipper's GPIO header for external module connection",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB",
+   "notable_physical": [
+    "Compact form factor matched to the Flipper Zero's GPIO header footprint"
+   ]
+  },
+  "capabilities": {
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Passive pinout adapter only - has no bus capability of its own; it just routes an attached SPI module's connection to the Flipper's header."
+   },
+   "uart": {
+    "v": "no",
+    "note": "SPI pins only - no UART breakout."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C breakout."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No analysis capability - passive adapter only."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No firmware or software of its own."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Only functions attached to a Flipper Zero with an external SPI module plugged in."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app - relies entirely on the Flipper Zero's own firmware/app ecosystem."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage of its own."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive adapter board with no radio and no independent function - legal to own and use everywhere."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "n/a",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-spi-adapter-board",
+    "what": "official listing (Shopify product JSON): $5.00, description confirms it is for connecting CC1101/NRF24 SPI modules to the Flipper Zero, currently 'Sold out'"
+   },
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-spi-adapter-board.json",
+    "what": "raw Shopify product API response used to confirm price and availability programmatically rather than relying on rendered page text"
+   },
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-nrf24-module",
+    "what": "the vendor's own NRF24 module listing, which explicitly lists the SPI Adapter Board as a compatible-but-not-included accessory, confirming the cross-product relationship described in this record's summary"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact pin mapping or dimensions from the product page. All sources are from the single vendor (JCMK) - no independent teardown or review located for this specific accessory."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "mini-daplink-debug-probe-muselab",
+  "hardware_id": "mini-daplink-debug-probe-muselab",
+  "name": "Mini DAPLink Debug Probe",
+  "firmware": "Stock (MuseLab, DAPLink-based)",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Vendor states source code and documentation are available on GitHub; specific repo URL not published on the listing.",
+  "vendor": "MuseLab",
+  "vendor_url": "https://www.tindie.com/stores/johnnywu/",
+  "product_url": "https://www.tindie.com/products/johnnywu/mini-daplink-debug-probe/",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 4.8,
+  "price_note": "$4.80 for the base unit on Tindie, in stock (64 units). Kits with DuPont cables or a bundled 1m USB-C cable are also offered. This is the cheapest debug probe in this batch.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Standard driverless CMSIS-DAP operation with Keil/IAR/pyOCD/OpenOCD - if you've used any DAPLink-class probe before, this behaves the same way.",
+  "build_effort": "assembled",
+  "build_note": "Tiny cased USB-C dongle, no assembly.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A 3.2 x 1.7 cm USB-C CMSIS-DAP/DAPLink probe for ARM Cortex-M targets (STM32, GD32, nRF51/52) over SWD or JTAG, with a built-in UART bridge that enumerates as a serial port alongside the debug interface. At $4.80 it is the budget floor of the debug-probe market covered in this batch, and the same MuseLab store also sells a 'Mini High-Speed DAPLink' variant, implying this base model is the slower of the two.",
+  "honest_take": "This is the price-to-performance benchmark every other probe in this batch has to be measured against: $4.80 for a driverless, CMSIS-DAP-compliant SWD/JTAG probe plus a UART bridge is genuinely hard to beat, and it is built on the same DAPLink lineage as far more expensive branded probes. The vendor's claim of being faster than J-Link/ST-Link at a lower price is a marketing line from the Tindie listing, not something independently benchmarked here - mark it as claimed, not confirmed, and note that MuseLab sells a separate 'Mini High-Speed DAPLink' as a different product, which quietly suggests this base model is not the fast option in their own lineup. Its real limitation next to the IBDAP or XDS110 in this batch is scope: it is SWD/JTAG-plus-UART only, with no I2C/SPI/ADC breakout or glitching, so it is a pure debug probe rather than a general peripheral-access tool.",
+  "best_for": [
+   "The cheapest reliable SWD/JTAG entry point for STM32/GD32/nRF51/52 development",
+   "A disposable/spare probe to keep in a kit without worrying about cost",
+   "UART console access bundled with the same dongle as the debug port"
+  ],
+  "not_for": [
+   "General peripheral bring-up (I2C/SPI/ADC) - it has none, unlike the IBDAP",
+   "TI silicon - see the XDS110 in this batch instead",
+   "Taking the vendor's speed-vs-J-Link/ST-Link claim as independently verified - MuseLab sells a separate 'High-Speed' variant, implying this base model isn't it"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The internal controller implementing the DAPLink firmware is not published by MuseLab.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB powered.",
+   "charging": null,
+   "pmic": null,
+   "storage": "None",
+   "connectivity": [
+    "USB-C",
+    "SWD/JTAG target header",
+    "UART bridge (COM port / /dev/tty)"
+   ],
+   "gpio": "SWD/JTAG signal pins plus a TTL UART TX/RX pair",
+   "sensors": [],
+   "dimensions_mm": "32 x 17",
+   "weight_g": null,
+   "case": "Small molded enclosure",
+   "notable_physical": [
+    "Automatic target reset after firmware download",
+    "Enumerates simultaneously as a debug probe (HID) and a serial COM port"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "CMSIS-DAP/DAPLink compliant SWD and JTAG for STM32, GD32 and nRF51/52 Cortex-M targets; works with Keil MDK, IAR Workbench and pyOCD, driverless."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "Built-in TTL UART bridge, enumerating as a separate COM port / tty alongside the debug interface."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI/I2C/ADC peripheral breakout - debug probe and UART bridge only."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not broken out."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer function."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "Used through standard CMSIS-DAP toolchains (Keil, IAR, pyOCD, OpenOCD); no separate scripting API documented."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered debug probe."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No companion app."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bench debug probe with no radio - legal to own and use everywhere. Debugging or extracting firmware from a chip you do not own can raise anti-circumvention or computer-misuse issues depending on jurisdiction and target."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/johnnywu/mini-daplink-debug-probe/",
+    "what": "listing: 3.2x1.7cm USB-C, SWD/JTAG for STM32/GD32/nRF51/52, CMSIS-DAP driverless, UART bridge as COM/tty, works with Keil/IAR/pyOCD, $4.80, 64 in stock, vendor claim of faster-than-J-Link/ST-Link speed at lower price"
+   },
+   {
+    "url": "https://www.tindie.com/products/johnnywu/mini-high-speed-daplink-debug-probe/",
+    "what": "the same seller's separate 'High-Speed' variant listing, used to establish that this base Mini DAPLink is implicitly the non-high-speed model in MuseLab's own lineup"
+   },
+   {
+    "url": "https://swdprobe.com/probes-compared.html",
+    "what": "independent third-party comparison of debug-probe SWD clock speeds (J-Link, ST-Link, generic DAPLink ~10MHz), used as general context for where DAPLink-class probes sit versus J-Link/ST-Link - not a direct benchmark of this specific unit"
+   }
+  ],
+  "research_gaps": [
+   "Could not identify the internal controller/chip implementing DAPLink on this probe, confirm a maximum SWD/JTAG clock speed, or independently verify the vendor's speed comparison against J-Link/ST-Link."
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

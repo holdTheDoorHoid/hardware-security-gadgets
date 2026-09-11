@@ -206,7 +206,8 @@
   "research_gaps": [
    "Could not confirm whether BLE or 802.15.4 (Zigbee/Thread) features are exposed in this firmware build despite the chip supporting both.",
    "Vendor product page requires a Discord login for full spec details beyond the meta/description data; pulled what is available without authenticating."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "marauder-c5-adapter-flipper-zero",
@@ -397,7 +398,8 @@
   "research_gaps": [
    "Could not independently verify current DevKitC-1 retail price at time of writing; used Espressif's original $15 launch price as a baseline.",
    "BLE/802.15.4 feature exposure in Marauder firmware unconfirmed, same as C5 LowKey."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "cinder-ferret",
@@ -561,7 +563,8 @@
   "research_gaps": [
    "Could not independently bench-confirm subghz_replay/subghz_bruteforce/mousejack on this specific board - relying on HaleHound's own module list.",
    "Exact CC1101 frequency band configuration as shipped (region-locked or full range) not confirmed."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "cinder-ferret-v2",
@@ -731,7 +734,8 @@
   ],
   "research_gaps": [
    "Could not independently confirm exact CC1101/NRF24 part revisions or whether NRF24L01 is the plain or +PA+LNA variant on this specific board (HaleHound's main site references +PA+LNA generally)."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "cinder-ferret-v2-2-double-nrf",
@@ -895,7 +899,8 @@
   "research_gaps": [
    "Second-NRF24 firmware release date/status should be re-checked before publishing - it was explicitly unreleased at time of research and may have shipped since.",
    "Not confirmed whether the two NRF24 radios can be used concurrently or only one at a time even once firmware lands."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "sneak32",
@@ -1061,7 +1066,8 @@
   "research_gaps": [
    "Could not confirm whether the project has any GUI/companion app for reviewing detection logs, or whether output is serial-console only.",
    "detect_airtag capability is genuinely unclear - the project doesn't document Apple's rotating BLE MAC scheme being handled specially, so marked unknown rather than yes or no."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "hydra-esp",
@@ -1247,7 +1253,8 @@
   "research_gaps": [
    "Could not independently confirm the exact BLE spam payload used for 'Google' devices maps cleanly to the ble_spam_android capability key - marked claimed rather than yes.",
    "No independent teardown/packet-capture verification of the deauth/PMKID/evil-twin claims beyond the project's own README."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "quadrf",
@@ -1417,7 +1424,8 @@
   "research_gaps": [
    "Could not confirm exact current Crowd Supply tier pricing - the $549 and $499 figures come from different sources/dates and may reflect different bundle tiers.",
    "No independent teardown confirming the exact FPGA part number beyond 'Lattice ECP5' family."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "portapack-h4m-pro-hackrf-pro",
@@ -1580,7 +1588,8 @@
   "research_gaps": [
    "Exact touchscreen size/resolution not disclosed by the vendor listing.",
    "Could not independently confirm whether Mayhem's HackRF-Pro-specific build has full feature parity with the HackRF One build at time of research."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "tinysa-ultra-plus",
@@ -1742,7 +1751,8 @@
   "research_gaps": [
    "Could not confirm the exact MCU used in this hardware revision from the vendor listing.",
    "Could not reconcile the first-pass batch price ($209) against the EUR163 (~$176) price found directly on the vendor page - flagging both for the record."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "opera-cake-hackrf",
@@ -1891,7 +1901,8 @@
    "Could not confirm exact physical connection method (cable type/port) from available documentation beyond that it uses HackRF's expansion header plus RF cabling.",
    "Insertion loss and power-handling specs not found in available sources.",
    "This is a passive antenna switch, not a radio - most capability keys legitimately don't apply. The populated keys correctly reflect a genuinely single-purpose accessory rather than incomplete research."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "morfeus",
@@ -2053,7 +2064,8 @@
   "research_gaps": [
    "The exact mixer/synthesizer IC is not officially disclosed by the vendor - the RFFC5071/RFFC5072 attribution is hobbyist speculation based on matching frequency specs, not a confirmed teardown or datasheet reference.",
    "Exact output power (dBm) in generator mode not confirmed from available sources."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "nanovna-f",
@@ -2210,7 +2222,8 @@
    "Could not independently confirm the exact MCU used on this specific 'F' (non-V2) hardware revision.",
    "Could not reconcile the first-pass batch price ($143) against the EUR110 (~$119) price found directly on the vendor page - flagging both for the record.",
    "Vendor listing itself did not disclose exact frequency range in the fetched content; range sourced from third-party reseller listings for the same model name instead."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "rfgen44",
@@ -2373,7 +2386,8 @@
   "research_gaps": [
    "Direct fetch of the Crowd Supply campaign page was blocked (403); price/ship-date info relies on search-result summaries rather than a direct page read.",
    "Exact output filtering/harmonic suppression specs not found in available sources - assumed minimal based on 'raw synthesizer output' framing in the designer's own materials."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "uconsole-aio-v2",
@@ -2548,6 +2562,7 @@
   "research_gaps": [
    "Instantaneous SDR bandwidth for this specific RTL2832U implementation not independently confirmed - used the general RTL2832U family figure as a reasonable estimate, marked unknown rather than asserted.",
    "No independent teardown/review found confirming real-world RTL-SDR sensitivity or LoRa range performance on this integrated board versus standalone RTL-SDR dongles."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  }
 ]

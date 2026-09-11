@@ -1,0 +1,2724 @@
+[
+ {
+  "id": "airfrog",
+  "hardware_id": "airfrog",
+  "name": "Airfrog",
+  "firmware": "Airfrog default firmware",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/piersfinlayson/airfrog",
+  "firmware_note": "Single official Rust firmware (embassy + esp-hal) you build and flash yourself with cargo/espflash; no assembled/pre-flashed option exists. Provides web, REST and binary APIs plus probe-rs integration; custom apps can be built against the same libraries.",
+  "vendor": "Piers Finlayson",
+  "vendor_url": "https://piers.rocks/u/airfrog",
+  "product_url": "https://github.com/piersfinlayson/airfrog",
+  "category": "hardware-debug",
+  "subcategory": "wireless-swd-debug-coprocessor",
+  "status": "diy-only",
+  "released": "2025",
+  "price_usd": 5,
+  "price_note": "No assembled unit is sold by anyone found in this research. Per the project's own FAQ, the BOM (ESP32-C3-MINI-1-N4 module ~$3, plus an AP2112K-3.3 LDO and a handful of passives per the rev-b BOM) comes to 'well under $5 per unit even in very low quantities.' Add PCB fab (a few dollars for a small panel from a standard fab house) and your own soldering time/equipment; JLCPCB's standard SMT service will not place the ESP32 module, only their pricier 'advanced assembly' tier will.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Hand-soldering 0402 passives and a QFN-style ESP32-C3-MINI-1 module onto a coin-sized 2-layer board, wiring SWD to a target, and building Rust firmware with cargo are all required; the resulting web UI itself is simple to use once it's running.",
+  "build_effort": "full-diy",
+  "build_note": "No kit is sold. You fabricate the 2-layer PCB yourself from the provided Gerbers (rev-b BOM: ESP32-C3-MINI-1-N4, AP2112K-3.3, 8 passives), hand-solder it, then build and flash the Rust firmware yourself via `cargo run --release -p airfrog`.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "Airfrog is an open-source, coin-sized (16x28mm) PCB built around a $3 ESP32-C3-MINI-1 module that bit-bangs the SWD protocol to an ARM Cortex-M target and exposes its RAM, flash and peripherals over Wi-Fi via a web UI, a REST API, and a low-overhead binary API, plus probe-rs integration. It's designed to stay wired to one target permanently - the way a network card lives inside a PC - rather than being carried between different boards like a USB debug probe.",
+  "honest_take": "This is a wireless SWD bridge for one target, not a general-purpose debug probe you carry between boards - it has no JTAG, only SWD, and has only been tested by the author against STM32F1/F4 and the RP2040/Pico. It's a single-developer project that saw two and a half months of rapid commits (July-September 2025) and then went completely silent - no commits and no replies to any of its 22 open feature-request issues for a full year as of this check. The core idea (debug + telemetry over Wi-Fi without a wired connection) is genuinely useful and not something Tigard or Glasgow Interface Explorer do, but those wired, multi-protocol probes (JTAG/SWD/UART/SPI/I2C) are instantly usable, ship assembled, and don't require permanently wiring hardware to a target - if you just want a working debug probe today, they're the safer choice. The ESP32-C3 silicon is the same family widely used for Wi-Fi deauth/monitor-mode tools elsewhere, but Airfrog's firmware doesn't implement any of that - its Wi-Fi radio exists purely as the SWD backhaul.",
+  "best_for": [
+   "Adding a permanent wireless telemetry/debug channel to a target ARM device you control",
+   "Reprogramming or monitoring an embedded device over Wi-Fi without ongoing physical access",
+   "Learning embedded Rust and SWD protocol internals from a small, readable codebase"
+  ],
+  "not_for": [
+   "General-purpose portable debugging across many different target boards - it's meant to stay wired to one",
+   "JTAG targets - SWD only",
+   "Anyone who wants a ready-to-use assembled probe rather than a soldering-plus-Rust-toolchain project"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-C3-MINI-1-N4",
+   "mcu_primary_note": "Single-core RISC-V @160MHz, 400KB SRAM, 4MB integrated flash (N4 variant). Module includes 2.4GHz 802.11 b/g/n Wi-Fi and Bluetooth 5 LE, though only Wi-Fi is used by the firmware.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-C3-MINI-1-N4",
+     "role": "wifi",
+     "note": "2.4GHz 802.11 b/g/n; DHCP client plus a captive AP mode for first-time setup. Used purely as the SWD-over-network backhaul, not for any Wi-Fi security functions."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "No battery. Powered by 5V from a host/USB source via the 5-pin target header or the UART programming header; onboard AP2112K-3.3 LDO regulates to 3.3V.",
+   "charging": null,
+   "pmic": "AP2112K-3.3 (LDO regulator, not a full PMIC)",
+   "storage": "4MB flash integrated in the ESP32-C3-MINI-1 module (firmware/config only, not used to store target data)",
+   "connectivity": [
+    "Wi-Fi 2.4GHz (802.11 b/g/n)",
+    "UART (firmware programming/logging, separate 6-pin header)",
+    "5-pin 0.1in SWD target connector"
+   ],
+   "gpio": "5-pin target connector (5V power, SWDIO, SWCLK, GND, 1 reserved/unused pin); separate 6-pin UART programming header exposes TX/RX/GND/VCC/EN/IO9-BOOT",
+   "sensors": [],
+   "dimensions_mm": "16 x 28",
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Coin/postage-stamp sized 2-layer PCB",
+    "0402 passives, hand-solderable",
+    "Separate self-programming header so one Airfrog can flash another"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "Dedicated 6-pin UART header used for flashing/programming and log output at selectable levels (error through trace)."
+   },
+   "jtag_swd": {
+    "v": "partial",
+    "note": "SWD only, no JTAG. Bit-banged on ESP32-C3 GPIOs at 500KHz/1MHz/2MHz/4MHz (Turbo, default); tested against STM32F1, STM32F4 and RP2040/Pico. Integrates with probe-rs via a fork."
+   },
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Reads/writes/erases target flash via the SWD debug port (not a native SPI interface) using the REST/binary API or probe-rs."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C bridge - the 5-pin target connector carries only power, ground and the two SWD lines."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not a logic analyzer; purely an SWD debug/programming bridge."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability of any kind."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card slot; onboard flash is used only for the device's own firmware/config."
+   },
+   "wifi_monitor_mode": {
+    "v": "no",
+    "note": "The ESP32-C3 silicon supports Wi-Fi monitor mode in other projects, but Airfrog's firmware only uses the radio as a plain Wi-Fi client/AP for its own web and API traffic - no packet capture or injection is implemented."
+   },
+   "wifi_deauth_24": {
+    "v": "no",
+    "note": "Not implemented. Worth stating explicitly since the ESP32-C3 is the same chip family used for deauth tools elsewhere - Airfrog's firmware doesn't do this."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "The ESP32-C3-MINI-1 module's BLE radio is present in silicon but is not initialized or used by Airfrog's firmware at all."
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Built-in web interface for memory/RAM/flash/peripheral access, served from the ESP32 itself."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "REST API (JSON/HTTP) and a low-overhead binary TCP API for scripting; custom firmware apps can be built in Rust against the provided libraries."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Once flashed with Wi-Fi credentials it runs standalone, reachable over the network with no host PC required for ongoing operation."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Not a radio transmitter beyond the pre-certified ESP32-C3 Wi-Fi module, and not designed to attack devices you don't control. Owning and building it is uncontroversial in essentially all jurisdictions; using SWD access to bypass another party's device protections without authorization can implicate computer-misuse law the same as any other debug probe. This is general information, not legal advice - check your local law."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "excellent",
+   "last_release": "2025-09",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/piersfinlayson/airfrog",
+    "what": "main README - concept, features, hardware/software summary, licensing"
+   },
+   {
+    "url": "https://github.com/piersfinlayson/airfrog/blob/main/docs/FAQ.md",
+    "what": "BOM cost claim, SWD speed settings, target compatibility (STM32F1/F4, RP2040), connector pinout"
+   },
+   {
+    "url": "https://github.com/piersfinlayson/airfrog/blob/main/docs/TECHNICAL.md",
+    "what": "SWD bit-banging implementation detail, ESP32-C3 hardware rationale, flash partition table"
+   },
+   {
+    "url": "https://github.com/piersfinlayson/airfrog/blob/main/pcb/airfrog-rev-b/README.md",
+    "what": "rev-b PCB notes, JLCPCB assembly caveat about the ESP32 module"
+   },
+   {
+    "url": "https://github.com/piersfinlayson/airfrog/blob/main/pcb/airfrog-rev-b/fab/airfrog-rev-b-bom.csv",
+    "what": "exact BOM: ESP32-C3-MINI-1-N4, AP2112K-3.3, 8 passives"
+   },
+   {
+    "url": "https://api.github.com/repos/piersfinlayson/airfrog",
+    "what": "stars (60), forks (3), open issues (22), pushed_at (2025-09-07) - checked via GitHub API 2026-09-10"
+   }
+  ],
+  "research_gaps": [
+   "Exact SWD signal integrity/reliability over longer wires not independently tested by this research",
+   "No confirmation of any third party selling pre-assembled Airfrog units",
+   "BLE radio present on the ESP32-C3-MINI-1 module but not used by firmware; no roadmap commitment found for adding it"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "curious-bolt",
+  "hardware_id": "curious-bolt",
+  "name": "Curious Bolt",
+  "firmware": "Curious Bolt firmware",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/tjclement/bolt",
+  "firmware_note": "Single vendor firmware (RP2040 C, TinyUSB + Raspberry Pi Pico SDK) ships pre-flashed. Implements the SUMP logic-analyzer protocol, a PIO/DMA-driven crowbar glitcher, an ADC-based power scope, and a 4-channel programmable I/O pattern generator, all controlled over USB-serial.",
+  "vendor": "Curious Supplies",
+  "vendor_url": "https://bolt.curious.supplies/",
+  "product_url": "https://shop.allnetchina.cn/products/curious-bolt-limited-edition",
+  "category": "hardware-debug",
+  "subcategory": "glitcher-logic-analyzer-scope multitool",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 49.99,
+  "price_note": "Sold as the 'Curious Bolt limited Edition' bundle through Curious Supplies' production partner Allnet (shop.allnetchina.cn), SKU CD-CBOLTKIT, confirmed live in the storefront's own product JSON as of the check date. Price covers the whole kit - the Bolt board, an STM32F103 target board with the 4 ECSC23 hardware challenges, a separate STM32 SWD programmer, Dupont cables and logic-analyzer probes - not the Bolt alone.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Voltage glitching and differential power analysis both require understanding the attack you're attempting and iterating with the bundled Python library; it was built for a cybersecurity-competition (ECSC 2023) audience, not total beginners, though the included challenges give a structured on-ramp.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a populated, ready-to-use board; no soldering. You do need to install Python + pyserial and, for the logic analyzer, PulseView/sigrok.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "The Curious Bolt is a Raspberry Pi RP2040-based hardware-hacking multitool combining three functions on one small board: a PIO-driven crowbar voltage glitcher with roughly 8.3ns timing resolution, an 8-channel logic analyzer speaking the SUMP protocol (works directly in PulseView/sigrok), and a 10-bit ADC used as a differential power-analysis scope. It originated as the hardware for the 2023 European Cyber Security Challenge (ECSC23) in Oslo and is now sold as a 'limited edition' kit bundled with the STM32F103 target board and four challenges used in that competition.",
+  "honest_take": "The RP2040 is doing essentially all the real-time work here - its PIO state machines generate the glitch pulses and clock the logic-analyzer/ADC sampling - so this is fundamentally a well-executed RP2040 project, not custom silicon; the actual engineering is in the PIO programs and the MS9280 parallel ADC front end. It sits in the same functional niche as the well-established ChipWhisperer-Nano and ChipWhisperer-Lite (glitcher plus power-analysis capture on one board), which have a far bigger user base and published courses behind them; Bolt's differential-power-scope mode is explicitly marked 'documentation in progress' by the vendor, making it the least mature of its three advertised functions. The firmware repo has had no commits since February 2024 and carries an open issue literally titled 'Firmware build instructions' because there aren't any in the repo - fine if you only ever run it as shipped, a real obstacle if you want to modify the firmware yourself. It is also not a JTAG/SWD debug probe or a UART bridge, despite being marketed as a general 'security multitool' - those are separate categories of tool it doesn't touch.",
+  "best_for": [
+   "Learning voltage glitching and logic analysis together on one board with a guided target (the ECSC23 challenges)",
+   "Cheap 8-channel logic analysis via existing PulseView/sigrok tooling",
+   "A structured intro to fault injection for students or CTF-style training"
+  ],
+  "not_for": [
+   "Production or professional power-analysis work - the scope function is the least documented of the three and has far less tooling than ChipWhisperer",
+   "Anyone wanting to build or modify the firmware themselves - no build instructions exist in the repo as of this check",
+   "JTAG/SWD debugging or general UART bridging - it does neither"
+  ],
+  "hardware": {
+   "mcu_primary": "RP2040",
+   "mcu_primary_note": "Dual-core Cortex-M0+ @133MHz (Raspberry Pi Pico SDK-based firmware). PIO blocks and DMA channels do the real-time glitch triggering, logic-analyzer sampling and GPIO pattern generation; confirmed from firmware/bolt/CMakeLists.txt (pico_sdk_import.cmake) and the PIO assembly in glitch.c/adc.c/output.c.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered only, no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (2x CDC-ACM serial interfaces: control protocol + SUMP logic-analyzer stream)"
+   ],
+   "gpio": "8 logic-analyzer input channels, 1 glitcher 'sig' output pin, 4 programmable I/O output channels (100MHz PIO-clocked pattern generator), 1 ADC input for the power scope",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "MS9280 10-bit parallel ADC (Hangzhou Ruimeng Tech, ~35MSPS per JLCPCB's listing) for the power-scope function",
+    "Onboard switching stage for the crowbar glitch output"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Crowbar-style voltage glitcher (pulls the target rail to ground), driven by an RP2040 PIO program in ~8.3ns steps (one 120MHz clock cycle). Triggerable manually, in a loop, or off an external signal edge with a programmable delay."
+   },
+   "logic_analyzer": {
+    "v": "yes",
+    "note": "8 channels, SUMP-protocol compatible, works directly with sigrok/PulseView over USB-serial. Vendor's landing page states 100k sample memory points; this research confirmed the SUMP/PIO/DMA implementation in firmware source but not that exact depth figure, so treat the specific number as vendor-claimed."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No general-purpose UART bridge to a target - the two USB-CDC interfaces carry only Bolt's own control protocol and the SUMP logic-analyzer stream."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Not a debug probe - no JTAG or SWD support despite being marketed as a 'security multitool.'"
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No dedicated I2C master/bridge function; the logic analyzer can passively observe I2C traffic on its input channels but cannot drive the bus."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash programming/dump mode documented."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card; captures are streamed live to a host PC over USB."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Python library (lib/scope.py, pyserial-based) exposes glitcher, ADC and I/O control for scripting."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface - control is via the Python library or PulseView over USB-serial."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC (Python script or PulseView) for every function; no standalone/field mode."
+   },
+   "side_channel_power": {
+    "v": "partial",
+    "note": "Has its own onboard MS9280 ADC used as a differential power-analysis DPA scope, confirmed in the firmware source (adc.c) rather than just marketing copy - a genuinely self-contained capture path, unlike the accessory/target boards elsewhere in this batch. But the vendor's own documentation marks this specific mode 'documentation in progress', making it the least mature of the board's three advertised functions."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A voltage glitcher, logic analyzer and power-analysis scope for hardware you own or are authorized to test; no radio, no restricted crypto. Using it to defeat protections on a device you don't own or aren't authorized to test can implicate computer-misuse or anti-circumvention law depending on jurisdiction. This is general information, not legal advice - check your local law."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2024-02",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Bolt",
+   "Curious Bolt Limited Edition"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/tjclement/bolt",
+    "what": "main README, repo file tree, MIT license"
+   },
+   {
+    "url": "https://github.com/tjclement/bolt/blob/main/firmware/bolt/CMakeLists.txt",
+    "what": "confirms RP2040/Pico SDK basis"
+   },
+   {
+    "url": "https://github.com/tjclement/bolt/blob/main/firmware/bolt/glitch.c",
+    "what": "PIO-based crowbar glitcher implementation, confirms 8.3ns/cycle timing"
+   },
+   {
+    "url": "https://github.com/tjclement/bolt/blob/main/firmware/bolt/adc.c",
+    "what": "PIO/DMA-driven ADC sampling for the power scope"
+   },
+   {
+    "url": "https://github.com/tjclement/bolt/blob/main/hardware/bolt/MS9280.kicad_sym",
+    "what": "MS9280 ADC part used for the scope function"
+   },
+   {
+    "url": "https://bolt.curious.supplies/docs/getting-started/logic_analyzer.md",
+    "what": "SUMP/PulseView usage instructions, confirms 8-channel SUMP compatibility"
+   },
+   {
+    "url": "https://bolt.curious.supplies/docs/getting-started/voltage_glitching.md",
+    "what": "glitcher usage and the 8.3ns timing unit, per vendor docs"
+   },
+   {
+    "url": "https://shop.allnetchina.cn/products/curious-bolt-limited-edition.json",
+    "what": "live price ($49.99), SKU, kit contents, listing freshness"
+   },
+   {
+    "url": "https://api.github.com/repos/tjclement/bolt",
+    "what": "stars (16), forks (2), open issues (2), pushed_at (2024-02-01)"
+   }
+  ],
+  "research_gaps": [
+   "Exact logic-analyzer sample memory depth (vendor claims 100k points) not confirmed in the firmware source reviewed",
+   "No capability key exists for the differential power-analysis/side-channel oscilloscope function or the 4-channel programmable I/O pattern generator - both described in hardware/summary instead",
+   "Glitcher output current/drive strength (how much current the crowbar switching stage can sink) not published",
+   "Physical dimensions and weight of the Bolt board itself not published (only the combined kit shipping weight of 150g, which includes the target board, programmer and cables)"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "steppenprobe",
+  "hardware_id": "steppenprobe",
+  "name": "Steppenprobe",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No user-flashable firmware. The board is an FTDI FT2232H USB-to-MPSSE/UART bridge chip configured entirely by host-side software (OpenOCD, standard FTDI drivers) - there is nothing on the board itself to build or flash.",
+  "vendor": "Diego Herranz",
+  "vendor_url": "https://github.com/diegoherranz/steppenprobe",
+  "product_url": "https://github.com/diegoherranz/steppenprobe/releases/tag/v1.0",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-uart-debug-probe",
+  "status": "diy-only",
+  "released": "2020",
+  "price_usd": 20,
+  "price_note": "No vendor sells this assembled or as a kit. Estimated from the project's own JLCPCB-format BOM: the dominant cost is the FT2232HL USB UART/FIFO chip (~$5.30 in single quantities per DigiKey), plus a USB-C receptacle, 12MHz crystal, ESD-protection and logic-buffer ICs, and roughly 50 passives (an estimated $5-8 total at low volume), plus a small 2-layer PCB fab run (a few dollars per board for 5-10pcs from a standard fab house). Excludes your own assembly time/equipment - hand-soldering the FT2232HL's 0.5mm-pitch LQFP-64 package is nontrivial.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You fab your own PCB from the provided Gerbers and hand-solder an LQFP-64 0.5mm-pitch FTDI chip plus SOT-23/SC-70 logic ICs yourself (or pay a fab house for assembly), then configure OpenOCD by hand. No kit, no guided build, no assembled option from anyone.",
+  "build_effort": "full-diy",
+  "build_note": "KiCad source, schematic PDF, Gerbers/Excellon, and JLCPCB-format BOM/CPL files are published (v1.0 release, 2020), but no one - including the original author - appears to sell it assembled. You order the PCB and parts yourself and solder it.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "Steppenprobe is a one-person, open-hardware (KiCad) debug probe built around an FTDI FT2232H dual-channel USB bridge: channel A does JTAG or SWD (OpenOCD-compatible, no jumpers needed), channel B does UART or SWO trace, and both run simultaneously over a single USB-C cable to a 14-pin STDC14 Cortex debug connector (backward compatible with the standard 10-pin ARM connector). It also exposes 4 general-purpose GPIO controllable from OpenOCD.",
+  "honest_take": "Steppenprobe uses the exact same core chip as Tigard - the FT2232H - and Tigard's own README describes itself as 'an FTDI FT2232H-based multi-protocol tool for hardware hacking.' The difference is what's built around that chip: Tigard also does SPI, I2C, AVR ISP and iCE40 programming and ships assembled and ready to use, while Steppenprobe is JTAG/SWD/UART/SWO only and you have to fab and hand-solder the board yourself from Gerbers - no one sells it assembled. If you don't specifically need simultaneous JTAG/SWD plus UART/SWO on one USB-C cable, or don't want to hand-solder an LQFP-64 0.5mm-pitch part, Tigard or the Glasgow Interface Explorer get you a working, more capable probe faster. The project itself is functionally frozen: the last real code change was in 2021/2022, and a 2024 commit only re-saved the same files for KiCad 8 compatibility with no functional change. It has 0 open issues, which reads less as 'bug-free' and more as 'nobody is actively filing against it anymore' - though 11 forks suggest some people did build on it.",
+  "best_for": [
+   "Simultaneous JTAG/SWD debugging and UART/SWO trace capture on one USB-C connection",
+   "Learning OpenOCD/FTDI MPSSE internals by building your own probe from a fully open KiCad design",
+   "A minimal, single-purpose JTAG/SWD+UART probe if you're already comfortable fabricating and hand-soldering your own boards"
+  ],
+  "not_for": [
+   "Anyone who wants to buy a working probe rather than build one - no assembled units exist",
+   "SPI or I2C work - Tigard and Glasgow Interface Explorer cover far more protocols on the same class of hardware",
+   "Beginners - hand-soldering an LQFP-64 0.5mm-pitch FTDI chip is not a first-solder-project task"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU - the board is built around an FTDI FT2232HL, a fixed-function dual-channel USB-to-MPSSE/UART bridge IC, not a programmable microcontroller.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered only, no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB-C (USB 2.0 Hi-Speed)",
+    "STDC14 14-pin Cortex debug connector (JTAG/SWD/UART/SWO)",
+    "2.54mm pin header breakout for custom pinouts"
+   ],
+   "gpio": "4 GPIO (GPIO_A-D), high-impedance by default, settable/readable via OpenOCD's ftdi_set_signal/ftdi_get_signal commands",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "FT2232HL LQFP-64 as the sole active IC (plus small logic buffers)",
+    "System reset tactile switch",
+    "Physical switch selecting UART RX vs SWO on channel B",
+    "Status LEDs"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "FT2232H channel B, up to 12Mbps (4Mbps reliably on modern Linux without custom divisors), switchable with SWO via a physical switch."
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "FT2232H channel A in MPSSE mode; JTAG or SWD selected in software via OpenOCD ('transport select swd'), no jumpers. OpenOCD-compatible from v0.11.0."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer mode or sigrok/PulseView support documented - notable since comparable FT2232H-based probes (Tigard) and other tracked debug tools (Bus Pirate 5, Glasgow Interface Explorer) commonly add this."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "Not exposed - only JTAG/SWD and UART/SWO are wired up on this design, unlike Tigard which uses the same chip family for I2C too."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No dedicated SPI/flash-programming mode documented in the OpenOCD interface config; only JTAG/SWD target-flash programming through a debug core, same as any debug probe."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Pure debug/trace probe - no fault-injection capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No onboard scripting; it is a passive USB-to-MPSSE/UART bridge entirely driven by host-side OpenOCD."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running OpenOCD (or a serial terminal) at all times; cannot operate independently."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network interface or web UI of any kind - USB only."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No storage on the board; all capture happens on the connected host."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A standard JTAG/SWD/UART debug adapter for hardware you own or are authorized to test; no radio, nothing export-controlled. Using it against a device's security/debug-lockout protections without authorization can raise the same computer-misuse concerns as any other debug probe. This is general information, not legal advice - check your local law."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "good",
+   "last_release": "2020-04",
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://github.com/diegoherranz/steppenprobe",
+    "what": "main README - specs, FTDI channel layout, OpenOCD usage examples, connector options"
+   },
+   {
+    "url": "https://github.com/diegoherranz/steppenprobe/releases/tag/v1.0",
+    "what": "v1.0 release date (2020-04-12), schematic PDF, Gerbers, BOM availability"
+   },
+   {
+    "url": "https://github.com/diegoherranz/steppenprobe/releases/download/v1.0/steppenprobe_bom_v1.0.csv",
+    "what": "exact BOM with LCSC part numbers (FT2232HL = C27882 etc.), used for the price estimate"
+   },
+   {
+    "url": "https://api.github.com/repos/diegoherranz/steppenprobe",
+    "what": "stars (44), forks (11), open issues (0), default branch and push history"
+   },
+   {
+    "url": "https://api.github.com/repos/diegoherranz/steppenprobe/compare/master...kicad8",
+    "what": "confirms the 2024 commit was a no-op KiCad 8 file resave, not functional development"
+   },
+   {
+    "url": "https://github.com/tigard-tools/tigard",
+    "what": "confirms Tigard is also FT2232H-based and lists its broader protocol support, for the honest_take comparison"
+   }
+  ],
+  "research_gaps": [
+   "No independent confirmation of any assembled/kit seller for Steppenprobe anywhere",
+   "Exact JTAG/SWD clock speed ceiling not stated in README (depends on FT2232H MPSSE configuration via OpenOCD, not fixed in hardware)",
+   "Physical board dimensions/weight not published"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "cypherock-emfi-board",
+  "hardware_id": "cypherock-emfi-board",
+  "name": "Cypherock EMFI Board",
+  "firmware": "Cypherock EMFI firmware",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/Cypherock/emfi-board",
+  "firmware_note": "STM32CubeIDE project (STM32 HAL) implementing a PID voltage-control loop over PWM plus a USB-CDC serial command protocol for arming/triggering shots and reading back voltage. You build and flash it yourself via STM32CubeIDE; there is no separate firmware distribution or pre-flashed option.",
+  "vendor": "Cypherock",
+  "vendor_url": "https://github.com/Cypherock",
+  "product_url": "https://github.com/Cypherock/emfi-board",
+  "category": "hardware-debug",
+  "subcategory": "electromagnetic-fault-injection",
+  "status": "diy-only",
+  "released": "2023",
+  "price_usd": 65,
+  "price_note": "No vendor sells this assembled; Cypherock (a hardware-wallet company) published it as an open research artifact, not a product. Rough estimate from the Altium BOM (EMFI_BOM.xlsx) in the repo: STM32L412C8T6 MCU (~$3), IXGA30N120B3 1200V IGBT (~$1-1.50 in low qty per Newark), TPS61040 boost converter (~$1.50), a Coilcraft SCS-200LD transformer (no public unit price found, budgeted ~$8-10), roughly 24 1000V-rated ceramic capacitors forming the voltage-multiplier/reservoir bank, 3 SMA connectors, 2 USB-C receptacles, the 3D-printed protective enclosure (STEP files provided), and PCB fab. Likely range is $50-80 in low-volume parts; $65 used as a point estimate. Excludes the separate hand-wound EM probe and your build time/equipment.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "This is a roughly 1kV pulsed high-voltage device you build and hand-tune yourself, aimed at bypassing MCU read-out protection - it assumes you already understand fault-injection methodology, EMFI probe positioning, and high-voltage safety. A field report (see honest_take) describes the switching transistor, and on a repeat attempt the STM32 itself, being destroyed during first bring-up on a unit built exactly as documented.",
+  "build_effort": "full-diy",
+  "build_note": "No kit or assembled unit exists. You fab the Altium-designed PCB, source and solder the BOM (including a 1200V IGBT and 1000V-rated capacitors), 3D-print the provided enclosure, hand-wind your own EM injection probe from a power inductor and SMA connector, and build/flash the STM32CubeIDE firmware project yourself.",
+  "stealth": "overt",
+  "form_factor": "box",
+  "summary": "The Cypherock EMFI Board is an open-hardware electromagnetic fault-injection tool: a USB-powered, STM32L412-controlled boost converter and a 1200V IGBT (IXGA30N120B3) drive a step-up transformer and diode voltage multiplier into a bank of 1000V-rated capacitors, then discharge through a hand-built EM probe coil to inject a fast electromagnetic pulse timed against a target chip. Cypherock, a hardware crypto-wallet maker, designed and published it to research fault-injection and read-out-protection-bypass attacks against microcontroller families (STM32, ATSAMD, ATmega, ESP32) and a crypto-authentication IC used in wallets like their own, and shipped 8 matching DUT target boards for exactly that testing.",
+  "honest_take": "This sits in ChipSHOUTER territory - a purpose-built EMFI pulse generator - not ChipSHOUTER-PicoEMP territory; the PicoEMP is a much simpler, lower-voltage board, while this one runs a closed-loop PID voltage regulator up to roughly 1kV through a real IGBT switching stage, which is meaningfully more dangerous and more capable to build and operate. The single most important thing to know before attempting this: an open GitHub issue (filed August 2025, still unanswered as of this research) reports that the IGBT (Q1) self-excites and destroys itself on first power-up as designed, because it's switched directly by a logic-level MOSFET (Q3) instead of a proper isolated gate driver - and that repeated rebuild attempts destroyed further parts, including the STM32 MCU. Cypherock has not commented, and the repo has had zero commits since January 2024, so treat this as an unmaintained, reportedly broken-as-published design rather than a working product - budget for spare IGBTs and STM32s, or look at the actively-maintained ChipSHOUTER if you need something that works out of the box. The repo also ships 8 DUT boards (STM32F205RET6, STM32F427VIT6TR, STM32L496RGT6, STM32H753VIT6, ESP32-D0WD-V3, ATSAMD51J20A-AU, ATMEGA328P-AU, and an ATECC secure-element board), not the 7 MCU families the README's prose lists - the text and the actual hardware folder disagree by one.",
+  "best_for": [
+   "Researchers who already have EMFI experience and want an open reference design to build and modify rather than buy a commercial unit",
+   "Studying read-out-protection bypass and control-flow fault attacks against the specific MCU/secure-element families it ships DUT boards for"
+  ],
+  "not_for": [
+   "Anyone without prior high-voltage or fault-injection experience - see the unresolved Q1 self-destruction report",
+   "Anyone who wants a working device without a rebuild-and-debug cycle - build it exactly as documented and there's a credible, unaddressed report it destroys its own IGBT and possibly the MCU",
+   "A first EMFI project - the already-tracked ChipSHOUTER-PicoEMP is a simpler, lower-voltage starting point"
+  ],
+  "hardware": {
+   "mcu_primary": "STM32L412C8T6",
+   "mcu_primary_note": "Arm Cortex-M4, 32-bit, 80MHz (per the BOM's own part description). Runs the PID voltage-regulation loop and the USB-CDC serial control protocol; confirmed from firmware/Core/Startup/startup_stm32l412c8tx.s and the EMFI_BOM.xlsx part description.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB-powered only, no battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (USB-CDC serial control, 9600 baud)",
+    "2x SMA connectors for the EM probe (polarity-reversible)",
+    "1x SMA/pin header for external trigger input"
+   ],
+   "gpio": "External trigger input pin for hardware-timed shots (in addition to serial 'software shoot' commands); 3 onboard status LEDs",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed two-part enclosure (STEP files provided), described by the vendor as protection against exposure to the internal high-voltage circuitry",
+   "notable_physical": [
+    "IXGA30N120B3 1200V IGBT switching stage",
+    "Coilcraft SCS-200LD transformer (a 1:200 current-sense transformer repurposed here as a step-up transformer) feeding a x4 diode voltage multiplier",
+    "Bank of 1000V-rated ceramic capacitors as the pulse reservoir",
+    "Separate hand-built EM probe (user-sourced power inductor + SMA connector, not included)"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Electromagnetic fault injection (EMFI), not voltage-rail crowbar glitching: a closed-loop PID-controlled boost stage charges a capacitor bank built from 1000V-rated components, discharged through an IGBT into a hand-wound EM probe coil, timed via a serial 'software shoot' command or an external hardware trigger pin. An open, unresolved GitHub issue reports the IGBT driver circuit self-destructs on first power-up as designed - see honest_take."
+   },
+   "uart": {
+    "v": "yes",
+    "note": "USB-CDC serial at 9600 baud for arming, triggering, voltage-setpoint and PID-tuning commands (Scripts/Cypherock/cypherock.py); not a UART bridge to a third-party target."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No onboard debug probe. The README describes pairing this board with a separate JTAG/SWD probe (e.g. for crash detection/recovery on the target) rather than including one."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C bridge function."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash interface - this board only delivers the EM pulse, it doesn't read target memory itself."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer or waveform-capture function onboard."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Python control script (Scripts/Cypherock/cypherock.py) over serial: on/off, PWM settings, voltage setpoint, software-triggered shoot, PID tuning."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network interface or web UI - USB-serial control only."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running the Python control script (or a terminal sending raw serial commands) for every operation; no standalone field mode."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage; all control and readback happens live over the USB-serial link."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Not a radio transmitter and not export-controlled crypto; owning/building a research EMFI tool is uncontroversial in most jurisdictions, similar to the already-tracked ChipSHOUTER. Using it to defeat the read-out protection of a device you don't own or lack authorization to test can implicate computer-misuse or anti-circumvention law depending on jurisdiction. It also involves genuinely dangerous voltages (~1kV) - a safety concern independent of any legal one. This is general information, not legal advice - check your local law."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "good",
+   "last_release": "2024-01",
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "Cypherock EMFI",
+   "emfi-board"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/Cypherock/emfi-board",
+    "what": "main README - working principle, features, DUT list, usage instructions"
+   },
+   {
+    "url": "https://github.com/Cypherock/emfi-board/blob/main/hardware/emfi-pcb/EMFI_BOM.xlsx",
+    "what": "full BOM with exact part numbers: STM32L412C8T6, IXGA30N120B3 IGBT, SCS-200LD transformer, TPS61040, 1000V-rated capacitors"
+   },
+   {
+    "url": "https://github.com/Cypherock/emfi-board/blob/main/firmware/Core/Inc/board.h",
+    "what": "PID voltage-control data structures and serial command set"
+   },
+   {
+    "url": "https://github.com/Cypherock/emfi-board/blob/main/Scripts/Cypherock/cypherock.py",
+    "what": "host-side serial control protocol, confirms 9600 baud, voltage-setpoint/PWM/shoot commands"
+   },
+   {
+    "url": "https://github.com/Cypherock/emfi-board/issues/1",
+    "what": "unresolved field report of the IGBT (Q1) self-destructing on power-up, filed Aug 2025, no maintainer response"
+   },
+   {
+    "url": "https://api.github.com/repos/Cypherock/emfi-board",
+    "what": "stars (27), forks (2), open issues (1), commit history - no commits since 2024-01-06"
+   }
+  ],
+  "research_gaps": [
+   "Exact output pulse voltage/current/rise-time not independently measured - README states the design targets roughly 1kV using 1000V-rated components, which is a design target, not a measured spec",
+   "Coilcraft SCS-200LD unit price not found from a public distributor listing, budgeted from comparable Coilcraft current-sense transformers",
+   "No capability key exists for EM-probe positioning/grid-scan automation (README mentions optional 3-axis stage integration) - described in summary/hardware only",
+   "Whether the Q1 self-destruction reported in issue #1 affects every unit built to spec, or was specific to that builder's assembly, could not be independently confirmed - no maintainer response and no other build reports found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "chipwhisperer-pro",
+  "hardware_id": "chipwhisperer-pro",
+  "name": "ChipWhisperer-Pro (CW1200)",
+  "firmware": "Stock (NewAE)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/newaetech/chipwhisperer",
+  "firmware_note": "Same open-source ChipWhisperer Python API and capture firmware as the rest of the line; the Pro exposes extra FPGA-based trigger modules (analog SAD, SPI decode, UART decode) through the same interface.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://chipwhisperer.readthedocs.io/en/latest/Capture/ChipWhisperer-Pro.html",
+  "category": "hardware-debug",
+  "subcategory": "side-channel-glitching",
+  "status": "discontinued",
+  "released": "2016",
+  "price_usd": null,
+  "price_note": "No longer sold. NewAE's own documentation flags it discontinued and points buyers to the Husky instead. Could not find an archived list price - web.archive.org was unreachable from this research environment, and historical distributor listings for the NAE-CW1200-KIT SKU (TrustedParts, digchip) returned no readable price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Same underlying discipline as the Lite/Nano/Husky - differential power analysis and fault injection - plus a more complex trigger/streaming setup that assumes you already know why you want SAD triggering or SPI/UART-pattern triggers.",
+  "build_effort": "assembled",
+  "build_note": "Sold assembled as the 'ChipWhisperer-Pro Complete Level 3 Starter Kit' with a CW308 target platform, CW308T-XMEGA and CW308T-STM32F3 target boards, H-field and differential probes, a probe power supply, a 20dB LNA and analogue filters.",
+  "stealth": "overt",
+  "form_factor": "box",
+  "summary": "The former top tier of NewAE's ChipWhisperer capture-hardware line: a 10-bit, 105 MS/s ADC with a 98,119-sample buffer, streaming capture up to 10 MS/s, a 5-200 MHz synchronous clock generator, four trigger module types (basic edge/level, analog SAD, SPI decode and UART decode), and both crowbar voltage glitching and clock glitching. It used the same FPGA-based architecture and 20-pin target connector as the ChipWhisperer-Lite, just with far more FPGA resources behind it, plus an onboard touchscreen the Lite and Husky don't have.",
+  "honest_take": "NewAE's own current documentation states plainly that the CW1200 is discontinued and tells buyers to get a ChipWhisperer-Husky instead - and the Husky beats it outright on paper (12-bit/200 MS/s vs 10-bit/105 MS/s, a bigger buffer, and a newer VCO-based clock-glitch design), presumably at a fraction of the Pro's original price. This is a genuinely different product from the ChipWhisperer-Nano despite the naming similarity people sometimes assume: the Nano was always the ~$50 fixed-function education board with an 8-bit/20 MS/s ADC and no clock glitching at all, while the Pro was NewAE's flagship lab instrument aimed at labs already committed to the platform - different market tier, different silicon, not a rebrand or a variant of the same board. If you already own one, it is still a genuinely capable 10-bit/105 MS/s instrument with trigger modules the Lite lacks (SAD, SPI/UART decode) - it just is not the thing to go buy today, and a used unit carries the usual risk of an FPGA design nobody at NewAE is actively patching anymore.",
+  "best_for": [
+   "Existing owners who already have one and don't need to buy",
+   "Labs that specifically need SPI/UART-pattern or SAD triggering and can find one used",
+   "Understanding the historical ChipWhisperer product line before evaluating a Husky"
+  ],
+  "not_for": [
+   "New purchases - buy a ChipWhisperer-Husky instead",
+   "Anyone comparing it to the ChipWhisperer-Nano - wrong tier entirely, not a substitute",
+   "Budget-conscious hobbyists - even used, this was priced as lab equipment"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "FPGA-based capture design with more FPGA fabric than the Lite/Husky per NewAE's own comparisons; the exact FPGA part number is not published in the documentation reachable for this research.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "Touchscreen (on-device status/config)",
+    "size_in": null,
+    "resolution": null,
+    "color": null,
+    "touch": true
+   },
+   "battery_mah": null,
+   "battery_note": "Mains/USB powered; ships with a 5V/2.1A power supply plus a USB-to-barrel-jack cable. No battery.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB 2.0 High Speed (VID 0x2B3E, PID 0xACE3)",
+    "20-pin ChipWhisperer target connector",
+    "SMA measure/glitch/aux-trigger I/O",
+    "5V barrel-jack power input"
+   ],
+   "gpio": "TIO1-4 general-purpose I/O pins at 3.3V logic, plus 5V/3.3V power rail outputs on the 20-pin target connector",
+   "sensors": [
+    "AC-coupled power-measurement input, adjustable gain -6.5 dB to +55 dB"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Enclosed unit with touchscreen (unlike the bare-board Lite/Husky)",
+   "notable_physical": [
+    "On-device touchscreen, unique in the ChipWhisperer capture line",
+    "20A-capable crowbar voltage-glitch output",
+    "Four trigger module types including SAD and protocol-decode triggers"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Voltage glitching via high- or low-power crowbar (up to 20A pulse current) and clock glitching (0-49.8% of a cycle, 0.4% resolution) over a 5-200MHz synchronous clock generator."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Captures analog power traces for side-channel analysis, not digital bus traces."
+   },
+   "uart": {
+    "v": "partial",
+    "note": "A UART-decode trigger module can pattern-match on serial traffic to fire a trigger; this is not a general-purpose UART bridge/adapter."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "An SPI-decode trigger module exists for triggering off SPI bus patterns, but the Pro has no read/dump workflow - it is not a flash-dumping tool."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C interface; not covered by any of the four trigger module types."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No JTAG or SWD debug capability."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Full ChipWhisperer Python API and Jupyter notebook workflow, same as the rest of the line."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "The onboard touchscreen shows status/config, but capture and analysis run through the host Python API - same host-tethered architecture as the Lite and Husky."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Control is via Python/Jupyter, not a browser interface."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage; captures stream live to the host PC over USB, same as the rest of the ChipWhisperer capture line."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A laboratory instrument with no radio; legal to own and use everywhere. As with the rest of the ChipWhisperer line, the legal exposure is in the target: extracting keys or bypassing protections on a device you do not own can engage anti-circumvention law (DMCA 1201 in the US) and computer-misuse law. Work on your own hardware or under written authorisation."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "excellent",
+   "last_release": "2025",
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "CW-Pro",
+   "CW1200",
+   "NAE-CW1200-KIT",
+   "ChipWhisperer Pro Level 3 Starter Kit"
+  ],
+  "sources": [
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Capture/ChipWhisperer-Pro.html",
+    "what": "full specs: 10-bit/105MS/s ADC, 98,119-sample buffer, streaming to 10MS/s, 5-200MHz clock gen, 4 trigger module types, 20A crowbar, USB VID/PID, and the explicit statement that the CW1200 is discontinued in favor of the Husky"
+   },
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Starter%20Kits/ChipWhisperer-Pro.html",
+    "what": "Level 3 Starter Kit contents: CW308 platform, CW308T-XMEGA and CW308T-STM32F3 targets, probes, LNA, filters, power supply options"
+   },
+   {
+    "url": "https://github.com/newaetech/wiki.newae.com/blob/master/CW1200_ChipWhisperer-Pro.mw",
+    "what": "wiki source confirming this is 'an upgraded version of the ChipWhisperer Lite' with a bigger FPGA, touchscreen, and pin-compatible 20-pin connector"
+   },
+   {
+    "url": "https://github.com/newaetech/wiki.newae.com/commits/master/CW1200_ChipWhisperer-Pro.mw",
+    "what": "earliest commit (13 June 2016) reading 'Details forthcoming - expected release in July/August 2016!', used to date the release year"
+   }
+  ],
+  "research_gaps": [
+   "No confirmed price could be found for the CW1200 or the Level 3 Starter Kit, historical or current; web.archive.org was unreachable from this research environment so archived NewAE store pricing could not be checked.",
+   "Exact FPGA part number not published in reachable documentation.",
+   "Could not confirm the exact discontinuation date, only that it postdates the Husky's 2022 release and predates September 2026.",
+   "Touchscreen size/resolution not documented in the sources reached."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "cw305-artix-fpga-target",
+  "hardware_id": "cw305-artix-fpga-target",
+  "name": "CW305 Artix FPGA Target Board",
+  "firmware": "Stock (NewAE)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/newaetech/cw305-artix-target",
+  "firmware_note": "The onboard SAM3U microcontroller (USB/board control, not the security target) runs NewAE's stock firmware from a separate repo to the main chipwhisperer package. The Artix-7 FPGA itself takes a user-supplied bitstream (e.g. a hardware AES/ECC core) - that bitstream, not this firmware, is what a side-channel or fault-injection attack actually targets.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/cw305-artix-fpga-target",
+  "category": "hardware-debug",
+  "subcategory": "fpga-side-channel-target",
+  "status": "discontinued",
+  "released": "2016",
+  "price_usd": 1462.5,
+  "price_note": "NewAE's own storefront no longer carries it - the product-page URL 404s and the old store.newae.com subdomain no longer resolves at all (NXDOMAIN). Distributor Electromaker still lists both FPGA variants (SKUs NAE-CW305-04-7A35-0.10-X and -7A100-0.10-X) as 'In Stock' at $1,462.50, but both SKUs show the identical figure, which reads like a stale or templated price rather than confirmed current per-variant pricing.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "You are expected to bring or write your own FPGA bitstream (Verilog/VHDL crypto core) and a Vivado project - this is a target for people already doing FPGA-based side-channel or fault-injection research, not a beginner board.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled. Available soldered or in a socketed-FPGA variant (swap FPGAs without resoldering) per the distributor SKU listings.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A standalone Artix-7 FPGA target board built specifically to be attacked: it carries a socketable or soldered XC7A35T or XC7A100T FPGA, diode-protected power rails built for fault injection, dedicated shunt-resistor measurement points, and the standard 20-pin ChipWhisperer connector, so a CW1200/Lite/Husky can run power analysis or voltage-glitching experiments against whatever crypto core you load into the FPGA. NewAE ships example AES cores and Vivado projects to get started. It is the target, not the attack tool - by itself it does nothing.",
+  "honest_take": "This is not an attack tool at all - it is the victim board, and it only does anything once paired with a real ChipWhisperer capture unit (Lite, Husky, or the now-discontinued Pro) and your own FPGA bitstream. NewAE appears to have quietly walked away from selling it directly: the product page 404s and their old storefront domain is dead, even though the ChipWhisperer documentation still lists it as a supported target. Distributor stock exists (around $1,460, which is suspiciously identical across both FPGA sizes and probably stale), but there's no confirmed live channel to buy new from NewAE itself. If you need a new Artix-7 FPGA side-channel target today, NewAE's current lineup points two different directions instead: the smaller CW312T-XC7A35 on their newer modular CW312/CW313 target system for something closer to the CW305's own scope, or the much larger CW310 'Bergen Board' ($5,310, Kintex-7 K410T) if you actually need SoC/OpenTitan-scale emulation. Neither is a drop-in replacement for the CW305's specific form factor and price point, so treat 'buy a CW310 instead' with caution - it may be the wrong tier entirely for what the CW305 was doing.",
+  "best_for": [
+   "Power analysis and fault-injection research against FPGA-implemented crypto cores you write or port yourself",
+   "Academic and industrial side-channel evaluation of hardware AES/ECC/PUF implementations",
+   "Labs already using CW1200/Lite/Husky capture hardware and the CW308 target ecosystem"
+  ],
+  "not_for": [
+   "Anyone without a separate ChipWhisperer capture unit - this board does not attack anything by itself",
+   "Software-target side-channel work - it is FPGA-only, no MCU socket",
+   "Buyers wanting a currently-in-production NewAE product - check the CW312T-XC7A35 or CW310 first"
+  ],
+  "hardware": {
+   "mcu_primary": "Xilinx Artix-7 XC7A35T or XC7A100T (FTG256 package)",
+   "mcu_primary_note": "Two SKU variants (CW305-A35 / CW305-A100, part numbers NAE-CW305-04-7A35-0.10-X and -7A100-0.10-X); a socketed variant exists for swapping FPGAs. This is the actual attack target - the board ships with no fixed function, only whatever bitstream you load.",
+   "mcu_secondary": "Atmel/Microchip SAM3U (USB and board-control MCU; not the FPGA and not the security target)",
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "No battery. USB power for control; external DC supply required via banana-jack connectors for the FPGA's VCC-INT core-voltage rail (the rail used for voltage-glitching experiments).",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB 2.0 High Speed (VID 0x2B3E, PID 0xC305)",
+    "JTAG (FPGA programming via an external Xilinx platform cable, not included)",
+    "Standard ChipWhisperer 20-pin connector",
+    "40-pin PMOD-compatible GPIO header (JP3)",
+    "3x SMA clock I/O (PLL out, clock in, FPGA clock out)"
+   ],
+   "gpio": "40-pin header (JP3), 3.3V VCC-IO, PMOD-compatible and usable with NewAE's OpenADC modules",
+   "sensors": [
+    "Shunt-resistor power-measurement points (X2-X4) and differential-probe headers (JP6/JP7) for side-channel power analysis"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare board",
+   "notable_physical": [
+    "CDCE906 PLL, USB-programmable 5-160MHz FPGA clock",
+    "Diode-protected supply rails rated for fault-injection use",
+    "Banana-jack external VCC-INT input for voltage-glitching experiments"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "addon",
+    "note": "The board's power rails are diode-protected and built to be voltage-glitched, but it has no glitch generator of its own - needs a CW1200/Lite/Husky (or equivalent) to actually inject faults."
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "The FPGA can be programmed over JTAG via an external Xilinx platform cable and Vivado, in addition to over USB via ChipWhisperer software. This is FPGA bitstream programming, not a general SWD debug port."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No fixed-function UART header; the 40-pin GPIO could carry one if implemented inside your own FPGA bitstream."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No fixed-function I2C header for the same reason."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No digital capture capability of its own - it is a target, not an analyzer."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Configured and controlled via the ChipWhisperer Python API; the FPGA itself is programmed via Vivado."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Host-tethered; requires a PC for both FPGA programming/control and for the separate capture unit doing the actual attack."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage; capture data is streamed to the connected ChipWhisperer capture unit's host PC, not stored on this board."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network interface; configured via the ChipWhisperer Python API and Vivado, not a browser."
+   },
+   "side_channel_power": {
+    "v": "addon",
+    "note": "Carries dedicated shunt-resistor measurement points built for clean power-trace capture, but this is a victim/target board with no glitch-or-capture generator of its own (same relationship as its own glitching rating of 'addon') - it needs a CW1200/Lite/Husky to actually sample and record anything. Also worth noting: NewAE's own product page now 404s and the board's current purchase channel is unclear."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bare FPGA target board with no radio; legal to own and use everywhere. It only becomes ethically/legally relevant in combination with what you load onto the FPGA and what you attack - side-channel or fault-injection research against a third party's IP core or product without authorisation can raise the same anti-circumvention and computer-misuse issues as attacking real silicon."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "excellent",
+   "last_release": "2025",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "CW305",
+   "Artix FPGA Target Board",
+   "NAE-CW305-04-7A35-0.10-X",
+   "NAE-CW305-04-7A100-0.10-X"
+  ],
+  "sources": [
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Targets/CW305%20Artix%20FPGA.html",
+    "what": "FPGA part numbers CW305-A35/CW305-A100 (XC7A35T/XC7A100T), CDCE906 PLL, JTAG-via-external-programmer detail, 40-pin JP3 GPIO header, shunt/differential probe points, power supply specs; still listed as a documented target with no discontinuation note in the docs themselves"
+   },
+   {
+    "url": "https://forum.newae.com/t/cw305-sam3u-building-and-uploading-firmware/5244",
+    "what": "confirms the onboard SAM3U is a separate USB-control MCU from the Artix-7 target FPGA, and that its firmware moved to the github.com/newaetech/cw305-artix-target repo"
+   },
+   {
+    "url": "https://github.com/newaetech/wiki.newae.com/commits/master/CW305_Artix_FPGA_Target.mw",
+    "what": "earliest wiki commit dated 24 April 2016, used to date the release year"
+   },
+   {
+    "url": "https://www.newae.com/product-page/cw305-artix-fpga-target",
+    "what": "returns HTTP 404 as of 2026-09-10, evidence the board is no longer sold on NewAE's own current storefront"
+   },
+   {
+    "url": "https://www.electromaker.io/shop/product/artix-a100-fpga-target-board",
+    "what": "distributor listing showing the NAE-CW305-04-7A100-0.10-X SKU 'In Stock' at $1,462.50 as of this check"
+   },
+   {
+    "url": "https://www.newae.com/product-page/cw310-bergen-board-large-fpga-k410t-for-full-emulation",
+    "what": "current NewAE FPGA target board (CW310, Kintex-7 K410T) listed live at $5,310, used as evidence of the vendor's current larger-FPGA alternative"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm whether NewAE still manufactures the CW305 at all, or whether Electromaker's 'In Stock' listing is old inventory; the identical $1,462.50 price shown for both the 35T and 100T SKUs looks like a templated/stale figure rather than confirmed current differentiated pricing.",
+   "web.archive.org was unreachable from this research environment, so an archived NewAE store snapshot could not be checked for a historical list price.",
+   "Could not confirm the exact discontinuation date.",
+   "As a target/DUT board rather than an attack tool, several standard capability keys (uart, i2c, spi_flash_dump) genuinely do not apply in the normal sense - they would only exist if implemented inside a user-supplied FPGA bitstream, which is out of scope for describing the board as sold."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "glitchcaster",
+  "hardware_id": "glitchcaster",
+  "name": "GlitchCaster",
+  "firmware": "n/a (no built-in controller)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "GlitchCaster ships with no onboard MCU and no firmware of its own - it is a PWM-driven high-voltage flyback circuit that needs an external GPIO/PWM controller to actually fire. An optional bundle adds a simple Raspberry Pi Pico controller board, which would run PicoEMP-compatible firmware, but that is a separate add-on, not part of the base unit.",
+  "vendor": "Diffused Tactics",
+  "vendor_url": "https://diffusedtactics.com",
+  "product_url": "https://www.crowdsupply.com/diffused-tactics/glitchcaster",
+  "category": "hardware-debug",
+  "subcategory": "emfi-injection",
+  "status": "vaporware",
+  "released": null,
+  "price_usd": null,
+  "price_note": "The Crowd Supply page is still 'Coming Soon' as of 2026-09-10 with 0 updates posted and no funding campaign launched - there is no price to check yet, only a sign-up-for-updates form.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "It ships with no built-in controller - you must supply and program your own PWM/GPIO source to actually time and fire pulses, on top of the usual EMFI skill (finding a fault-sensitive spot and timing window on a live target) and the safety knowledge to handle a device that stores hundreds of volts.",
+  "build_effort": "assembly",
+  "build_note": "No soldering described: a resin-shielded high-voltage PCB, a miniature coil-adapter board (leaded or SMA), a pre-made 4.7uH probe coil, and 24-inch jumper wires to your own controller. An optional bundle adds a simple Pi Pico controller board for people who want to start firing pulses immediately.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An open-hardware EMFI (electromagnetic fault injection) probe head from a small Colorado-based team (Diffused Tactics), explicitly built on Colin O'Flynn's open-source PicoEMP design - the same design behind NewAE's own ChipSHOUTER-PicoEMP kit already in this database. It generates a roughly 250V pulse through a leaded or SMA probe coil via an LDA111/ATB3225-based flyback circuit and a 630V/470nF storage capacitor, but unlike PicoEMP it deliberately ships with no built-in controller - instead it uses 40mm-fan mounting so it can be bolted to a 3D printer or CNC head for repeatable XYZ-staged glitch mapping, with a coil adapter that accepts either leaded or SMA probe coils interchangeably.",
+  "honest_take": "Do not confuse 'inspired by PicoEMP' with 'better than PicoEMP' - GlitchCaster is explicitly the same ~250V flyback circuit, and PicoEMP is open-source CC-BY-SA hardware you can build yourself or buy pre-built as NewAE's own ChipSHOUTER-PicoEMP Kit for $100. What GlitchCaster is actually selling is not more voltage or a new attack capability, it is mechanical: 40mm-fan mounting so you can bolt it to a 3D printer or CNC gantry for repeatable XYZ probe positioning, plus a coil adapter that takes both leaded and SMA coils, neither of which the stock PicoEMP kit provides out of the box. Whether that mechanical convenience is worth paying for over a $100 PicoEMP kit plus your own 3D-printed mount depends entirely on the eventual price, which does not exist yet - as of this check the project has never launched a Crowd Supply campaign, has zero updates, and its promised open-source GitHub repo does not exist publicly yet either, so right now there is nothing to buy and nothing independently verifiable beyond the campaign page's own claims. Treat every capability claim here as vendor-stated until backers actually receive hardware.",
+  "best_for": [
+   "Researchers who already want PicoEMP-style EMFI and specifically need XYZ-stage mounting for repeatable fault mapping",
+   "People who want to swap between leaded and SMA probe coils without rebuilding a rig",
+   "Following the project to see if/when it actually ships"
+  ],
+  "not_for": [
+   "Anyone who needs a working tool now - it is not for sale yet",
+   "Buyers wanting a self-contained EMFI tool - there is no built-in controller in the base unit",
+   "Anyone expecting more raw capability than the open PicoEMP design it is explicitly based on"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No onboard MCU in the base GlitchCaster board - PWM drive must come from an external, user-supplied controller. The optional bundled controller board is Pi Pico-based (RP2040) but is a separate add-on.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "No battery; externally powered/controlled.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "2.54mm header and 2.54mm screw-terminal for controller connection"
+   ],
+   "gpio": "PWM input from an external controller via header or screw terminal; no onboard GPIO of its own",
+   "sensors": [],
+   "dimensions_mm": "71 x 32 x 1.65 (main PCB); 11.6 x 10.1 x 1.65 (SMA adapter, 29.3mm including connectors)",
+   "weight_g": null,
+   "case": "Resin-shielded high-voltage section with an external safe-discharge button",
+   "notable_physical": [
+    "40mm-fan mounting hole pattern for 3D-printer/CNC head mounting",
+    "630V/470nF storage capacitor",
+    "LDA111/ATB3225-based PWM flyback circuit",
+    "Included 4.7uH, 17.5-turn ferrite-rod probe coil",
+    "Coil adapter board for leaded or SMA probe coils"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "addon",
+    "note": "Generates the ~250V EMFI pulse itself via its flyback circuit, but needs a user-supplied PWM-capable GPIO controller to actually trigger and time it - there is none built in. An optional Pi Pico-based controller bundle is offered separately."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Cannot fire a pulse without an external controller supplying PWM timing."
+   },
+   "scriptable": {
+    "v": "claimed",
+    "note": "Vendor states firmware for the optional Pico controller bundle will be customizable and 'fully compatible with PicoEMP-based firmwares'; no firmware or repo is publicly available yet to confirm."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug port of any kind - this is a single-purpose EMFI pulse head with no logic of its own, not a debug probe."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No serial interface; the only I/O is a PWM trigger input from an external controller."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C interface."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool; it only generates an EM pulse."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No capture capability of any kind - the board only generates the EM pulse, it does not observe anything."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network interface or UI of any kind - PWM header/screw-terminal only."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A bench EMFI tool with no radio and no offensive capability of its own without a target you deliberately attack; legal to own everywhere. The vendor's own warning notes EMFI can damage the target, the tool itself, staging equipment, and nearby electronics - as with any fault-injection tool, using it against hardware you do not own or lack authorisation to test can raise anti-circumvention and computer-misuse issues in most jurisdictions."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/diffused-tactics/glitchcaster",
+    "what": "full campaign page: 'Coming Soon' status with 0 updates, ~250V pulse spec, LDA111/ATB3225 flyback circuit, 630V/470nF capacitor, 40mm-fan mounting, leaded/SMA coil adapter, PCB dimensions, no-built-in-controller design decision, optional Pi Pico controller bundle, team identity (Diffused Tactics, Colorado, single named contributor 'Nullstring')"
+   },
+   {
+    "url": "https://github.com/newaetech/chipshouter-picoemp",
+    "what": "the open-source PicoEMP project GlitchCaster is explicitly built on: ~250V EMFI pulse, Raspberry Pi Pico controller, CC BY-SA 3.0 license, sold pre-built by NewAE as the ChipSHOUTER-PicoEMP Kit for $100"
+   },
+   {
+    "url": "https://diffusedtactics.com",
+    "what": "confirms the vendor's identity and existence but has no product information of its own beyond navigation/contact links"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists for '40mm-fan/XYZ-stage mountable form factor' - this is GlitchCaster's actual differentiator over stock PicoEMP and is described in summary/honest_take instead.",
+   "Genuinely a single-purpose EMFI probe head with no controller of its own, so most standard hardware-debug and RF capability keys do not apply; the sparse capability list reflects that, not missing research.",
+   "Could not find the promised open-source GitHub repository (github.com/diffused-tactics returns 404) - design files, BOM and controller firmware are stated as 'will be published... before products are shipped' but do not exist publicly yet.",
+   "No price could be found - the campaign has not launched.",
+   "Could not independently verify the claimed 250V output or component choices (LDA111/ATB3225, 630V/470nF capacitor) beyond the vendor's own campaign page."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "chipjabber-unplugged",
+  "hardware_id": "chipjabber-unplugged",
+  "name": "ChipJabber Unplugged",
+  "firmware": "n/a (discrete analog/TTL logic, no MCU on the glitcher itself)",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/newaetech/ChipJabber-Unplugged",
+  "firmware_note": "The glitcher itself is built from discrete components (comparators/timers and manual potentiometers) with 'not a single piece of programmable logic anywhere in sight,' by design - that is the whole teaching point. The bundled NOTDuino demo target is a real Arduino-programmable MCU board, separate from the glitcher.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.crowdsupply.com/newae/chipjabber-unplugged",
+  "category": "hardware-debug",
+  "subcategory": "side-channel-glitching",
+  "status": "vaporware",
+  "released": null,
+  "price_usd": null,
+  "price_note": "Never launched. The Crowd Supply page still reads 'This project is launching soon... Coming Soon' with 0 updates - the GitHub repo's last commit is 16 September 2020 and Circuit Cellar covered the design in July 2020, so this has sat unlaunched for six years with no price ever posted.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "NewAE pitches it explicitly as 'designed more for fun than real-life usage' and as a hands-on way to learn what voltage fault injection actually is - you turn physical potentiometers and watch a boot process fail or succeed, no software required for the glitcher itself. The included NOTDuino target does need basic Arduino IDE familiarity to reprogram.",
+  "build_effort": "soldering",
+  "build_note": "Three variants: the base Kit is through-hole parts buildable on a breadboard/perfboard from the schematic; the Mini is a pre-built SMD unit (not sold as a kit) powered by 3xAA batteries with large slider potentiometers; the Old-School PCB variant is a simplified double-sided design meant for home-etching or a PCB mill (sized to fit the Bantam PCB Mill's work area).",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A deliberately simple, no-programmable-logic voltage fault-injection tool from NewAE (the ChipWhisperer/ChipSHOUTER company) meant to teach the mechanics of glitching by hand: it drops a target's core voltage momentarily at a manually-timed instant during boot, using discrete analog circuitry and physical potentiometers instead of software. It pairs with NewAE's 'NOTDuino' demo board, which uses an EEPROM as a naive boot-time 'key' check, so you can watch the glitch actually defeat it. NewAE's own pitch is explicit that for real work you want ChipWhisperer or ChipSHOUTER instead - this exists to teach the concept, not to do the job professionally.",
+  "honest_take": "Judge this by what it actually is, not what it might become: it has read 'Coming Soon' on Crowd Supply since before 2020, the GitHub repo's last commit is from September 2020, and NewAE's own page still says 'this project is launching soon' with zero updates posted in six years. That is not a slow-burn crowdfunding campaign, that is an abandoned commercial launch for a design that otherwise works fine - the open schematics and NOTDuino demo are real and documented, and NewAE's own campaign page tells you plainly to buy ChipWhisperer or ChipSHOUTER-PicoEMP instead once you outgrow it. If you want to actually own one, your only route right now is building it yourself from the public GitHub schematics - there was never a functioning 'buy it' path, so DIY was effectively always the only real option despite being marketed as three purchasable variants.",
+  "best_for": [
+   "Learning what a voltage-glitch attack physically is, hands-on, with knobs instead of software",
+   "Recreating documented boot-time bypass demos (e.g. against the bundled NOTDuino EEPROM-key target)",
+   "DIY builders willing to work from the public GitHub schematics, since there is no functioning purchase path"
+  ],
+  "not_for": [
+   "Buying a finished unit today - no variant has ever actually shipped as a product",
+   "Real fault-injection work on a target you bring - NewAE's own pitch says to use ChipWhisperer or ChipSHOUTER instead",
+   "Precise, repeatable, software-controlled glitch sweeps - there is no programmable logic in it at all"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU on the glitcher - discrete analog/TTL circuitry with manual potentiometers set the glitch timing and depth. This is the entire design premise ('not a single piece of programmable logic anywhere in sight').",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "The Mini variant runs on 3x AA batteries for portable use; the Kit and Old-School PCB variants are bench-powered (exact supply not specified in reachable sources).",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Direct wired connection to the target's core-voltage rail; no USB or wireless interface on the glitcher itself"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare board (Kit, Old-School PCB); small enclosure-free SMD unit sized close to 3xAA batteries (Mini)",
+   "notable_physical": [
+    "Large 'slider'-style potentiometers on the Mini for physically twiddling glitch timing/depth",
+    "Home-etch/PCB-mill-friendly double-sided layout on the Old-School PCB variant, sized for the Bantam PCB Mill",
+    "Bundled NOTDuino target board using an EEPROM as a naive secure-boot 'key'"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Discrete analog voltage-glitch (crowbar-style) circuit that drops the target's core voltage momentarily at a manually-set instant during boot; timing/depth set by physical potentiometers, not software."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "The Mini variant is genuinely standalone - 3xAA battery powered with physical controls, no PC needed to fire a glitch. This is the opposite architecture from the host-tethered ChipWhisperer line."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Explicitly no programmable logic anywhere in the glitcher - the entire pitch is manual, knob-based operation."
+   },
+   "uart": {
+    "v": "addon",
+    "note": "Talking to the bundled NOTDuino target's 3.3V serial needs a separate companion tool (NewAE's DIPUSB, a through-hole USB-serial adapter) - not built into ChipJabber itself."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "No debug-port capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a flash-dumping tool."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C interface."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No capture/observation capability - purely a manually-timed voltage-glitch generator."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No network interface or UI of any kind - physical potentiometers only."
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No onboard storage."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A simple bench glitching tool with no radio; legal to own and build everywhere. As with any fault-injection tool, using it to bypass a boot/secure-boot check on hardware you do not own, or without authorisation, can engage anti-circumvention law (DMCA 1201 in the US) and computer-misuse law even though the tool itself is explicitly pitched as an educational toy."
+  },
+  "ecosystem": {
+   "community": "dead",
+   "docs_quality": "sparse",
+   "last_release": "2020",
+   "app_store": "No",
+   "abandoned_risk": "already-abandoned"
+  },
+  "aliases": [
+   "ChipJabber-Unplugged Kit",
+   "ChipJabber Unplugged Mini",
+   "ChipJabber Unplugged Old-School PCB"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/newae/chipjabber-unplugged",
+    "what": "full campaign page as of 2026-09-10: still shows 'This project is launching soon / Coming Soon' with 0 updates; describes the three variants (Kit, Mini on 3xAA batteries, Old-School PCB for home-etch/Bantam mill), the NOTDuino EEPROM-key demo target, the companion DIPUSB serial adapter, and NewAE's own recommendation to use ChipWhisperer/ChipSHOUTER for real work"
+   },
+   {
+    "url": "https://github.com/newaetech/ChipJabber-Unplugged",
+    "what": "repo README confirms 'work in progress,' 'not a single piece of programmable logic anywhere in sight,' and the notduino-secure-boot/NOTDuino_Sketch folder"
+   },
+   {
+    "url": "https://github.com/newaetech/ChipJabber-Unplugged/commits/master",
+    "what": "most recent visible commit dated 16 September 2020, used to establish the project has been stalled for six years"
+   }
+  ],
+  "research_gaps": [
+   "No price was ever published for any of the three variants - the Crowd Supply campaign has never actually launched.",
+   "Could not confirm a specific release/announcement date beyond the July 2020 Circuit Cellar coverage referenced on the campaign page itself.",
+   "Exact bench power supply requirements for the Kit and Old-School PCB variants (vs. the Mini's 3xAA) were not specified in the sources reached.",
+   "Could not independently price a DIY build from the public schematics/BOM - the GitHub repo states it is incomplete ('not everything is uploaded to the repo OR documented yet')."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "epic-erebus",
+  "hardware_id": "epic-erebus",
+  "name": "EPIC Erebus",
+  "firmware": "Open PCILeech-compatible gateware (vendor default bitstream)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/epic-erebus",
+  "firmware_note": "Ships intended to run a default open-source ECP5 bitstream for standalone memory acquisition and patch/match, but the entire pitch is that gateware, firmware and toolchain are open so you build/modify your own rather than run one fixed vendor image. As of the check date the linked GitHub org (github.com/epic-erebus) is a placeholder with no published source.",
+  "vendor": "SecuringHardware.com",
+  "vendor_url": "https://securinghardware.com/",
+  "product_url": "https://www.crowdsupply.com/securinghw/epic-erebus",
+  "category": "hardware-debug",
+  "subcategory": "dma-attack",
+  "status": "vaporware",
+  "released": null,
+  "price_usd": null,
+  "price_note": "No price has been set. The Crowd Supply campaign page is marked 'Coming Soon' with 0 updates and 0 backers; only an email signup for launch notification exists.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "expert",
+  "skill_note": "Pitched explicitly around protocol-layer tinkering (open PCIe implementation, deep gateware modification), a level beyond just running pre-built PCILeech firmware on a Squirrel-class board.",
+  "build_effort": "assembled",
+  "build_note": "Intended to sell as a finished M.2 2230 card, no soldering. Installing it means opening the target machine and fitting it into a free M.2 slot (or an adapter), which is inherently physical-access work.",
+  "stealth": "implant",
+  "form_factor": "board",
+  "summary": "A pre-launch M.2 2230 FPGA card built around a Lattice ECP5 (ECP5-25 or ECP5-5G-85) for PCIe-based direct memory access research, positioned as PCILeech-compatible. Unlike bench-style PCIe DMA cards, it's sized and marketed to live permanently inside a laptop's internal M.2 slot and run standalone - acquiring memory and doing patch/match operations without a tethered host. Gateware, firmware and toolchain are promised fully open source. As of September 2026 it exists only as a pre-launch Crowd Supply listing with no price, no funded campaign, and no published source code.",
+  "honest_take": "This is not a product you can buy yet: as of September 2026 the Crowd Supply page says 'launching soon,' with zero backers, zero updates, no price, and a linked GitHub org (github.com/epic-erebus) that contains nothing. Compared to the already-shipping Screamer PCIe Squirrel - an Artix-7 card you plug into a desktop PCIe x1 slot when you want to run an attack, priced around EUR 159 - Erebus targets the opposite use case: an M.2 2230 card small enough to install inside a laptop's Wi-Fi/NVMe slot and leave there, which the vendor states outright ('you can keep installed inside your laptop'). That makes it a plausible internal implant rather than a bench tool, and shifts the threat model from 'plug a card in' to 'install something permanently and close the case.' The people behind it (Joe FitzPatrick of SecuringHardware.com and Piotr Esden-Tempski) have a genuine track record in hardware-security training and open FPGA tooling, so this reads as a credible upcoming project rather than vaporware in the pejorative sense - but today it is unpriced, unreleased, and the 'fully open gateware' claim can't be checked against any published source.",
+  "best_for": [
+   "Watching for release if you already do PCIe/TLP-level protocol research",
+   "FPGA/gateware tinkering on a Lattice ECP5 once source is actually published",
+   "Comparing against the Screamer PCIe Squirrel for standalone, untethered DMA acquisition once it ships"
+  ],
+  "not_for": [
+   "Buying today - there is no price, no live campaign, and no ship date",
+   "Turnkey or beginner DMA-attack use - this is explicitly a deep protocol-tinkering platform",
+   "Anyone needing tethered USB streaming now - only standalone acquisition is promised at launch; tethered USB is 'hoped for' later"
+  ],
+  "hardware": {
+   "mcu_primary": "Lattice ECP5 (ECP5-25 or ECP5-5G-85, SKU-dependent)",
+   "mcu_primary_note": "Vendor states two FPGA options depending on configuration; exact part/speed grade per SKU not yet published. There is no separate microcontroller - the ECP5 is the only compute element.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Bus-powered from the PCIe/M.2 slot; no battery.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "microSD slot or 8GB onboard flash, depending on configuration (vendor lists these as alternatives, not both together)",
+   "connectivity": [
+    "M.2 2230 A+E key (PCIe Gen1 or Gen2 host interface)",
+    "USB 2.0 or 3.0 (stated for a future tethered/host mode)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "30 x 22 (M.2 2230 standard)",
+   "weight_g": null,
+   "case": "Bare M.2 card, no enclosure",
+   "notable_physical": [
+    "M.2 2230 A+E key edge connector",
+    "microSD slot (SKU-dependent)",
+    "Small enough to sit inside a laptop's internal M.2 slot rather than a desktop expansion slot"
+   ]
+  },
+  "capabilities": {
+   "usb_exfil": {
+    "v": "claimed",
+    "note": "Vendor 'hopes to support tethered operation over USB in the future' - explicitly not a confirmed v1 feature. The launch mode is standalone acquisition to microSD/onboard flash instead."
+   },
+   "standalone_untethered": {
+    "v": "claimed",
+    "note": "Vendor's stated goal for the default bitstream: standalone memory acquisition and patch/match without a host. Not demonstrated publicly - no gateware has shipped or been published as of the check date."
+   },
+   "scriptable": {
+    "v": "claimed",
+    "note": "Fully open gateware/firmware/toolchain is the core pitch, but nothing is published yet to confirm what's actually scriptable or how."
+   },
+   "sd_logging": {
+    "v": "claimed",
+    "note": "microSD slot present on at least one planned SKU, intended for standalone-acquisition dumps; not yet demonstrated in public."
+   },
+   "packet_capture": {
+    "v": "no",
+    "note": "Not a network device - PCIe/system memory is a different attack surface entirely."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Not a fault-injection device."
+   },
+   "ethernet_mitm": {
+    "v": "no",
+    "note": "No network interface of any kind - PCIe/M.2 only."
+   },
+   "ethernet_tap_passive": {
+    "v": "no",
+    "note": "No Ethernet hardware."
+   },
+   "cloud_c2": {
+    "v": "no",
+    "note": "No network connectivity; standalone mode targets microSD/onboard flash, not a cloud endpoint."
+   },
+   "vpn_exfil": {
+    "v": "no",
+    "note": "No network connectivity."
+   },
+   "hdmi_capture": {
+    "v": "no",
+    "note": "Not a video-capture device."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Different attack surface - this targets live system RAM over PCIe DMA, not a target device's SPI flash chip."
+   },
+   "jtag_swd": {
+    "v": "unknown",
+    "note": "FPGA boards often expose JTAG for programming the FPGA itself; whether any such header is broken out for use as a general target-device debug tool is not stated by the vendor."
+   },
+   "uart": {
+    "v": "unknown",
+    "note": "Not mentioned in the campaign page's feature list; could not confirm a general-purpose UART header exists."
+   },
+   "i2c": {
+    "v": "unknown",
+    "note": "Not mentioned in the campaign page's feature list."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not marketed or described as a logic-analyzer product; that is not what the ECP5 bitstream is being built for here."
+   },
+   "pcie_dma": {
+    "v": "claimed",
+    "note": "Vendor positions it as PCILeech-compatible and built for standalone PCIe DMA memory acquisition/patch-match from inside an M.2 slot, but as of the research date this exists only as a pre-launch Crowd Supply listing with zero backers, zero funding, and no published gateware/firmware in its linked GitHub org - there is no working, purchasable unit to independently verify the claim against."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Same category as other PCIe DMA cards: reading or modifying a machine's memory without authorization is unauthorized computer access almost everywhere. Because this is designed to be installed and left inside a laptop, it raises implant/chain-of-custody concerns beyond a bench-only DMA card. No product-specific import restrictions found, most likely because nothing has shipped yet. Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No - no software released",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Erebus",
+   "EPIC Erebus DMA board"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/securinghw/epic-erebus",
+    "what": "official campaign page: pre-launch 'Coming Soon' status with 0 updates/0 backers, feature list (M.2 2230 A+E key, ECP5-25/ECP5-5G-85, 128/256Gb DRAM, PCIe Gen1/Gen2, microSD or 8GB flash, USB 2.0/3.0), team (SecuringHardware.com / Joseph FitzPatrick / Piotr Esden-Tempski), standalone/match-patch description, github.com/epic-erebus link"
+   },
+   {
+    "url": "https://www.hackster.io/news/epic-erebus-puts-a-tiny-yet-powerful-fpga-onto-your-pci-express-bus-for-security-research-and-more-c2b830e9e0a0",
+    "what": "independent write-up corroborating ECP5-25/ECP5-5G-85 options and the 128Gb/256Gb (16/32GB) DRAM figures"
+   },
+   {
+    "url": "https://github.com/ufrisk/pcileech-fpga",
+    "what": "the PCILeech gateware ecosystem Erebus positions itself as compatible with"
+   },
+   {
+    "url": "https://github.com/epic-erebus",
+    "what": "checked directly: the linked GitHub org has no repositories or gateware source published as of the check date, despite being referenced as 'our GitHub repo' on the campaign page"
+   },
+   {
+    "url": "https://shop.lambdaconcept.com/home/50-screamer-pcie-squirrel.html",
+    "what": "Screamer PCIe Squirrel comparison facts used in honest_take: desktop PCIe x1 form factor, Artix-7 FPGA, EUR 159, already shipping - contrasted against Erebus's M.2-internal, pre-launch status"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists in the schema for PCIe DMA memory acquisition/patch-match; described in summary and capability notes instead",
+   "No price, release date, or funding status beyond 'Coming Soon' as of 2026-09-10",
+   "GitHub org github.com/epic-erebus is linked from the campaign page but contained no visible gateware/firmware source as of the check date",
+   "Exact ECP5 part/speed grade, DRAM chip part number, and which SKU gets microSD vs. 8GB flash are not specified",
+   "No weight published; dimensions inferred from the M.2 2230 standard, not stated by the vendor",
+   "Whether any JTAG/UART/I2C header is broken out for use against target devices (as opposed to programming the ECP5 itself) is undocumented"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "texas-flipper-boards-wardriving-gps",
+  "hardware_id": "texas-flipper-boards-wardriving-gps",
+  "name": "Flipper Zero Wardriving GPS enabled ESP32 Board",
+  "firmware": "ESP32 Marauder",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/justcallmekoko/ESP32Marauder",
+  "firmware_note": "Preloaded with the stock, official ESP32 Marauder firmware's Flipper Zero build target (MARAUDER_FLIPPER in the upstream source, current version string v1.16.0). The seller explicitly credits justcallmekoko and tells buyers to re-flash using the official 'esp32_marauder_..._flipper_sd_serial.bin' release, not a private fork - unlike the NetNinja board, which runs a vendor fork frozen several versions behind.",
+  "vendor": "Texas Flipper Boards",
+  "vendor_url": "https://www.tindie.com/stores/texasflipperboards/",
+  "product_url": "https://www.tindie.com/products/texasflipperboards/flipper-zero-wardriving-gps-enabled-esp32-board/",
+  "category": "wardriving",
+  "subcategory": "flipper-zero-addon",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 120.0,
+  "price_note": "Price as listed on Tindie. Seller is currently not accepting orders ('this seller is taking a break').",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Arrives pre-flashed and pre-assembled; use is mostly plugging it onto the Flipper's GPIO/UART header and running the Marauder app from the Flipper app catalog.",
+  "build_effort": "assembly",
+  "build_note": "Ships fully assembled in a 3D-printed case (ASA, ABS, or PETG); the only 'assembly' step is seating it on the Flipper Zero's GPIO/UART header. No soldering.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "The official Flipper Zero Wi-Fi Devboard (Flipper Devices' own $35 ESP32 add-on) modified by Texas Flipper Boards with a bolted-on GPS module and an external Wi-Fi antenna, reshipped in a custom 3D-printed enclosure and preloaded with the official ESP32 Marauder firmware. It has no storage or Bluetooth radio of its own - the upstream firmware's own board-feature table explicitly disables Bluetooth for this target - and wardriving logs (Wi-Fi scans tagged with GPS coordinates) are relayed over UART to the Flipper Zero's own microSD card.",
+  "honest_take": "This is the official $35 Flipper Zero Wi-Fi Devboard with a GPS module and antenna added, resold for $120 - the markup buys someone else's soldering and a 3D-printed shell, not new silicon. It's also a direct head-to-head with BPM Circuits' NetNinja board, which costs $20 less ($100): the underlying Marauder firmware's own board-configuration file shows this board's stock 'MARAUDER_FLIPPER' target ships with Bluetooth explicitly disabled (`HAS_BT` is commented out), while the NetNinja's board target ships with it enabled. So the cheaper NetNinja is also, on paper, the more capable one - it can do BLE scanning and spam on top of the wardriving that both boards do, while this board is Wi-Fi- and GPS-only. What this board has going for it instead is that it tracks the current, actively-maintained upstream Marauder release (v1.16.0 at last check) rather than a vendor fork frozen years behind, so it should keep gaining features the NetNinja's stale fork won't. Neither board carries its own storage - both write to the Flipper's SD card - and as of September 2026 the seller has stopped taking orders, so it isn't purchasable right now regardless.",
+  "best_for": [
+   "Existing Flipper Zero Wi-Fi Devboard owners who want GPS added without doing the mod themselves",
+   "Casual Wi-Fi wardriving where GPS accuracy and time-to-first-fix aren't critical",
+   "Staying current with upstream Marauder releases rather than being stuck on a frozen vendor fork"
+  ],
+  "not_for": [
+   "Buyers optimizing for cost - the base Flipper Wi-Fi Devboard plus a DIY GPS mod (documented on the Marauder wiki) is cheaper than paying $120 for someone else's assembly",
+   "Anyone right now - the seller is not currently accepting orders",
+   "Bluetooth/BLE scanning or spam - explicitly compiled out of this board's firmware target",
+   "5GHz scanning or anything beyond the base Wi-Fi Devboard's 2.4GHz-only ESP32 radio"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Built on the official Flipper Zero Wi-Fi Devboard, which Flipper Devices' own store describes only as 'based on ESP32 module' without naming the exact part or variant; this listing does not add a specific chip either, so it is left null rather than guessed.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi",
+     "note": "The Wi-Fi Devboard's onboard ESP32 radio, 2.4GHz only. Seller adds an external antenna for improved range/gain; exact antenna spec not published."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Powered from the Flipper Zero's own battery/GPIO rail; the Marauder source confirms `HAS_BATTERY` is not defined for this board target, and no separate battery is mentioned for the GPS module either.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "None onboard - writes to the Flipper Zero's own microSD card over UART",
+   "connectivity": [
+    "Flipper Zero GPIO/UART header"
+   ],
+   "gpio": "Mounts directly on the Flipper Zero 18-pin GPIO header",
+   "sensors": [
+    "GPS module, part number not published, not stated to be battery-backed"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Custom 3D-printed enclosure (seller offers ASA, ABS, or PETG)",
+   "notable_physical": [
+    "External Wi-Fi antenna mod",
+    "Bolt-on GPS module",
+    "3D-printed shell around the stock Wi-Fi Devboard PCB",
+    "No RGB status LED - `HAS_NEOPIXEL_LED` is not defined for this board target"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Stock Marauder Wi-Fi scan modes"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "Classic ESP32 Wi-Fi Devboard radio is 2.4GHz only"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Stock Marauder promiscuous-mode sniffing"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Raw 802.11 frame TX via esp_wifi_80211_tx, as on every Marauder board - fine for management frames (deauth, beacon), not general-purpose injection like an Atheros adapter"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Included in the stock Marauder firmware this ships with; PMF/802.11w defeats it like any other Marauder board"
+   },
+   "wifi_deauth_5": {
+    "v": "no",
+    "note": "No 5GHz radio to deauth on"
+   },
+   "wifi_evil_twin": {
+    "v": "yes",
+    "note": "WIFI_SCAN_EVIL_PORTAL, standard in current upstream Marauder"
+   },
+   "wifi_captive_portal": {
+    "v": "yes",
+    "note": "EvilPortal module, HTML served from the Flipper's SD, credentials logged there too"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Stock Marauder EAPOL capture, saved to the Flipper SD card; cracking happens off-device"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "EAPOL capture is explicit in the upstream source; a dedicated PMKID mode is not clearly documented, matching the ambiguity noted on other current Marauder boards"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Random/list-based beacon spam modes, standard in current upstream Marauder"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "WIFI_SCAN_PROBE, standard in current upstream Marauder"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "WIFI_HOSTSPOT mode, standard in current upstream Marauder"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Wigle-compatible CSV wardrive logging; this is the board's stated purpose"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Bolt-on GPS module; `HAS_GPS` is explicitly defined for this board target in the firmware source. Vendor states it 'works best outside or in a car' and can take several minutes for a first fix."
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "GPS-tagged wardrive logs written via the stock Marauder firmware"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "`HAS_SD`/`USE_SD` are defined for this board target, but this refers to relaying data to the Flipper Zero's own microSD over UART - the add-on board has no SD slot of its own, and needs a special Flipper-SD Marauder build to update"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero to operate at all - it has no screen, buttons, storage or battery of its own"
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Driven through the Flipper's Marauder companion app over UART; also accepts raw serial CLI commands from a PC. No on-device scripting language of its own"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "The upstream Marauder source's MARAUDER_FLIPPER board-feature block has `HAS_BT` commented out (disabled) for this exact target - no Bluetooth/BLE radio function is compiled in"
+   },
+   "ble_advertise": {
+    "v": "no",
+    "note": "Same `HAS_BT`-disabled board target as ble_scan"
+   },
+   "ble_tracker_detect": {
+    "v": "no",
+    "note": "Requires the BLE stack, which is compiled out for this board target"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Bluetooth is compiled out entirely for this board target, and Marauder's Bluetooth features are BLE-only even on boards where BT is enabled"
+   },
+   "detect_flipper": {
+    "v": "no",
+    "note": "Depends on BLE scanning, which is disabled for this board target"
+   },
+   "detect_pineapple": {
+    "v": "yes",
+    "note": "WIFI_SCAN_PINESCAN is a Wi-Fi-side (not BLE) detection feature and is present in the current upstream release this board tracks"
+   },
+   "detect_pwnagotchi": {
+    "v": "yes",
+    "note": "WIFI_SCAN_PWN is a Wi-Fi-side detection feature present in the current upstream release this board tracks"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio - this is a Wi-Fi/GPS-only add-on"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC/RFID hardware on this board"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware on this board"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter on this board"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "The Marauder firmware implements no HID/BadUSB function on this board"
+   },
+   "nrf24_scan": {
+    "v": "no",
+    "note": "No nRF24 radio present"
+   },
+   "mousejack": {
+    "v": "no",
+    "note": "No nRF24 radio present"
+   },
+   "zigbee": {
+    "v": "no",
+    "note": "No 802.15.4 radio present"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the board and passively wardriving/logging is legal in most places. The stock Marauder firmware it ships with also supports deauth and handshake capture, which carry the same legal exposure as any Marauder board - deauthing networks you don't own and capturing/cracking handshakes without authorization are separate offences from simply owning the hardware. Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "poor",
+   "last_release": null,
+   "app_store": "No - relies on the Flipper Zero Marauder companion app and upstream Marauder firmware releases",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Texas Flipper Wardriving Board",
+   "Flipper WiFi Devboard + GPS (Texas Flipper Boards)"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/texasflipperboards/flipper-zero-wardriving-gps-enabled-esp32-board/",
+    "what": "product description: $120, 'modified genuine Flipper WIFI dev board' plus external antenna and GPS, 3D-printed ASA/ABS/PETG case, credits justcallmekoko's firmware, notes GPS needs outdoor/vehicle use and re-flashing requires the flipper_sd_serial build, seller currently taking a break, 254 orders / 7 reviews"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "upstream Marauder firmware project this board is preloaded with"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/configs.h",
+    "what": "MARAUDER_FLIPPER board-feature block: confirms HAS_GPS and HAS_SD/USE_SD enabled, and HAS_BT, HAS_BATTERY, HAS_NEOPIXEL_LED, HAS_SCREEN explicitly disabled for this exact stock target; also confirms current MARAUDER_VERSION v1.16.0"
+   },
+   {
+    "url": "https://www.justcallmekokollc.com/products/wifi-devboard",
+    "what": "official Flipper Zero Wi-Fi Devboard listing: $35, described only as 'developer board with WiFi connectivity based on ESP32 module,' confirming the base hardware this product modifies"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/wardrive",
+    "what": "confirms Wigle-compatible CSV wardrive log format and the 'wardrive_' filename prefix used across all Marauder targets including the Flipper board"
+   }
+  ],
+  "research_gaps": [
+   "Exact ESP32 die/variant not stated by either Texas Flipper Boards or Flipper Devices' own product page, so mcu_primary is left unconfirmed rather than guessed",
+   "GPS module part number, antenna gain, board dimensions and weight not published",
+   "No confirmed original release/first-listed date",
+   "Whether wifi_pmkid is a distinct capture mode in current Marauder builds could not be confirmed from source"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "netninja-wardriving-gps-marauder",
+  "hardware_id": "netninja-wardriving-gps-marauder",
+  "name": "NetNinja Wardriving GPS Marauder",
+  "firmware": "ESP32 Marauder (NetNinja / Feberis fork)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/bpmcircuits/ESP32Marauder_NetNinja",
+  "firmware_note": "A BPM Circuits fork of justcallmekoko's ESP32 Marauder, built for a custom 'BPMCIRCUITS_FEBERIS' board target - not the stock upstream binary, and per the vendor's own update instructions, the same firmware/target is shared with BPM Circuits' separate 'Feberis' board. The fork's configs.h reports MARAUDER_VERSION v1.2.1, well behind the current upstream release (v1.16.0) as of the check date.",
+  "vendor": "BPM Circuits",
+  "vendor_url": "https://www.tindie.com/stores/bpmcircuits/",
+  "product_url": "https://www.tindie.com/products/bpmcircuits/netninja-wardriving-gps-marauder-flipper-zero/",
+  "category": "wardriving",
+  "subcategory": "flipper-zero-addon",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 100.0,
+  "price_note": "Price as listed on Tindie. Seller is currently not accepting orders ('this seller is taking a break').",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Arrives pre-assembled and pre-flashed; plug it onto the Flipper's GPIO/UART header and run the Marauder companion app.",
+  "build_effort": "assembly",
+  "build_note": "Ships fully assembled with a 3D-printed case (bottom cover included). No soldering; the only step is seating it on the Flipper's GPIO header.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A purpose-built ESP32-WROOM-32UE add-on board for the Flipper Zero, combining a battery-backed GPS module and a high-gain 2.4GHz antenna with a BPM Circuits fork of the ESP32 Marauder firmware. Unlike the Texas Flipper Boards competitor, its firmware target ships with Bluetooth/BLE compiled in, so it adds BLE scanning and spam on top of Wi-Fi wardriving. It writes wardriving data directly to the Flipper Zero's own microSD card and reports status via an onboard RGB NeoPixel and TX/RX LEDs.",
+  "honest_take": "Strip the branding away and this is an ESP32-WROOM-32UE running a forked build of the same open-source Marauder firmware every ESP32 wardriving board runs - the real differentiators are a battery-backed GPS module (faster first satellite fix than a bare GPS chip) and a purpose-built PCB with Bluetooth left switched on, unlike the $120 Texas Flipper Boards competitor, whose stock firmware target has Bluetooth explicitly compiled out. At $100 this is $20 cheaper and, on that evidence, the more capable of the two boards. The catch: the fork's own configs.h reports firmware version v1.2.1 while the upstream project it's based on is at v1.16.0, meaning it's frozen well behind current Marauder - newer scan/detection modes (Flock Safety camera detection, newer BLE spam variants, and other features added to upstream since) may simply not be present here, and there's no way to tell without the vendor publishing a changelog. It has no storage of its own - everything is written to the Flipper's SD card - and the original dual-core ESP32 (not an S2/S3/C-series part) means 2.4GHz-only Wi-Fi with no 5GHz visibility. As of September 2026 BPM Circuits has stopped taking orders, so neither board in this comparison is actually purchasable right now.",
+  "best_for": [
+   "Wardriving where faster GPS lock-on after power-up matters",
+   "Buyers who want BLE scanning/spam alongside Wi-Fi wardriving on the same board",
+   "Buyers directly comparing this against the Texas Flipper Boards wardriving add-on on price and capability"
+  ],
+  "not_for": [
+   "Anyone right now - the seller is not currently accepting orders",
+   "Users who want the latest upstream Marauder features - this fork is several versions behind and there's no published changelog",
+   "5GHz Wi-Fi visibility - the WROOM-32UE is 2.4GHz only",
+   "Users who want storage independent of the Flipper's own SD card"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-WROOM-32UE",
+   "mcu_primary_note": "Original dual-core Xtensa ESP32 module (U.FL external-antenna variant), 2.4GHz 802.11b/g/n plus Bluetooth Classic/BLE silicon. Vendor-stated part; exact GPS module part number not published.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-WROOM-32UE",
+     "role": "wifi",
+     "note": "2.4GHz 802.11b/g/n only, no 5GHz"
+    },
+    {
+     "ic": "ESP32-WROOM-32UE",
+     "role": "bluetooth",
+     "note": "BT Classic and BLE silicon present; firmware source confirms `HAS_BT` is enabled for this board's build target"
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Firmware source confirms `HAS_BATTERY` is not defined for the main board (powered from the Flipper Zero); the GPS module has its own small backup battery for faster reacquisition, capacity not published.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "None onboard (firmware source confirms `HAS_SD` is not defined for this board target) - writes PCAPs directly to the Flipper Zero's own microSD card over UART",
+   "connectivity": [
+    "Flipper Zero GPIO/UART header"
+   ],
+   "gpio": "Mounts on the Flipper Zero 18-pin GPIO header",
+   "sensors": [
+    "Battery-backed GPS module, part number not published"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed case with bottom cover, included",
+   "notable_physical": [
+    "High-gain 2.4GHz antenna",
+    "Power-on LED",
+    "TX/RX UART status LEDs",
+    "RGB NeoPixel showing Marauder status - `HAS_NEOPIXEL_LED` confirmed in the firmware source"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Inherited from the upstream Marauder codebase this firmware is forked from"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-32UE radio is 2.4GHz only"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Inherited promiscuous-mode sniffing from upstream Marauder"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Raw 802.11 frame TX inherited from upstream Marauder - management frames only, not general-purpose injection"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Inherited from upstream Marauder; PMF/802.11w defeats it like any other Marauder board"
+   },
+   "wifi_deauth_5": {
+    "v": "no",
+    "note": "No 5GHz radio to deauth on"
+   },
+   "wifi_evil_twin": {
+    "v": "unknown",
+    "note": "Present in current upstream Marauder, but this fork is frozen at v1.2.1 and it's unconfirmed whether that feature existed at that fork point"
+   },
+   "wifi_captive_portal": {
+    "v": "unknown",
+    "note": "Same version-freeze caveat as wifi_evil_twin"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Inherited EAPOL capture from upstream Marauder, saved to the Flipper SD card; cracking happens off-device"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "Ambiguous even in current upstream Marauder; more so in this older fork"
+   },
+   "wifi_beacon_spam": {
+    "v": "yes",
+    "note": "Beacon spam is a long-standing base Marauder feature predating this fork's v1.2.1 freeze point"
+   },
+   "wifi_probe_sniff": {
+    "v": "yes",
+    "note": "Probe-request sniffing is a long-standing base Marauder feature"
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "WIFI_HOSTSPOT is a long-standing base Marauder feature"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Vendor's stated core feature - PCAP saved directly to the Flipper Zero's SD card, GPS-tagged"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Integrated GPS module with its own backup battery; `HAS_GPS` confirmed enabled in the firmware source"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "GPS-tagged wardrive logging is the product's stated purpose"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Uses the Flipper Zero's own microSD card over UART - the board has no onboard SD slot (`HAS_SD` not defined)"
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero to operate - no screen, buttons or storage of its own"
+   },
+   "scriptable": {
+    "v": "partial",
+    "note": "Driven through the Flipper's Marauder companion app over UART; also accepts raw serial CLI commands. No on-device scripting language of its own"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "Firmware source confirms `HAS_BT` is enabled for this board's build target, unlike the Texas Flipper Boards competitor"
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Enabled by the same `HAS_BT` flag; used by whatever BLE spam modes exist at this fork's version"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Marauder's Bluetooth features are BLE-only even on boards where BT is enabled; BT Classic inquiry/pairing is not implemented by the project"
+   },
+   "ble_spam_apple": {
+    "v": "unknown",
+    "note": "This specific BLE-spam mode existed in upstream Marauder by some point in its history, but whether it was present at this fork's frozen v1.2.1 checkpoint is unconfirmed"
+   },
+   "ble_tracker_detect": {
+    "v": "unknown",
+    "note": "AirTag/Find My detection was added to upstream Marauder at some point after early versions; unconfirmed whether it's present in this v1.2.1-based fork"
+   },
+   "detect_flipper": {
+    "v": "unknown",
+    "note": "Depends on a BLE-signature scan mode whose presence in this specific older fork is unconfirmed"
+   },
+   "detect_pineapple": {
+    "v": "unknown",
+    "note": "Wi-Fi-side detection feature whose presence in this specific older fork version is unconfirmed"
+   },
+   "detect_pwnagotchi": {
+    "v": "unknown",
+    "note": "Wi-Fi-side detection feature whose presence in this specific older fork version is unconfirmed"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio on this board"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC/RFID hardware on this board"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware on this board"
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "No IR emitter on this board"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No HID/BadUSB function in the Marauder firmware family this runs"
+   },
+   "nrf24_scan": {
+    "v": "no",
+    "note": "No nRF24 radio present"
+   },
+   "mousejack": {
+    "v": "no",
+    "note": "No nRF24 radio present"
+   },
+   "zigbee": {
+    "v": "no",
+    "note": "No 802.15.4 radio present"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the board and passively wardriving/logging is legal in most places. The Marauder-derived firmware also supports deauth, handshake capture and BLE spam, which carry the same legal exposure as any Marauder board - deauthing networks you don't own, capturing/cracking handshakes, and spamming BLE advertisements at people without authorization are separate offences from simply owning the hardware. Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No - relies on the Flipper Zero Marauder companion app",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "NetNinja",
+   "NetNinja Marauder Board"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/bpmcircuits/netninja-wardriving-gps-marauder-flipper-zero/",
+    "what": "product spec bullets: $100, ESP32-WROOM-32UE, battery-backed GPS, high-gain 2.4GHz antenna, status LEDs/NeoPixel, 3D-printed case, PCAP saved to Flipper SD, seller currently on a break, designed by BPM Circuits in Poland, 86 orders / 4 reviews"
+   },
+   {
+    "url": "https://github.com/bpmcircuits/ESP32Marauder_NetNinja",
+    "what": "vendor firmware fork repository, confirming it is forked from justcallmekoko/ESP32Marauder and includes PCB/schematic/mechanical design files; also referenced as sharing a binary with BPM Circuits' separate 'Feberis' board"
+   },
+   {
+    "url": "https://github.com/bpmcircuits/ESP32Marauder_NetNinja/blob/master/esp32_marauder/configs.h",
+    "what": "BPMCIRCUITS_FEBERIS board-feature block: confirms HAS_BT and HAS_NEOPIXEL_LED enabled, HAS_GPS enabled, HAS_SD and HAS_BATTERY not defined, and MARAUDER_VERSION frozen at v1.2.1"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder",
+    "what": "upstream project this firmware fork is derived from, and reference point for current version (v1.16.0) used to assess how far behind this fork is"
+   },
+   {
+    "url": "https://github.com/justcallmekoko/ESP32Marauder/wiki/wardrive",
+    "what": "confirms Wigle-compatible CSV wardrive log format used across Marauder targets including forks like this one"
+   }
+  ],
+  "research_gaps": [
+   "GPS module exact part number not published",
+   "Board dimensions and weight not published",
+   "No changelog published for the NetNinja/Feberis fork, so which post-v1.2.1 upstream features (if any) have been backported could not be confirmed for several capability entries marked unknown above",
+   "No confirmed original release date",
+   "Exact last-commit date of the firmware fork repo could not be retrieved (GitHub rate-limited during research)"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "pwnagotchi-hat-hackergadgets",
+  "hardware_id": "pwnagotchi-hat-hackergadgets",
+  "name": "Pwnagotchi Hat (UPS/GPS/AC WiFi/USB Hub/RTC)",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Bare expansion board with no firmware of its own. It exists to carry hardware for the Pwnagotchi project (already a separate tracked entry) — you flash Pwnagotchi's own OS image onto a microSD card yourself.",
+  "vendor": "Hacker Gadgets",
+  "vendor_url": "https://hackergadgets.com",
+  "product_url": "https://hackergadgets.com/products/pwnagotchi-hat-ups-gps-ac-wifi-usb-hub-rtc-all-in-one-hat",
+  "category": "wardriving",
+  "subcategory": "raspberry-pi-hat",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 74.5,
+  "price_note": "Vendor lists $74.50; currently sold out with a waitlist and a 3-5 business day ship estimate once restocked. Does not include a Raspberry Pi Zero/Zero W/Zero 2 W, microSD card, or 18650 cell — all sold separately.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "You still need to source a Pi Zero, flash a Pwnagotchi image yourself, and configure it — the hat has no setup wizard or onboarding of its own.",
+  "build_effort": "assembly",
+  "build_note": "Solderless: mounts on the Pi Zero's GPIO header. You supply the Pi Zero (W or 2 W), a microSD card, and flash Pwnagotchi's own image — the board ships with no software pre-loaded. An optional backplate holds a user-supplied 18650 cell for up to ~4 hours runtime per the vendor.",
+  "stealth": "discreet",
+  "form_factor": "hat-shield",
+  "summary": "A Raspberry Pi Zero expansion board that bundles the specific hardware Pwnagotchi needs to run standalone: a dual-band MediaTek MT7612U USB WiFi chipset (the vendor states it is the same chipset as Alfa's AWUS036ACM, independently confirmed via a third-party listing), a USB-serial GPS module with PPS output, a UPS circuit for an optional 18650 cell, an internal 4-port USB hub, and a battery-backed RTC. It is bare hardware only — you provide the Pi Zero and flash Pwnagotchi's own OS image yourself.",
+  "honest_take": "This is an integration convenience, not new capability: every function on this hat exists separately for less (an MT7612U dongle, a USB GPS puck, an RTC module, a USB hub), and Pwnagotchi itself is free, open-source software that has never shipped pre-installed on any commercial product, per its own install docs. What the ~$75 buys is not having to wire four separate peripherals into a Pi Zero's single USB port and GPIO header, plus a UPS so the unit survives being carried around. It ships as a bare board — no Pwnagotchi pre-installed, no Pi included, no SD card slot of its own (it rides on the Pi's) — budget extra money and 30-60 minutes of flashing and config before it does anything, and don't mistake 'purpose-built for Pwnagotchi' on the product page for 'comes with Pwnagotchi.'",
+  "best_for": [
+   "Building a dedicated, always-on Pwnagotchi with wardriving-style GPS logging",
+   "Avoiding a rat's-nest of USB peripherals hanging off a Pi Zero"
+  ],
+  "not_for": [
+   "Anyone who doesn't already know they want a Pi Zero-based Pwnagotchi build",
+   "Turnkey out-of-the-box operation — no software is included",
+   "Buyers who just want to try Pwnagotchi cheaply — the Pi Zero W's own onboard WiFi can run a basic Pwnagotchi with no hat at all"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The hat has no application MCU of its own — it is a passive expansion board relying entirely on the attached Raspberry Pi Zero's SoC (not part of this product).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7612U",
+     "role": "wifi",
+     "note": "USB dual-band 802.11ac chipset; vendor states 'same as ALFA AWUS036ACM' — independently confirmed via a third-party (Getic) listing of the AWUS036ACM's own spec sheet"
+    }
+   ],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No cell included. UPS circuit accepts a user-supplied 18650 via an optional backplate; vendor claims up to 4 hours runtime. Simultaneously charges the cell and powers the Pi Zero.",
+   "charging": "USB (5V in; charges an installed 18650 concurrently)",
+   "pmic": null,
+   "storage": "None on the hat itself — relies on the attached Pi Zero's own microSD slot",
+   "connectivity": [
+    "USB-A",
+    "USB-C",
+    "Wi-Fi 2.4/5GHz (MT7612U)",
+    "GPS (USB serial)"
+   ],
+   "gpio": "Mounts on the Pi Zero 40-pin header; whether GPIO passthrough is broken out is not confirmed",
+   "sensors": [
+    "GPS/GNSS module (GPS+BeiDou or GPS+GLONASS per vendor; exact part number not disclosed)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB; optional 18650 backplate",
+   "notable_physical": [
+    "4-port internal USB hub (2 ports consumed internally by the WiFi and GPS modules)",
+    "Battery-backed RTC circuit",
+    "PPS timing output from GPS"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "MT7612U dual-band chipset; basic station-mode scanning"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Dual-band chipset covers 5GHz"
+   },
+   "wifi_monitor_mode": {
+    "v": "claimed",
+    "note": "Vendor states the chipset is 'same as ALFA AWUS036ACM', an mt76-driver-family part with established monitor mode support — chipset match independently confirmed via a third-party listing, but monitor mode itself not independently re-tested on this exact hat"
+   },
+   "wifi_injection": {
+    "v": "claimed",
+    "note": "Same basis as monitor mode above — vendor equivalence claim to a known-good chipset, not independently verified"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "Pwnagotchi's own README describes capturing handshakes 'either passively, or by performing authentication and association attacks' — this is the mechanism the hat's radio would be driven through, not independently tested on this specific board"
+   },
+   "wifi_handshake_capture": {
+    "v": "claimed",
+    "note": "Core Pwnagotchi function per the project's own README, once Pwnagotchi software is installed on top of this hardware"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Combined WiFi radio + onboard GPS is the marketed use case"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "Dual-constellation module (GPS+BeiDou or GPS+GLONASS) with PPS output, connected via USB serial so the Pi's hardware UART stays free for console access"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "GPS tagging via Pwnagotchi plugins/bettercap; not a feature of the hat's own firmware since it has none"
+   },
+   "sd_logging": {
+    "v": "no",
+    "note": "No microSD slot on the hat itself; all storage depends entirely on the attached Pi Zero's own microSD card, which is not part of this product"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "The hat's own WiFi radio has no Bluetooth capability. A Pi Zero W/2W has its own separate onboard Bluetooth chip unrelated to this board, which this hat neither adds to nor uses"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Same as above — no Bluetooth silicon on the hat itself"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "No sub-GHz radio; this is a WiFi/GPS-focused hat only, despite the 'all-in-one' branding"
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "No NFC hardware onboard"
+   },
+   "lf_125khz_read": {
+    "v": "no",
+    "note": "No RFID hardware onboard"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "With the optional 18650 backplate and a flashed Pi Zero, runs with no host computer, per vendor's 4-hour runtime claim"
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Once running Pwnagotchi on Raspberry Pi OS, it's a full Linux system with Python-based plugins — not a feature of the hat's own hardware, but the practical reality of the stack"
+   },
+   "web_ui": {
+    "v": "unknown",
+    "note": "Pwnagotchi is widely reported in the community to expose a browser-based status UI, but this session could not locate a source confirming it independently of general knowledge — flagged rather than guessed"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the hardware is legal everywhere. Pwnagotchi's default behavior performs authentication/association attacks to force WPA handshakes from nearby networks — doing this against networks you don't own or lack written authorization to test is a computer-misuse offence in most jurisdictions (e.g. US CFAA, UK Computer Misuse Act). Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No — not applicable; runs whatever OS you flash onto the Pi Zero, most commonly Pwnagotchi (a separately tracked project with its own ecosystem)",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Pwnagotchi UPS/GPS/AC WiFi/USB Hub/RTC Hat",
+   "Pwnagotchi All-in-One Hat"
+  ],
+  "sources": [
+   {
+    "url": "https://hackergadgets.com/products/pwnagotchi-hat-ups-gps-ac-wifi-usb-hub-rtc-all-in-one-hat",
+    "what": "price $74.50, sold out status, full spec list, MT7612U chipset claim, GPS constellation/PPS details, 18650 backplate/4hr runtime claim, 4-port USB hub, RTC, compatible Pi Zero models"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/evilsocket/pwnagotchi/master/README.md",
+    "what": "independent (non-vendor) confirmation of the handshake-capture mechanism: 'either passively, or by performing authentication and association attacks'"
+   },
+   {
+    "url": "https://www.pwnagotchi.ai/installation/",
+    "what": "confirms Pwnagotchi does not ship pre-installed on any commercial product; must be downloaded and flashed to SD by the user"
+   },
+   {
+    "url": "https://www.getic.com/product/alfa-awus036acm",
+    "what": "third-party (non-Alfa, non-hackergadgets) listing independently confirming the AWUS036ACM's chipset is MT7612U, corroborating the hat vendor's equivalence claim"
+   }
+  ],
+  "research_gaps": [
+   "Exact GPS module part number not disclosed by vendor (described only as 'GPS + BeiDou or GPS + GLONASS' with USB-serial interface and PPS out)",
+   "USB hub controller IC and RTC/PMIC part numbers not disclosed",
+   "Whether Pwnagotchi software ships pre-installed on this specific hat is not explicitly stated by the vendor; Pwnagotchi's own docs confirm the software never ships pre-installed on any commercial hardware in general, which strongly implies the same here, but this specific product was not independently tested",
+   "Dimensions, weight, release date, and original OEM/manufacturer not published",
+   "Whether Pwnagotchi's web UI survives functional on this hardware could not be sourced this session"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "alfa-awus036achm",
+  "hardware_id": "alfa-awus036achm",
+  "name": "ALFA AWUS036ACHM",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Pure hardware NIC. Monitor mode and injection come from the host OS's in-kernel mt76 driver family plus whatever software you run (aircrack-ng, Wireshark, Kismet) — there is no vendor firmware relevant to security features.",
+  "vendor": "ALFA Network Inc.",
+  "vendor_url": "https://www.alfa.com.tw",
+  "product_url": "https://www.alfa.com.tw/products/awus036achm",
+  "category": "wifi",
+  "subcategory": "usb-wifi-adapter",
+  "status": "available",
+  "released": null,
+  "price_usd": 63.72,
+  "price_note": "lab401 (the reseller named in the brief) lists it at €59.00, ≈$63.72 at the FX rate checked. That's a real premium: the identical hardware sells for $36-49 at general electronics resellers (Getic ~$43, Rokland $48.97). lab401 also showed a $79 figure in a separate cached listing that could not be reconciled with the live €59 page — flagged as unresolved rather than picking one arbitrarily.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Plug-and-play driver-wise on modern Linux (mt76 is in-tree, no DKMS) — Rokland's own driver guide calls MediaTek chipsets 'plug and play' — but getting real use out of monitor mode/injection means comfort with aircrack-ng/Wireshark/Kismet.",
+  "build_effort": "assembled",
+  "build_note": "Buy and plug into USB. No assembly or flashing of the adapter itself; you configure whatever OS runs on the attached computer.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "Alfa's 'Mini' dual-band adapter: a MediaTek MT7610U chipset, AC600 class (150 Mbps 2.4GHz / 433 Mbps 5GHz), two RP-SMA connectors for external dipole antennas, and a screen-clip mount, aimed at laptop users who want monitor mode and packet injection with in-kernel Linux support. It is easily confused with the larger, older, RTL8812AU-based AWUS036ACH — despite the near-identical name, they use different chipsets, different USB connectors (Mini-USB here vs USB-C on the ACH) and different AC classes (AC600 vs AC1200).",
+  "honest_take": "This is 'just a Wi-Fi adapter' in the most literal sense: no display, no attack software, nothing beyond an MT7610U chip and two antenna jacks — and notably no Bluetooth radio at all, unlike the newer AXM adapter in this same product line. Everything useful it does — monitor mode, deauth, handshake capture — comes from free software (aircrack-ng, Wireshark, Kismet) running on your laptop. The chipset itself is fine: MT7610U has mature in-kernel mt76 driver support with no DKMS wrestling, independently confirmed by community documentation (morrownr's USB-WiFi project). But it's a lower tier than the name suggests — AC600, not the AC1200 that at least one reseller's own product title confusingly implies — and it is a cheaper, different chipset from the RTL8812AU in the plain (non-M) 'AWUS036ACH.' Categorized here as 'wifi' rather than 'accessory' because monitor-mode/injection support is a deliberate, marketed feature this chipset was selected for. Be clear-eyed that you're paying for a driver-compatible commodity chip, not proprietary capability — lab401's price is a real premium over general electronics resellers for identical hardware.",
+  "best_for": [
+   "Laptop-based Wi-Fi monitoring/injection on Linux with minimal driver hassle",
+   "A compact secondary adapter for aircrack-ng/Kismet work"
+  ],
+  "not_for": [
+   "Anyone who actually needs the plain ACH's higher AC1200 throughput or Realtek-specific tooling",
+   "Anyone expecting attack software or Bluetooth capability bundled in — neither is included",
+   "6GHz/WiFi 6E work — this is an older AC600-class part"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "MT7610U is a combined baseband/MAC/USB WiFi chip; no separate general-purpose MCU.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7610U",
+     "role": "wifi",
+     "note": "Dual-band 802.11a/b/g/n/ac, AC600 class (150 Mbps 2.4GHz + 433 Mbps 5GHz). In-kernel Linux mt76 driver, mainlined since kernel ~4.19, supports monitor mode, packet injection, VIF and active monitor mode per morrownr's USB-WiFi reference doc."
+    }
+   ],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus-powered, no battery.",
+   "charging": "n/a (USB-powered)",
+   "pmic": null,
+   "storage": "none",
+   "connectivity": [
+    "Mini-USB 2.0",
+    "2x RP-SMA (5dBi dipole antennas included)"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Plastic, with folding screen-clip mount",
+   "notable_physical": [
+    "2x RP-SMA female connectors",
+    "Folding laptop-screen clip mount",
+    "5dBi dipole antennas included"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard station-mode scanning"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Dual-band chipset"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "In-kernel mt76 driver (mt76x0u); morrownr's USB-WiFi doc lists this exact chipset with 'Yes' for VIF and active monitor mode support"
+   },
+   "wifi_injection": {
+    "v": "yes",
+    "note": "mt76 driver supports raw frame injection on this chipset; Kali documentation explicitly confirms packet injection support"
+   },
+   "wifi_deauth_24": {
+    "v": "yes",
+    "note": "Standard aireplay-ng-style management-frame TX, enabled by the same injection-capable mt76 driver"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "hcxdumptool-style PMKID capture generally depends on driver-level raw frame support present here, but no source specifically confirmed PMKID capture on this chipset"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Standard aircrack-ng/hcxdumptool workflow via monitor mode"
+   },
+   "wifi_wardriving": {
+    "v": "partial",
+    "note": "No GPS or logging of its own — works as the capture radio for wardriving software running on the host (e.g. Kismet)"
+   },
+   "wifi_ap_mode": {
+    "v": "claimed",
+    "note": "MediaTek mt76-family chips generally support hostapd AP mode; Rokland's driver guide describes MediaTek chipsets as 'plug and play' on Linux, but AP mode specifically was not independently tested"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Standard tcpdump/Wireshark capture from a monitor-mode interface using this adapter as the radio"
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "MT7610U is WiFi-only, no Bluetooth silicon onboard"
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "MT7610U is WiFi-only, no Bluetooth silicon onboard"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Pure WiFi radio; no HID/BadUSB functionality"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and selling this adapter is legal everywhere it's sold. Using monitor mode to passively capture your own traffic or survey spectrum is broadly legal; using injection to deauth or attack networks you do not own or lack written authorization to test is a computer-misuse offence in most countries (US CFAA, UK Computer Misuse Act, etc). Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "AWUS036ACHM Mini",
+   "Alfa Mini Dual-Band AC600"
+  ],
+  "sources": [
+   {
+    "url": "https://www.alfa.com.tw/products/awus036achm",
+    "what": "official chipset (MT7610U), band/rate specs, antenna, connector, OS support"
+   },
+   {
+    "url": "https://lab401.com/collections/pentesting-network",
+    "what": "reseller price €59.00, marketing claim of '5x sensitivity increase', named in original brief as the seller_url"
+   },
+   {
+    "url": "https://store.rokland.com/products/alfa-awus036achm-802-11ac-dual-band-high-power-ac1200-mediatek-wifi-usb-adapter",
+    "what": "chipset confirmation, AC600/433Mbps rating, Kali packet-injection support claim, $48.97 price — note this listing's own title says 'AC1200' which contradicts the AC600/433Mbps spec stated in its body text"
+   },
+   {
+    "url": "https://www.getic.com/product/alfa-awus036achm",
+    "what": "alternate reseller pricing ~$36-43 range for the same part, used to establish the market price spread"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/blob/main/home/Recommended_Adapters_for_Kali_Linux.md",
+    "what": "independent (non-vendor) confirmation that the AWUS036ACHM's mt7610u chipset supports monitor mode, packet injection, VIF and active monitor mode via the mt76 driver"
+   },
+   {
+    "url": "https://store.rokland.com/pages/alfa-wireless-adapters-monitor-mode-help-linux",
+    "what": "confirms MediaTek chipsets (unlike Realtek) are 'plug and play' for monitor mode on Linux, supporting the wifi_ap_mode claimed rating"
+   }
+  ],
+  "research_gaps": [
+   "Exact TX power (dBm), dimensions and weight not published by Alfa or any reseller checked",
+   "Release year not confirmed",
+   "Official datasheet PDF at alfa-network.eu returned HTTP 403 and could not be reviewed directly",
+   "lab401 showed two different prices (€59.00 on a direct page fetch vs $79.00 in a separate cached search snippet) — could not resolve which reflects current live pricing, both are reported rather than silently picking one",
+   "PMKID capture and AP-mode support not independently confirmed, only inferred from the general mt76 driver family"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "wardriver-uk-rev3",
+  "hardware_id": "wardriver-uk-rev3",
+  "name": "wardriver.uk Rev3",
+  "firmware": "Wardriver Rev3 Firmware",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/JosephHewitt/wardriver_rev3",
+  "firmware_note": "Custom Arduino-based firmware split across two sketches (one per onboard ESP32), actively developed: OTA updates, direct WiGLE.net upload, SD-card config file support, WiGLE-format CSV logging. GPL-3.0.",
+  "vendor": "Joseph Hewitt (independent open-source project)",
+  "vendor_url": "https://wardriver.uk",
+  "product_url": "https://github.com/JosephHewitt/wardriver_rev3",
+  "category": "wardriving",
+  "subcategory": "esp32-wardriving-rig",
+  "status": "available",
+  "released": null,
+  "price_usd": 50.0,
+  "price_note": "No single official price — this is an open-source design. Cheapest currently-buyable full DIY kit found is $50 (463n7.io, requires soldering); a similar Tindie kit runs $65. An 'Assembled Wardriver' (factory-built, no soldering) is also sold by 463n7.io at a further premium (exact current price not confirmed). The original creator's own bare-PCB Tindie listing (jhewitt_net) is currently paused until Jan 2027 and not shippable to the US. The brief's cited $55 does not exactly match any listing found; treat it as within the normal $50-65 kit range rather than a single confirmed price point.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You are wiring two separate ESP32 dev boards, a GPS module, an optional SIM800L cellular module, an I2C OLED, and a temperature sensor by hand — a genuine electronics-assembly project, not a flash-and-go kit, unless you pay extra for a pre-assembled unit from a third party.",
+  "build_effort": "soldering",
+  "build_note": "Officially distributed as an open-source PCB design (Gerbers and schematics on GitHub) plus third-party DIY kits of components; all connections are through-hole soldering per the project's own assembly docs. A small number of resellers (e.g. 463n7.io) sell factory-assembled units for people who don't want to solder.",
+  "stealth": "discreet",
+  "form_factor": "box",
+  "summary": "An open-source, dual-ESP32-WROOM-32U wardriving rig: one ESP32 handles WiFi scanning, the other handles Bluetooth/BLE scanning plus peripherals (ATGM336H GPS, optional SIM800L cellular module, SSD1306 OLED status display, DS18B20 temperature sensor). Everything logs to a microSD card as WiGLE-format CSV, with the current firmware able to upload directly to WiGLE.net. Joseph Hewitt publishes schematics, Gerbers and firmware on GitHub under GPL-3.0; the bare PCB is normally sold via Tindie, with DIY kits and assembled units available from independent third-party resellers.",
+  "honest_take": "Confirmed as a genuinely distinct project from the 'C5 Wardriver' already in this database, not the same thing under a different name: this rig splits WiFi and Bluetooth scanning across two separate, older ESP32-WROOM-32U modules (2.4GHz-only silicon) rather than one newer single-chip solution, a deliberate architectural choice, not an oversight. It requires real through-hole soldering unless you pay a third-party reseller extra for a pre-built unit — the original creator's own bare-PCB Tindie listing is currently paused and won't ship to the US, so US buyers are pushed toward third-party kits by default. The firmware is unusually healthy for a single-maintainer hobby project: 368 GitHub stars, 40 forks, and commits into 2026 (OTA updates, direct WiGLE upload, a NimBLE migration for Bluetooth). But this is not a flash-only device — budget real assembly time and a soldering iron, or pay significantly more for someone else's assembled unit.",
+  "best_for": [
+   "Wardriving enthusiasts who want to build rather than buy",
+   "WiGLE contributors who want cell-tower (SIM800L) location logging alongside WiFi/BT when GPS is unavailable",
+   "Anyone who already owns a soldering iron and wants a cheaper alternative to single-board wardriving units"
+  ],
+  "not_for": [
+   "Anyone who wants to unbox and go — no flash-only or assembled path from the original creator right now",
+   "US buyers hoping to order the official bare PCB directly from Tindie (that listing currently won't ship to the US)",
+   "5GHz Wi-Fi scanning — the ESP32-WROOM-32U is 2.4GHz only"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-WROOM-32U",
+   "mcu_primary_note": "Two identical ESP32-WROOM-32U modules (the -U variant has a U.FL/IPEX external-antenna connector instead of a PCB antenna, required for the project's IPEX-to-SMA cabling). One runs the WiFi-scanning firmware, the other runs Bluetooth/BLE scanning plus GPS/GSM/display/sensor I/O.",
+   "mcu_secondary": "ESP32-WROOM-32U (second unit, Bluetooth/peripheral role)",
+   "radios": [
+    {
+     "ic": "ESP32-WROOM-32U",
+     "role": "wifi",
+     "note": "2.4GHz 802.11 b/g/n only, external IPEX antenna"
+    },
+    {
+     "ic": "ESP32-WROOM-32U",
+     "role": "bluetooth",
+     "note": "Classic + BLE scanning; recent firmware migrated the BLE stack to NimBLE"
+    },
+    {
+     "ic": "SIM800L",
+     "role": "cellular",
+     "note": "Optional 2G/GSM module for cell-tower-based location logging when GPS is unavailable"
+    }
+   ],
+   "display": {
+    "type": "SSD1306 OLED (i2c)",
+    "size_in": 0.91,
+    "resolution": "128x32",
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery included in the base kit. Project docs suggest a 5200mAh USB power bank; some kit resellers offer an optional dual-18650 battery board.",
+   "charging": "USB, via an external power bank or optional battery board (not built into the base PCB)",
+   "pmic": null,
+   "storage": "microSD (SPI); 16GB or smaller recommended per project docs",
+   "connectivity": [
+    "USB (serial/programming, x2 — one per ESP32)",
+    "2x IPEX-to-SMA WiFi/BT antenna leads",
+    "GPS (UART)",
+    "Optional SIM800L cellular"
+   ],
+   "gpio": "Project-specific pinout across two DevKitC boards; not a general-purpose header",
+   "sensors": [
+    "ATGM336H GPS/GNSS module",
+    "DS18B20 temperature sensor"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "User-supplied plastic enclosure (100x60x25mm or larger per project docs) or a 3D-printed case offered by some kit resellers",
+   "notable_physical": [
+    "Dual ESP32 DevKitC boards on one PCB",
+    "External GPS antenna",
+    "OLED status display",
+    "SIM card slot on the optional SIM800L module"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Core function, dedicated ESP32"
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-WROOM-32U is 2.4GHz-only silicon"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "Promiscuous-mode passive scanning used to enumerate APs for wardriving; not a general injection/attack tool"
+   },
+   "wifi_wardriving": {
+    "v": "yes",
+    "note": "Primary purpose of the device"
+   },
+   "gps": {
+    "v": "yes",
+    "note": "ATGM336H GPS/GNSS module"
+   },
+   "gps_wardrive_log": {
+    "v": "yes",
+    "note": "WiGLE-format CSV; direct upload to WiGLE.net supported since firmware v1.2.0"
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "microSD, SPI"
+   },
+   "ble_scan": {
+    "v": "yes",
+    "note": "NimBLE-based scanning on the second ESP32 as of recent firmware"
+   },
+   "bt_classic": {
+    "v": "unknown",
+    "note": "README describes generic 'Bluetooth device' scanning but the specific and most recently documented firmware work is BLE (NimBLE migration); whether Classic/BR-EDR scanning is genuinely implemented was not confirmed"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Onboard web interface for CSV download over a configured WiFi connection, per README"
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Runs off a USB power bank with no host computer needed once configured"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "This is a passive scanner and logger — it does not transmit attacks, jam, or inject packets, so legal exposure is much lower than most devices in this database. The main consideration is privacy/data-protection law around logging nearby WiFi/Bluetooth device identifiers and uploading them to a public map (WiGLE.net) — rules on collecting and publishing this kind of data vary by country. Check your local law before uploading collected data publicly."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-05",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Wardriver Rev3",
+   "Portable ESP32 Wardriver",
+   "JHewitt Wardriver"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/JosephHewitt/wardriver_rev3",
+    "what": "star count (368), fork count (40), GPL-3.0 license, README description"
+   },
+   {
+    "url": "https://github.com/JosephHewitt/wardriver_rev3/commits/main",
+    "what": "most recent commit dated 2026-05-25 ('Improve OTA download speed, bump version number #236')"
+   },
+   {
+    "url": "https://github.com/JosephHewitt/wardriver_rev3/releases",
+    "what": "release history and dates, v1.2.0 stable adding OTA/WiGLE direct-upload/SD config, v1.3.0b2 beta with NimBLE migration"
+   },
+   {
+    "url": "https://wardriver.uk/component_list_3",
+    "what": "exact BOM: ESP32-DevKitC V4 w/ ESP32-WROOM-32U x2, ATGM336H GPS, SIM800L, 0.91in SSD1306 OLED, DS18B20, SPI microSD reader"
+   },
+   {
+    "url": "https://wardriver.uk/",
+    "what": "confirms no hosted WiGLE-style service on wardriver.uk itself — uploads go to the third-party WiGLE.net; confirms Tindie as the official PCB sales channel"
+   },
+   {
+    "url": "https://www.tindie.com/products/jhewitt_net/portable-esp32-wardriver-pcb-only/",
+    "what": "official bare-PCB listing currently paused ('taking a break until Jan. 1, 2027'), not shippable to the US"
+   },
+   {
+    "url": "https://463n7.io/products/diy-wardriver-kit",
+    "what": "third-party DIY kit, $50, Rev3 PCB, requires soldering, 3-week lead time"
+   },
+   {
+    "url": "https://www.tindie.com/products/wardriverstore/diy-wardriver-kit/",
+    "what": "alternate third-party DIY kit, $65, full component list including 3D-printed case"
+   }
+  ],
+  "research_gaps": [
+   "Exact initial hardware release date/year for Rev3 not confirmed",
+   "No single official current price from the original creator — the brief's cited $55 does not exactly match any listing found ($50-65 range across third-party kits)",
+   "Whether Bluetooth Classic (not just BLE) scanning is genuinely implemented is not confirmed",
+   "Runtime/battery figures not published — the project assumes an external USB power bank",
+   "Dimensions and weight of the assembled unit not published beyond the suggested minimum enclosure size"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "alfa-awus036axm",
+  "hardware_id": "alfa-awus036axm",
+  "name": "ALFA AWUS036AXM",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Pure hardware NIC. Linux support comes from the in-kernel mt7921u driver, not any vendor-supplied firmware.",
+  "vendor": "ALFA Network Inc.",
+  "vendor_url": "https://www.alfa.com.tw",
+  "product_url": "https://www.alfa.com.tw/products/awus036axm",
+  "category": "wifi",
+  "subcategory": "usb-wifi-adapter",
+  "status": "available",
+  "released": null,
+  "price_usd": 55.0,
+  "price_note": "JustCallMeKoko LLC (JCMK, the reseller named in the brief) lists it at $55.00 but is currently sold out. It's in stock elsewhere at similar or lower prices — Rokland has it at $49.97, ready to ship. Not significantly reseller-inflated the way the ACHM is.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Plug-and-play on kernel 5.18+ (mt7921u is in-tree, no DKMS needed), but 6GHz/WiFi 6E monitor-mode and injection workflows are newer and less battle-tested than older Realtek-based adapters — expect more troubleshooting.",
+  "build_effort": "assembled",
+  "build_note": "Buy and plug in via USB-A (USB 3.2 Gen 1). No assembly of the adapter itself.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A compact WiFi 6E adapter built around a MediaTek MT7921AUN combo chip (no separate general-purpose MCU) covering 2.4/5/6GHz WiFi plus Bluetooth 5.2, with two RP-SMA connectors for detachable dipole antennas and a USB 3.2 Gen 1 Type-A connector. Sold into the pentest/wardriving market specifically for its Linux monitor-mode and injection support, which is real but newer and less mature than Alfa's older Realtek-based adapters.",
+  "honest_take": "The MT7921AUN's monitor-mode and injection support on Linux is genuinely usable today — in-kernel mt7921u driver, no DKMS needed on kernel 5.18+ — but it is not the drop-in-and-forget experience of an older RTL8812AU adapter. Community reports (morrownr's USB-WiFi reference doc, and two open GitHub issues filed against this exact chipset/driver combination — one against morrownr/USB-WiFi, one against openwrt/mt76) describe passive monitor mode working well while 'active monitor mode' has a documented history of breaking the driver, only recently reported fixed on kernel 6.12 and later. If your workflow needs rock-solid injection today, the Realtek-based AWUS036ACH/ACHM are a safer bet; if you specifically need 6GHz/WiFi 6E visibility or onboard Bluetooth 5.2 (which the ACHM lacks entirely), there is no Realtek alternative and this is the adapter for it. As with the other Alfa adapter in this batch, it's 'just' a combo WiFi/BT chip in a plastic shell with two antenna jacks — the actual attack tooling is separate free software you run on your computer, not anything on the device. No GPS either, despite marketing copy about 'portable WiFi analysis' that could be mistaken for a wardriving feature.",
+  "best_for": [
+   "6GHz/WiFi 6E spectrum visibility that older adapters simply cannot see",
+   "Modern Linux systems (kernel 5.18+) wanting in-kernel driver support with no DKMS",
+   "Situations wanting WiFi + Bluetooth 5.2 scanning from one adapter"
+  ],
+  "not_for": [
+   "Workflows that need the most battle-tested, rock-solid injection — Realtek RTL8812AU-based adapters have a longer track record",
+   "Older kernels without mt7921u support",
+   "Wardriving — no GPS onboard"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "MediaTek MT7921AUN WiFi6E/BT5.2 combo chip; no exposed general-purpose MCU.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "MediaTek MT7921AUN",
+     "role": "wifi",
+     "note": "Tri-band 2.4/5/6GHz 802.11a/b/g/n/ac/ax (WiFi 6E). In-kernel mt7921u Linux driver, kernel 5.18+."
+    },
+    {
+     "ic": "MediaTek MT7921AUN",
+     "role": "bluetooth",
+     "note": "Bluetooth 5.2, integrated antenna; Classic (BR/EDR) support alongside BLE not independently confirmed"
+    }
+   ],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus-powered, no battery.",
+   "charging": "n/a (USB-powered)",
+   "pmic": null,
+   "storage": "none",
+   "connectivity": [
+    "USB 3.2 Gen 1 Type-A",
+    "2x RP-SMA (detachable dipole antennas)",
+    "Integrated Bluetooth antenna"
+   ],
+   "gpio": null,
+   "sensors": [],
+   "dimensions_mm": "87.4 x 28.5 x 12",
+   "weight_g": null,
+   "case": "Plastic",
+   "notable_physical": [
+    "2x RP-SMA female connectors",
+    "Detachable dual-band dipole antennas"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "Standard scanning"
+   },
+   "wifi_scan_5": {
+    "v": "yes",
+    "note": "Tri-band chipset"
+   },
+   "wifi_monitor_mode": {
+    "v": "yes",
+    "note": "In-kernel mt7921u driver, kernel 5.18+. Passive monitor mode reported solid per morrownr's USB-WiFi doc; 'active monitor mode' has a documented history of breaking the driver, reportedly improved on kernel 6.12+"
+   },
+   "wifi_injection": {
+    "v": "partial",
+    "note": "Works for typical use, but a specific GitHub issue (morrownr/USB-WiFi #387) documents frame-injection problems on this exact chipset/driver combination, corroborated by a related openwrt/mt76 issue (#839) about active monitor mode breaking the driver — treat as less mature than Realtek alternatives"
+   },
+   "wifi_deauth_24": {
+    "v": "claimed",
+    "note": "Management-frame TX should follow from the same injection-capable driver path, but not independently confirmed given the documented injection caveats above"
+   },
+   "wifi_pmkid": {
+    "v": "unknown",
+    "note": "Not confirmed either way for this chipset/driver combination"
+   },
+   "wifi_handshake_capture": {
+    "v": "yes",
+    "note": "Standard workflow via monitor mode + host software"
+   },
+   "wifi_wardriving": {
+    "v": "partial",
+    "note": "No GPS or onboard logging — usable as the capture radio with Kismet et al. on the host, same caveat as the ACHM"
+   },
+   "wifi_ap_mode": {
+    "v": "claimed",
+    "note": "mt7921u generally supports hostapd AP mode as a standard driver feature; not independently tested on this exact adapter"
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Standard tcpdump/Wireshark capture from a monitor-mode interface"
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS hardware — not a wardriving device despite marketing language around 'portable WiFi analysis'"
+   },
+   "ble_scan": {
+    "v": "claimed",
+    "note": "MT7921AUN includes Bluetooth 5.2 hardware per the official Alfa spec page; standard bluez-based BLE scanning should work over this radio, but not independently tested this session"
+   },
+   "bt_classic": {
+    "v": "unknown",
+    "note": "Bluetooth 5.2 dual-mode chips often support Classic BR/EDR alongside BLE, but this was not independently confirmed for this exact part"
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Pure WiFi/BT radio combo chip; no HID/BadUSB functionality"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and selling is legal everywhere it's sold. Using monitor mode/injection against networks you do not own or lack written authorization to test is a computer-misuse offence in most jurisdictions. Check your local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "AWUS036AXM",
+   "Alfa WiFi 6E adapter"
+  ],
+  "sources": [
+   {
+    "url": "https://www.alfa.com.tw/products/awus036axm",
+    "what": "official chipset (MT7921AUN), dimensions (87.4x28.5x12mm), band/rate specs, Bluetooth 5.2, USB 3.2 Gen 1"
+   },
+   {
+    "url": "https://justcallmekokollc.com/products/alfa-awus036axm",
+    "what": "JCMK reseller listing: $55, sold out, product description"
+   },
+   {
+    "url": "https://store.rokland.com/products/alfa-awus036axm-wifi-6e-3000-mbps-tri-band-2-4-5-6-ghz-wifi-usb-adapter",
+    "what": "alternate reseller in stock at $49.97"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/blob/main/home/Recommended_Adapters_for_Kali_Linux.md",
+    "what": "MT7921AU monitor mode described as working well, active monitor mode reported broken then reportedly fixed on kernel 6.12+"
+   },
+   {
+    "url": "https://github.com/morrownr/USB-WiFi/issues/387",
+    "what": "open issue documenting frame-injection problems specifically on the AWUS036AXM/mt7921au/mt7921u combination"
+   },
+   {
+    "url": "https://github.com/openwrt/mt76/issues/839",
+    "what": "independent (non-morrownr) issue corroborating active monitor mode breaking the mt7921u driver on this chipset family"
+   }
+  ],
+  "research_gaps": [
+   "Exact release year not confirmed",
+   "TX power (dBm) and weight not published by Alfa or resellers checked",
+   "Whether Bluetooth Classic (BR/EDR) is supported alongside BLE on this exact chip variant not independently confirmed",
+   "PMKID capture support not confirmed either way"
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

@@ -19,11 +19,13 @@ ENUMS = {
  "firmware_kind": {"stock","community","third-party-product","diy","n/a"},
  "category": {"multitool","wifi","rfid-nfc","subghz","bluetooth","usb-hid",
               "network-implant","sdr","hardware-debug","wardriving",
-              "detection-defense","accessory"},
+              "detection-defense","accessory","automotive"},
  "status": {"available","preorder","out-of-stock","discontinued","diy-only","vaporware"},
  "skill_level": {"beginner","intermediate","advanced","expert"},
  "build_effort": {"assembled","flash-only","assembly","soldering","full-diy"},
  "stealth": {"overt","discreet","covert","implant"},
+ "form_factor": {"handheld","pocket","keychain","usb-stick","cable","wearable","board",
+                 "box","hat-shield","desktop"},
 }
 
 def known_caps():

@@ -248,7 +248,11 @@ const GENERIC_FW = new Set(["stock","official","custom","none","none shipped","n
 function fwFamily(d){
   if (!d.firmware) return null;
   if (!["community","third-party-product"].includes(d.firmware_kind)) return null;
+  /* Fold accents to their base letter first. Stripping them outright turned
+     "Doppelgänger" into "doppelg nger", which is shown verbatim on the home
+     page value-gap table. */
   const n = String(d.firmware).toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
     .replace(/\bv?\d+(\.\d+)*\b/g," ").replace(/\(.*?\)/g," ")
     .replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim();
   if (!n || GENERIC_FW.has(n)) return null;

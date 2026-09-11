@@ -132,7 +132,8 @@
   "research_gaps": [
    "No capability key exists for 'USB data-line blocking while passing power' - the device's entire function. The nearest existing keys only describe attacks/features it deliberately does NOT have.",
    "Vendor page lists dimensions as '18 x 12.5 x 2 cm' and weight as '0.080 g', both of which are physically implausible for this product (too large / far too light) and are almost certainly a units error in the vendor's own spec table. Not corrected here since no independent measurement was available - treat vendor physical dimensions as unreliable."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "paw-detector",
@@ -262,7 +263,8 @@
    "No capability key exists for 'detects a malicious/keylogging USB cable via electrical anomaly' - this is the device's entire function and the detection-defense key list (detect_skimmer, detect_pineapple, etc.) has no USB-cable-implant equivalent.",
    "Could not locate a dedicated public GitHub repository for Paw Detector firmware/hardware design despite the vendor page stating it is open source (CERN-OHL v1.2 / GPL-3.0); only the sibling PAW Protector repo (github.com/ElectronicCats/pawprotector) was found, which is a different product.",
    "Exact release year is an inference from 'DEF CON 34' (2026) being cited as its debut, not a stated ship date."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "usbkeylogger-push3ax",
@@ -408,7 +410,8 @@
    "No capability key exists for 'exfiltrates via a self-hosted open Wi-Fi AP + web UI' as a distinct pattern from cloud_c2 - conflated here under wifi_ap_mode + cloud_c2.",
    "Exact MCU part number (ESP-07S) is drawn from page content rather than a bill-of-materials file directly reviewed line-by-line; treat with slightly lower confidence than a datasheet-sourced part number.",
    "Only one independent source (the GitHub repo itself) exists for this project - no third-party teardown or review was found."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "okhi",
@@ -548,7 +551,8 @@
    "No capability key exists for 'parasitic power draw from the target cable, no external power needed' or for 'OTA firmware update over Wi-Fi' - both are genuine differentiators versus USBKeylogger, which needs a physical reflash.",
    "Could not confirm whether the Wi-Fi dashboard runs in AP mode (its own hotspot, like USBKeylogger) or joins an existing network (station mode) - the README does not state this explicitly, so no wifi_ap_mode-equivalent claim is made.",
    "PS/2 capture is confirmed as a feature but the maximum keyboard protocol speed/compatibility limits for that path were not detailed in available sources."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "hydralink",
@@ -715,7 +719,8 @@
    "No capability key exists for automotive single-pair Ethernet (100BASE-T1/1000BASE-T1) specifically, or for master/slave bridge mode - ethernet_mitm/ethernet_tap_passive were used as the closest fit but don't capture that this is automotive-specific, not general LAN Ethernet.",
    "Exact PHY chip part number is undisclosed by the vendor (contractually redacted), so mcu_primary/radios.ic are left null rather than guessed.",
    "Could not independently verify the open-source driver actually achieves the claimed wire-speed forwarding under load - relying on vendor claim only, not a third-party benchmark."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "cantact-pro",
@@ -886,7 +891,8 @@
   "research_gaps": [
    "No capability keys exist for CAN channel count (2), CAN-FD support (both channels), galvanic isolation (yes), or single-wire CAN (channel 1 only) - all four are explicit headline differentiators for this exact device per the assignment brief.",
    "GitHub returned HTTP 403 to automated fetch for linklayer/cantact-hw, so exact MCU and CAN transceiver part numbers could not be confirmed from the schematic itself; relied on the Crowd Supply spec sheet only."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "panda-comma-ai",
@@ -1054,7 +1060,8 @@
    "Galvanic isolation between the CAN side and USB/host side is not confirmed either way by any official comma.ai source found; do not assume isolated.",
    "Whether the current 'red panda' hardware still includes an ESP32/Wi-Fi radio (present on some earlier panda generations per third-party sources) could not be confirmed from official documentation - omitted from hardware.radios rather than guessed.",
    "Exact physical connector (OBD-II vs. a proprietary harness) for the current red panda SKU was not stated on the shop page."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "wican-pro",
@@ -1236,7 +1243,8 @@
    "No capability keys exist for OBD-II protocol breadth (3 CAN variants + 1 single-wire CAN + legacy K-line protocols), CAN-FD support (appears absent - not mentioned anywhere in the spec sheet), or galvanic isolation (not claimed) - all central to the assignment brief.",
    "The marketing text says 'three CAN BUS protocols and one SW CAN' but the detailed protocol table lists up to six CAN-family variants (including Medium-Speed CAN and GM High-Speed CAN) that may share physical pins rather than being six independent electrical channels - exact physical CAN channel count is not confirmed.",
    "Exact part number of the 'dedicated OBD interpreter chip' is not disclosed by the vendor."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "cantact-v1-2-hackerwarehouse",
@@ -1402,7 +1410,8 @@
    "No capability keys exist for CAN channel count (1), absence of CAN-FD, or absence of isolation - all directly relevant per the assignment brief.",
    "Exact MCU and CAN transceiver part numbers could not be confirmed - GitHub returned HTTP 403 to automated fetch of the hardware schematic repo.",
    "Release year for this specific Hacker Warehouse fork/SKU is unknown; the underlying open-source CANtact design dates to around 2016."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "canable-pro",
@@ -1582,7 +1591,8 @@
    "No capability keys exist for CAN channel count (1), CAN-FD support (present on the non-isolated sibling only), or galvanic isolation (5kV on this SKU) - all central to the assignment brief and to this specific product line's key trade-off.",
    "Exact MCU part number for the isolated Pro/Pro 1.1 boards specifically (as opposed to the non-isolated CANable 2.0, whose STM32G431 is confirmed from source) was not independently verified.",
    "Treated CANable 2.0 and CANable Pro as one merged record per the batch's single input row and shared seller lineage; they are technically two different current SKUs with different trade-offs (isolation vs. CAN-FD) and could arguably be split into two separate database records."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "flipper-canbus-electroniccats",
@@ -1756,7 +1766,8 @@
    "No capability key exists for CAN channel count (1), CAN-FD support (explicitly absent), or isolation (not mentioned, presumed absent) - central to the assignment brief.",
    "Could not confirm the companion CAN transceiver IC paired with the MCP2515 controller (e.g. TJA1050, SN65HVD230, or similar) - no dedicated hardware/schematic repo could be located separately from the firmware repo.",
    "This record merges three reseller listings (Electronic Cats direct, Hacker Warehouse, Lab401) that a first-pass script treated as three separate leads; confirmed via each vendor's own product description that all three describe the identical MCP2515-based Electronic Cats board."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "canpico-canhack",
@@ -1938,7 +1949,8 @@
    "No capability keys exist for CAN-specific data-link-layer attacks (bus-off denial-of-service, selective error-frame injection/corruption) - this toolkit's entire purpose - or for CAN-FD support/channel count/isolation generally.",
    "canislabs.com/canpico/ (the vendor's own product page) redirected to a dead/parked page during this research, and SK Pang (a UK reseller) shows the board as retired with an unnamed 'replacement' - could not confirm what, if anything, currently replaces it, or whether Canis Labs sells directly at all today.",
    "No galvanic isolation is mentioned for the CANPico board; treated as unconfirmed/likely absent rather than asserted."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "wican",
@@ -2119,7 +2131,8 @@
   "research_gaps": [
    "No capability keys exist for CAN channel count (1), absence of CAN-FD, or absence of isolation - central to the assignment brief.",
    "Exact release year (2022) is inferred from the Crowd Supply campaign's 'funded on Oct 05 2022' date, not an explicit 'released' field from the vendor."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "hitager",
@@ -2265,6 +2278,7 @@
   "research_gaps": [
    "No capability keys exist for Hitag-family (125kHz) transponder cloning specifically - lf_125khz_read/write were used as the closest fit, but the schema doesn't distinguish 'clone to a blank' from generic LF read/write, which matters for an immobiliser-transponder tool like this.",
    "Exact license terms (a license.txt file exists per the repo) were not read in full; GitHub's API reports the SPDX identifier as unassignable/NOASSERTION."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  }
 ]

@@ -1,0 +1,2340 @@
+[
+ {
+  "id": "cc1101-tool-arduino",
+  "hardware_id": "cc1101-tool",
+  "name": "cc1101-tool",
+  "firmware": "cc1101-tool",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/mcore1976/cc1101-tool",
+  "firmware_note": "Single Arduino sketch (not a full OS) that turns any supported board + CC1101 breakout into a serial-terminal-controlled sub-GHz transceiver. No GUI, no app - you type commands over a serial console.",
+  "vendor": "mcore1976 (independent developer)",
+  "vendor_url": "https://github.com/mcore1976",
+  "product_url": "https://github.com/mcore1976/cc1101-tool",
+  "category": "subghz",
+  "subcategory": "diy-transceiver",
+  "status": "diy-only",
+  "released": null,
+  "price_usd": 12,
+  "price_note": "No assembled unit is sold anywhere; this is parts cost only (Arduino Pro Micro clone ~$5-6, CC1101 breakout ~$4-6, wire). mcore1976 does not sell hardware - it is a firmware/wiring-diagram repo you build yourself.",
+  "price_is_estimate": true,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "No PCB - you wire a CC1101 breakout to a Pro Micro (or ESP32/ESP8266/Nano/Pro Mini/RP2040) by hand following the repo's pinout photos, then flash the sketch and talk to it over a serial terminal. Nothing about the RF side is beginner-friendly; commands are typed, not menued.",
+  "build_effort": "soldering",
+  "build_note": "Jumper-wire or solder a CC1101 breakout (E07-M1101D-SMA, D-SUN, or similar) to the chosen MCU per the repo's pinout diagrams, then flash with the Arduino IDE.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An open-source Arduino sketch that drives a bare CC1101 breakout from a plain serial terminal - no Flipper, no SDR software, no proprietary app. It supports Pro Micro, Nano, Pro Mini, ESP32, ESP8266 and RP2040 as the host MCU, and the author positions it explicitly as a budget alternative to the YARD Stick One.",
+  "honest_take": "This is genuinely a YARD Stick One competitor for people willing to build it themselves, and at $12 in parts versus roughly $200 for a YARD Stick One it is a real budget option - but you are trading a calibrated, driverless, GNU Radio-integrated tool for a hand-wired breakout and a text CLI with no official support channel beyond GitHub issues. It does the same fundamental things a Flipper Zero's sub-GHz app does (RX, TX, raw record/replay, jamming) using the identical CC1101 silicon, so if you already own a Flipper this buys you nothing except a dedicated headless box. The 'brute force' feature is fixed-code DIP-switch garage doors only - it does nothing against rolling codes, and the project makes no such claim.",
+  "best_for": [
+   "Someone who wants a headless, low-cost CC1101 tool and is comfortable wiring their own hardware",
+   "Learning the CC1101's register-level behavior instead of hiding it behind a GUI"
+  ],
+  "not_for": [
+   "Anyone who wants an assembled, warrantied product",
+   "Rolling-code attacks - not supported",
+   "Beginners who haven't wired a breakout board before"
+  ],
+  "hardware": {
+   "mcu_primary": "ATmega32U4 (Arduino Pro Micro)",
+   "mcu_primary_note": "Primary supported/tested platform per the repo. The sketch also has ports for ESP32, ESP8266 (Wemos D1 Mini), Arduino Nano, Arduino Pro Mini and Raspberry Pi Pico (RP2040), each with its own pinout diagram in the README.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "300-348, 387-464 and 779-928 MHz. The repo lists compatible breakout boards (E07-M1101D-SMA, D-SUN and others) rather than shipping its own PCB."
+    }
+   ],
+   "display": {
+    "type": "None",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB-powered from the host MCU; no onboard battery in any published build.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": "None - commands and captured frames live in the terminal session, not on the device",
+   "connectivity": [
+    "USB serial"
+   ],
+   "gpio": "SPI to the CC1101 breakout; exact pins vary by supported MCU per the README's per-board pinout diagrams",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None - bare board(s), typically breadboarded or dead-bug wired",
+   "notable_physical": [
+    "No enclosure in any published build",
+    "Multiple wiring diagrams for different MCU choices"
+   ]
+  },
+  "capabilities": {
+   "subghz_rx": {
+    "v": "yes",
+    "note": "Packet and raw-mode reception across the CC1101's three bands, controlled via serial commands."
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Packet and raw-mode transmission; modulation set via 2-FSK/GFSK/ASK-OOK/4-FSK/MSK commands matching CC1101 registers."
+   },
+   "subghz_replay": {
+    "v": "yes",
+    "note": "RAW-mode record and replay of captured frames, which the author explicitly compares to Flipper Zero's raw sub-GHz replay."
+   },
+   "subghz_bruteforce": {
+    "v": "partial",
+    "note": "Simulates DIP-switch garage-door codes only. Fixed-code systems, not rolling code."
+   },
+   "subghz_rolling_code": {
+    "v": "no",
+    "note": "No rolling-code (KeeLoq etc.) attack is implemented or claimed anywhere in the repo."
+   },
+   "subghz_external_antenna": {
+    "v": "claimed",
+    "note": "Depends entirely on which CC1101 breakout you wire up; SMA-equipped modules like the E07-M1101D-SMA are explicitly listed as compatible, but the tool itself adds nothing here."
+   },
+   "subghz_amplified": {
+    "v": "no",
+    "note": "The listed compatible breakouts (E07-M1101D-SMA, D-SUN) are plain CC1101 modules with no power amplifier, unlike PA-equipped modules such as the E07-433M20S used in amplified Flipper add-ons."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Entirely command-driven over a serial terminal (PuTTY, Android USB-OTG terminal apps, or WiFi telnet on the ESP8266/ESP32 ports); there is also an IRC-like 'chat mode' between two units."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "No screen or buttons - every function requires a connected terminal (serial or telnet)."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a feature of this sketch."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "One GitHub repo, one sketch; no module/app ecosystem."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Building and owning the hardware is legal. Transmitting on sub-GHz ISM bands without the appropriate license/authorization, and replaying or brute-forcing signals for devices you don't own or control, are separately regulated (e.g. FCC Part 15 in the US) and can be a criminal offence depending on jurisdiction and target. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2025-12 (no tagged GitHub releases; commit history is the changelog)",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "cc1101-tool"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/mcore1976/cc1101-tool",
+    "what": "project README: supported boards, frequency bands, feature list (jam/replay/bruteforce/chat), explicit YARD Stick One comparison"
+   },
+   {
+    "url": "https://github.com/mcore1976/cc1101-tool/commits/main",
+    "what": "commit history confirming most recent commit Dec 23, 2025 and general activity cadence"
+   },
+   {
+    "url": "https://github.com/mcore1976/cc1101-tool/releases",
+    "what": "confirms no tagged releases exist - the repo has no versioned release channel"
+   }
+  ],
+  "research_gaps": [
+   "No confirmed initial release year for the project",
+   "No independent confirmation of actual RX sensitivity or TX power achieved with the wired breakouts (depends entirely on which breakout the builder sources)",
+   "License not stated on the repo's main page"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "jcmk-flipper-subghz-module",
+  "hardware_id": "jcmk-flipper-subghz-module",
+  "name": "Flipper Zero SubGHz Module",
+  "firmware": "n/a (passive RF front-end, no firmware of its own)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "This is a radio module, not a firmware project. It runs whatever sub-GHz app the host Flipper Zero's own firmware (stock or Momentum/Unleashed/etc.) provides - the module changes the antenna/RF front end, not the software.",
+  "vendor": "JustCallMeKoko LLC (JCMK)",
+  "vendor_url": "https://justcallmekokollc.com",
+  "product_url": "https://justcallmekokollc.com/products/flipper-zero-400mhz-module",
+  "category": "subghz",
+  "subcategory": "flipper-accessory",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 12.0,
+  "price_note": "Sold in 400MHz and 900MHz band-matched versions, both listed as sold out. It also requires JCMK's separate $5 SPI Adapter Board (also sold out) to physically connect to the Flipper's GPIO header, so the real cost of the accessory is $17 when both are in stock.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "No soldering; it plugs onto the SPI Adapter Board, which plugs onto the Flipper's GPIO header.",
+  "build_effort": "assembly",
+  "build_note": "Plug the module onto the required SPI Adapter Board, then onto the Flipper Zero's 18-pin GPIO header. No flashing needed - the Flipper's own sub-GHz app talks to it over SPI exactly as it does the internal CC1101.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A standalone CC1101 module that plugs into a Flipper Zero's GPIO header (via a required separate adapter board) to externalize sub-GHz radio duties, so a bigger antenna or an amplifier can be attached instead of using the Flipper's small internal antenna. It does not add any new firmware capability - the Flipper's own sub-GHz app still runs the same features it always did.",
+  "honest_take": "This is a single-radio accessory with no amplifier of its own, sold at the same price point as commodity 3-in-1 Flipper expansion boards that pack an ESP32 and an nRF24 alongside the same CC1101 - so buyers comparing on price alone are giving up two radios for the same money. If your actual goal is more transmit range, this module alone doesn't get you there; Rabbit-Labs' Flux Capacitor bundles a genuine +20 dBm power amplifier (E07-433M20S) into a similar GPIO board for about $59, versus this module's bare CC1101 with just a better antenna connector. Both the module and its required adapter board are currently sold out, so as of this check it isn't actually buyable at any price.",
+  "best_for": [
+   "Someone who specifically wants a dedicated, single-purpose sub-GHz radio isolated from other Flipper add-on boards",
+   "Attaching a directional or gain antenna without an amplifier"
+  ],
+  "not_for": [
+   "Anyone wanting more RF power - there's no PA here, see the Flux Capacitor instead",
+   "Buying today - both required parts are out of stock"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU on this board - it's a passive CC1101 radio module. The Flipper Zero's own STM32WB55 drives it over SPI, identical to how it drives the internal CC1101.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "CC1101",
+     "role": "sub-ghz",
+     "note": "Sold in separate 400MHz-band and 900MHz-band variants; JCMK does not publish gain/sensitivity figures beyond the stock CC1101 datasheet numbers."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - powered from the Flipper's GPIO rail via the SPI Adapter Board.",
+   "charging": "n/a",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header (via required SPI Adapter Board)"
+   ],
+   "gpio": "Consumes the Flipper's hardware SPI lines through the adapter board",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare PCB",
+   "notable_physical": [
+    "Included antenna",
+    "Requires a separate $5 SPI Adapter Board sold by the same vendor - not included"
+   ]
+  },
+  "capabilities": {
+   "subghz_rx": {
+    "v": "yes",
+    "note": "Same underlying CC1101 receive capability as the Flipper's internal radio, with a swappable/external antenna."
+   },
+   "subghz_tx": {
+    "v": "yes",
+    "note": "Same underlying CC1101 transmit capability; whatever TX range restrictions the installed Flipper firmware enforces still apply."
+   },
+   "subghz_external_antenna": {
+    "v": "yes",
+    "note": "The stated purpose of the product - 'externalizes sub-GHz capability so external antennas/amplifiers can be attached', per the vendor listing."
+   },
+   "subghz_amplified": {
+    "v": "no",
+    "note": "No power amplifier or LNA on this board - it is a bare CC1101, unlike PA-integrated alternatives such as the Rabbit-Labs Flux Capacitor."
+   },
+   "subghz_replay": {
+    "v": "partial",
+    "note": "Inherited entirely from whatever sub-GHz app the host Flipper firmware runs; the module contributes only the RF front end."
+   },
+   "subghz_rolling_code": {
+    "v": "no",
+    "note": "Not a feature of the module; would depend on Flipper firmware, and no rolling-code defeat is claimed by JCMK."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host Flipper Zero - not usable on its own."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not applicable - passive radio module."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No firmware or scripting interface of its own - it's a passive RF front end for whatever the Flipper's own firmware does."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module ecosystem of its own; relies entirely on the host Flipper's app catalog."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the module is legal. Transmitting on sub-GHz bands is licence- and power-limited in most countries regardless of what hardware you use; pairing this with a directional or amplified antenna can push a transmission over legal field-strength limits faster than the stock setup would. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "n/a - hardware accessory, no firmware releases",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "JCMK SubGHz Module"
+  ],
+  "sources": [
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-400mhz-module",
+    "what": "product listing: price, band variants, sold-out status, requirement for the SPI Adapter Board, antenna inclusion"
+   },
+   {
+    "url": "https://justcallmekokollc.com/products/flipper-zero-spi-adapter-board",
+    "what": "confirms the required adapter board's own price ($5) and sold-out status"
+   },
+   {
+    "url": "https://www.tindie.com/products/tehrabbitt/rabbit-labstm-cc1101-900mhz-module/",
+    "what": "comparison point for a non-amplified vs amplified CC1101 GPIO board pricing in the same accessory niche"
+   }
+  ],
+  "research_gaps": [
+   "No published gain, sensitivity or TX power figures specific to this module beyond generic CC1101 datasheet numbers",
+   "Exact PCB dimensions not listed",
+   "Could not confirm whether this uses a plain CC1101 IC or a pre-matched breakout module (e.g. an Ebyte E07 variant)",
+   "This is a genuinely single-function accessory (one radio, no MCU, no firmware) - the short capability list reflects that, not incomplete research"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "retia-meshtastic-nibble",
+  "hardware_id": "retia-meshtastic-nibble",
+  "name": "Open Source Meshtastic Nibble",
+  "firmware": "Meshtastic (upstream)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/meshtastic/firmware",
+  "firmware_note": "Ships pre-flashed with mainline Meshtastic firmware, updatable over USB. Retia's own repo (github.com/retiallc/nibble) states the Nibble board variants are merged upstream into Meshtastic itself, rather than being a fork running divergent code.",
+  "vendor": "Retia (retia.io)",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/products/rp2040-meshtastic-nibble-bme280-sensor-kit",
+  "category": "subghz",
+  "subcategory": "mesh-comms-node",
+  "status": "out-of-stock",
+  "released": "2024",
+  "price_usd": 10,
+  "price_note": "All five listed variants (PCB only, unsoldered kit, and soldered/tested kit, each in RP2040 or ESP32-S3) are priced identically at $10 and all are currently sold out. That a fully assembled/tested unit costs the same as a bare PCB is unusual and confirmed directly on the live listing, not an error in our transcription.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The unsoldered kit needs surface-mount-adjacent hand soldering (LoRa module, MCU module, LED); the Meshtastic side then needs comfort with mesh-network configuration (channels, PSK, node roles) which is not beginner territory even if the hardware is easy.",
+  "build_effort": "assembly",
+  "build_note": "Soldered/tested variant is plug-and-play; the unsoldered kit is a small through-hole/module build designed to fit inside a 25mm PVC pipe for weatherproofing; PCB-only requires sourcing every part yourself from the published BOM.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "An open-source LoRa mesh-networking node built around an RFM95 (Semtech SX1276) radio and either an RP2040 or ESP32-S3, designed to fit inside a 1-inch PVC pipe for cheap weatherproof field deployment. It ships pre-loaded with mainline Meshtastic firmware, and the board design has been merged upstream into the Meshtastic project itself rather than being a one-off fork.",
+  "honest_take": "This is not an offensive or defensive security tool - it's an encrypted off-grid mesh-comms node, useful to the same crowd that carries a Flipper because it solves 'no cell signal at a protest, a disaster site, or a remote con venue' rather than anything resembling a pentest primitive. It earns a place here because the comparison database already tracks general-purpose hacker-con hardware, and because Meshtastic mesh networks are exactly what some detection tooling elsewhere in this database (the MeshCore/Meshtastic detector keys) is built to spot - so a reader comparing detectors benefits from seeing what they're detecting. Buy the RP2040 version unless you specifically need BLE/Wi-Fi pairing with a phone: the ESP32-S3 variant burns meaningfully more power for that convenience. Every variant is currently sold out.",
+  "best_for": [
+   "Off-grid encrypted mesh comms for field work, cons, or emergency use",
+   "Anyone who wants to understand what a Meshtastic detector in another device is actually matching on"
+  ],
+  "not_for": [
+   "Offensive security testing - it has no attack capability of any kind",
+   "Anyone needing GPS-tagged mesh logging out of the box - no GPS is included"
+  ],
+  "hardware": {
+   "mcu_primary": "RP2040 (RP2040 Zero) or ESP32-S3 (ESP32-S3 Zero) - buyer's choice at purchase",
+   "mcu_primary_note": "RP2040 variant has no radio of its own beyond the LoRa module (lower power, longer runtime, no phone BLE pairing). ESP32-S3 variant adds native Wi-Fi/BLE, required for iPhone companion-app pairing per Meshtastic's connectivity model, at the cost of higher idle current.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "RFM95 (Semtech SX1276)",
+     "role": "lora-mesh",
+     "note": "868 MHz (EU) or 915 MHz (US) variant, selected at purchase. No sub-GHz key in this schema covers LoRa/Meshtastic specifically - see research_gaps."
+    },
+    {
+     "ic": "ESP32-S3 integrated radio",
+     "role": "wifi-ble",
+     "note": "Only present on the ESP32-S3 build option; used for Meshtastic's phone companion-app pairing and optional MQTT gateway bridging, not for any offensive Wi-Fi/BLE feature."
+    }
+   ],
+   "display": {
+    "type": "None",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Not included in any variant; powered over USB from whatever host or power bank it's connected to.",
+   "charging": "USB (Micro-USB or USB-C depending on the MCU breakout used)",
+   "pmic": null,
+   "storage": "None beyond the MCU's own flash (firmware + config only)",
+   "connectivity": [
+    "USB",
+    "LoRa 868/915 MHz",
+    "Wi-Fi/BLE (ESP32-S3 variant only)"
+   ],
+   "gpio": "I2C and SPI pads broken out for peripheral expansion",
+   "sensors": [
+    "None included by default on the current listing, despite 'BME280 Sensor Kit' appearing in the product URL slug - see research_gaps"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None included; PCB is sized to fit inside a 25mm (1-inch) PVC pipe for a DIY weatherproof enclosure",
+   "notable_physical": [
+    "Designed around 25mm PVC pipe mounting with pre-drilled holes",
+    "Coil/wire LoRa antenna",
+    "Status LED"
+   ]
+  },
+  "capabilities": {
+   "sd_logging": {
+    "v": "no",
+    "note": "No SD card slot on the board."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Configured through the standard Meshtastic app/CLI, not independently scriptable."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Runs unattended as a mesh relay node once powered, but has no screen - composing or reading messages requires the Meshtastic phone app or a connected computer."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Uses the standard Meshtastic companion app, not a per-device app store."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Not a BLE scanning tool on either variant."
+   },
+   "ble_advertise": {
+    "v": "partial",
+    "note": "ESP32-S3 variant advertises BLE for Meshtastic companion-app pairing only; RP2040 variant has no BLE radio at all."
+   },
+   "wifi_ap_mode": {
+    "v": "partial",
+    "note": "ESP32-S3 variant can run Meshtastic's Wi-Fi client/AP mode for MQTT gateway bridging; RP2040 variant has no Wi-Fi radio."
+   },
+   "wifi_scan_24": {
+    "v": "no",
+    "note": "Not a Wi-Fi reconnaissance device."
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS module is included in any current listed variant, despite the product URL referencing a sensor kit."
+   },
+   "gps_wardrive_log": {
+    "v": "no",
+    "note": "No GPS present to log against."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Enumerates as a USB serial/programming device, not mass storage."
+   },
+   "mesh_lora": {
+    "v": "yes",
+    "note": "RFM95 (Semtech SX1276) radio, ships pre-loaded with mainline Meshtastic firmware, and per the GitHub repo the board design has actually been merged upstream into the Meshtastic project itself - about as confirmed as this capability gets."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Operating a LoRa mesh node is generally legal worldwide on the applicable unlicensed ISM band (868 MHz in the EU, 915 MHz in the US) subject to the usual duty-cycle and power limits for that band. Meshtastic's default encryption is for confidentiality, not anonymity - check your local law on unlicensed radio use and encrypted communications; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-09 (Retia's companion scriptkitty.sh flasher repo was updated 2026-09-05; the Nibble hardware repo shows recent 2026 activity)",
+   "app_store": "No - uses the standard Meshtastic app",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Nibble",
+   "Retia Nibble"
+  ],
+  "sources": [
+   {
+    "url": "https://retia.io/products/rp2040-meshtastic-nibble-bme280-sensor-kit",
+    "what": "current price ($10 across all 5 variants), sold-out status, MCU/radio options, PVC-pipe form factor"
+   },
+   {
+    "url": "https://github.com/retiallc/nibble",
+    "what": "confirms RFM95/SX1276 radio, MIT license, schematic and gerber files present, and that Nibble variants are merged upstream into Meshtastic"
+   },
+   {
+    "url": "https://github.com/RetiaLLC",
+    "what": "org repo listing showing active 2026 commits across Nibble-adjacent tooling (scriptkitty.sh flasher, 38c3-Meshtastic), used to assess ecosystem activity"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists in this schema for LoRa mesh-network participation (send/receive encrypted mesh text, store-and-forward relay) - the device's core function has no home in the current capability vocabulary",
+   "Could not confirm whether a BME280 environmental sensor is actually offered as a purchasable option despite appearing in the product page's URL slug/name",
+   "No battery life or TX power (dBm) figures published for this specific board"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "unit72784-diabolic-parasite",
+  "hardware_id": "unit72784-diabolic-parasite",
+  "name": "Diabolic Parasite",
+  "firmware": "Diabolic Parasite firmware (Retia/UNIT 72784, v2.0 line)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/unit72784/Diabolic-Parasite",
+  "firmware_note": "Partially open source - the schematic is public and select firmware components are being released to GitHub, but the full firmware is not fully open at time of writing. Firmware v2.0 added 'Diabolic Shell', an encrypted bidirectional command/exfil channel over the same HID keystroke-reflection technique used for keylogging.",
+  "vendor": "UNIT 72784",
+  "vendor_url": "https://unit72784.com",
+  "product_url": "https://www.crowdsupply.com/unit-72784/diabolic-parasite",
+  "category": "usb-hid",
+  "subcategory": "covert-usb-implant",
+  "status": "preorder",
+  "released": "2026",
+  "price_usd": 125,
+  "price_note": "Crowdfunded (482% funded), orders placed now ship Oct 31, 2026. Plus $8 US / $18 worldwide shipping.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Deploying it well requires physical access to swap a target's existing keyboard/mouse cable, understanding of USB HID descriptor behavior, and operational awareness of what its keystroke-injection and exfiltration channel will and won't trigger in EDR/behavioral tooling.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled; a 3D-printable enclosure design was published separately in Feb 2026.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "An inline USB pass-through implant: you unplug a target's keyboard/mouse, plug it into the Parasite's female port, then plug the Parasite into the freed host port. It clones the passthrough device's full USB identity (VID/PID/manufacturer/product strings), logs every keystroke to a web UI over Wi-Fi, and can be wirelessly triggered to inject keystrokes or open an encrypted covert shell - all while behaving as an inert passthrough the rest of the time.",
+  "honest_take": "The headline feature isn't the keystroke injection - every device in this batch does that - it's that Diabolic Parasite is simultaneously a full hardware keylogger for whatever real keyboard is plugged through it, which almost none of the cheaper BadUSB cables/sticks here can do. That capability is also exactly why it's the most legally dangerous device in this batch: wiretapping/keylogger statutes in most jurisdictions treat *capturing someone else's input* very differently from injecting your own, and 'Diabolic Shell' turning stray keystrokes into a live exfiltration channel is squarely built for interactive access to systems you don't own. It's still pre-order as of this check (ships Oct 31, 2026, per the vendor), so nothing about its real-world detectability against modern EDR is independently verified yet - treat vendor evasion claims as marketing until someone publishes a teardown or a blue-team writeup.",
+  "best_for": [
+   "Red-team engagements requiring both passive keylogging and on-demand active injection from one implant",
+   "Simulating a compromised peripheral for insider-threat exercises"
+  ],
+  "not_for": [
+   "Anyone without explicit written authorization - keylogging a third party's real keyboard traffic is a separate, often more serious, legal exposure than keystroke injection alone",
+   "Buying today - it's still pre-order, not shipping"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3FN8",
+   "mcu_primary_note": "Runs at 240 MHz; native USB support drives both the HID cloning/injection side and the passthrough logic.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S3 integrated Wi-Fi",
+     "role": "wifi",
+     "note": "2.4 GHz only, via a high-gain 4.1 dBi ceramic chip antenna. Used for the web UI, keylog retrieval, and remote payload triggering."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered; a 3.3V 700mAh onboard LDO regulator supplies the logic rail, not a standalone battery.",
+   "charging": "n/a (bus-powered)",
+   "pmic": "Onboard 3.3V LDO",
+   "storage": "8 MB built-in flash",
+   "connectivity": [
+    "USB Type-A input/output (passthrough)",
+    "Wi-Fi 2.4 GHz"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Ultra-compact adapter enclosure; separate 3D-printable case files published",
+   "notable_physical": [
+    "Female USB-A input for the real HID device",
+    "Male USB-A output to the host port",
+    "Discreet configurable RGB WS2812 status LED"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Wirelessly triggered keystroke/mouse injection that clones a previously-seen trusted device's VID/PID/strings, with randomized typing cadence and ALT+Numpad keyboard-layout bypass."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Vendor's own comparison table lists no mass-storage persona; it presents only as the cloned HID device or in dormant passthrough."
+   },
+   "usb_keylogger": {
+    "v": "yes",
+    "note": "Hardware-level keylogger that works with 'nearly any connected USB keyboard, whether standard or composite HID', logged in real time to the built-in web UI."
+   },
+   "usb_exfil": {
+    "v": "yes",
+    "note": "Firmware v2.0's 'Diabolic Shell' opens an encrypted covert channel over the HID keystroke-reflection technique for command execution and file pull, entirely over the USB HID link (no network traffic)."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Wi-Fi web UI wirelessly arms the injection payload on demand; the device otherwise sits dormant in passthrough mode."
+   },
+   "usb_payload_lang": {
+    "v": "claimed",
+    "note": "Vendor states firmware v2.0 added multi-keyboard-layout ('speaks the world's keyboards') support; the exact scripting language/format for payloads is not documented in what UNIT 72784 has published so far."
+   },
+   "hardware_destruct": {
+    "v": "yes",
+    "note": "Listed as a feature in the vendor's own comparison table against Rubber Ducky/O.MG Cable Elite/Key Croc; mechanism not publicly documented."
+   },
+   "usb_ethernet_attack": {
+    "v": "no",
+    "note": "No Ethernet/network-adapter persona - it is a USB-A HID/passthrough device only."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Logs and injects without any host software running, but arming a payload or reading the keylog requires connecting to its Wi-Fi web UI from another device."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Single web UI, no module/app ecosystem."
+   },
+   "scriptable": {
+    "v": "claimed",
+    "note": "Payload configuration happens through the web UI; whether there's a scripting API beyond that isn't documented in available sources."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "This device both injects keystrokes AND captures a third party's real keystrokes - the latter is a wiretapping/interception offence in most jurisdictions (e.g. US federal and state wiretap statutes, UK RIPA/Computer Misuse Act) when used without the device owner's and user's consent, independent of any separate law covering unauthorized computer access. Owning the hardware is generally legal; using it on a system or against a person without explicit authorization is not. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "2026-02 (enclosure design files; firmware v2.0/Diabolic Shell announced Jan 2026)",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/unit-72784/diabolic-parasite",
+    "what": "full spec sheet (ESP32-S3FN8, 8MB flash, 4.1dBi antenna), price, comparison table against Rubber Ducky/O.MG Cable Elite/Key Croc, shipping date"
+   },
+   {
+    "url": "https://github.com/unit72784/Diabolic-Parasite",
+    "what": "confirms partial open-source status and repo existence for firmware/install instructions"
+   },
+   {
+    "url": "https://www.cnx-software.com/2025/07/23/diabolic-parasite-esp32-s3-usb-dongle-for-penetration-testing-and-security-research/",
+    "what": "independent hardware writeup corroborating the ESP32-S3 USB dongle design at launch"
+   },
+   {
+    "url": "https://www.crowdsupply.com/unit-72784/diabolic-parasite/updates/introducing-diabolic-shell-a-covert-encrypted-bidirectional-channel-for-command-execution-and-data-exfiltration",
+    "what": "Diabolic Shell feature announcement: encrypted HID-channel command execution and exfiltration in firmware v2.0"
+   }
+  ],
+  "research_gaps": [
+   "No independent teardown or detection/evasion testing published yet - device has not shipped as of this check",
+   "Self-destruct mechanism not documented beyond being listed in the vendor's comparison table",
+   "Exact payload scripting language/format not published",
+   "No confirmed max keylog buffer size or behavior when the web UI is unreachable"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "unit72784-diabolic-drive",
+  "hardware_id": "unit72784-diabolic-drive",
+  "name": "Diabolic Drive",
+  "firmware": "Diabolic Drive firmware (2025 refresh)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/unit72784/Diabolic-Drive",
+  "firmware_note": "June 2025 firmware update added keystroke reflection/exfiltration, dynamic hardware-ID spoofing and OS detection. ATmega32U4 side supports 'almost any open source firmware built for those chips' - the vendor names WiFi Duck, WiFi Ducky, ESPloitV2, WHID and supremeDuck as compatible alternatives, since the ATmega32U4 and ESP8266 are wired over Serial/I2C the same way those projects expect.",
+  "vendor": "UNIT 72784",
+  "vendor_url": "https://unit72784.com",
+  "product_url": "https://www.crowdsupply.com/unit-72784/diabolic-drive",
+  "category": "usb-hid",
+  "subcategory": "wireless-badusb-drive",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 115,
+  "price_note": "In stock, ships within three business days. Plus $8 US / $18 worldwide shipping.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Default operation (plug in, trigger a stored payload over the web UI) is approachable; spoofing hardware IDs, writing custom firmware, or using the exposed ATmega32U4 bootloader for deep customization is not.",
+  "build_effort": "assembled",
+  "build_note": "Ships fully assembled and tested in a universal flash-drive PCB form factor meant to be dropped into a generic flash-drive enclosure.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "A USB-A flash drive that is a genuine, working 64GB storage device (real read/write, ~20/10 Mbps) until wirelessly commanded over its own Wi-Fi access point to expose a HID keyboard interface and fire a stored keystroke-injection payload. Both its storage and HID personas can have their VID/PID/serial/vendor strings spoofed to match a specific brand.",
+  "honest_take": "This is the most direct like-for-like comparison in the batch: the vendor's own listing puts it against the Rubber Ducky ($100, no wireless, no storage) and O.MG Cable Basic ($120, wireless but no 64GB of real storage) and the pricing genuinely tracks - you're paying about the same as those for meaningfully more (dual persona, real usable storage that works *during* payload firing, spoofable IDs). The catch is architectural, not marketing: it's an ATmega32U4 doing the HID work talking to an ESP8266 over serial/I2C, the same pairing used by several $25 hobbyist boards in this very batch (Wifi BadUSB, and the open-source WiFi Duck/supremeDuck lineage it's explicitly compatible with) - so a chunk of the $115 is the 64GB flash controller, the assembled/tested universal-drive PCB, and spoofable-ID firmware polish, not exotic silicon.",
+  "best_for": [
+   "Social-engineering drops where a device needs to pass as a real, working flash drive before and after the attack",
+   "Red teams wanting spoofable hardware IDs on both the storage and HID personas"
+  ],
+  "not_for": [
+   "Anyone who wants the cheapest possible wireless BadUSB - the ATmega32U4+ESP8266 hobbyist boards in this batch do the injection side for a quarter of the price, just without real usable storage"
+  ],
+  "hardware": {
+   "mcu_primary": "Microchip ATmega32U4",
+   "mcu_primary_note": "Runs at 16 MHz / 5V; handles HID keyboard emulation and native-USB bootloading. This is the same family of chip (Arduino Leonardo-class, native USB HID) used across most of this batch's cheaper BadUSB boards.",
+   "mcu_secondary": "ESP8266EX",
+   "radios": [
+    {
+     "ic": "ESP8266EX",
+     "role": "wifi",
+     "note": "160 MHz, 3.3V via onboard LDO. Hosts the Wi-Fi AP and web UI used to arm and fire payloads remotely; connected to the ATmega32U4 over Serial and I2C."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered; no battery.",
+   "charging": "n/a (bus-powered)",
+   "pmic": "Onboard LDO regulator for the ESP8266's 3.3V rail",
+   "storage": "64GB flash storage (usable simultaneously with payload firing) plus a separate W25Q32 4MB SPI flash for payload/script storage",
+   "connectivity": [
+    "USB Type-A",
+    "Wi-Fi 2.4 GHz (self-hosted AP)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Universal flash-drive PCB form factor, designed to fit generic flash-drive enclosures",
+   "notable_physical": [
+    "High-gain 4.1 dBi 2.4 GHz ceramic chip antenna",
+    "Exposed ATmega32U4 bootloader access via the USB 3.0 pins"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Exposes a HID keyboard interface on command and injects a pre-loaded payload; defaults to a dormant 'spectre' state on plug-in rather than firing immediately."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Genuine 64GB flash storage, readable/writable at up to ~20/10 Mbps, functional simultaneously with payload injection - this is the feature that most differentiates it from stick-style injectors in this batch."
+   },
+   "usb_exfil": {
+    "v": "partial",
+    "note": "The 64GB volume itself can be used for manual file exfiltration once mounted; the June 2025 firmware update also added keystroke-reflection based exfiltration for covert channel use, per the vendor."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough device and has no mechanism to intercept a separate real keyboard's traffic, unlike the Diabolic Parasite."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Fires remotely over Wi-Fi via the onboard web UI, or can be pre-programmed to inject immediately on plug-in instead."
+   },
+   "usb_payload_lang": {
+    "v": "claimed",
+    "note": "ATmega32U4+ESP8266 pairing is compatible with WiFi Duck/WiFi Ducky/ESPloitV2/WHID/supremeDuck firmware per the vendor, all of which use DuckyScript or DuckyScript-derived payload formats; UNIT 72784's own default firmware payload format is not separately documented."
+   },
+   "hardware_destruct": {
+    "v": "no",
+    "note": "Vendor's own comparison table explicitly lists 'Self-Destruct: No' for Diabolic Drive, versus 'Yes' for its sibling Diabolic Parasite."
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hosts its own Wi-Fi access point and web UI for remote arming/firing and OTA firmware updates - no separate network infrastructure required."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Can pre-program payloads to fire on plug-in without any operator present, but remote arming/monitoring needs a Wi-Fi client connecting to its AP."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Single onboard web UI; no module ecosystem."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "ATmega32U4 accepts direct Arduino-sketch uploads via its native USB bootloader for full custom firmware, in addition to the stock web-UI payload workflow."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "high",
+   "notes": "Owning the hardware is legal. Deploying it as a disguised drop drive against a system or person without explicit authorization is unauthorized computer access in most jurisdictions (e.g. the US Computer Fraud and Abuse Act, UK Computer Misuse Act), independent of any separate wiretap-style concern - Diabolic Drive does not intercept a third party's keystrokes the way Diabolic Parasite does. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": "2025-06 (keystroke reflection, dynamic hardware-ID spoofing, OS detection firmware update)",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/unit-72784/diabolic-drive",
+    "what": "full spec sheet (ATmega32U4 + ESP8266EX, 64GB storage, W25Q32 4MB payload flash), price, in-stock status, vendor comparison table against Rubber Ducky/O.MG Cable Basic/USBNinja"
+   },
+   {
+    "url": "https://github.com/unit72784/Diabolic-Drive",
+    "what": "confirms GitHub repo exists with design files and firmware installation instructions"
+   },
+   {
+    "url": "https://www.hackster.io/news/diabolic-drive-stealthily-injects-keyboard-strokes-while-being-a-functional-usb-drive-cd255a46db2d",
+    "what": "independent writeup corroborating the dual-persona (functional storage + HID) design"
+   },
+   {
+    "url": "https://www.crowdsupply.com/unit-72784/diabolic-drive/updates/new-firmware-with-support-for-keystroke-reflection-dynamic-hardware-id-spoofing-os-detection-and-more",
+    "what": "June 2025 firmware update details: keystroke reflection exfil, dynamic hardware ID spoofing, OS detection"
+   }
+  ],
+  "research_gaps": [
+   "No independent confirmation of real-world detection/evasion behavior against modern EDR",
+   "Exact default payload scripting language for UNIT 72784's own firmware (as opposed to the third-party firmware options it's compatible with) not documented",
+   "No published figure for payload storage capacity in characters/bytes beyond 'millions of characters' on the 4MB SPI flash"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "retia-usb-nugget-s2",
+  "hardware_id": "retia-usb-nugget-s2",
+  "name": "USB Nugget (ESP32-S2)",
+  "firmware": "Nugget OS / S2-Nugget",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/RetiaLLC/S2-Nugget",
+  "firmware_note": "CircuitPython/MicroPython firmware maintained by Retia LLC (Alex Lynd's current company). This is a live, actively-updated continuation of the cat-themed 'Nugget' hacking-education line he originally created under HakCat - not the same as the separate 'DevKitty' fork/shop, whose own storefront and repos are dead. Retia's GitHub org shows commits as recent as Aug-Sep 2026 across Nugget/Nibble tooling, including a browser-based flasher (scriptkitty.sh) for the line.",
+  "vendor": "Retia (retia.io)",
+  "vendor_url": "https://retia.io",
+  "product_url": "https://retia.io/products/wi-fi-nugget-s2-nugget-esp32s2",
+  "category": "usb-hid",
+  "subcategory": "educational-badusb-board",
+  "status": "out-of-stock",
+  "released": "2022",
+  "price_usd": 75.0,
+  "price_note": "Listed as sold out on the current Retia storefront.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Purpose-built as a teaching platform: drag-and-drop payload deployment via mass storage, quick-select buttons for pre-made attacks, and an OLED that shows what's executing. Deeper use (writing your own CircuitPython payloads) is intermediate.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled board; no soldering required.",
+  "stealth": "overt",
+  "form_factor": "usb-stick",
+  "summary": "A cat-themed ESP32-S2 board with native USB, an OLED screen, quick-select buttons and Wi-Fi, sold by Retia LLC as the current-generation successor to Alex Lynd's original HakCat WiFi/USB Nugget line. It mounts as a USB flash drive for drag-and-drop payload deployment, injects keystrokes as a HID keyboard, and can be remotely controlled from a phone or desktop over its own Wi-Fi.",
+  "honest_take": "The existing database entry for the original 'WiFi Nugget' calls the whole Nugget lineage already-abandoned, based on the DevKitty-branded shop and repos going dark - and that assessment is correct for DevKitty specifically, but it misses that creator Alex Lynd's line is alive and being actively developed today under Retia LLC (commits into September 2026, per Retia's GitHub org), just under new branding and a new firmware name (Nugget OS / S2-Nugget, distinct from DevKitty's archived ScriptKitty-era code). If you're evaluating whether to buy into this ecosystem, judge it on Retia's current activity, not the DevKitty shop's dead Shopify store. On capability: it's an ESP32-S2 board, so 2.4GHz-only Wi-Fi, no 5GHz, and the 'monitor mode' is the same management-frame-level tooling every other ESP32 security board in this database uses - not a magic wand against WPA3/PMF-protected networks.",
+  "best_for": [
+   "Beginners wanting a screen-driven, buttons-first intro to BadUSB and basic Wi-Fi recon",
+   "Anyone already following Retia/HakCat's workshop material"
+  ],
+  "not_for": [
+   "5GHz Wi-Fi work - the ESP32-S2 doesn't have the radio for it",
+   "Buying today - currently sold out"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S2",
+   "mcu_primary_note": "Native USB support drives both the mass-storage/HID personas directly, without a second co-processor.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "ESP32-S2 integrated Wi-Fi",
+     "role": "wifi",
+     "note": "2.4 GHz 802.11b/g/n only - the ESP32-S2 has no 5GHz radio and no Bluetooth."
+    }
+   ],
+   "display": {
+    "type": "OLED",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery in the base design; USB-powered.",
+   "charging": "USB",
+   "pmic": null,
+   "storage": "Onboard flash exposed as a drag-and-drop mass-storage volume for payloads",
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4 GHz"
+   ],
+   "gpio": "Expansion header (design shares lineage with the original cat-shaped Nugget boards)",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "None specified for this variant",
+   "notable_physical": [
+    "OLED screen showing live command execution",
+    "Quick-select payload buttons",
+    "Status LED"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "HID keyboard emulation for keystroke-injection payloads, confirmed by both the Retia product listing and the S2-Nugget firmware repo."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Mounts as a USB flash drive for drag-and-drop payload deployment - the primary way payloads get onto the board."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not documented in available Retia sources one way or the other."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device - it's a direct-inject BadUSB board."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Product listing states remote control via mobile and desktop devices over Wi-Fi, in addition to on-device quick-select buttons."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "CircuitPython/MicroPython, per the S2-Nugget firmware repo - not DuckyScript."
+   },
+   "wifi_scan_24": {
+    "v": "yes",
+    "note": "S2-Nugget firmware repo lists Wi-Fi packet monitoring/analysis in Python as a feature."
+   },
+   "wifi_scan_5": {
+    "v": "no",
+    "note": "ESP32-S2 has no 5GHz radio."
+   },
+   "wifi_monitor_mode": {
+    "v": "partial",
+    "note": "Promiscuous-mode packet monitoring per the firmware repo; not confirmed as full injection-capable monitor mode."
+   },
+   "detect_generic_wifi": {
+    "v": "yes",
+    "note": "S2-Nugget firmware repo explicitly lists deauthentication packet detection as a feature."
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "ESP32-S2 has no Bluetooth radio at all (unlike the ESP32-S3 'Bluetooth Nugget' variant in the same product family)."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Has a screen and buttons for on-device payload selection, but no battery - needs to stay plugged into USB power."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module/app store; firmware and payloads come from Retia's GitHub repos."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning and building the board is legal. Wi-Fi deauthentication against networks you don't own or control is treated as prohibited RF interference by the FCC in the US (47 U.S.C. 333) and as unauthorized network interference under equivalents like the UK Computer Misuse Act elsewhere; HID keystroke injection against a system without authorization is a separate computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-09 (Retia's scriptkitty.sh browser flasher for the Nugget/Nibble line updated Sep 5, 2026)",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Wi-Fi Nugget S2",
+   "S2 Nugget"
+  ],
+  "sources": [
+   {
+    "url": "https://retia.io/products/wi-fi-nugget-s2-nugget-esp32s2",
+    "what": "product listing: price ($75), sold-out status, ESP32-S2 MCU, OLED/buttons, mass-storage + HID behavior, Wi-Fi remote control"
+   },
+   {
+    "url": "https://github.com/RetiaLLC/S2-Nugget",
+    "what": "firmware repo: CircuitPython/MicroPython language, HID injection, Wi-Fi monitoring in Python, deauth detection, MIT license"
+   },
+   {
+    "url": "https://github.com/RetiaLLC",
+    "what": "org activity confirming Retia is actively maintaining the Nugget/Nibble product line into September 2026, distinct from the defunct DevKitty branch already in this database"
+   },
+   {
+    "url": "https://nugget.dev",
+    "what": "project history page distinguishing Alex Lynd's original HakCat Nugget work from the later DevKitty fork, and confirming Retia's current investment in the line"
+   }
+  ],
+  "research_gaps": [
+   "No capability key exists in this schema for on-device quick-select physical payload buttons as a UX feature",
+   "Exact relationship/hardware differences between this ESP32-S2 'USB Nugget' and the separate ESP32-S3 'Bluetooth Nugget'/'Bad Nugget' firmware line in the same Retia catalog is not fully disentangled from available sources",
+   "No independent confirmation of Wi-Fi TX power or antenna gain"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "maltronics-malduino-w",
+  "hardware_id": "maltronics-malduino-w",
+  "name": "MalDuino W",
+  "firmware": "MalDuino-W (fork of SpacehuhnTech/WiFiDuck)",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/maltronics/MalDuino-W",
+  "firmware_note": "Maltronics' own GitHub repo describes MalDuino-W as a fork of SpacehuhnTech/WiFiDuck adapted for Maltronics hardware, MIT licensed. WiFiDuck's architecture is an ATmega32U4 (keystroke injection, DuckyScript-compatible) talking to an ESP8266 (Wi-Fi AP + web UI + script storage) over serial.",
+  "vendor": "Maltronics",
+  "vendor_url": "https://maltronics.com",
+  "product_url": "https://maltronics.com/products/malduino-w",
+  "category": "usb-hid",
+  "subcategory": "wireless-badusb-stick",
+  "status": "available",
+  "released": null,
+  "price_usd": 62.23,
+  "price_note": "GBP 49.00 direct from Maltronics (the manufacturer), converted at 1 GBP = 1.27 USD = US$62.23. Black variant is sold out; Silver variant is in stock. Site does not state whether VAT is included or excluded.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Scripts run/edit/delete/download entirely through a web interface over its own Wi-Fi hotspot - no separate cable-based reflashing needed for day-to-day payload work.",
+  "build_effort": "assembled",
+  "build_note": "Plug and go; USB-A and USB-C connectors both present on the same unit.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A wireless BadUSB stick built on the open-source WiFi Duck architecture (ATmega32U4 for injection, ESP8266 for Wi-Fi), letting an operator run, edit, and manage DuckyScript-style payloads over a web interface hosted by the device's own Wi-Fi hotspot instead of needing to physically reprogram it.",
+  "honest_take": "Maltronics doesn't publish the exact chips on their own product or docs pages, but their GitHub repo states plainly that MalDuino-W's firmware is a fork of Spacehuhn's open-source WiFiDuck project, and WiFiDuck's own documented hardware is an ATmega32U4 + ESP8266 pair - the same combination used by the $25 Wifi BadUSB board elsewhere in this batch, and the same open-source lineage. The $66 you're paying over that $25 hobbyist board buys an assembled dual-connector (USB-A + USB-C) unit, a maintained web-UI firmware fork, and a company that answers support requests - not different silicon.",
+  "best_for": [
+   "Buyers who want wireless BadUSB without building it themselves",
+   "USB-A and USB-C target compatibility from one device"
+  ],
+  "not_for": [
+   "Anyone comfortable building their own - the underlying WiFiDuck design this is forked from is free and open source"
+  ],
+  "hardware": {
+   "mcu_primary": "ATmega32U4 (inferred)",
+   "mcu_primary_note": "Not stated on Maltronics' own product or docs pages. Inferred with moderate confidence from Maltronics' GitHub repo describing MalDuino-W as a fork of SpacehuhnTech/WiFiDuck, whose documented reference hardware pairs an ATmega32U4 (HID/injection) with an ESP8266 (Wi-Fi). Treat as claimed, not vendor-confirmed.",
+   "mcu_secondary": "ESP8266 (inferred)",
+   "radios": [
+    {
+     "ic": "ESP8266 (inferred)",
+     "role": "wifi",
+     "note": "Inferred from the MalDuino-W GitHub repo's use of ESPAsyncTCP, a library specific to the ESP8266 Arduino core (ESP32 boards use a different async web-server stack), and from its stated WiFiDuck lineage."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": "4MB (vendor states 'stores 4 million keys')",
+   "connectivity": [
+    "USB-A",
+    "USB-C",
+    "Wi-Fi (self-hosted hotspot)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Assembled unit; Black and Silver color variants",
+   "notable_physical": [
+    "Programmable RGB LED",
+    "Dual USB-A and USB-C connectors on one unit"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "DuckyScript-compatible keystroke injection, autorun-on-plug-in per the product listing."
+   },
+   "usb_mass_storage": {
+    "v": "unknown",
+    "note": "Not documented on Maltronics' product or docs pages one way or the other."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not documented."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough device; no keylogging capability advertised."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Runs/edits/deletes/downloads scripts over its own Wi-Fi web interface, per the product listing - functionally remote control, though the vendor doesn't separately describe a 'fire now from across the room' mode distinct from editing the active script."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "'The same BadUSB scripting language you've been using for years' per the vendor - i.e. DuckyScript, with LOCALE and LED extension commands."
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hosts its own Wi-Fi hotspot for the web control interface."
+   },
+   "hardware_destruct": {
+    "v": "no",
+    "note": "Not advertised or documented as a feature."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Can autorun a stored payload on plug-in without any operator present; interactive script management needs a Wi-Fi client connected to its hotspot."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "Single web UI, no module ecosystem."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "DuckyScript payloads editable directly through the web terminal/interface."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions (e.g. the US Computer Fraud and Abuse Act, UK Computer Misuse Act). Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "unknown - no dated releases visible on the maltronics/MalDuino-W GitHub repo",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://maltronics.com/products/malduino-w",
+    "what": "price (£49), stock status by color, feature list (web interface, DuckyScript compatibility, 4MB storage, dual USB-A/C)"
+   },
+   {
+    "url": "https://github.com/maltronics/MalDuino-W",
+    "what": "confirms firmware is a fork of SpacehuhnTech/WiFiDuck, MIT license, ESPAsyncTCP dependency (ESP8266-specific)"
+   },
+   {
+    "url": "https://docs.spacehuhn.com/blog/malduino",
+    "what": "Spacehuhn's own blog post describing MalDuino W as 'wireless BadUSB based on our open-source WiFi Duck project'"
+   },
+   {
+    "url": "https://github.com/SpacehuhnTech/WiFiDuck",
+    "what": "upstream WiFiDuck project documenting the ATmega32U4 + ESP8266 reference hardware pairing that MalDuino-W's firmware was forked from"
+   }
+  ],
+  "research_gaps": [
+   "Maltronics does not publish the exact MCU/Wi-Fi chip on their own product or documentation pages - the ATmega32U4 + ESP8266 identification here is inferred from firmware lineage, not vendor-confirmed",
+   "No independent teardown found to physically verify the inferred chips",
+   "Original release year not found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "maltronics-malduino-3",
+  "hardware_id": "maltronics-malduino-3",
+  "name": "MalDuino 3",
+  "firmware": "MalDuino 3 firmware",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": null,
+  "firmware_note": "Successor to the original MalDuino Lite/Elite line (already in this database as 'MalDuino Elite'), which used an ATmega32U4. Maltronics does not publish a dedicated GitHub repo or exact MCU for the '3' revision.",
+  "vendor": "Maltronics",
+  "vendor_url": "https://maltronics.com",
+  "product_url": "https://maltronics.com/products/malduino-3",
+  "category": "usb-hid",
+  "subcategory": "badusb-stick",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 44.45,
+  "price_note": "GBP 35.00 direct from Maltronics (the manufacturer), converted at 1 GBP = 1.27 USD = US$44.45. Listed as sold out. Site does not state whether VAT is included or excluded.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "A physical 3-position switch selects between two stored scripts or a setup mode that exposes the onboard storage - no wireless configuration, no app.",
+  "build_effort": "assembled",
+  "build_note": "Plug and go; scripts are edited as plain text files when the switch is set to position 3 (setup mode), which exposes the 128MB flash as a mass-storage volume.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A cable-free, offline BadUSB stick with dual USB-A/USB-C connectors, 128MB of onboard storage, and a physical 3-position switch to select between two stored scripts or a setup mode that exposes the storage for editing. It supports 34 keyboard locales and spoofable VID/PID for both its HID and mass-storage personas.",
+  "honest_take": "This is the plug-in-only, no-wireless sibling to MalDuino W in the same product family - if you don't need remote/wireless triggering, it's the cheaper and simpler option and its 128MB of storage (versus the W's 4MB) is genuinely useful for file-exfiltration-style payloads. Maltronics doesn't publish the MCU for this specific revision, but the product line's history (Lite/Elite, both ATmega32U4-based, already in this database) makes an ATmega32U4-class native-USB chip the reasonable assumption rather than a confirmed fact - treat the exact silicon as unverified. As with the W, you're paying mostly for an assembled, documented, support-backed unit; the underlying trick (switch-selected DuckyScript payloads with VID/PID spoofing) is the same thing a $25 hobbyist board in this batch does.",
+  "best_for": [
+   "Offline/air-gapped payload delivery where Wi-Fi triggering is undesirable or impossible",
+   "File exfiltration to onboard storage during a physical engagement"
+  ],
+  "not_for": [
+   "Remote/wireless triggering - see MalDuino W instead",
+   "Buying today - currently sold out"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published by Maltronics for this revision. The predecessor MalDuino Lite/Elite line (already tracked in this database) used an ATmega32U4; whether the '3' revision continues that or moved to a different native-USB MCU is not confirmed by any source found.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": "128MB onboard flash, exposed as mass storage in setup mode (~200KBps transfer speed)",
+   "connectivity": [
+    "USB-A",
+    "USB-C"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Unbranded 'incognito' USB enclosure",
+   "notable_physical": [
+    "3-position physical switch (script 1 / script 2 / setup mode)",
+    "Dual USB-A and USB-C connectors on one unit"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Executes stored DuckyScript-style payloads at up to '9000 characters per minute' per the vendor, selected via the physical switch."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Switch position 3 (setup mode) exposes the 128MB flash as a mass-storage volume for editing scripts and configuration."
+   },
+   "usb_exfil": {
+    "v": "partial",
+    "note": "128MB of onboard storage can be used as an exfiltration target for payload scripts that copy files to it, though this isn't a dedicated one-click feature."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No wireless radio at all - triggering is entirely physical (plug-in autorun or the 3-position switch). Contrast with MalDuino W, its wireless sibling."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "Vendor calls it 'standard BadUSB script' language; docs confirm a preferences file supports per-persona VID/PID configuration and locale settings."
+   },
+   "hardware_destruct": {
+    "v": "no",
+    "note": "Not advertised or documented."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully offline operation - plug in and it autoruns a stored script with no network or app dependency."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module ecosystem; scripts are plain text files edited directly on the exposed storage."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Plain-text BadUSB scripts editable directly via the exposed 128MB storage volume in setup mode."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://maltronics.com/products/malduino-3",
+    "what": "price (£35), sold-out status, 128MB storage, dual USB-A/C, 34 keyboard locales, 3-position switch behavior"
+   },
+   {
+    "url": "https://docs.maltronics.com/devices/malduino-3",
+    "what": "confirms mass-storage exposure in setup mode and per-persona VID/PID spoofing via the preferences file"
+   },
+   {
+    "url": "https://digitalit.pl/en/pentesting-tools-c-31/maltronics-malduino-3-p-262",
+    "what": "independent retailer listing corroborating the 128MB storage and ~200KBps transfer speed figures"
+   }
+  ],
+  "research_gaps": [
+   "Exact MCU not published by Maltronics for this specific revision, unlike the predecessor MalDuino Elite already in this database",
+   "No GitHub firmware repo found for this specific product",
+   "Original release date not found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "omg-cable-programmer-usb-ac",
+  "hardware_id": "omg-cable-programmer-usb-ac",
+  "name": "O.MG Cable Programmer (USB A+C)",
+  "firmware": "n/a (host-side configuration tool)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Not a target-facing implant itself - it's the accessory used to put an O.MG Cable, Plug, Adapter or UnBlocker into DFU (device firmware update) mode so it can be configured, updated, or recovered.",
+  "vendor": "O.MG (Hak5)",
+  "vendor_url": "https://o.mg.lol",
+  "product_url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+  "category": "accessory",
+  "subcategory": "programmer-dongle",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 25.0,
+  "price_note": "US$25.00 direct from Hak5/O.MG's own store (shop.hak5.org/products/o-mg-cable-programmer-usb-a-c, titled 'O.MG Programmer USB A+C'), confirmed live - this is a US-based manufacturer selling natively in USD, not a currency-conversion issue. This is the updated USB-A+C version replacing the earlier single-connector programmer. Prior figure of $40 did not match the live listing.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug the O.MG device into the programmer, the programmer into a host, and use the web interface or app - no soldering or firmware-flashing expertise required for routine use.",
+  "build_effort": "assembled",
+  "build_note": "n/a - purpose-built accessory, nothing to assemble.",
+  "stealth": "overt",
+  "form_factor": "usb-stick",
+  "summary": "The dedicated setup/recovery dongle for Hak5's O.MG line (Cable, Plug, Adapter, UnBlocker): it puts a connected O.MG device into DFU mode so an operator can configure Wi-Fi settings, upload DuckyScript-compatible payloads and trigger settings, perform firmware upgrades or recovery, pull forensic dumps/backups, or batch-flash multiple units - none of which is possible over the O.MG device's own limited USB interface once it's deployed.",
+  "honest_take": "This is infrastructure, not an attack tool - you cannot deploy this against anything, only use it to prepare something else in this same product family for deployment. It exists because the O.MG Cable/Plug/Adapter/UnBlocker are deliberately built to look and behave like innocuous everyday accessories in the field, which means they don't expose an easy configuration interface once assembled; the programmer is what restores that access. If you already own the O.MG Cable Programmer's older single-connector predecessor, this buys you USB-C target support and not much else.",
+  "best_for": [
+   "Owners of any O.MG Cable/Plug/Adapter/UnBlocker who need to reconfigure, update, or recover one",
+   "Batch-provisioning multiple O.MG devices before a field engagement"
+  ],
+  "not_for": [
+   "Anyone without an existing O.MG device to program - it has no independent attack capability",
+   "First-time buyers who don't yet own any O.MG hardware"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published by Hak5/O.MG; functions as a USB host-side interface adapter rather than a payload-carrying device in its own right.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB-A (to host)",
+    "USB-C (to host)",
+    "O.MG device connector"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Small dongle enclosure",
+   "notable_physical": [
+    "Supports both USB-A and USB-C target connections on one unit"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "The programmer itself has no HID persona - it configures other devices that do."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a storage device."
+   },
+   "usb_exfil": {
+    "v": "no",
+    "note": "Not applicable - it's a configuration tool, not a deployable implant."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "No keylogging capability."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "Not applicable to the programmer itself."
+   },
+   "usb_payload_lang": {
+    "v": "claimed",
+    "note": "Enables uploading DuckyScript-compatible payloads and trigger settings onto connected O.MG devices, per the vendor listing; the language itself belongs to the O.MG device being programmed, not the programmer."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Configuration happens through the O.MG web interface or companion app, not direct scripting of the programmer."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host computer or phone to drive the configuration UI."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module ecosystem of its own."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "The programmer itself has no offensive capability - it configures other hardware. Legal risk attaches to how the O.MG device it programs is subsequently used, not to owning or using this accessory. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": "n/a - hardware accessory",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "O.MG Programmer"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/o-mg-cable-programmer-usb-a",
+    "what": "EUR49 price, DFU-mode function, in-stock status, description of configuring Wi-Fi settings/payloads/trigger settings"
+   },
+   {
+    "url": "https://shop.hak5.org/products/o-mg-cable-programmer-usb-a-c",
+    "what": "official $40 USD price from the primary O.MG/Hak5 vendor"
+   },
+   {
+    "url": "https://www.witslb.com/product/o-mg-programmer-usb-ac/",
+    "what": "independent reseller listing corroborating universal compatibility across O.MG Cable/Plug/Adapter/UnBlocker"
+   }
+  ],
+  "research_gaps": [
+   "Exact internal chip/controller not published - not consequential for its function as a configuration dongle",
+   "Physical dimensions not listed by any source found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ks-elektronikdesign-usbsafe2",
+  "hardware_id": "ks-elektronikdesign-usbsafe2",
+  "name": "UsbSafe2",
+  "firmware": "UsbSafe2 firmware (C, MikroC)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/Newbadboy/UsbSafe2",
+  "firmware_note": "Fully open source: firmware (C, compiled with MikroC), schematics and PCB layout (Diptrace) are all published (packaged as a single archive plus a manual in the repo), and the BOM uses standard, replaceable parts.",
+  "vendor": "KS Elektronikdesign",
+  "vendor_url": "https://ks-elektronikdesign.se",
+  "product_url": "https://www.crowdsupply.com/karoly-simon/usbsafe2",
+  "category": "accessory",
+  "subcategory": "usb-data-blocker",
+  "status": "available",
+  "released": "2017",
+  "price_usd": 39,
+  "price_note": "In stock, ships within three business days, plus $8 US / $18 worldwide shipping.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Single button controls both data-blocking and current-threshold settings via press-and-hold timing and LED flash counts, explained in the included manual.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled, tested, and shipped with a user manual; open-source design files exist if you want to build your own instead.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "A defensive inline USB dongle, not an attack tool: it sits between your device and an untrusted host or charger, and lets you cut the USB data lines entirely ('anti-juice-jacking' data integrity mode) while separately capping current at one of five selectable thresholds (0.5-2.4A) and hard-clamping over-voltage at 6.5V to protect against a faulty or malicious power source.",
+  "honest_take": "This solves a real, narrow problem - juice-jacking and dodgy charging ports - and does it with genuinely open, inspectable hardware (schematic, PCB layout and firmware are all public), which is more than most of the covert attack tools in this batch can say. It is not a general USB firewall: it does nothing against a device that already has a valid, unblocked data connection, and the over-voltage protection is fixed at 6.5V by hardware, not adjustable. It occupies the same defensive niche as the O.MG UnBlocker already in this database; UsbSafe2 predates it by years and adds current/voltage protection that the UnBlocker doesn't claim, but doesn't have the UnBlocker's more polished branding or O.MG ecosystem integration.",
+  "best_for": [
+   "Charging from untrusted public USB ports without exposing data lines",
+   "Lab bench protection for dev boards during testing"
+  ],
+  "not_for": [
+   "USB-C PD fast charging - it's a USB 2.0-verified design with no PD negotiation",
+   "Blocking an already-paired/trusted data connection - it only helps when you actively enable data-blocking mode before connecting"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not specified by name in available sources; firmware is written in C and compiled with MikroC, implying a Microchip PIC-family microcontroller (MikroC is Mikroelektronika's PIC/AVR/ARM toolchain), but the exact part number is not confirmed.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "None - inline pass-through device, no battery.",
+   "charging": "n/a (pass-through)",
+   "pmic": "Hardware over-voltage protection fixed at 6.5V; five user-selectable current thresholds (0.5A/0.9A/1.5A/2.1A/2.4A)",
+   "storage": null,
+   "connectivity": [
+    "USB 2.0 (verified)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "72 x 26 x 12",
+   "weight_g": null,
+   "case": "Assembled dongle enclosure",
+   "notable_physical": [
+    "Single set/reset button for all controls",
+    "Two LEDs: green (D2, data status) and red (D1, power/threshold status)"
+   ]
+  },
+  "capabilities": {
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a storage device - it's an inline data/power gate."
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "No injection capability of any kind; purely defensive."
+   },
+   "usb_exfil": {
+    "v": "no",
+    "note": "Its entire purpose is preventing data exfiltration over an untrusted USB link, not performing it."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not applicable."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "Fixed firmware behavior controlled only by the physical button."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully self-contained inline operation with no host software or companion app required."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app or module ecosystem."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A purely defensive device with no offensive capability; no legal concerns beyond ordinary product safety/CE-type compliance for a USB power-path device."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "good",
+   "last_release": "2017-03 (per the Crowd Supply project's last posted update)",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "UsbSafe squared",
+   "USBSafe2"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/karoly-simon/usbsafe2",
+    "what": "full spec sheet (5 current thresholds, 6.5V OVP, 72x26x12mm, USB 2.0 verified), price, in-stock status, open-source design file links, MikroC/Diptrace toolchain"
+   },
+   {
+    "url": "https://github.com/Newbadboy/UsbSafe2",
+    "what": "confirms the open-source repo exists with firmware archive and manual, 6 commits, though no license file or MCU part number visible on the repo's main page"
+   },
+   {
+    "url": "https://www.hackster.io/newbadboy/usbsafe-featured-on-eevblog-dde7cc",
+    "what": "creator's own writeup noting the project was featured on the EEVblog electronics review show, used as independent-attention corroboration"
+   }
+  ],
+  "research_gaps": [
+   "Exact MCU part number not confirmed - only the toolchain (MikroC, implying a PIC-family part) is documented",
+   "No independent teardown found to verify the datasheet-claimed protection thresholds",
+   "Project has not posted a Crowd Supply update since March 2017, so long-term firmware maintenance status is unclear despite the open-source availability",
+   "The capability list here is genuinely short rather than under-researched: UsbSafe2 is a single-purpose inline data/power gate with one button and two behaviors (block data, cap current), and almost none of this schema's offensive USB/HID or radio capability keys apply to a defensive pass-through device"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "themakercat-usb-snake-box",
+  "hardware_id": "themakercat-usb-snake-box",
+  "name": "USB Snake Box",
+  "firmware": "USB Snake Box firmware (CircuitPython)",
+  "firmware_kind": "diy",
+  "firmware_repo": "https://github.com/HappyCat234/USB-Snake-Box",
+  "firmware_note": "CircuitPython-based; the public repo is minimal (5 commits, a boot.py/main.py pair and an example folder) with essentially no README beyond the project title, so treat it as lightly documented rather than a polished platform.",
+  "vendor": "The Maker Cat",
+  "vendor_url": "https://www.tindie.com/stores/TheMakerCat/",
+  "product_url": "https://www.tindie.com/products/TheMakerCat/usb-snake-box-circuit-python-hacking-tool/",
+  "category": "usb-hid",
+  "subcategory": "badusb-board",
+  "status": "out-of-stock",
+  "released": "2018",
+  "price_usd": 38.74,
+  "price_note": "Seller listed as 'taking a break' on Tindie - no current way to purchase.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Four physical buttons map to four pre-set payload scripts; editing them means dropping a new ducky-script-style text file onto the exposed mass-storage volume.",
+  "build_effort": "assembled",
+  "build_note": "Assembled, in a 3D-printed enclosure. Code is editable via CircuitPython drag-and-drop.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "A four-button CircuitPython BadUSB board in a 3D-printed enclosure: it enumerates as both a keyboard and a flash drive, and each of its four buttons fires a different pre-loaded keystroke-injection script, which the vendor describes as reading directly from ducky-script-style text files.",
+  "honest_take": "This is a hobbyist Tindie project, not a maintained product - its own GitHub repo has no real documentation beyond a title and five commits, and the seller's storefront is currently on a break with no listed return date. The core idea (multi-button physical payload selection on a CircuitPython board that also exposes mass storage) is genuinely useful and distinct from most single-payload sticks in this batch, but buyers should expect to read the source directly rather than rely on docs, and should not assume this is currently purchasable.",
+  "best_for": [
+   "Someone who wants several pre-selected payloads chooseable with a button press rather than a switch or plug order",
+   "Anyone comfortable reading CircuitPython source directly since documentation is minimal"
+  ],
+  "not_for": [
+   "Anyone needing vendor support or documentation",
+   "Buying today - seller is not currently fulfilling orders"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Described only as 'a Circuit Python device' with references to Adafruit components; the specific board (e.g. an Adafruit QT Py, Trinket M0, or similar SAMD21/RP2040 CircuitPython board) is not named in available sources.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": "Onboard flash exposed as mass storage for script files",
+   "connectivity": [
+    "USB"
+   ],
+   "gpio": "Four buttons wired to GPIO, each mapped to a stored script",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "3D-printed enclosure",
+   "notable_physical": [
+    "Four physical buttons, one payload each"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Acts as a keyboard to inject keystrokes 'at speeds no human can', per the product listing, with four buttons each selecting a different script."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Simultaneously enumerates as a flash drive, per the vendor listing ('acts as a keyboard and a flash drive')."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not documented whether payloads can write captured data back to the exposed storage."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device - direct HID injector only."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "Purely physical button-triggered; no wireless radio of any kind."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "Vendor states it 'is able to read from a ducky script text file', i.e. DuckyScript-style plain-text payloads."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Vendor explicitly advertises the 'ability to change any code (if you'd like)', with the full CircuitPython source open on GitHub."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully offline, button-triggered operation with no host software or wireless dependency."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app ecosystem; single open-source repo."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "poor",
+   "last_release": "unknown - GitHub repo shows 5 commits with no visible dates in available sources",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/TheMakerCat/usb-snake-box-circuit-python-hacking-tool/",
+    "what": "price ($38.74), four-button/dual-persona (keyboard + flash drive) description, DuckyScript-file support, seller on break/unavailable status"
+   },
+   {
+    "url": "https://github.com/HappyCat234/USB-Snake-Box",
+    "what": "confirms MIT license and minimal repo contents (boot.py, main.py, one example folder, no substantive README)"
+   },
+   {
+    "url": "https://blog.tindie.com/2018/06/usb-snake-box-circuit-python-hacking/",
+    "what": "independent Tindie Blog coverage confirming June 2018 origin and the maker's stated motivation (a cheaper alternative to the USB Rubber Ducky)"
+   }
+  ],
+  "research_gaps": [
+   "Exact CircuitPython board/MCU not named in any source found",
+   "No dated commit history visible to establish when the project's GitHub source was last actually touched (distinct from the confirmed 2018 product launch)",
+   "Whether the four scripts can be independently edited at runtime or require a full storage-volume rewrite is not documented"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "sbcomponents-hackypi",
+  "hardware_id": "sbcomponents-hackypi",
+  "name": "HackyPi",
+  "firmware": "HackyPi-Software",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/sbcshop/HackyPi-Software",
+  "firmware_note": "245-star, 147-commit open-source CircuitPython codebase; example payloads shown publicly include OS-specific scripts (Windows shutdown, Mac browser-history deletion, camera access) rather than DuckyScript-style USB-descriptor manipulation.",
+  "vendor": "SB Components",
+  "vendor_url": "https://sb-components.co.uk",
+  "product_url": "https://www.tindie.com/products/sbc/hackypi-programmable-diy-usb-hacking-tool/",
+  "category": "usb-hid",
+  "subcategory": "badusb-board",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 37.99,
+  "price_note": "Seller listed as 'On A Break' on Tindie - no current way to purchase.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug-and-play, no drivers required, drag-and-drop CircuitPython programming with a 1.14in TFT to watch what's executing; the RP2040's Thonny/CircuitPython workflow is friendlier than raw Arduino sketches for first-time buyers.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled board with SD card support and an onboard boot button; no soldering required.",
+  "stealth": "discreet",
+  "form_factor": "usb-stick",
+  "summary": "An RP2040-based (Cortex-M0+ dual-core) BadUSB board with a 1.14in TFT display and SD card slot, open-source and programmed in CircuitPython/Python via drag-and-drop. Cross-platform payload examples target Windows, Mac and Linux.",
+  "honest_take": "It has a screen and SD storage that most sub-$40 BadUSB sticks in this batch don't, and it's genuinely open source with 245 GitHub stars - real community traction for a hobbyist board. But the published example payloads (shutting down Windows, deleting Mac browser history, grabbing a camera snapshot) are closer to novelty pranks than the kind of payload library a red-team engagement would use, and no VID/PID spoofing is documented anywhere in available sources - if hardware-identity spoofing matters to your use case, this isn't confirmed to offer it. As with HackyPi's peers here, it's currently unpurchasable: the seller's Tindie store is on a break.",
+  "best_for": [
+   "Learning HID payload development with a screen to watch execution",
+   "Cross-platform (Windows/Mac/Linux) payload experimentation"
+  ],
+  "not_for": [
+   "Buying today - seller not currently fulfilling orders",
+   "Anyone needing confirmed VID/PID spoofing"
+  ],
+  "hardware": {
+   "mcu_primary": "RP2040",
+   "mcu_primary_note": "Dual-core Arm Cortex-M0+, per the vendor's own product listing.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "TFT",
+    "size_in": 1.14,
+    "resolution": "240x135",
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": "microSD card slot (card not included)",
+   "connectivity": [
+    "USB Type-A"
+   ],
+   "gpio": "Onboard boot button",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "87 x 74 x 37",
+   "weight_g": 20,
+   "case": "None specified",
+   "notable_physical": [
+    "1.14in color TFT display",
+    "microSD slot",
+    "Boot button"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "HID library-based keystroke injection, per the vendor listing and the HackyPi-Software repo."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "Drag-and-drop programming via mass-storage enumeration, per the vendor listing."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "SD card slot could plausibly support file exfiltration payloads, but this isn't documented as a built-in feature in available sources."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No wireless radio; purely plug-in/autorun triggered."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "CircuitPython/Python, per both the vendor listing and the GitHub repo - not DuckyScript."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Fully open-source, drag-and-drop CircuitPython payload editing; 245-star GitHub repo with 147 commits."
+   },
+   "sd_logging": {
+    "v": "yes",
+    "note": "Onboard microSD slot, per the vendor listing."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Plug-and-play autorun operation with no host software or wireless dependency; the TFT shows status without needing a connected computer."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module store; example payloads live in the GitHub repo."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "unknown exact date; repo shows 147 commits and is actively starred (245)",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/sbc/hackypi-programmable-diy-usb-hacking-tool/",
+    "what": "price ($37.99), RP2040 dual-core Cortex-M0+ MCU, 1.14in TFT, SD support, drag-and-drop mass storage, seller 'On A Break' status"
+   },
+   {
+    "url": "https://github.com/sbcshop/HackyPi-Software",
+    "what": "245 stars, 147 commits, MIT license, CircuitPython/Python payload language, example scripts (Windows shutdown, Mac history deletion, camera access)"
+   },
+   {
+    "url": "https://shop.sb-components.co.uk/products/hackypi-compact-diy-usb-hacking-tool",
+    "what": "manufacturer's own store listing confirming 87x74x37mm dimensions, 20g weight, and 240x135 TFT resolution"
+   },
+   {
+    "url": "https://www.cnx-software.com/2025/12/23/hackypi-2-0-hacking-tool-esp32-s3-for-wi-fi-and-bluetooth-connectivity/",
+    "what": "independent coverage confirming SB Components moved to an ESP32-S3-based 'HackyPi 2.0' for Wi-Fi/Bluetooth in a later, separate product - this record covers the original RP2040 HackyPi only"
+   }
+  ],
+  "research_gaps": [
+   "No documentation found of VID/PID spoofing capability either way",
+   "Exact GitHub last-commit date not confirmed",
+   "No independent confirmation of claimed cross-platform (Windows/Mac/Linux) reliability",
+   "SB Components has since released a distinct ESP32-S3-based 'HackyPi 2.0' with Wi-Fi/Bluetooth - not covered by this record, which is specific to the original RP2040 product listed on Tindie"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "michalmonday-ble-badusb-jdy08",
+  "hardware_id": "michalmonday-ble-badusb-jdy08",
+  "name": "BLE BadUSB (JDY-08)",
+  "firmware": "supremeDuck",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/michalmonday/supremeDuck",
+  "firmware_note": "Open-source, MIT-licensed, 241-star DuckyScript-compatible firmware; encoding for different keyboard languages is based on Hak5's and mame82's DuckyScript work per the repo's own credit note.",
+  "vendor": "michalmonday",
+  "vendor_url": "https://www.tindie.com/stores/michalmonday/",
+  "product_url": "https://www.tindie.com/products/michalmonday/ble-badusb-jdy-08/",
+  "category": "usb-hid",
+  "subcategory": "ble-badusb-stick",
+  "status": "discontinued",
+  "released": null,
+  "price_usd": 25.0,
+  "price_note": "Listed sold out since June 8, 2019 - effectively discontinued rather than temporarily out of stock.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Programmable with the Arduino IDE; the accompanying supremeDuck Android app's Google Play listing was removed for inactivity, so triggering payloads today likely means driving the BLE link yourself rather than using an official companion app.",
+  "build_effort": "assembled",
+  "build_note": "Hand-assembled and tested before shipping by the maker, per the listing; open-source EasyEDA design files exist if you want to build your own.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "An ATmega32U4 USB stick paired with a JDY-08 Bluetooth 4.0 module, remotely triggerable over BLE to fire DuckyScript-compatible keystroke/mouse-injection payloads via the open-source supremeDuck firmware. It has been sold out since 2019.",
+  "honest_take": "This is the BLE sibling of the same maker's Wifi BadUSB, using identical core silicon (ATmega32U4) with a different radio bolted on, and the honest headline is that it's been unavailable for seven years - this belongs in the database as a documented historical/reference design rather than something to actually go buy. Its JDY-08 module is explicitly BLE 4.0 only and the listing warns it will not connect to a phone that only supports BLE 4.2, which is itself a sign of the module's age; the maker's own comparison notes it has no BLE pairing password at all, and its ~5m range is the shortest of the maker's three variants (WiFi and the JDY-10 BLE variant both reach roughly 14m). If BLE-triggered BadUSB is what you're after today, expect to build this yourself from the open EasyEDA files rather than purchase an assembled unit.",
+  "best_for": [
+   "Reference design for BLE-remote-triggered BadUSB on cheap, well-documented open-source hardware",
+   "Builders willing to source an ATmega32U4 + JDY-08 themselves from the published EasyEDA files"
+  ],
+  "not_for": [
+   "Buying an assembled unit today - sold out since 2019",
+   "Anyone needing modern BLE (4.2+) phone compatibility"
+  ],
+  "hardware": {
+   "mcu_primary": "ATmega32U4",
+   "mcu_primary_note": "Native-USB, Arduino-IDE-programmable, per the vendor listing.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "JDY-08",
+     "role": "ble",
+     "note": "Bluetooth 4.0 only - the listing explicitly warns it 'will not work if your phone supports Bluetooth 4.2', a compatibility gap for a phone-triggered workflow. Per the supremeDuck project's own comparison page, effective range is around 5 meters in the open field, versus about 14 meters for the JDY-10 variant of the same board."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "Bluetooth 4.0 (BLE)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare USB stick PCB, hand-assembled",
+   "notable_physical": [
+    "Smaller than comparable alternatives cited by the maker (WHID, CJMCU-3212)"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Emulates keyboard and mouse HID for DuckyScript-compatible keystroke/mouse injection via the supremeDuck firmware."
+   },
+   "usb_mass_storage": {
+    "v": "unknown",
+    "note": "Not documented in available sources for this specific BLE variant."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not documented."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device - direct HID injector only."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Remote command injection over BLE 4.0, per the vendor listing and the supremeDuck project."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "supremeDuck firmware is DuckyScript-compatible, per its own GitHub repo."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open source, MIT licensed, Arduino IDE programmable - full firmware source available."
+   },
+   "ble_hid": {
+    "v": "yes",
+    "note": "The device's core function - BLE-triggered HID keyboard/mouse emulation."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "Not a BLE reconnaissance/scanning tool - it only advertises for its own control link."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a BLE controller (phone app or another BLE-capable device) to trigger payloads; no onboard trigger mechanism."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "A companion Android app existed but its Google Play listing was removed for developer-account inactivity, per the supremeDuck repo."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "unknown exact date; supremeDuck repo shows 155 commits and 241 stars",
+   "app_store": "No - official Android companion app pulled from Google Play for inactivity",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/michalmonday/ble-badusb-jdy-08/",
+    "what": "price ($25), ATmega32U4 + JDY-08 hardware, BLE 4.0-only limitation, sold-out-since-2019 status, hand-assembled/tested note"
+   },
+   {
+    "url": "https://github.com/michalmonday/supremeDuck",
+    "what": "241-star, MIT-licensed firmware repo confirming DuckyScript compatibility and the Google Play app removal"
+   },
+   {
+    "url": "https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison",
+    "what": "maker's own comparison page giving exact BLE range figures (JDY-08 ~5m vs JDY-10 ~14m) and confirming no pairing password on either BLE variant"
+   }
+  ],
+  "research_gaps": [
+   "Mass storage and file-exfiltration capability not documented either way",
+   "No independent confirmation of continued firmware compatibility with modern OS BLE stacks given the project's age"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "michalmonday-wifi-badusb",
+  "hardware_id": "michalmonday-wifi-badusb",
+  "name": "Wifi BadUSB",
+  "firmware": "supremeDuck (default); wifi_ducky or ESPloitV2 also supported",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/michalmonday/supremeDuck",
+  "firmware_note": "Ships with supremeDuck pre-installed but is hardware-compatible with two other open-source projects (wifi_ducky, ESPloitV2) since it uses the same ATmega32U4 + ESP-12F pairing those projects target.",
+  "vendor": "michalmonday",
+  "vendor_url": "https://www.tindie.com/stores/michalmonday/",
+  "product_url": "https://www.tindie.com/products/michalmonday/wifi-badusb/",
+  "category": "usb-hid",
+  "subcategory": "wifi-badusb-stick",
+  "status": "out-of-stock",
+  "released": null,
+  "price_usd": 25.0,
+  "price_note": "Listed sold out since June 28, 2023.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Hosts its own Wi-Fi AP with a default SSID ('supremeDuck') and password for control; reflashing the ESP-12F is helped by an onboard switch the maker added specifically for that purpose.",
+  "build_effort": "assembled",
+  "build_note": "Hand-made and tested before shipping, per the listing; open-source EasyEDA design files exist for self-builders.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "An ATmega32U4 USB stick paired with an ESP-12F Wi-Fi module, hosting its own access point ('supremeDuck' by default) for wireless keystroke-injection control. It's compatible with three different open-source firmware options (supremeDuck, wifi_ducky, ESPloitV2) since its ATmega32U4+ESP-12F hardware pairing matches what all three projects target.",
+  "honest_take": "This is the direct $25 open-source ancestor of the architecture Diabolic Drive charges $115 for elsewhere in this batch: both pair an ATmega32U4 for HID injection with an ESP-series Wi-Fi chip over serial, both run DuckyScript-compatible payloads, and both host a self-controlled Wi-Fi AP. What the $115 device adds - real usable 64GB storage that works simultaneously with injection, spoofable VID/PID/serial on both personas, and an assembled/tested/supported product - is real, but so is the roughly 4.5x price gap for what is architecturally the same trick. The maker's own comparison notes the Wi-Fi version has 'occasional lag spikes in mouse movement' and is less reliable than the BLE variants, and reflashing the ESP-12F requires a NodeMCU-style flasher rather than a simple drag-and-drop. This one has been sold out since 2023, and the default AP password ('37373737') is published in the product listing, so anyone buying a used or self-built unit should change it before relying on it for anything sensitive.",
+  "best_for": [
+   "Understanding the open-source ATmega32U4+ESP8266 architecture that pricier commercial wireless BadUSB devices are built on",
+   "Builders wanting to choose between three compatible open-source firmware options"
+  ],
+  "not_for": [
+   "Buying an assembled unit today - sold out since 2023",
+   "Anyone needing onboard storage beyond the ESP-12F's payload flash"
+  ],
+  "hardware": {
+   "mcu_primary": "ATmega32U4",
+   "mcu_primary_note": "Native-USB, handles keyboard/mouse HID emulation.",
+   "mcu_secondary": "ESP-12F",
+   "radios": [
+    {
+     "ic": "ESP-12F",
+     "role": "wifi",
+     "note": "Hosts a self-controlled Wi-Fi access point (default SSID 'supremeDuck', default password '37373737') for the web-based control interface. Per the maker's own comparison page, effective range is around 14 meters in the open field - on par with the JDY-10 BLE variant of the same board family, and well ahead of the JDY-08 BLE variant's ~5m."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "Wi-Fi 2.4 GHz (self-hosted AP)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Bare USB stick PCB, hand-assembled",
+   "notable_physical": [
+    "Onboard switch specifically for convenient ESP-12F reflashing",
+    "Smaller than comparable alternatives cited by the maker (WHID, CJMCU-3212)"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "yes",
+    "note": "Keyboard/mouse HID emulation for DuckyScript-compatible payload injection."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "No storage persona documented - injection payloads live in the ESP-12F's own flash, not an exposed mass-storage volume."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not documented in available sources."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Not a passthrough/keylogging device."
+   },
+   "hid_remote_trigger": {
+    "v": "yes",
+    "note": "Fires payloads via its self-hosted Wi-Fi AP and web interface."
+   },
+   "usb_payload_lang": {
+    "v": "yes",
+    "note": "DuckyScript-compatible via supremeDuck (default) or the alternative wifi_ducky/ESPloitV2 firmware the hardware also supports."
+   },
+   "wifi_ap_mode": {
+    "v": "yes",
+    "note": "Hosts its own access point for control; default credentials are published in the product listing."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Fully open source across all three compatible firmware options; an onboard switch is provided specifically to ease ESP-12F reflashing."
+   },
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "Can autorun a stored payload on plug-in; interactive control needs a Wi-Fi client joining its AP."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No module ecosystem; three alternative full-firmware options instead."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. Using it to inject keystrokes into a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "unknown exact date; supremeDuck repo shows 155 commits and 241 stars",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/michalmonday/wifi-badusb/",
+    "what": "price ($25), ATmega32U4 + ESP-12F hardware, default AP SSID/password, three compatible firmware options, sold-out-since-2023 status"
+   },
+   {
+    "url": "https://github.com/michalmonday/supremeDuck",
+    "what": "241-star, MIT-licensed default firmware repo confirming DuckyScript compatibility and architecture"
+   },
+   {
+    "url": "https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison",
+    "what": "maker's own comparison page giving the ~14m Wi-Fi range figure and documenting the Wi-Fi variant's mouse-lag and reflashing-complexity downsides versus the BLE variants"
+   }
+  ],
+  "research_gaps": [
+   "Mass-storage and file-exfiltration capability not documented",
+   "Exact release year not found"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "ucshop-programmable-badusb-cable",
+  "hardware_id": "ucshop-programmable-badusb-cable",
+  "name": "Programmable BadUSB Payload Cable (USB-A to USB-C)",
+  "firmware": "unknown/proprietary",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": null,
+  "firmware_note": "No GitHub repository, schematic, or firmware source is published or linked anywhere in the listing; the description points to 'docs' and a 'configuration toolchain' without naming or linking either.",
+  "vendor": "Unlimited Coverage",
+  "vendor_url": "https://www.tindie.com/stores/ucshop/",
+  "product_url": "https://www.tindie.com/products/ucshop/programmable-badusb-payload-cable-usb-a-to-usb-c/",
+  "category": "usb-hid",
+  "subcategory": "badusb-cable",
+  "status": "available",
+  "released": null,
+  "price_usd": 24.99,
+  "price_note": "Cable Type selector on the listing also offers 'USB-A to Micro USB' at the same price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Marketed as a ready-to-use platform; without a published toolchain link, actually reprogramming it is not confirmed to be beginner-friendly in practice.",
+  "build_effort": "assembled",
+  "build_note": "Sold assembled and tested per the listing; no build/assembly required or offered.",
+  "stealth": "covert",
+  "form_factor": "cable",
+  "summary": "A USB-A-to-USB-C cable advertised as containing a programmable microcontroller that can emulate HID keyboard/mouse input and virtual mass storage while looking like an ordinary charging/data cable. The listing is built almost entirely from generic marketing language - no chip, no schematic, and no linked GitHub repository or configuration tool are given anywhere on the page.",
+  "honest_take": "Treat this one with real skepticism: the Tindie listing's product description reads as templated boilerplate reused across this seller's catalog (which also includes rooted-phone 'HacPhone' resells and a 'USB Power-Kill Tester'), names no MCU, no radio, no storage capacity, and links to no GitHub repo, schematic, or the 'configuration toolchain' and 'docs' it repeatedly references. At roughly a tenth of the O.MG Cable's $180 price, either this is a rebadged generic BadUSB cable PCB (several near-identical ones circulate on AliExpress, typically built around cheap ATtiny85 or CH552-class chips) sold at a fair price for what it is, or the capabilities are simply unverifiable marketing copy - available sources cannot distinguish between the two. Buy it expecting a basic single-payload cable, not a full O.MG-Cable-class device, and don't expect vendor documentation to back up any specific claim.",
+  "best_for": [
+   "Buyers who understand they're getting an unverified, undocumented generic-hardware cable at a low price and are comfortable with that risk"
+  ],
+  "not_for": [
+   "Anyone who needs confirmed hardware specs before purchasing",
+   "Anyone expecting O.MG-Cable-level capability at a tenth of the price - that gap is not free"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not disclosed anywhere in the listing. Described only as 'a programmable microcontroller' with 'nonvolatile storage for payload persistence' - no part number, no vendor confirmation.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": "Unspecified nonvolatile storage for 'multiple payload files' - no capacity given",
+   "connectivity": [
+    "USB-A",
+    "USB-C"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "Braided cable with reinforced strain relief, per the listing",
+   "notable_physical": [
+    "LED indicator for device state/safe mode",
+    "Also available in a USB-A to Micro-USB variant at the same price"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "claimed",
+    "note": "Vendor states 'HID (keyboard/mouse) emulation ... supported'; no independent confirmation or schematic found."
+   },
+   "usb_mass_storage": {
+    "v": "claimed",
+    "note": "Vendor states 'virtual mass-storage emulation supported'; not independently confirmed."
+   },
+   "usb_exfil": {
+    "v": "unknown",
+    "note": "Not addressed in the listing beyond generic 'automation and testing' language."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "No keylogging capability advertised or plausible from the described inline-cable form factor."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No wireless radio mentioned anywhere in the listing - triggering, if any, is local/physical only."
+   },
+   "usb_payload_lang": {
+    "v": "unknown",
+    "note": "Listing references a 'compatible configuration toolchain' without naming the payload language or linking the toolchain."
+   },
+   "scriptable": {
+    "v": "unknown",
+    "note": "Described as 'reprogrammable via USB' but no toolchain, repo, or documentation is linked to verify how."
+   },
+   "standalone_untethered": {
+    "v": "claimed",
+    "note": "Implied by 'plugs into a host as a normal USB cable' framing, but the actual trigger mechanism (plug-in autorun vs. some other method) is not documented."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app or module ecosystem referenced."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "medium",
+   "notes": "Owning the device is legal. If its advertised HID injection capability is genuine, using it against a system without the owner's authorization is a computer-misuse offence in most jurisdictions. Check your local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "none",
+   "last_release": "unknown - no firmware repository found",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/ucshop/programmable-badusb-payload-cable-usb-a-to-usb-c/",
+    "what": "full product description, price ($24.99), and confirmation that no MCU, schematic, or GitHub/documentation link appears anywhere on the listing"
+   },
+   {
+    "url": "https://www.tindie.com/stores/ucshop/items/",
+    "what": "seller's broader catalog (rooted-phone resells, a USB power-kill tester) used to assess whether this is an original design or a generic rebadge, given the listing's templated marketing language"
+   },
+   {
+    "url": "https://shop.hak5.org/products/omg-cable",
+    "what": "O.MG Cable's official $180 price, used as the basis for this record's roughly-tenth-the-price comparison"
+   }
+  ],
+  "research_gaps": [
+   "No MCU, radio, or storage-capacity specification found anywhere",
+   "No GitHub repository, schematic, or teardown found to verify any advertised capability",
+   "No independent reviews found to corroborate or refute vendor claims",
+   "Cannot determine whether this is an original design or a rebadged generic BadUSB cable PCB commonly sold on AliExpress"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "hackerwarehouse-mouse-jiggler",
+  "hardware_id": "hackerwarehouse-mouse-jiggler",
+  "name": "Mouse Jiggler",
+  "firmware": "unknown/proprietary",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": null,
+  "firmware_note": "Not open source; sold as a finished product with no published firmware source. Functionally the same idea as numerous open-source ATtiny85/Digispark mouse-jiggler projects on GitHub, but this specific unit's internals are not confirmed to match any of them.",
+  "vendor": "Generic (sold via Hacker Warehouse)",
+  "vendor_url": "https://hackerwarehouse.com",
+  "product_url": "https://hackerwarehouse.com/product/mouse-jiggler/",
+  "category": "usb-hid",
+  "subcategory": "mouse-jiggler",
+  "status": "available",
+  "released": null,
+  "price_usd": 20.0,
+  "price_note": "In stock at Hacker Warehouse.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Plug in and forget - no configuration, no software, no switches.",
+  "build_effort": "assembled",
+  "build_note": "n/a - sold fully assembled, no build option.",
+  "stealth": "covert",
+  "form_factor": "usb-stick",
+  "summary": "A USB device that enumerates as a generic mouse and injects small, randomized cursor movements referenced back to the original position, purely to prevent screensaver/idle-lock/sleep from triggering. It is not an attack tool - it's an operational-support accessory used during physical or remote engagements (or ordinary desk use) to keep a session from locking.",
+  "honest_take": "This is the simplest, most single-purpose device in the entire batch, and that's fine - it does exactly one narrow thing and the vendor doesn't oversell it. The common misconception is that 'mouse jiggler' implies something clever defeating enterprise idle-detection; in reality this is a generic HID mouse sending small relative movements, and independent security-vendor writeups describe exactly this class of device being flagged by modern EDR (naming CrowdStrike, SentinelOne and Microsoft Defender for Endpoint) via synthetic-movement timing analysis or known jiggler HID/VID-PID signatures - so treat 'undetectable' marketing claims skeptically in a monitored enterprise environment even though the movement itself is genuinely imperceptible to a human eye. No MCU, firmware source, or internal design is published by the vendor, unlike the open-source ATtiny85/Digispark mouse-jiggler projects that do the same thing for a few dollars in parts if you're willing to build one.",
+  "best_for": [
+   "Preventing idle-lock/screensaver during legitimate unattended access, demos, or long-running processes",
+   "Simple, no-configuration desk use"
+  ],
+  "not_for": [
+   "Defeating enterprise EDR/DLP tools that specifically fingerprint jiggler-pattern HID mice",
+   "Anyone wanting open-source/inspectable firmware - build one of the many free ATtiny85 designs instead"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not disclosed by the vendor. Functionally equivalent open-source designs (e.g. ATtiny85 + V-USB) exist, but this specific product's internals are not confirmed to match any of them.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "USB bus-powered.",
+   "charging": "n/a (bus-powered)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "~16.9mm long (vendor states 'smallest available on the market'); packaged 4 x 3 x 0.5 in",
+   "weight_g": null,
+   "case": "Small dongle described by the vendor as looking like a generic USB wireless-receiver stub, not a full USB stick",
+   "notable_physical": [
+    "Very low-profile form factor intended to be unobtrusive when left plugged in"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Only ever emulates a generic mouse sending small relative-position movements; it does not send keyboard input or any scripted payload."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "No storage persona - pure HID mouse device."
+   },
+   "usb_exfil": {
+    "v": "no",
+    "note": "No data capability of any kind - purely cursor-movement generation."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "No keyboard-related capability at all."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No wireless radio or remote control; it runs continuously and autonomously from plug-in."
+   },
+   "usb_payload_lang": {
+    "v": "no",
+    "note": "Fixed behavior with no scripting or payload capability."
+   },
+   "scriptable": {
+    "v": "no",
+    "note": "No configuration or scripting interface - a single fixed function."
+   },
+   "standalone_untethered": {
+    "v": "yes",
+    "note": "Fully autonomous once plugged in; no host software, app, or configuration needed."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "No app or module ecosystem."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Generally legal to own and use for keeping your own session active. Using it to defeat mandatory idle-lock/screen-lock policy on an employer-owned or otherwise governed system may violate acceptable-use policy even where no law is broken - this is a policy risk, not primarily a legal one. Check your organization's policy and local law; this is not legal advice."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "n/a - fixed-function hardware product, no firmware updates",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "USB Mouse Mover",
+   "Mouse Mover"
+  ],
+  "sources": [
+   {
+    "url": "https://hackerwarehouse.com/product/mouse-jiggler/",
+    "what": "price ($20), in-stock status, dimensions, behavior description (small randomized movements referenced to original cursor position, generic-mouse-receiver-style appearance)"
+   },
+   {
+    "url": "https://sepiocyber.com/blog/mouse-jigglers/",
+    "what": "independent security-vendor explainer on how hardware mouse jigglers function as generic HID devices and how they get flagged, used to source the EDR-detection claim in honest_take"
+   },
+   {
+    "url": "https://www.currentware.com/blog/mouse-jiggler-detection/",
+    "what": "independent writeup naming specific EDR products (CrowdStrike, SentinelOne, Microsoft Defender for Endpoint) that flag synthetic mouse movement via timing-pattern analysis"
+   }
+  ],
+  "research_gaps": [
+   "No MCU or firmware source disclosed by the vendor - could not confirm whether this specific unit matches any published open-source ATtiny85/Digispark jiggler design",
+   "No independent teardown or detection-testing found specific to this Hacker Warehouse unit (the EDR-detection sources above describe the device class generally, not this product by name)",
+   "No confirmed release date"
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

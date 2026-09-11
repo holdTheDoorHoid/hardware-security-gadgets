@@ -148,7 +148,8 @@
    "No capability key in this schema covers a passive defensive USB data-line blocker; none were applied.",
    "Could not find the manufacturer's own site or confirm any internal chip part number.",
    "Could not confirm whether it degrades fast-charging (USB-PD/QC) negotiation on modern phones."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "vidar-attiny85-badusb",
@@ -300,7 +301,8 @@
   "research_gaps": [
    "No public schematic or firmware repo found; ATtiny85/V-USB architecture is inferred from the product description and the wider category of ATtiny85 BadUSB sticks, not independently confirmed for this specific product.",
    "Exact dimensions and flashing procedure (bootloader vs ISP programmer) not published."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "evil-crow-cable",
@@ -459,7 +461,8 @@
   ],
   "research_gaps": [
    "Could not confirm from the repo alone whether this specific SKU is the ATtiny85 revision or the later Atmega32U4/RP2040 'Pro' revision of the base Cable line; Tindie listing text explicitly names ATtiny85 and this was used."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "evilduck-sd",
@@ -621,7 +624,8 @@
   ],
   "research_gaps": [
    "Exact last-commit date for the SD-generation code path specifically (repo now centers on S3) not confirmed."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "evilduck-s3",
@@ -787,7 +791,8 @@
   ],
   "research_gaps": [
    "Exact Wi-Fi mode (AP-only vs joins an existing network) and whether payload trigger requires the operator to be on the same network, not confirmed."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "usbvalve",
@@ -944,7 +949,8 @@
   "research_gaps": [
    "No capability key in this schema directly covers 'inline USB threat/activity detector'; usb_mass_storage was used loosely as the closest fit and flagged here.",
    "Exact commit date of the most recent release could not be pinned beyond the 2026-08-19 date carried over from the first-pass listing."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "multifunction-network-box",
@@ -1096,7 +1102,8 @@
    "No manufacturer/OEM name, CPU part numbers, OS distribution, blocking mechanism, or power-loss/bypass behavior documented anywhere public.",
    "Could not determine whether it can defeat or merely passes through 802.1X - not documented.",
    "Considered emitting separate records for Model 100 and Model 1000 but the public spec sheet is too thin to responsibly differentiate their capabilities beyond raw CPU/RAM, so they are documented as one record with the tier difference in price_note/hardware."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "pikvm-v4-plus",
@@ -1271,7 +1278,8 @@
   "research_gaps": [
    "Exact CM4 RAM/eMMC configuration in the 'Plus' SKU and HDMI-capture IC part number not confirmed.",
    "PoE support not confirmed either way."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "dualcomm-etap-2003-gigabit-tap",
@@ -1421,7 +1429,8 @@
   ],
   "research_gaps": [
    "Could not confirm from Dualcomm's own documentation whether the inline pass-through path truly stays up with zero power, or whether the whole device (including pass-through) requires USB power to function - this materially affects its 'fail open' behavior and was not resolved."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "dualcomm-dc-1005pt-faste-switch-tap",
@@ -1559,7 +1568,8 @@
   ],
   "research_gaps": [
    "Exact switch ASIC and buffer size (which determine how much frame loss occurs under mirrored-port saturation) not published."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "firewalla-red",
@@ -1708,7 +1718,8 @@
   "research_gaps": [
    "Could not confirm the exact split between open-source and closed-source components of the Firewalla stack.",
    "No capability keys in this schema cover home-network IDS/parental-control/ad-blocking; only the closest-fitting one (packet_capture) was used, flagged here rather than force-fitting others."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "glytch-gps-module-pineapple-pager",
@@ -1847,7 +1858,8 @@
   "research_gaps": [
    "Exact USD list price on Hak5's own shop could not be read (client-rendered price placeholder); used lab401's EUR-converted figure instead.",
    "No category vocabulary value exists for 'wardriving addon module' specifically; used 'accessory' as the closest fit."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "littlepcap-network-tap",
@@ -1994,7 +2006,8 @@
   "research_gaps": [
    "No public firmware source repository found; software stack beyond 'runs on NanoPi R3S' (v2) is not documented.",
    "Version 2 pricing not confirmed."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "glytch-ethernet-module-pineapple-pager",
@@ -2133,7 +2146,8 @@
   ],
   "research_gaps": [
    "Confirmed as a duplicate pair within this batch's first pass (lab401 resale vs Hak5 direct listing) and merged into one record rather than written twice."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "netgotchi-pro",
@@ -2296,7 +2310,8 @@
   "research_gaps": [
    "No capability key in this schema covers 'local-network host-scanning honeypot IDS'; wifi_scan_24 was used as the closest fit and the honeypot/alarm behavior is described only in the summary/honest_take.",
    "Battery vs power-bank power source is ambiguous between the listing's marketing copy ('battery-powered') and its stated included items (no battery listed) - documented as power-bank powered per the more specific spec text."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  },
  {
   "id": "negotchi",
@@ -2458,6 +2473,7 @@
   ],
   "research_gaps": [
    "No capability key in this schema covers 'local-network host-scanning honeypot IDS'; wifi_scan_24 was used as the closest fit and the honeypot/alarm behavior is described only in the summary/honest_take."
-  ]
+  ],
+  "_staged_by": "integrate.py"
  }
 ]

@@ -1,0 +1,2332 @@
+[
+ {
+  "id": "tinysniffer",
+  "hardware_id": "tinysniffer",
+  "name": "tinySniffer",
+  "firmware": "tinyDebian",
+  "firmware_kind": "stock",
+  "firmware_repo": null,
+  "firmware_note": "Custom stripped-down Debian built by tinyDebian for the NanoPi NEO Air. The USB capture/passthrough logic is closed-source vendor software; no public repo found.",
+  "vendor": "tinyDebian",
+  "vendor_url": "https://www.usb7.net",
+  "product_url": "https://www.tindie.com/products/tinydebian/tinysniffer-usb-sniffer/",
+  "category": "hardware-debug",
+  "subcategory": "usb-analyzer",
+  "status": "available",
+  "released": "2022",
+  "price_usd": 179,
+  "price_note": "Live Tindie listing reads $179; some search-indexed snippets show $199 (possibly a stale cached price). Vendor's own usb7.net docs site does not display price at all, only links to Tindie.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Setup requires SSH into a Linux SBC, optional cloud registration on usb7.net for remote/shipped-to-someone-else use, and Wireshark/URB familiarity to make sense of captures.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a complete, pre-flashed appliance (NanoPi NEO Air running tinyDebian) - no soldering or firmware flashing by the buyer.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A USB 1.x/2.0 inline sniffer built on a FriendlyElec NanoPi NEO Air single-board computer (Allwinner H3), confirmed directly in the vendor's own documentation. Instead of dedicated capture silicon (FPGA/CPLD) like the other sniffers in this category, it does USB passthrough and packet capture entirely in software on the SBC's Linux kernel, then lets you pull PCAP files or control it remotely over WiFi/SSH.",
+  "honest_take": "This is essentially a ~$15-20 Allwinner H3 Linux SBC marked up roughly 10x, with the real value being the vendor's custom 'software passthrough' capture stack rather than any special hardware. That software approach is also its biggest limitation: the vendor's own docs explicitly warn against connecting a USB flash drive because it can't keep up with sustained bulk transfers - something a hardware FPGA sniffer wouldn't struggle with. 'Remote control' is genuinely just SSH and a cloud web portal into a Linux box, and the device must stay network-connected to capture at all, which undercuts any 'portable field tool' framing. An independent reviewer (Doug Brown's blog) also flagged unclear language suggesting cloud registration might be required even for local use.",
+  "best_for": [
+   "Shipping a unit to a remote colleague for USB enumeration debugging",
+   "Wireshark-based USB 1.x/2.0 protocol work that doesn't involve sustained high-bandwidth bulk transfers"
+  ],
+  "not_for": [
+   "Capturing high-bandwidth bulk transfers like USB flash drives (vendor explicitly warns against this)",
+   "Offline/air-gapped use - requires network connectivity to operate at all",
+   "USB 3.0/SuperSpeed capture (that needs the separate 'USB 3.0 Sniffer' product, built on a NanoPi R4SE)"
+  ],
+  "hardware": {
+   "mcu_primary": "Allwinner H3",
+   "mcu_primary_note": "Quad-core Cortex-A7 SoC on a FriendlyElec NanoPi NEO Air SBC, confirmed on the vendor's own usb7.net product docs ('tinySniffer is built on the top of NanoPi Neo Air'). This board family typically ships with 512MB DDR3 RAM and onboard 2.4GHz WiFi/BT, no Ethernet.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi",
+     "note": "Onboard WiFi on the NanoPi NEO Air carrier board, used only for remote SSH/web control and capture retrieval - not for any wireless sniffing capability."
+    }
+   ],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB/mains powered only, no internal battery.",
+   "charging": "USB",
+   "pmic": null,
+   "storage": "microSD (standard NanoPi NEO Air boot storage); capacity not specified by vendor",
+   "connectivity": [
+    "USB (device-facing passthrough port)",
+    "USB (host-facing port)",
+    "WiFi"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Dual USB ports (target passthrough + host)",
+    "Red/green status LEDs"
+   ]
+  },
+  "capabilities": {
+   "wifi_monitor_mode": {
+    "v": "no",
+    "note": "WiFi is used only for remote control/network access to the underlying Linux SBC (SSH, web portal), not for capturing wireless traffic. Notable because the product is marketed as 'WiFi-connected,' which could be misread as a wireless sniffing feature."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Vendor's own docs state it 'must be online in order to capture USB packets' - it needs an active network connection, so it's not a walk-around/offline tool."
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "A passive inline sniffer/passthrough appliance - it does not inject HID keystrokes or payloads like a Rubber Ducky-class device."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a mass-storage emulator; vendor's own docs warn against connecting a USB flash drive because the software passthrough can't keep up with sustained bulk transfers."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "Captures whatever USB traffic passes through it but has no keylogger-specific storage/exfil function."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No remote-triggered payload capability - it is a capture appliance, not an injection tool."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Pure USB bus sniffer; no debug-port support of any kind."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART bridge/probe function beyond capturing USB traffic."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C probing capability."
+   },
+   "ethernet_tap_passive": {
+    "v": "no",
+    "note": "Captures USB bus traffic only, not Ethernet."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passively capturing USB traffic on hardware you own/control is broadly legal. Using it to intercept traffic from a device you don't have authorization to inspect could raise unauthorized-access or wiretap-adjacent concerns depending on jurisdiction - check local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "sparse",
+   "last_release": "2024-11",
+   "app_store": "No",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "tinySniffer USB 1.x/2.0 Sniffer"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/tinydebian/tinysniffer-usb-sniffer/",
+    "what": "price ($179), product description, seller identity"
+   },
+   {
+    "url": "https://www.usb7.net/products/tinySniffer",
+    "what": "vendor confirms built on NanoPi Neo Air; software passthrough architecture"
+   },
+   {
+    "url": "https://www.usb7.net/products/tinySniffer/user-guide",
+    "what": "capture filters, WiFi/SSH remote control details, warning against high-bandwidth USB flash drive captures"
+   },
+   {
+    "url": "https://blog.tindie.com/2024/07/tinysniffer-usb-packet-capture-passthrough/",
+    "what": "independent coverage; flags ambiguity about cloud registration requirement"
+   },
+   {
+    "url": "https://www.usb7.net/products/USB-3.0-Sniffer",
+    "what": "sibling USB 3.0 product confirms product line is being actively extended (built on NanoPi R4SE instead)"
+   },
+   {
+    "url": "https://www.cnx-software.com/2024/07/23/tinysniffer-wifi-connected-usb-sniffer-nanopi-neo-air-sbc/",
+    "what": "independent tech press corroboration of NanoPi NEO Air hardware basis"
+   }
+  ],
+  "research_gaps": [
+   "Exact release year ambiguous: vendor docs metadata says 2022-06-26, but first public/press coverage found is July 2024",
+   "No published dimensions, weight, or confirmation of whether an enclosure/case is included",
+   "Unclear whether cloud registration on usb7.net is mandatory even for purely local/offline-network use",
+   "No SCHEMA.md capability key exists for generic USB bus sniffing/protocol capture - not forcing usb_hid_inject or packet_capture since neither matches this device's function"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "bugblat-minisniffer-2",
+  "hardware_id": "bugblat-minisniffer-2",
+  "name": "BugBlat miniSniffer 2",
+  "firmware": "n/a",
+  "firmware_kind": "n/a",
+  "firmware_repo": "https://github.com/bugblat/sniffer",
+  "firmware_note": "No named firmware version; the onboard FPGA gateware and FX2LP firmware are closed/unpublished. The linked GitHub repo (MIT license) is host-side capture/decode support code (Python/Lua/C++ APIs), not the device's own firmware.",
+  "vendor": "BugBlat",
+  "vendor_url": "https://www.bugblat.com",
+  "product_url": "https://www.bugblat.com/products/minisniff2/",
+  "category": "hardware-debug",
+  "subcategory": "usb-analyzer",
+  "status": "available",
+  "released": "2019",
+  "price_usd": 99.99,
+  "price_note": "Vendor's own bugblat.com US listing: $99.99 (+$20 shipping). Same vendor's EU storefront lists EUR149 (~$161 at current rates). UK/EU reseller lab401 lists it at both $160.92 and $195.00 across two pages - roughly 60-95% over the vendor-direct US price, most likely EU-converted pricing plus reseller/import markup rather than a real spec difference.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Plug-and-play capture via BugBlat's own desktop app, but making sense of raw USB packet dumps or using the Python/Lua/C++ APIs for custom tooling needs real USB protocol knowledge.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled board (50x33mm), no soldering. Needs libusb/WinUSB driver on Windows; no special driver on Linux/Mac.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A small (about half a credit card) inline USB protocol analyzer that sits between host and target device, sampling Low/Full/High-Speed USB traffic with an onboard FPGA and streaming or buffering (up to 256MB compressed) captures to a PC over a Cypress FX2LP USB-C link. BugBlat has sold sniffers of this family since the 2000s, aimed at USB firmware/device developers rather than consumer hobbyists.",
+  "honest_take": "The 'FPGA samples the bus, FX2LP handles the buffered high-speed USB uplink' architecture is the standard pattern for this whole product category (the same split used by the open-source Taradov design and OpenVizsla) - BugBlat just never names the actual FPGA part in any public material, so you're trusting a closed design for the part that actually does the sampling. The genuinely open piece is the host-side Python/Lua/C++ capture API on GitHub (MIT), not the gateware. At $99.99 direct it's a fair price for a real LS/FS/HS sniffer with meaningful buffer depth; paying lab401's $160-195 for the identical board is paying a real premium for UK/EU stock convenience.",
+  "best_for": [
+   "USB device/firmware developers debugging Full-Speed and High-Speed enumeration and transfers",
+   "Reverse engineering USB peripherals without an expensive Beagle/Total Phase analyzer"
+  ],
+  "not_for": [
+   "USB 3.x/SuperSpeed capture - Low/Full/High-Speed only, no SuperSpeed support",
+   "Any non-USB bus analysis"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Vendor describes an unnamed 'on-board FPGA' handling USB bus sampling; no manufacturer or part number disclosed in any public BugBlat material found.",
+   "mcu_secondary": "Cypress FX2LP family (CY7C68013A-class part; exact suffix unconfirmed)",
+   "radios": [],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus powered only (0.15W draw), no battery, no external supply needed.",
+   "charging": "USB-C (host link)",
+   "pmic": null,
+   "storage": "Up to 256MB onboard capture buffer (compressed, effectively more); no removable storage",
+   "connectivity": [
+    "USB-C (to analysis PC)",
+    "USB-A (target device port)",
+    "Micro-USB (alt target device port)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "50 x 33",
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "USB-A and Micro-USB target ports",
+    "USB-C host port"
+   ]
+  },
+  "capabilities": {
+   "standalone_untethered": {
+    "v": "partial",
+    "note": "The 256MB onboard compressed capture buffer lets it log without an actively-streaming host connection, but it's inline bus-powered hardware, not a walk-around handheld - the buffer still has to be downloaded to a PC afterward to view captures."
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "A passive protocol analyzer, not an injection tool."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a mass-storage emulator."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "No keylogger-specific storage/exfil function beyond generic capture."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No remote-triggered payload capability."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Pure USB bus analyzer; no debug-port support."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART bridge/probe function."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C probing capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash access; USB bus analysis only."
+   },
+   "ethernet_tap_passive": {
+    "v": "no",
+    "note": "Captures USB bus traffic only, not Ethernet."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passively capturing USB traffic on hardware you own/control is broadly legal. Using it to intercept traffic from a device you don't have authorization to inspect could raise unauthorized-access or wiretap-adjacent concerns depending on jurisdiction - check local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": "2024-03",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "miniSniffer2",
+   "miniSniffer2b"
+  ],
+  "sources": [
+   {
+    "url": "https://www.bugblat.com/products/minisniff2/",
+    "what": "official price ($99.99), dimensions, power draw, USB speed support, 256MB buffer"
+   },
+   {
+    "url": "https://github.com/bugblat/sniffer",
+    "what": "MIT-licensed host support code (captureAPI/decodeAPI); confirms miniSniffer/miniSniffer2/ezSniffer product family"
+   },
+   {
+    "url": "https://lab401.com/products/bugblat-minisniffer-v2",
+    "what": "EU reseller price (EUR149), stock status"
+   },
+   {
+    "url": "https://lab401.com/collections/hardware-audit",
+    "what": "original lead pricing ($160.92 / $195.00) supplied in task brief"
+   }
+  ],
+  "research_gaps": [
+   "Exact FPGA part number/manufacturer unconfirmed - not published anywhere found",
+   "Exact release year of miniSniffer2 vs the miniSniffer2b variant unclear (product copyright block spans 2007-2019)",
+   "No SCHEMA.md capability key exists for generic USB bus sniffing/protocol capture - not forcing usb_hid_inject or packet_capture since neither matches this device's function"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "takeit-open-source-usb-sniffer-usb20",
+  "hardware_id": "takeit-open-source-usb-sniffer-usb20",
+  "name": "Open Source Portable USB Sniffer USB2.0",
+  "firmware": "Vendor-flashed default capture firmware",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": null,
+  "firmware_note": "Listing claims an 'open source design scheme' and ships pre-flashed with a 'default burning open source USB grab package firmware,' but no GitHub repo, schematic, or original-author credit is linked anywhere in the listing.",
+  "vendor": "takeit",
+  "vendor_url": null,
+  "product_url": "https://www.tindie.com/products/takeit/open-source-portable-usb-sniffer-usb20/",
+  "category": "hardware-debug",
+  "subcategory": "usb-analyzer",
+  "status": "out-of-stock",
+  "released": "unknown",
+  "price_usd": 85,
+  "price_note": "Listed Tindie price; seller is currently marked 'taking a break,' meaning the listing is not actively orderable as of the check date.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "No polished companion app - you work from generic Wireshark/USB-standard knowledge and the board's CPLD test points. Listing text reads as machine-translated and is thin on real documentation.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a bare, pre-flashed 'Board Only' - no soldering required, but no case/enclosure and no real setup guide.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "A low-cost (~$85) bare PCB USB 1.1/2.0 bus sniffer sold by a Hong Kong-based Tindie seller ('takeit'), built around an unnamed CPLD/FPGA with four status LEDs, claiming stable capture above 48Mbps and Wireshark-compatible output. Framed as 'open source' but the listing links no schematic, firmware repository, or original design credit.",
+  "honest_take": "The description - 'open source,' CPLD-based, USB2.0/1.1 capture 'stable above 48Mbps,' sub-$100 price - matches the well-known genre of open-source CPLD/FPGA USB sniffers popularized by Alex Taradov's BSD-3-licensed design (Lattice MachXO2 FPGA + Cypress FX2LP MCU + Microchip USB3343 PHY, ~$50 BOM). Taradov's own project explicitly warns buyers off 'fake or sketchy' AliExpress/eBay clones of exactly this kind, and this listing has the same shape. But because the seller names no chips, links no repo, and credits no original author, I can't confirm this is that specific design versus a different derivative - or just marketing language borrowed from that scene. Given the seller is now inactive and there's zero public documentation to fall back on, this is a worse bet than either Taradov's own $50 DIY build or BugBlat's supported $99.99 unit.",
+  "best_for": [
+   "Budget hobbyist USB 1.1/2.0 protocol tinkering if you can tolerate zero documentation and no vendor support"
+  ],
+  "not_for": [
+   "Anyone needing a supported product or a verifiable/credited open-source repo",
+   "USB High-Speed 480Mbps work (only claims stable capture up to ~48Mbps)",
+   "Production or professional debugging use"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Listing says 'CPLD' with 'reserved signal test points' but names no manufacturer or part number; no schematic published.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus powered only, no battery.",
+   "charging": "USB",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB (target device)",
+    "USB (host PC)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "4 status LEDs",
+    "Reserved CPLD signal test points"
+   ]
+  },
+  "capabilities": {
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "A passive bus sniffer, not an injection tool."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Not a mass-storage emulator."
+   },
+   "usb_keylogger": {
+    "v": "no",
+    "note": "No keylogger-specific function beyond generic capture."
+   },
+   "hid_remote_trigger": {
+    "v": "no",
+    "note": "No remote-triggered payload capability."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Pure USB bus sniffer; no debug-port support."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART bridge/probe function."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C probing capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash access."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Fixed-function USB capture only; not a general logic analyzer."
+   },
+   "ethernet_tap_passive": {
+    "v": "no",
+    "note": "Captures USB bus traffic only, not Ethernet."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passively capturing USB traffic on hardware you own/control is broadly legal. Using it to intercept traffic from a device you don't have authorization to inspect could raise unauthorized-access or wiretap-adjacent concerns depending on jurisdiction - check local law."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "poor",
+   "last_release": "unknown",
+   "app_store": "No",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "Open Source USB Sniffer USB2.0 (takeit)"
+  ],
+  "sources": [
+   {
+    "url": "https://www.tindie.com/products/takeit/open-source-portable-usb-sniffer-usb20/",
+    "what": "full listing text, price ($85), CPLD/LED/bandwidth claims, seller status ('taking a break')"
+   },
+   {
+    "url": "https://github.com/ataradov/usb-sniffer",
+    "what": "genre/architecture comparison - Lattice LCMXO2 FPGA, Cypress CY7C68013A MCU, Microchip USB3343 PHY, BSD-3-Clause, <$50 BOM, explicit warning about eBay/AliExpress clones"
+   },
+   {
+    "url": "https://www.downtowndougbrown.com/2023/08/building-alex-taradovs-open-source-usb-sniffer/",
+    "what": "independent build context for the open-source USB sniffer genre this listing resembles"
+   }
+  ],
+  "research_gaps": [
+   "Exact CPLD/FPGA part number and any MCU used are unconfirmed - vendor names no chips",
+   "No GitHub repo or schematic linked despite the 'open source' claim in the listing",
+   "Cannot confirm whether this board is actually derived from Alex Taradov's open-source design or a different/unrelated design - architecturally and price-wise similar, but unconfirmed",
+   "Release date unknown",
+   "Current availability inferred from Tindie 'seller taking a break' status, not an explicit discontinuation notice",
+   "No SCHEMA.md capability key exists for generic USB bus sniffing/protocol capture - not forcing usb_hid_inject or packet_capture since neither matches this device's function"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "opticspy",
+  "hardware_id": "opticspy",
+  "name": "OpticSpy",
+  "firmware": "n/a",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No microcontroller and nothing to flash. OpticSpy is a fixed analog signal chain (photodiode -> two op-amp gain stages -> comparator) feeding an FTDI USB-to-UART bridge chip. Full schematics, BOM, and Gerbers are published by Grand Idea Studio under CC-BY-3.0.",
+  "vendor": "Grand Idea Studio",
+  "vendor_url": "https://grandideastudio.com",
+  "product_url": "https://www.crowdsupply.com/grand-idea-studio/opticspy",
+  "category": "hardware-debug",
+  "subcategory": "optical-covert-channel",
+  "status": "available",
+  "released": "2018",
+  "price_usd": 49,
+  "price_note": "Confirmed live on Crowd Supply as of check date (In stock), plus $8 US / $18 worldwide shipping. Originally a Crowd Supply crowdfunding campaign (launched Feb 2018, NOT Kickstarter) and has remained continuously available/in stock since.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Outputs a raw NRZ digital bitstream with no onboard decoding. You manually tune two gain potentiometers and then capture/decode the signal yourself (logic analyzer, sigrok, custom script) - it is not a point-and-click IR/optical decoder.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled, tested module with a built-in FTDI FT231XS-R USB-to-UART bridge (confirmed in the official bill of materials), so it plugs directly into a host USB port and enumerates as a serial device. Decoding whatever bitstream you receive is entirely on you.",
+  "stealth": "discreet",
+  "form_factor": "board",
+  "summary": "An open-source (CC-BY-3.0) analog photodiode receiver module from Grand Idea Studio (Joe Grand), sold continuously on Crowd Supply since its February 2018 campaign. A Vishay BPW21R silicon photodiode feeds two Maxim op-amp gain stages and a Maxim comparator to turn a visible-light or near-IR optical signal into a raw digital serial bitstream, exposed to a host PC over USB via an onboard FTDI chip.",
+  "honest_take": "This is essentially Maxim's own decades-old application-note reference circuit (AN1117, 'Small Photodiode Receiver Handles Fiber-Optic Data Rates to 800kbps') built onto a nice open PCB with an FTDI chip added for USB convenience - there is no microcontroller, no signal processing, and no decoding logic on board at all. It cites the classic Loughry & Umphress 'optical TEMPEST' paper as inspiration, but OpticSpy itself is not a TEMPEST-grade eavesdropping tool: no directional optics, no long-range sensitivity - the vendor's own range tests only reached about 1-3 inches. It's a hobbyist-range receiver front end, full stop, and you still have to build or find your own decoder for whatever signal you're chasing.",
+  "best_for": [
+   "Hobbyist research into optical covert channels / LED-based data exfiltration",
+   "Decoding IR remote controls and other near-IR blink codes with your own software",
+   "Learning analog photodiode receiver design from a real, fully documented reference circuit"
+  ],
+  "not_for": [
+   "Long-range or directional TEMPEST-style optical eavesdropping - range is inches, not meters, in the vendor's own tests",
+   "Point-and-click decoding - there is no built-in protocol decoder",
+   "High-bandwidth optical links - hard-capped around 800kbps by the underlying app-note design"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No microcontroller. Analog signal chain: 2x Maxim MAX4124EUK+T op-amps, 1x Maxim MAX985EUK+T comparator, feeding an FTDI FT231XS-R USB-to-UART bridge for host connectivity. Confirmed via the official Crowd Supply bill of materials.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB bus powered only, no battery.",
+   "charging": "USB (bus-powered via onboard FT231X)",
+   "pmic": "Microchip MIC5205-3.3YM5 (3.3V LDO regulator)",
+   "storage": null,
+   "connectivity": [
+    "USB (via onboard FTDI FT231X, enumerates as serial device)"
+   ],
+   "gpio": null,
+   "sensors": [
+    "Vishay BPW21R silicon PN photodiode, 420-675nm peak response (visible-light-weighted to approximate the human eye, still IR sensitive)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Photodiode receiver window",
+    "Two gain-tuning potentiometers",
+    "Test points for each signal stage",
+    "Status LEDs"
+   ]
+  },
+  "capabilities": {
+   "ir_rx": {
+    "v": "yes",
+    "note": "Genuine analog IR receiver - sensitive into near-IR and can be gain-tuned to filter a ~30-56kHz IR carrier per the vendor's own notes, unlike a canned demodulating IR receiver module (e.g. TSOP-series) this requires manual tuning and offers no automatic demodulation."
+   },
+   "ir_tx": {
+    "v": "no",
+    "note": "Receive-only; has no transmitter, despite the optical framing."
+   },
+   "uart": {
+    "v": "no",
+    "note": "Outputs its own demodulated optical signal over a USB-serial (FTDI) link, but it is not a general-purpose UART bridge/probe for external circuits."
+   },
+   "ir_learn": {
+    "v": "no",
+    "note": "No stored/learned remote-control database - outputs a raw bitstream only, with no protocol decoding."
+   },
+   "ir_universal_remote": {
+    "v": "no",
+    "note": "Not a remote-control replacement; receive-only raw signal front end."
+   },
+   "ir_flood": {
+    "v": "no",
+    "note": "No transmit capability of any kind."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Not a debug probe; pure analog optical receiver."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C probing capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash access."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Single-channel analog receiver, not a logic analyzer."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection capability of any kind."
+   },
+   "optical_covert_rx": {
+    "v": "yes",
+    "note": "This is the device the taxonomy key's own alias list is named after - a Vishay BPW21R photodiode into two op-amp gain stages and a comparator, converting a visible-light or near-IR optical signal into a raw digital serial bitstream over USB. Per this record's own honest_take it is a hobbyist-range receiver front end only (the vendor's own tests reached about 1-3 inches), not a TEMPEST-grade long-range eavesdropping tool, and it includes no decoder - you build or find your own for whatever signal you're chasing."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Passively receiving light emitted by a device you can see (e.g. its own status LED) is broadly legal - it's just light. Using it to intercept covert data secretly exfiltrated from systems you don't own or operate would raise the same unauthorized-access/wiretap-adjacent concerns as any other interception tool - check local law."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "excellent",
+   "last_release": "2018-02",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Grand Idea Studio OpticSpy"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/grand-idea-studio/opticspy",
+    "what": "current price ($49) and stock status, full bill of materials, bandwidth (800kbps design/2.4-115.2kbps tested), inspiration citations including the Loughry & Umphress optical TEMPEST paper"
+   },
+   {
+    "url": "https://www.vishay.com/docs/81519/bpw21r.pdf",
+    "what": "BPW21R photodiode datasheet, referenced directly by the vendor"
+   },
+   {
+    "url": "https://pdfserv.maximintegrated.com/en/an/AN1117.pdf",
+    "what": "Maxim AN1117 application note that the OpticSpy design is explicitly based on"
+   },
+   {
+    "url": "https://www.crowdsupply.com/grand-idea-studio/opticspy/updates/opticspy-is-here",
+    "what": "launch/shipping update confirming 2018 Crowd Supply release"
+   }
+  ],
+  "research_gaps": [
+   "No published physical dimensions, weight, or confirmation of whether any enclosure is offered",
+   "SCHEMA.md's ir_rx key covers the infrared-receive slice of OpticSpy's function, but there is no key for visible-light optical covert-channel reception, which is actually the device's primary marketed use case (LED blink data / xLED-style exfiltration) - described in summary/honest_take instead of forcing a mismatched key"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "newae-cw308-socket-target-stm32f",
+  "hardware_id": "newae-cw308-socket-target-stm32f",
+  "name": "Socket Target for CW308 (STM32F-SOCKET64)",
+  "firmware": "N/A (bare target hardware)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Ships with no firmware at all. It's an empty socket; whatever STM32F chip you drop in runs whatever test firmware you flash yourself (e.g. ChipWhisperer's bundled AES/crypto test binaries).",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/socket-target-for-cw308",
+  "category": "hardware-debug",
+  "subcategory": "glitching-target",
+  "status": "available",
+  "released": null,
+  "price_usd": 140,
+  "price_note": "Board only. No MCU included, and it does NOT work standalone - it requires a CW308 UFO baseboard (NewAE part NAE-CW308-04), which is sold separately and not bundled with this listing. Total buy-in is well above $140 for a first-time buyer.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "You're expected to already run ChipWhisperer, own a CW308 UFO baseboard, and be comfortable hand-placing a bare TQFP-64 chip and picking the right pinout-switch position for your specific STM32F part.",
+  "build_effort": "assembly",
+  "build_note": "No soldering to use it - it's a zero-insertion-force (ZIF) socket, drop the chip in and close the lever. But it only becomes a working setup once seated on a CW308 UFO baseboard you already own.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A CW308-family daughtercard that is nothing but an empty TQFP-64 ZIF socket, a 2-position switch to select between two STM32F pinout families (chips with an onboard voltage regulator like STM32F415, vs. chips without like STM32F303), and routing to the CW308 20-pin connector. It exists so a researcher can side-channel or fault-inject an arbitrary user-supplied STM32F part without designing a custom carrier PCB for every chip.",
+  "honest_take": "This is a passive accessory, not a tool - it doesn't glitch or measure anything itself, it's the thing that gets glitched by an external ChipWhisperer (or similar) attacking it through the CW308 baseboard. It is genuinely useless on its own: no MCU is included, and it will not connect to anything without a CW308 UFO baseboard, which NewAE sells separately and which most buyers don't already own unless they're already deep into the ChipWhisperer ecosystem. If you're not already a CW308 UFO owner, buying this $140 socket card first is backwards - budget for the baseboard too before you order this. This record is deliberately capability-sparse: it is a passive chip socket with no independent function of its own, and that sparseness is the finding, not an oversight.",
+  "best_for": [
+   "Researchers who already own a CW308 UFO baseboard and want to test side-channel/glitch resistance on an arbitrary STM32F chip they supply themselves",
+   "Multi-chip characterization work (swap chips in/out of the same socket without re-soldering)"
+  ],
+  "not_for": [
+   "Anyone without an existing CW308 UFO baseboard - this card cannot be used standalone",
+   "Beginners - ships with zero MCU and no guided workflow",
+   "One-off testing of a single fixed target - buy the matching soldered CW308T target board instead if one exists for your chip"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No MCU is included. The board is a bare TQFP-64 ZIF socket sized for STM32F-series parts; buyer supplies their own chip.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "CW308 20-pin UFO target connector"
+   ],
+   "gpio": "Routes the socketed STM32F chip's pins (including JTAG/SWD/serial-bootloader and shunt-resistor power-measurement points) to the CW308 connector. A 2-position switch selects between the pinout of regulator-equipped STM32F variants (e.g. STM32F415) and non-regulator variants (e.g. STM32F303).",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "TQFP-64 zero-insertion-force (ZIF) socket",
+    "2-position pinout-family selector switch",
+    "Shunt resistor mounted for power-analysis measurement, with decoupling caps deliberately omitted for a clean power trace"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "partial",
+    "note": "JTAG, SWD, and the STM32F serial bootloader pins are all routed through to the CW308 connector per the vendor page, but there's no onboard debug probe - you still need your own programmer/debugger and the CW308 baseboard wiring to actually use them."
+   },
+   "uart": {
+    "v": "partial",
+    "note": "The STM32F serial-bootloader UART pins are routed through to the CW308 connector, but again only usable once seated on a baseboard with your own UART adapter."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI-flash-dumping function - this is a chip socket for direct MCU testing, not a flash programmer."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C bridge/probe function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture capability of its own."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "This board is the device under test, not a glitcher. Voltage/clock glitching requires a separate tool (ChipWhisperer-Lite/Husky/Pro, or something like a Pico Glitcher) attacking the socketed chip through the CW308 baseboard."
+   },
+   "side_channel_power": {
+    "v": "no",
+    "note": "This card is nothing but an empty TQFP-64 ZIF socket and a pinout-select switch - it carries none of the shunt/filtering infrastructure side-channel measurement needs. That circuitry lives on the separately-required CW308 UFO baseboard, not on this daughtercard; consistent with this record's own glitching rating ('no' for the identical reason - 'the device under test, not a glitcher')."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "This is bare test/lab equipment (a chip socket) with no radios and no attack payloads of its own - no import restrictions found. Whether using it to fault/side-channel a chip is legal depends entirely on whether you're authorized to test that chip/device, same as any lab equipment."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "excellent",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "STM32F-SOCKET64",
+   "CW308T-STM32F-SOCKET64",
+   "NAE-CW308T-STM32F-SOCKET64"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/socket-target-for-cw308",
+    "what": "vendor product page: price $140, TQFP-64 socket, pinout switch, JTAG/SWD/serial bootloader, CW308 baseboard requirement"
+   },
+   {
+    "url": "https://github.com/newaetech/chipwhisperer-target-cw308t",
+    "what": "GitHub hardware-files repo for CW308T target family; confirms 'these boards require a CW308 UFO Base-Board' and the shunt-resistor/no-decoupling-cap side-channel design pattern"
+   },
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Targets/CW308%20UFO.html",
+    "what": "official ChipWhisperer docs confirming the CW308 UFO baseboard requirement and general target-card architecture"
+   },
+   {
+    "url": "https://media.newae.com/datasheets/NAE-CW308-datasheet.pdf",
+    "what": "CW308 UFO baseboard datasheet, corroborating the socket-card/baseboard split design"
+   }
+  ],
+  "research_gaps": [
+   "Exact release/introduction date not found.",
+   "Physical dimensions and weight not published anywhere found.",
+   "Could not independently confirm the current price of the separately-required CW308 UFO baseboard on a live NewAE store page - budget meaningfully more than the $140 listed here for a complete working setup.",
+   "This device is deliberately capability-sparse (a passive chip socket) - the low capability count reflects that finding, not incomplete research."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "newae-sam4s-cw313-target",
+  "hardware_id": "newae-sam4s-cw313-target",
+  "name": "SAM4S CW313 Target",
+  "firmware": "N/A (bare target hardware)",
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No firmware ships pre-loaded for end-use attacks. NewAE publishes example crypto firmware (AES/RSA/ECC test binaries) for ChipWhisperer tutorials that you flash onto it via the serial bootloader or JTAG.",
+  "vendor": "NewAE Technology",
+  "vendor_url": "https://www.newae.com",
+  "product_url": "https://www.newae.com/product-page/sam4s-cw313-target",
+  "category": "hardware-debug",
+  "subcategory": "glitching-target",
+  "status": "available",
+  "released": null,
+  "price_usd": 44.99,
+  "price_note": "Board only. Requires the separate CW313 baseboard (not included in this listing) to power it and connect it to a capture tool; it's also sold pre-bundled with a CW313 baseboard inside ChipWhisperer-Husky/HuskyPlus starter kits.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The MCU is pre-populated (no chip handling required), but you still need to already understand ChipWhisperer/side-channel workflow and own a CW313 baseboard for it to do anything.",
+  "build_effort": "assembly",
+  "build_note": "No soldering - plug it into a CW313 baseboard. The board itself is fully populated.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A small CW313-family target board with a populated Microchip ATSAM4S2 (Arm Cortex-M4, 128KB flash, 64KB SRAM, 1.2V core) that plugs into NewAE's cut-down CW313 baseboard for running crypto code under power-analysis and fault-injection testing. It's the budget counterpart to the CW308 UFO ecosystem - CW313 is a simpler interposer built into the ChipWhisperer-Husky/HuskyPlus kits.",
+  "honest_take": "Cheap and populated, but still not a standalone product - CW313 targets only work seated on a CW313 baseboard, which is why NewAE bundles this exact board into its Husky starter kits rather than selling it to be useful alone. The listed core voltage (1.2V) is not actually delivered by an onboard regulator for testing purposes - NewAE bypasses the SAM4S's internal regulator and feeds 1.2V in externally from the baseboard's LDO specifically so the power trace is clean, which is a deliberate side-channel-friendly design choice, not a limitation, but it means this board cannot run on its own supply rail either. Like the CW308 socket target in this same batch, this is a legitimately sparse device - it is a fixed target board, not a multi-function tool, and the short capability list reflects that rather than shallow research.",
+  "best_for": [
+   "Buyers who already have (or are buying) a ChipWhisperer-Husky/HuskyPlus kit and want a second/spare/swappable SAM4S target",
+   "Learning power-analysis/fault-injection against a real Cortex-M4 running AES/RSA/ECC via NewAE's existing tutorials"
+  ],
+  "not_for": [
+   "Anyone without a CW313 baseboard - board does not function standalone",
+   "Anyone wanting a socket to test their own chip - this ships with a fixed, pre-soldered ATSAM4S2, not a socket"
+  ],
+  "hardware": {
+   "mcu_primary": "ATSAM4S2",
+   "mcu_primary_note": "Arm Cortex-M4 core (Microchip/Atmel SAM4S2 subfamily), 128KB flash, 64KB SRAM. Native core voltage is 1.2V; the board deliberately bypasses the chip's internal 1.2V regulator so the CW313 baseboard's external LDO can supply clean 1.2V for power-trace measurement. Exact package/pin-count suffix (SAM4S2A vs 2B vs 2C) not confirmed independently.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "CW313 baseboard connector",
+    "UART (ROM-resident serial bootloader)",
+    "JTAG"
+   ],
+   "gpio": "Exposes SAM4S JTAG, the ROM serial-bootloader UART, a hardware ERASE pin, and a 10-ohm shunt-resistor power-measurement point to the CW313 baseboard headers.",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Populated ATSAM4S2 in a fixed package (not socketed)",
+    "10-ohm shunt resistor for power measurement",
+    "Hardware ERASE pin for flash wipe/recovery"
+   ]
+  },
+  "capabilities": {
+   "jtag_swd": {
+    "v": "yes",
+    "note": "CW313 baseboard's 20-pin Arm JTAG header (HDR6) and Cortex-M header (J5) both support JTAG or SWD depending on the target chip, per official ChipWhisperer docs - resolves earlier uncertainty about SWD support on this target family."
+   },
+   "uart": {
+    "v": "partial",
+    "note": "ROM-resident serial bootloader UART is exposed to the CW313 baseboard headers, usable with your own adapter once seated on the baseboard."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No SPI flash dumping function - it's a fixed MCU target, not a flash programmer."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C bridge/probe function."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture capability of its own."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "This is the device under test, not a glitcher. It has a fixed shunt resistor for power measurement, but actually performing power analysis or fault injection requires an external capture/glitch tool (e.g. ChipWhisperer-Husky) connected via the CW313 baseboard."
+   },
+   "side_channel_power": {
+    "v": "yes",
+    "note": "Has its own fixed shunt resistor for power measurement, and NewAE deliberately bypasses the SAM4S's internal voltage regulator in favour of an external LDO feed specifically to keep the power trace clean - a real board-level side-channel-friendly design choice, not just inherited baseboard infrastructure. (Its glitching rating is 'no' for a different reason - fault injection needs a separate external tool - but the power-measurement circuitry genuinely lives on this board.)"
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Bare lab/test equipment (a populated microcontroller target board) with no radios - no import restrictions found. Legality of what you do with it depends on whether you're authorized to test the target/technique, not on owning the board."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "CW313 SAM4S Target",
+   "ATSAM4S2 CW313 Target"
+  ],
+  "sources": [
+   {
+    "url": "https://www.newae.com/product-page/sam4s-cw313-target",
+    "what": "vendor product page: price $44.99, ATSAM4S2, 128KB flash/64KB SRAM, 1.2V core with internal regulator bypassed, JTAG + serial bootloader, CW313 baseboard requirement"
+   },
+   {
+    "url": "https://github.com/newaetech/chipwhisperer-target-cw313",
+    "what": "GitHub design-files repo for the CW313 target/baseboard family"
+   },
+   {
+    "url": "https://chipwhisperer.readthedocs.io/en/latest/Targets/CW313.html",
+    "what": "official ChipWhisperer docs on the CW313 baseboard: confirms its 20-pin Arm JTAG header (HDR6) and 0.05in Cortex-M header (J5) can each be used for JTAG or SWD depending on the target - resolves prior SWD-support uncertainty"
+   },
+   {
+    "url": "https://github.com/newaetech/chipwhisperer-target-cw313",
+    "what": "CW313 design-files repo confirming the board family and target compatibility"
+   }
+  ],
+  "research_gaps": [
+   "Exact SAM4S2 package/pin-count suffix (A/B/C) not confirmed.",
+   "Standalone price of the CW313 baseboard itself could not be pinned down from a live NewAE product page - only found referenced inside Husky/HuskyPlus kit bundles.",
+   "Release/introduction date not found.",
+   "This device is deliberately capability-sparse (a fixed single-purpose target board) - the low capability count reflects that finding, not incomplete research."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "faultyhardware-picoglitcher-v3",
+  "hardware_id": "faultyhardware-picoglitcher-v3",
+  "name": "PicoGlitcher v3",
+  "firmware": "Findus (fault-injection-library)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/MKesenheimer/fault-injection-library",
+  "firmware_note": "MicroPython-based control firmware runs on the onboard Raspberry Pi Pico 2; a companion Python host library called Findus (same repo) runs on your PC to configure glitch timing/voltage and log results. The same Findus library can also drive a ChipWhisperer Pro or Husky as an alternate capture/glitch front-end instead of this board.",
+  "vendor": "Faulty Hardware (Mathias Kesenheimer)",
+  "vendor_url": "https://faultyhardware.de",
+  "product_url": "https://www.tindie.com/products/faulty-hardware/picoglitcher-v3/",
+  "category": "hardware-debug",
+  "subcategory": "voltage-glitcher",
+  "status": "available",
+  "released": "2025",
+  "price_usd": 59,
+  "price_note": "MERGED RECORD: first-pass research treated the GitHub project ('Pico Glitcher / fault-injection-library / Findus') and the Tindie 'PicoGlitcher v3' listing as two separate products with a price discrepancy ($67 vs $59); they are the same current open-source hardware line. $59 is the Tindie 'ready option, assembled' price. The maker's own faultyhardware.de store lists the equivalent EUR58-62 (ready/fully-assembled tiers), which converts to roughly $63-67 - the likely source of the original $67 estimate. Tindie kit/partially-populated configs span roughly $45-$111 depending on what's populated.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Even the pre-assembled unit is a bare Python/CLI tool with no GUI hand-holding - you're expected to understand fault-injection concepts (timing, voltage window search) to get useful results. The unassembled kit additionally requires SMD/THT soldering.",
+  "build_effort": "assembled",
+  "build_note": "Priced here is the pre-assembled 'ready option'. Faulty Hardware also sells unassembled full-kit and partially-populated versions (cheaper, solder-it-yourself) through both Tindie and faultyhardware.de.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An open-source voltage-glitching board built around a Raspberry Pi Pico 2, with two MOSFETs wired as crowbar switches to fault a target's power rail, dual level shifters multiplexing 1.2/1.8/3.3/5V target power, and adjustable Schmitt-trigger inputs (EXT1/EXT2) for filtering the trigger signal. It's driven by the open-source 'Findus' Python library, which can alternatively drive a ChipWhisperer Pro or Husky using the same code.",
+  "honest_take": "This is the third hardware revision of a one-person open-source project - v1 (plain Raspberry Pi Pico) is now officially retired on Tindie ('no longer available for sale'), and v2 (still original Pico, added the 4-voltage multiplexer) doesn't appear to have a current standalone store listing either; what's actually sold today under both 'Pico Glitcher' and 'PicoGlitcher v3' branding is this same Pico-2-based v3 board - this record merges what first-pass research logged as two separate products. The core design is fully open (schematics, GPL-3.0) on GitHub, so a comfortable hobbyist solderer could scratch-build the electronics for something like $15-30 in parts (a Pico 2 is about $5, the FETs/level-shifters/passives are a few dollars more); the $59-67 asking price mostly buys a routed/tested PCB, SMA connectors, and a kit rather than novel hardware. The '66A' transistor rating quoted in marketing is the switching device's absolute maximum, not a sustained operating current. 207 GitHub stars and commits as recent as 2026-07-29 make it a reasonably healthy hobbyist project, but it's maintained by one person, so treat it as a bus-factor-of-one dependency.",
+  "best_for": [
+   "Hobbyists/researchers already comfortable with fault-injection theory who want a cheap dedicated crowbar glitcher",
+   "Using the same Findus Python codebase to drive a ChipWhisperer Pro/Husky instead, if you already own one"
+  ],
+  "not_for": [
+   "Total beginners - no GUI, it's a Python scripting workflow and you need to already understand glitch-timing/voltage-window search",
+   "Anyone who found an old 'Pico Glitcher' (v1/v2, plain-Pico) listing expecting v3 specs - that hardware is a different, now-mostly-discontinued revision"
+  ],
+  "hardware": {
+   "mcu_primary": "Raspberry Pi Pico 2 (RP2350)",
+   "mcu_primary_note": "Dual Arm Cortex-M33 / dual Hazard3 RISC-V (switchable), up to 150MHz. Runs the onboard glitch-control firmware. Predecessor hardware (v1/v2, still branded 'Pico Glitcher' without a version number in older docs) used the original Raspberry Pi Pico (RP2040) instead - v1 is now retired, v2 status unconfirmed.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Micro-USB (onboard Raspberry Pi Pico 2, to host PC)",
+    "2x SMA connectors (GLITCH, MUX)",
+    "Pin headers (EXT1/EXT2 trigger inputs, target power)"
+   ],
+   "gpio": "EXT1/EXT2 adjustable Schmitt-trigger inputs for glitch triggering; MUX SMA output selects/level-shifts target power across 1.2V/1.8V/3.3V/5V; GLITCH SMA carries the crowbar fault pulse to the target's power rail.",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "2x high-power MOSFETs for crowbar glitch generation (rated to switch up to 66A peak)",
+    "2x SMA connectors (GLITCH, MUX)",
+    "Adjustable Schmitt-trigger trigger inputs (EXT1/EXT2)"
+   ]
+  },
+  "capabilities": {
+   "glitching": {
+    "v": "yes",
+    "note": "Purpose-built crowbar voltage-glitching tool: two MOSFETs short/pull the target's power rail through a multiplexed, level-shifted 1.2/1.8/3.3/5V supply, timed by the onboard Pico 2 and driven from a PC via the open-source Findus Python library. Confirmed via GitHub repo, readthedocs, and vendor store pages."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Not a debug probe - has no JTAG/SWD support of its own; it only faults the power rail of a target that you debug/verify with a separate tool."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No UART bridge/passthrough function - control is entirely over USB via the Findus Python library, not a serial console."
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C probing capability."
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "No flash-dumping capability of its own."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No signal-capture/logic-analyzer function; the EXT1/EXT2 inputs are trigger inputs only, not general-purpose capture channels."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Enumerates as a Raspberry Pi Pico 2 running MicroPython/custom firmware, not as a mass-storage device during normal glitching operation."
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "Enumerates as a control/debug interface for the Findus Python library, not an HID injection device."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "It's lab/test equipment with no radios - no import restrictions found. Using it to fault-inject a device you don't own or aren't authorized to test (e.g. to bypass secure boot or extract keys) is where legal risk lives, not the hardware itself."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-07",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "Pico Glitcher",
+   "Pico Glitcher v3",
+   "PicoGlitcher",
+   "Findus",
+   "fault-injection-library"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/MKesenheimer/fault-injection-library",
+    "what": "official GitHub repo: project description, hardware overview, ChipWhisperer Pro/Husky support, GPL-3.0 license, purchase link to faultyhardware.de"
+   },
+   {
+    "url": "https://fault-injection-library.readthedocs.io/en/latest/overview/",
+    "what": "docs confirming v1/v2 used original Raspberry Pi Pico, v3 uses Raspberry Pi Pico 2"
+   },
+   {
+    "url": "https://github.com/MKesenheimer/fault-injection-library/releases",
+    "what": "release notes confirming hardware v3.0 tied to release v1.13.1, dated 2025-02-11"
+   },
+   {
+    "url": "https://www.tindie.com/products/faulty-hardware/picoglitcher-v3/",
+    "what": "current Tindie listing: $59 assembled 'ready option', Pico-2-based, 2 MOSFETs, Schmitt-trigger inputs"
+   },
+   {
+    "url": "https://www.tindie.com/products/faulty-hardware/picoglitcher-v1-pcb-only/",
+    "what": "Tindie listing for the original hardware explicitly marked 'Product Retired', confirming v1 is discontinued and v3 is the current line"
+   },
+   {
+    "url": "https://faultyhardware.de/en/home/28-pico-glitcher-v3.html",
+    "what": "maker's own EUR-priced store: 'ready option, assembled' at EUR58, 'fully assembled' at EUR62"
+   }
+  ],
+  "research_gaps": [
+   "Whether v2 hardware (still Pico-based, with the 4-voltage mux) is still purchasable anywhere, or is fully discontinued like v1, could not be confirmed.",
+   "Physical board dimensions/weight not published anywhere found.",
+   "Scratch-build BOM cost ($15-30 estimate) is an estimate from typical component pricing, not itemized from a published BOM.",
+   "This device is deliberately capability-sparse (a dedicated voltage-glitching tool) - the short capability list reflects that single-purpose finding, not incomplete research."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "esp32jtag-ez32",
+  "hardware_id": "esp32jtag",
+  "name": "ESP32JTAG",
+  "firmware": "esp32jtag_firmware (stock)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/EZ32Inc/esp32jtag_firmware",
+  "firmware_note": "Single official open-source firmware (Apache-2.0, third-party components GPL-3.0/Apache-2.0) built on ESP-IDF v5.5; bundles a BlackMagic Probe GDB server, a CherryDAP CMSIS-DAP stack, an XVC server, and the logic-analyzer/UART-bridge web backend into one image, updated OTA or over USB.",
+  "vendor": "EZ32 Inc.",
+  "vendor_url": "https://ez32.com",
+  "product_url": "https://www.crowdsupply.com/ez32/esp32jtag",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe",
+  "status": "available",
+  "released": "2026",
+  "price_usd": 139,
+  "price_note": "Free US shipping / $12 worldwide. Crowdfunded on Crowd Supply (funded Dec 4, 2025 at 348% of a $10,000 goal, 173 backers); listed in stock as of Sept 2026.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The web UI removes driver hassle, but you still need to understand JTAG/SWD, target voltage selection, and (for the FPGA/XVC side) an FPGA toolchain - not a first hardware-debug tool.",
+  "build_effort": "assembled",
+  "build_note": "Ships assembled in an aluminum case with fly-wire sets; configure entirely through the browser, no soldering or driver install.",
+  "stealth": "overt",
+  "form_factor": "box",
+  "summary": "ESP32JTAG is a wireless debug probe from Canadian startup EZ32 Inc.: an ESP32-S3 running open-source firmware (BlackMagic Probe GDB server + CMSIS-DAP via CherryDAP) paired with a small Lattice iCE40UP5K FPGA that does the high-speed signal capture for a 16-channel logic analyzer and FPGA bitstream programming (Xilinx Virtual Cable). Everything - JTAG/SWD debugging, the logic analyzer, a UART terminal, and firmware updates - is driven through a built-in HTTPS web server reached over Wi-Fi, so there's no USB driver install.",
+  "honest_take": "Wireless JTAG is a real engineering tradeoff, not a free upgrade: Wi-Fi adds latency and jitter a wired USB-HS probe (hs-probe, a J-Link, or even a $15 clone) doesn't have, and for tight real-time debugging that shows up as slower round-trips no matter how good the raw throughput numbers look. The vendor's own comparison table also lists 'Wi-Fi 6' connectivity, but the ESP32-S3's radio is 802.11 b/g/n (Wi-Fi 4) only - the silicon has no 802.11ax hardware, so that line is either a spec-sheet error or marketing inflation; treat the rest of that comparison table skeptically too. It's also a debug probe running an HTTPS web server on your Wi-Fi network with no documented authentication - on a shared or IoT-segment network that's an open control/flash surface for anyone who can reach its IP. The 16-channel/250MHz logic analyzer plus driver-free multi-tool angle is a genuinely strong pitch, since the iCE40UP5K FPGA is doing real work, this is not 'just an ESP32 in a case'. But for latency-sensitive production debugging, a wired probe is still the safer default.",
+  "best_for": [
+   "Debugging boards on a bench without a USB tether",
+   "Combined MCU+FPGA projects wanting JTAG, a logic analyzer, and bitstream programming in one box",
+   "Hobbyists who want a driver-free, browser-based workflow"
+  ],
+  "not_for": [
+   "Real-time single-stepping or high-rate SWO tracing where wired-probe latency matters",
+   "Networks where you can't isolate an unauthenticated web-exposed device",
+   "Anyone needing a mature, years-proven probe - this shipped in 2026 and is under a year old"
+  ],
+  "hardware": {
+   "mcu_primary": "ESP32-S3",
+   "mcu_primary_note": "Dual-core Xtensa LX7. Crowd Supply's spec sheet lists '266 MHz' and the GitHub firmware README lists '240 MHz' elsewhere - Espressif's documented ESP32-S3 max is 240 MHz, so the 266 MHz figure is unresolved. 16 MB flash, 8 MB PSRAM (PSRAM required for the logic-analyzer capture buffer).",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "wifi-bt",
+     "note": "Integrated in the ESP32-S3 SoC: 802.11 b/g/n (Wi-Fi 4) + Bluetooth 5.0 (BLE). Crowd Supply's product/comparison page claims 'Wi-Fi 6', which the ESP32-S3 silicon does not support - flagged as likely marketing/spec error, not corrected."
+    }
+   ],
+   "display": {
+    "type": "LCD",
+    "size_in": 1.83,
+    "resolution": null,
+    "color": true,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "No battery mentioned anywhere in the campaign or firmware docs; appears USB-powered only, not a portable/battery device.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB Type-C",
+    "Wi-Fi 4 (802.11 b/g/n)",
+    "Bluetooth 5.0 (BLE)"
+   ],
+   "gpio": "Four configurable 4-wire ports, each individually switchable between JTAG, SWD, UART, or logic-analyzer mode",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "79 x 74 x 9",
+   "weight_g": null,
+   "case": "aluminum",
+   "notable_physical": [
+    "1.83in LCD (IP address / Wi-Fi status / system info)",
+    "onboard Lattice iCE40UP5K FPGA",
+    "aluminum enclosure"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "WebUART terminal over the browser plus USB-CDC/WebSocket bridge"
+   },
+   "spi_flash_dump": {
+    "v": "unknown",
+    "note": "No flashrom-style external SPI-NOR/NAND dump mode documented; the XVC port is for FPGA bitstream programming, not reading external flash chips"
+   },
+   "i2c": {
+    "v": "no",
+    "note": "The four ports are documented as JTAG/SWD/UART/logic-analyzer only; no I2C bridge mode found in vendor docs or firmware README"
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "Via OpenOCD, native BlackMagic Probe GDB server, and CMSIS-DAP (CherryDAP); vendor spec sheet claims up to 80 MHz JTAG/SWD clock"
+   },
+   "logic_analyzer": {
+    "v": "yes",
+    "note": "16 channels; vendor page states 250 MHz sample rate, firmware README states 264 MHz default (configurable down to 0.518 MHz); 128 KB PSRAM capture buffer routed through the onboard iCE40UP5K FPGA"
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Not a capability of the device; not mentioned anywhere in vendor or firmware materials"
+   },
+   "web_ui": {
+    "v": "yes",
+    "note": "Built-in HTTPS web server drives all configuration and control (JTAG/SWD, logic analyzer, FPGA programming, UART terminal) - no companion app or drivers needed."
+   },
+   "wifi_monitor_mode": {
+    "v": "no",
+    "note": "Wi-Fi radio is used only to reach the device's own control/debug web UI, not for any wireless monitoring or packet capture."
+   },
+   "ble_scan": {
+    "v": "no",
+    "note": "BLE radio is present in the ESP32-S3 but no scanning/sniffing function is exposed by the firmware; it is not used for anything BLE-related in the current release."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open-source ESP-IDF firmware and standard OpenOCD/GDB/XVC toolchains make it scriptable for CI/automated debug workflows."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC/browser to drive debugging, logic analysis, or FPGA programming - not a standalone handheld tool despite the onboard LCD."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A Wi-Fi/BLE debug tool, not a transmitter aimed at attacking other networks - no different legally from any other Wi-Fi-enabled electronics. Crowd Supply's own campaign page flags 'Certification Delays: Wi-Fi products require FCC certification' as a project risk, so confirm current FCC/CE status before importing in bulk."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": "2026-07",
+   "app_store": "N/A - browser-based web UI, no app store",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "EZ32 ESP32JTAG"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/ez32/esp32jtag",
+    "what": "official campaign page: full spec sheet, comparison table, price, shipping status"
+   },
+   {
+    "url": "https://github.com/EZ32Inc/esp32jtag_firmware",
+    "what": "official firmware repo README: ESP32-S3/iCE40UP5K confirmation, LA sample rate, license, supported tools"
+   },
+   {
+    "url": "https://www.cnx-software.com/2025/10/31/esp32jtag-an-open-source-wireless-jtag-and-logic-analyzer/",
+    "what": "independent hardware writeup corroborating FPGA/LA specs"
+   },
+   {
+    "url": "https://www.hackster.io/news/ez32-s-esp32jtag-is-a-handy-wireless-debugger-that-doubles-as-a-microcontroller-fpga-dev-board-fe11fd21c115",
+    "what": "independent coverage, cross-check on ESP32-S3/Wi-Fi 4 vs Wi-Fi 6 claim"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm whether the built-in HTTPS web server has any authentication/password protection",
+   "CPU clock listed as 266 MHz on the Crowd Supply page vs 240 MHz in the firmware repo docs; standard ESP32-S3 max is 240 MHz per Espressif - discrepancy unresolved",
+   "No public hardware/schematics repo found (only the firmware repo is public), so exact iCE40UP5K pin mapping and PCB design are unverified",
+   "Could not confirm exact LCD resolution"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "hs-probe-proberrs",
+  "hardware_id": "hs-probe",
+  "name": "hs-probe",
+  "firmware": "hs-probe-firmware (CMSIS-DAP, Rust)",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/probe-rs/hs-probe-firmware",
+  "firmware_note": "Pure-Rust CMSIS-DAP v1/v2 implementation written for this specific board; only one tagged release (0.1.4, Aug 2021) though source commits continued to late 2023. A 'turbo' build flag overclocks the STM32F723 from 72 MHz to 216 MHz.",
+  "vendor": "probe-rs",
+  "vendor_url": "https://probe.rs/",
+  "product_url": "https://www.tindie.com/products/probe-rs/hs-probe/",
+  "category": "hardware-debug",
+  "subcategory": "jtag-swd-probe",
+  "status": "out-of-stock",
+  "released": "2020",
+  "price_usd": 47,
+  "price_note": "Tindie listing price confirmed at $47, but as of Sept 2026 the seller has paused the shop and is not accepting orders (sign-up-for-restock only).",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Built for embedded developers who have hit USB Full-Speed throughput limits on cheaper probes; ships as a bare PCB, no beginner hand-holding.",
+  "build_effort": "assembled",
+  "build_note": "Comes fully assembled with 2 ribbon cables, 3 STDC14 connectors, and 1 Cortex-M Debug (10-pin) connector - no soldering, but you wire the correct cable to your target's debug header yourself.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "hs-probe is an open-hardware SWD/JTAG debug probe built around an STM32F723 (Cortex-M7 with an integrated USB 2.0 High-Speed PHY), designed for the probe-rs project. It enumerates as a CMSIS-DAP v1/v2 probe over genuine USB-HS (480 Mbit/s) rather than the USB Full-Speed (12 Mbit/s) most CMSIS-DAP probes are limited to, and includes a USB mux so the STM32's bootloader stays reachable for firmware recovery. Hardware is CERN-OHL-P v2 licensed with published schematics; firmware is dual Apache-2.0/MIT.",
+  "honest_take": "For most hobbyist STM32/nRF work, a $15 CMSIS-DAP clone or a Raspberry Pi Pico running DAPLink firmware will flash and debug just as well - the difference only shows up when you're moving real data over the wire: high-rate SWO tracing, big flash writes, or RTT-style logging, where hs-probe's genuine USB-HS link is meaningfully faster. What the project's own materials undersell: the firmware source has a full jtag.rs module, so JTAG is implemented even though probe-rs's docs and the Tindie listing both lean almost entirely on 'SWD probe' framing. The bigger concern is the project itself: the hardware repo hasn't been touched since January 2022, firmware commits stopped in November 2023 with 11 issues still open, there's been only one tagged firmware release ever (2021), and the Tindie shop isn't taking orders. It still works today because CMSIS-DAP is a stable protocol and the parent probe-rs debugging software keeps supporting it, but don't expect the hs-probe hardware/firmware itself to see more attention. This is a genuinely single-purpose device (SWD/JTAG only, nothing else) - the short capability list below is a real finding about the product, not a research gap.",
+  "best_for": [
+   "Embedded developers hitting USB Full-Speed throughput limits (high-rate SWO trace, large flash writes)",
+   "probe-rs/Rust toolchain users wanting a reference-quality open probe",
+   "Open-hardware users who want real CERN-OHL-P schematics, not a black box"
+  ],
+  "not_for": [
+   "Beginners who just need to flash and single-step an STM32 - a $15 clone or Pico-DAPLink covers that",
+   "Anyone wanting active support or ongoing firmware development",
+   "General logic analysis or protocol sniffing - it is SWD/JTAG only, nothing else"
+  ],
+  "hardware": {
+   "mcu_primary": "STM32F723",
+   "mcu_primary_note": "Cortex-M7 with an integrated USB 2.0 High-Speed PHY (480 Mbit/s), the key differentiator vs USB-FS-limited CMSIS-DAP clones. A USB mux lets the board enumerate in USB-FS bootloader mode first, then switch to USB-HS once firmware takes over.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB-powered only, no battery.",
+   "charging": "USB-C",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB-C",
+    "STDC14 (default, STLink/V3-compatible)",
+    "10-pin 1.27mm Cortex-M Debug (via pin modification)",
+    "Tag Connect TC2030 (programming)"
+   ],
+   "gpio": "Castellated vias for programming pins, power, and GPIOs; target 5V/3.3V protected via an ideal-diode circuit so current can't flow back from target to host",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "none - bare PCB",
+   "notable_physical": [
+    "bare PCB, no enclosure",
+    "castellated programming/GPIO vias",
+    "USB mux for bootloader access"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "unknown",
+    "note": "No UART/VCP passthrough documented in the hardware or firmware README; not marketed as a serial adapter"
+   },
+   "spi_flash_dump": {
+    "v": "no",
+    "note": "Not a general-purpose protocol bridge - CMSIS-DAP debug probe only, no SPI/flash-programmer mode"
+   },
+   "i2c": {
+    "v": "no",
+    "note": "No I2C capability documented; SWD/JTAG debug probe only"
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "SWD confirmed via CMSIS-DAP v1/v2 over USB-HS. JTAG is implemented in firmware source (firmware/src/jtag.rs in hs-probe-firmware) even though the project's own docs mostly emphasize SWD"
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No logic-analyzer function; dedicated SWD/JTAG debug probe"
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Not a capability; no glitching hardware or firmware support"
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Enumerates as a CMSIS-DAP debug probe, not a mass-storage device (no drag-and-drop flashing)."
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "No web interface - configured entirely through standard CMSIS-DAP/OpenOCD/GDB tooling on the host."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A standard debug probe with no radio and no controlled functionality - owning and using it carries no meaningful legal restriction anywhere. Only relevant law is around what you do with the target device you're debugging."
+  },
+  "ecosystem": {
+   "community": "dormant",
+   "docs_quality": "good",
+   "last_release": "2021-08",
+   "app_store": "N/A",
+   "abandoned_risk": "high"
+  },
+  "aliases": [
+   "HS-Probe"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/probe-rs/hs-probe",
+    "what": "hardware repo README: MCU, USB mux, connectors, license, schematic status"
+   },
+   {
+    "url": "https://github.com/probe-rs/hs-probe-firmware",
+    "what": "firmware repo README: CMSIS-DAP v1/v2 capability, turbo mode, license, build process"
+   },
+   {
+    "url": "https://www.tindie.com/products/probe-rs/hs-probe/",
+    "what": "vendor listing: price, current stock status, package contents"
+   },
+   {
+    "url": "https://github.com/probe-rs/hs-probe-firmware/blob/main/firmware/src/jtag.rs",
+    "what": "confirms JTAG module exists in firmware source"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact hs-probe hardware repo license (treated as CERN-OHL-P v2 per hardware README, not detected by GitHub's license API)",
+   "Could not confirm whether JTAG support in firmware/src/jtag.rs is fully functional/released or partial/experimental",
+   "No confirmation of a UART bridge capability either way beyond absence from documentation",
+   "This device is deliberately capability-sparse (a dedicated SWD/JTAG-only probe) - the short list reflects that finding, not incomplete research.",
+   "This device is deliberately capability-sparse (a dedicated SWD/JTAG-only debug probe) - the short capability list reflects that single-purpose finding, not incomplete research."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "bruschetta-board-whid",
+  "hardware_id": "bruschetta-board",
+  "name": "BRUSCHETTA Board",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "No reflashable on-board firmware - the board is built around WCH's CH347 USB-to-multi-protocol bridge chip, a fixed-function IC. All protocol logic (JTAG/SWD via OpenOCD, SPI via flashrom, I2C via ch347eeprom) lives in host-side tools talking to the CH347's USB descriptors, not in code running on the board.",
+  "vendor": "Luca Bongiorni (WHID Injector), manufactured/distributed by AprBrother",
+  "vendor_url": "https://github.com/whid-injector/BRUSCHETTA-board",
+  "product_url": "https://hackerwarehouse.com/product/bruschetta-board/",
+  "category": "hardware-debug",
+  "subcategory": "multi-protocol-probe",
+  "status": "available",
+  "released": "2023",
+  "price_usd": 70,
+  "price_note": "Confirmed at $70 on Hacker Warehouse; also sold via AprBrother, Tindie, KSEC Labs, AliExpress, and eBay at similar prices.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Requires understanding target voltage selection, DIP-switch operating modes, and separately compiling/using OpenOCD, flashrom, or ch347eeprom - not plug-and-play for a total beginner.",
+  "build_effort": "assembled",
+  "build_note": "Ships fully assembled and ready to use; no soldering required.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "BRUSCHETTA Board is Luca Bongiorni's (WHID Injector) open, assembled multi-protocol debugger built around WCH's CH347 USB bridge chip, wired for UART, JTAG/SWD (via a Bongiorni-patched OpenOCD build), I2C (EEPROM read/write via his ch347eeprom tool), and SPI (including flash chip dumping via flashrom's ch347_spi driver). A DIP switch selects between two main modes (UART+I2C+SPI, or UART+JTAG) and jumper-selectable level shifters cover 1.8V-5V targets.",
+  "honest_take": "This sits in the exact niche already covered by Bus Pirate 5 and Tigard in this database, and it doesn't clearly beat either. It's built on a single off-the-shelf WCH CH347 bridge chip rather than a general-purpose MCU (Bus Pirate 5 uses an RP2040) or a dedicated FTDI part (Tigard uses an FT2232H), and its protocols are split across two DIP-switch-selected modes rather than all available simultaneously - you have to physically flip the switch and unplug I2C/SPI devices before using it as a JTAG debugger. The GitHub repo has had no commits since October 2024, is maintained by one person, and carries no license file. The genuine draw is that it's Luca Bongiorni's own board with his own OpenOCD fork already patched for CH347 and flashrom support baked in, and it undercuts Tigard on price - a reasonable pick if you're already using his WHID toolset, but not an obvious upgrade over the probes already tracked here.",
+  "best_for": [
+   "Hardware hackers wanting one inexpensive board for UART+I2C+SPI+JTAG chip-level work",
+   "Flashrom users who specifically want CH347's ch347_spi driver support",
+   "People already using Luca Bongiorni's WHID/offensive-hardware toolset wanting matching gear"
+  ],
+  "not_for": [
+   "Users wanting all four protocols live at once without flipping a switch",
+   "Anyone who wants an actively-maintained tool with frequent firmware/software updates",
+   "SWD/JTAG-only users who would be better served by a dedicated CMSIS-DAP probe like hs-probe"
+  ],
+  "hardware": {
+   "mcu_primary": "CH347",
+   "mcu_primary_note": "WCH USB-to-UART/JTAG/SPI/I2C bridge IC, not a general-purpose reprogrammable MCU - all protocol behavior comes from the chip's fixed USB descriptors/modes, driven by host-side tools (OpenOCD, flashrom, ch347eeprom). Same IC family used in several other budget bridge/debug tools.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "none",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "USB-powered only.",
+   "charging": "USB",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "USB",
+    "SOP8/SOP16 test-clip adapters"
+   ],
+   "gpio": "Level-shifted UART/JTAG/SPI/I2C pins with a jumper to select 1.8V/2.5V/3.3V/5V target voltage",
+   "sensors": [
+    "none"
+   ],
+   "dimensions_mm": "101.6 x 101.6 x 7.6",
+   "weight_g": 363,
+   "case": "none - bare PCB",
+   "notable_physical": [
+    "DIP switch (S1/S2) for mode selection",
+    "level-shifter voltage jumper",
+    "SOP8/SOP16 adapter compatibility"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "UART1 available in both Mode 2 and Mode 4"
+   },
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Confirmed via flashrom's ch347_spi driver; README also references a Windows MultiProgrammer tool and SPI-NAND PROG support. Mode 2 only, 1.8-5V via level shifter."
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "Via the author's ch347eeprom tool - read/write EEPROM-style I2C devices. Mode 2 only, shares data lines with SPI so other I2C/SPI devices must be unplugged first."
+   },
+   "jtag_swd": {
+    "v": "yes",
+    "note": "JTAG and SWD via OpenOCD (a pre-patched openocd-ch347 build is provided in the repo). Mode 4 only, shares pins with UART1."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "Not a capability of the CH347 bridge chip; no logic-analyzer mode documented"
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Not a capability of the CH347 bridge chip; no glitching hardware documented"
+   },
+   "web_ui": {
+    "v": "no",
+    "note": "Configured entirely through host-side command-line tools (OpenOCD, flashrom, ch347eeprom, PuTTY) - no web interface."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a host PC running the appropriate protocol tool for every function - no standalone operation."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "Enumerates as a CH347 USB bridge device, not a mass-storage device."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "flashrom, OpenOCD, and ch347eeprom are all standard scriptable command-line tools, suitable for automated dump/flash/debug workflows."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A wired, non-radio debug/programmer tool - owning and using it is not restricted anywhere. Legal exposure comes entirely from what target device you dump/reprogram and whether you're authorized to do so."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "good",
+   "last_release": "2024-10",
+   "app_store": "N/A",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "BURSCHETTA Board (alternate spelling seen on some reseller listings)"
+  ],
+  "sources": [
+   {
+    "url": "https://github.com/whid-injector/BRUSCHETTA-board",
+    "what": "official README: CH347 chip, operating modes, level shifters, flashrom/OpenOCD/ch347eeprom tool usage, designer credit"
+   },
+   {
+    "url": "https://hackerwarehouse.com/product/bruschetta-board/",
+    "what": "reseller page: confirmed $70 price, dimensions, weight, SKU"
+   },
+   {
+    "url": "https://swisskyrepo.github.io/HardwareAllTheThings/gadgets/bruschetta-board/",
+    "what": "independent third-party technical summary confirming protocol set and predecessor-board lineage"
+   },
+   {
+    "url": "https://www.helpnetsecurity.com/2023/09/12/bruschetta-board-hardware-hackers/",
+    "what": "independent 2023 coverage corroborating release timing and feature set"
+   }
+  ],
+  "research_gaps": [
+   "No license file found in the GitHub repo, so exact reuse/redistribution terms are unclear",
+   "Could not confirm exact CH347 sub-variant (e.g. CH347F vs CH347T) used on the board",
+   "No independent teardown found to verify level-shifter IC part numbers"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "digilab-flipperzero-lab401",
+  "hardware_id": "digilab-flipperzero",
+  "name": "DigiLab for FlipperZero",
+  "firmware": "Lab401 DigiLab companion app (401/DigiLab FAP)",
+  "firmware_kind": "third-party-product",
+  "firmware_repo": "https://github.com/lab-401/fzDigiLab",
+  "firmware_note": "Official companion Flipper Application Package (FAP), open source (GPL-3.0), runs on stock Flipper Zero firmware and is listed in Flipper's official app catalog. All signal processing (ring buffers, statistical analysis, frequency detection) runs on the Flipper's own STM32WB55, not on the DigiLab module itself.",
+  "vendor": "Lab401 (hardware design by tixlegeek)",
+  "vendor_url": "https://lab401.com",
+  "product_url": "https://lab401.com/products/digilab-for-flipperzero",
+  "category": "hardware-debug",
+  "subcategory": "multi-protocol-probe",
+  "status": "available",
+  "released": "2025",
+  "price_usd": 64,
+  "price_note": "$64 USD confirmed via Lab401's US storefront (Shop Pay listing); Lab401's EU-facing page lists EUR 49 (~£42 GBP) - currency shown depends on storefront region.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Designed to be approachable: guided in-app calibration, and voltage/protocol info is surfaced via audio/LED/haptic feedback rather than requiring the user to read raw numbers or scope traces.",
+  "build_effort": "assembly",
+  "build_note": "Plugs directly onto the Flipper Zero's GPIO header, no soldering; comes with mini-probes for desktop use and a probe tip for portable use.",
+  "stealth": "overt",
+  "form_factor": "hat-shield",
+  "summary": "DigiLab is a Flipper Zero GPIO add-on designed by tixlegeek for Lab401: a probe module with its own analog front-end (protection/conditioning circuitry rated to 12V, plus an onboard I2C EEPROM used for demos) that feeds signals to the Flipper's own CPU rather than carrying a separate processor. The open-source (GPL-3.0) companion app provides four tools: an oscilloscope-style Scope with configurable audio/LED/haptic feedback, a quick voltage/frequency Probe, and I2C/SPI device scanners with a built-in hex editor for reading and writing device registers.",
+  "honest_take": "This is not just a GPIO pin breakout: Lab401's own behind-the-scenes post says they tried and abandoned putting an ESP32 on the board, and shipped analog signal-conditioning circuitry (voltage scaling/protection up to 12V) plus an onboard demo EEPROM instead - there is genuine purpose-built hardware behind the $64. That said, most of what makes it interesting - the oscilloscope view, the configurable feedback, the I2C/SPI 'prediction engine' - is software running entirely on the Flipper's own CPU, so DigiLab itself is best understood as a well-engineered analog probe front-end for the Flipper's GPIO. It also caps out at ~200kHz and is 3.3V-only for its I2C/SPI modes, so it's explicitly pitched as a first-look exploration tool rather than a scope or logic-analyzer replacement. It does NOT add any of the Flipper's headline radio capabilities (Sub-GHz, NFC/RFID, IR) - those come from the Flipper itself and are unrelated to this module, a common point of confusion for anyone assuming a Flipper 'module' adds radio range or protocols.",
+  "best_for": [
+   "Flipper Zero owners wanting a fast first pass at an unknown board's voltages and signals",
+   "Quick I2C/SPI device identification before reaching for a real logic analyzer",
+   "Teaching or demoing basic protocol concepts with audio/visual/haptic feedback"
+  ],
+  "not_for": [
+   "Real oscilloscope work - 200kHz ceiling and a single-probe view",
+   "1.8V or 5V I2C/SPI targets - those probe modes are 3.3V only",
+   "Anyone without a Flipper Zero - it is not a standalone tool",
+   "Anyone expecting it to extend the Flipper's Sub-GHz/NFC/IR range or protocol coverage - it doesn't touch those",
+   "Anyone expecting it to extend the Flipper's Sub-GHz/NFC/IR range or protocol coverage - it doesn't touch those"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "No separate MCU on the DigiLab board itself - all signal processing runs on the host Flipper Zero's STM32WB55. The board carries analog front-end/conditioning circuitry plus an onboard I2C EEPROM (board silkscreen designator U6; exact part number not published) used to demo the I2C Probe tool out of the box.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": {
+    "type": "none (uses Flipper's own display)",
+    "size_in": null,
+    "resolution": null,
+    "color": false,
+    "touch": false
+   },
+   "battery_mah": null,
+   "battery_note": "Powered from the Flipper Zero's GPIO header, no separate battery.",
+   "charging": "n/a (powered via Flipper Zero GPIO)",
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Flipper Zero 18-pin GPIO header",
+    "SMA-terminated mini-probes (desktop mode)",
+    "probe tip (portable mode)"
+   ],
+   "gpio": "Interfaces via Flipper Zero's GPIO header; SPI/I2C probe modes are 3.3V only, general voltage probing rated 0-12V",
+   "sensors": [
+    "onboard I2C EEPROM (demo device)"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": "custom-cut PCB, no enclosure",
+   "notable_physical": [
+    "RGB LED feedback",
+    "uses Flipper's speaker and vibration motor for feedback",
+    "compatible with BusPirate v5 accessories, including flash chip adaptors (DIP8/SOP8/WSON8)"
+   ]
+  },
+  "capabilities": {
+   "i2c": {
+    "v": "yes",
+    "note": "I2C Probe scans for devices and exposes register read/write via a built-in hex editor; onboard demo I2C EEPROM included out of the box. 3.3V only."
+   },
+   "spi_flash_dump": {
+    "v": "partial",
+    "note": "SPI Probe scans/identifies SPI devices with the same hex-editor-style register read/write as I2C Probe, and the device is explicitly compatible with BusPirate v5 Flash Adaptors (DIP8/SOP8/WSON8) - implying intended use for reading flash chips - but no confirmed bulk chip-dump-to-file workflow like flashrom exists. 3.3V only."
+   },
+   "uart": {
+    "v": "no",
+    "note": "No dedicated UART tool among the four DigiLab apps; the Scope can visualize a UART line's waveform but does not decode or log serial data"
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Not a JTAG/SWD probe; no debug-port support of any kind"
+   },
+   "logic_analyzer": {
+    "v": "partial",
+    "note": "The Scope app is a single-probe, oscilloscope-style real-time view (min/max/avg voltage, ~0-200kHz) built from ring-buffer/statistical analysis on the Flipper's own CPU - not a buffered, multi-channel logic analyzer"
+   },
+   "glitching": {
+    "v": "no",
+    "note": "Not a capability; no glitching hardware or software function"
+   },
+   "subghz_rx": {
+    "v": "no",
+    "note": "DigiLab adds analog/I2C/SPI probing only - Sub-GHz capability comes from the Flipper's own CC1101 radio, entirely unrelated to and unaffected by this module."
+   },
+   "hf_1356_read": {
+    "v": "no",
+    "note": "DigiLab does not add or change NFC/RFID capability - that is a Flipper-native function unrelated to this module."
+   },
+   "ir_rx": {
+    "v": "no",
+    "note": "DigiLab does not add or change IR capability - that is a Flipper-native function unrelated to this module."
+   },
+   "standalone_untethered": {
+    "v": "no",
+    "note": "Requires a Flipper Zero host to function at all - it has no independent processor or display."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive probe accessory with no radio or transmit function - owning and using it carries no meaningful restriction anywhere, independent of any Flipper Zero-specific import rules that apply to the host device itself."
+  },
+  "ecosystem": {
+   "community": "slow",
+   "docs_quality": "excellent",
+   "last_release": "2025-10",
+   "app_store": "Yes - official Flipper App Catalog (catalog.flipperzero.one)",
+   "abandoned_risk": "medium"
+  },
+  "aliases": [
+   "Lab401 DigiLab",
+   "401 DigiLab",
+   "401/DigiLab"
+  ],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/digilab-for-flipperzero",
+    "what": "official product page: price, description"
+   },
+   {
+    "url": "https://github.com/lab-401/fzDigiLab",
+    "what": "official companion app repo README: full feature breakdown (Scope/Probe/I2C Probe/SPI Probe), voltage/frequency limits, BusPirate accessory compatibility, license, designer credit"
+   },
+   {
+    "url": "https://lab401.com/blogs/news/building-the-digilab-behind-the-scenes",
+    "what": "Lab401 dev blog: confirms abandoned ESP32 prototype, analog front-end design, no separate onboard MCU"
+   },
+   {
+    "url": "https://shop.app/products/10066762105179/digilab-for-flipperzero",
+    "what": "third-party storefront confirming $64 USD price"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm exact part number of the onboard I2C EEPROM (silkscreen U6)",
+   "Could not confirm physical dimensions or weight of the board",
+   "Could not verify precision/accuracy specs for voltage or frequency measurement, only the stated range (0-12V, ~0-200kHz)"
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "project-reboot-hardware-target",
+  "hardware_id": "project-reboot",
+  "name": "Project Reboot: Hardware Audit Training Target",
+  "firmware": null,
+  "firmware_kind": "n/a",
+  "firmware_repo": null,
+  "firmware_note": "Ships with fixed, non-user-flashable challenge firmware embedded in the target board. There is nothing to reflash or customize - the point is a static target with a UART recovery console, an I2C sensor bus, external SPI flash, and a BLE peripheral, each hiding a flag.",
+  "vendor": "Mindstorm Security",
+  "vendor_url": "https://mindstormsecurity.com",
+  "product_url": "https://lab401.com/collections/all-products/products/project-reboot-hardware-target",
+  "category": "hardware-debug",
+  "subcategory": "training-target",
+  "status": "available",
+  "released": null,
+  "price_usd": 110.7,
+  "price_note": "Two SKUs, not a currency inconsistency: 'Basic' (board only) lists at EUR102.50 (~USD110.70) and 'Complete Pack' (board + USB-TTL adapter, CH341A reader, SOP-8 clip, 8-channel logic analyser, digital multimeter) at EUR125.50 (~USD133.00), confirmed directly on the Lab401 product page. The two USD figures are just currency-converted display prices for these two tiers.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "beginner",
+  "skill_note": "Explicitly built as an on-ramp for people intimidated by hardware RE - each of the four challenges (UART, I2C, SPI, BLE) has a Normal and a Hard mode plus a full written walkthrough, so it scales from first-timer to a harder self-test.",
+  "build_effort": "assembled",
+  "build_note": "Arrives as a ready-to-use target board; nothing to solder or build. Effort goes into solving the challenges, not building the hardware.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A commercial practice-target PCB shaped like a 'crashed robot' that gates four staged challenges - UART console recovery, I2C bus sniffing, external SPI flash extraction, and BLE GATT interaction - each ending in a flag, with an official written walkthrough. Built by Mindstorm Security (also behind the separate MACOBOX hardware-pentest tool) and sold through Lab401.",
+  "honest_take": "This is a boxed version of the exercises any hardware-hacking course already teaches on breadboards and cheap dev boards - you're paying roughly EUR100+ for curation, a written walkthrough, and not having to design your own target. Mindstorm Security hasn't published a schematic or named the MCU/BLE chip, so unlike the other three devices in this batch you can't verify difficulty or extend it yourself. Worth it for a guided, zero-setup on-ramp or as a consistent target for a class; skip it if you're comfortable sourcing your own STM32/nRF52 dev board and wiring up the same four interfaces yourself for a fraction of the price.",
+  "best_for": [
+   "First hands-on UART/I2C/SPI/BLE practice with a guided walkthrough",
+   "Instructors who need identical, repeatable targets for a class"
+  ],
+  "not_for": [
+   "Anyone who wants open schematics to study or modify",
+   "Experienced hardware hackers who'd rather build their own target for less"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "Not published by the vendor; no teardown or schematic found anywhere.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": null,
+     "role": "ble",
+     "note": "The BLE challenge requires the board to advertise and expose GATT services/characteristics; the specific BLE radio/SoC is not published anywhere found."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": null,
+   "storage": "External SPI NOR flash chip used as one of the four challenge targets (firmware extraction); exact part number not published.",
+   "connectivity": [
+    "UART header",
+    "I2C header",
+    "SPI header",
+    "BLE"
+   ],
+   "gpio": "Exposed UART, I2C and SPI test points/headers for the four challenge interfaces.",
+   "sensors": [
+    "Unspecified I2C sensor(s) simulating telemetry for the I2C sniffing challenge"
+   ],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Robot-themed PCB/enclosure art",
+    "Labeled test points for each challenge interface"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "Challenge 1: recover a UART recovery console and inspect a pseudo-filesystem."
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "Challenge 2: sniff the I2C bus and reconstruct a flag from simulated sensor traffic."
+   },
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Challenge 3: interact with an external SPI flash chip and recover a flag from firmware data."
+   },
+   "ble_advertise": {
+    "v": "yes",
+    "note": "Challenge 4: board advertises BLE services/characteristics the user connects to, sets modes on, and submits flags through. Closest matching capability key - schema has no dedicated 'BLE GATT target' key, see research_gaps."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "Not one of the four challenge interfaces; not exposed."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection/glitching challenge on this target."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "The board itself has no logic-analyzer capability; the Complete Pack bundles a separate standalone 8-channel logic analyser as an accessory tool, not a function of the target board."
+   },
+   "bt_classic": {
+    "v": "no",
+    "note": "Challenge is specifically BLE (GATT services/characteristics/advertising); no Bluetooth Classic mentioned anywhere."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "No direct USB port on the board itself; UART access is via header pins through an external USB-TTL adapter (bundled in the Complete Pack)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A passive practice PCB with a low-power BLE radio, not a transmitter or jammer - the same low regulatory profile as any hobbyist BLE dev board. No country-specific import issues found. Check your own country's rules before importing any electronics with radios."
+  },
+  "ecosystem": {
+   "community": "commercial",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://lab401.com/products/project-reboot-hardware-target",
+    "what": "vendor product page: full challenge description, EUR102.50/EUR125.50 tiers, kit contents, stock status"
+   },
+   {
+    "url": "https://mindstormsecurity.com/product/offensive-hardware-hacking-training/",
+    "what": "Mindstorm Security listing (minimal extractable content on fetch)"
+   },
+   {
+    "url": "https://github.com/mindstormsecurity/MACOBOX",
+    "what": "confirms MACOBOX is a separate Orange Pi Zero3-based pentest tool by the same company, not Project Reboot's own hardware"
+   },
+   {
+    "url": "https://www.majdak.online/blog/project-reboot-audyt-sprzetowy-iot",
+    "what": "third-party blog coverage (fetch blocked by site; title/snippet only)"
+   }
+  ],
+  "research_gaps": [
+   "Exact MCU and BLE radio IC are not published anywhere found; left null per schema rule rather than guessed.",
+   "No public GitHub repo or schematic for Project Reboot itself was found - unlike the other 3 devices in this batch, this is closed hardware.",
+   "Could not confirm exact release year.",
+   "No dedicated 'training-target' category exists in SCHEMA.md's controlled category list; used hardware-debug as the closest fit (applies to all 4 devices in this batch).",
+   "This is a narrow, single-purpose training target (4 fixed protocol challenges) - the capability list is intentionally short because that's genuinely all the device does, not because entries were skipped."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "flatsat-defcon-34",
+  "hardware_id": "flatsat",
+  "name": "FlatSat – DEFCON 34",
+  "firmware": "FlatSat Firmware",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/Pwnsat/FlatSat",
+  "firmware_note": "Preloaded, intentionally vulnerable AMP (asymmetric multiprocessing) firmware split across the RP2040's two Cortex-M0+ cores - one core runs the simulated spacecraft bus/telemetry stack, the other handles LoRa radio timing. Eight numbered attack walkthroughs (00-07) cover packet fuzzing, telecommand spoofing, buffer overflows, and subsystem manipulation.",
+  "vendor": "Electronic Cats",
+  "vendor_url": "https://electroniccats.com",
+  "product_url": "https://electroniccats.com/store/flatsat-defcon-34/",
+  "category": "hardware-debug",
+  "subcategory": "training-target",
+  "status": "out-of-stock",
+  "released": "2026",
+  "price_usd": 100,
+  "price_note": "Confirmed out of stock directly on the Electronic Cats DEFCON 34 store page as of check date. This edition includes an exclusive DEF CON 34 commemorative patch on top of the base board.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "Marketed as needing 'no soldering or coding initially' (drag-and-drop firmware, guided 3-level CTF), but the actual attack walkthroughs (buffer overflows, telecommand spoofing, RF protocol analysis) assume real binary-exploitation and RF fundamentals.",
+  "build_effort": "assembled",
+  "build_note": "Ships as a complete, assembled board; setup is USB connect + firmware drag-and-drop. No soldering needed to start the CTF.",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "An RP2040-based training board built around two Semtech SX1262 LoRa radios and a BME280/LIS2DH12 sensor pair, preloaded with deliberately vulnerable firmware that mimics a small satellite's telemetry/command bus. Originally an independent open-source project published by researcher(s) as Pwnsat, this DEFCON 34 edition is a limited commemorative production run manufactured and sold by Electronic Cats (an established open-hardware company) from a fork of the original Pwnsat/FlatSat GitHub repo.",
+  "honest_take": "The RP2040 and SX1262 radios are real and confirmed, and the underlying Pwnsat project has genuine traction (500+ GitHub stars, active commits) - this isn't vaporware. But 'analyze LoRa telemetry with an SDR' oversells what's onboard: FlatSat's own radios are fixed-function SX1262 LoRa transceivers, not an SDR - you bring your own RTL-SDR/HackRF to passively watch the RF side; the board itself doesn't do general-purpose signal capture. Also worth knowing before buying: when checked, the project's own GitHub wiki pages (hardware anatomy, attack walkthroughs) all returned load errors - the polished front page currently oversells docs that weren't fully working. It's out of stock at Electronic Cats regardless, so hobbyist interest is currently better served by building from the open Pwnsat/FlatSat repo directly than waiting on the commemorative edition.",
+  "best_for": [
+   "Hands-on practice with CCSDS-style space packet protocols and RF telemetry",
+   "Binary exploitation practice on a real dual-core RP2040 target"
+  ],
+  "not_for": [
+   "Actually doing SDR signal analysis (bring your own SDR)",
+   "Anyone who needs the board in stock right now"
+  ],
+  "hardware": {
+   "mcu_primary": "RP2040",
+   "mcu_primary_note": "Dual-core Arm Cortex-M0+, confirmed via GitHub repo and Electronic Cats spec table. Firmware uses an asymmetric-multiprocessing split so high-speed data handling on one core doesn't disturb time-critical radio operations on the other.",
+   "mcu_secondary": null,
+   "radios": [
+    {
+     "ic": "Semtech SX1262",
+     "role": "lora",
+     "note": "Two independent units (uplink/downlink simulation) on 433/915MHz ISM bands - a fixed-function LoRa transceiver, not a general SDR."
+    }
+   ],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": "USB",
+   "pmic": null,
+   "storage": "4MB onboard flash",
+   "connectivity": [
+    "USB",
+    "UART",
+    "I2C",
+    "SWD"
+   ],
+   "gpio": "Exposed UART, I2C, and SWD debug headers for hardware auditing, per the GitHub hardware docs.",
+   "sensors": [
+    "BME280 (environmental telemetry simulation)",
+    "LIS2DH12 3-axis accelerometer (telemetry simulation)"
+   ],
+   "dimensions_mm": "41 x 78",
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "WS2812B NeoPixel status LED for CTF-stage visual feedback",
+    "DEF CON 34 commemorative patch included with this edition"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "Exposed UART header for hardware auditing/debugging as part of the training target."
+   },
+   "i2c": {
+    "v": "yes",
+    "note": "Exposed I2C header; also the bus the onboard BME280/LIS2DH12 sensors sit on."
+   },
+   "jtag_swd": {
+    "v": "partial",
+    "note": "SWD (not full JTAG) is exposed on the RP2040 for debugging/auditing."
+   },
+   "spi_flash_dump": {
+    "v": "unknown",
+    "note": "RP2040 has its own QSPI program flash; unclear if it is presented as a standalone SPI-dump challenge the way Project Reboot's or Sword of Secrets' external flash chips are."
+   },
+   "sdr_rx": {
+    "v": "no",
+    "note": "Onboard radios are fixed-function SX1262 LoRa transceivers, not an SDR. 'LoRa telemetry analysis with an SDR' in the product description means the student supplies their own SDR to passively observe the RF side."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Open firmware/exploit-script repo with 8 numbered attack walkthroughs (00-07) covering packet fuzzing, telecommand spoofing, buffer overflows."
+   },
+   "sdr_tx": {
+    "v": "no",
+    "note": "Same as sdr_rx - fixed-function SX1262 LoRa transceiver, not a general-purpose SDR transmitter."
+   },
+   "sdr_bandwidth": {
+    "v": "no",
+    "note": "Not applicable; SX1262 is a fixed-function LoRa chirp-spread-spectrum radio, not a tunable-bandwidth SDR front end."
+   },
+   "sdr_full_duplex": {
+    "v": "no",
+    "note": "Not an SDR at all; not applicable."
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS module onboard - despite the 'space' theme, positioning is not part of this board; only BME280 environmental and LIS2DH12 accelerometer sensors are present."
+   },
+   "packet_capture": {
+    "v": "yes",
+    "note": "Attack walkthroughs explicitly work at the CCSDS space-packet level (packet fuzzing, telecommand spoofing) over the LoRa uplink/downlink per the GitHub wiki's documented scope."
+   },
+   "usb_mass_storage": {
+    "v": "yes",
+    "note": "RP2040's standard BOOTSEL/UF2 bootloader exposes the board as a USB mass-storage drive for drag-and-drop firmware installation, per the vendor's own 'no soldering or coding initially' setup description."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No onboard logic-analyzer function; students would need to bring their own analyzer to probe the exposed UART/I2C/SWD headers."
+   },
+   "glitching": {
+    "v": "no",
+    "note": "No fault-injection/glitching challenge documented in the attack walkthroughs found (packet fuzzing, telecommand spoofing, buffer overflows, subsystem manipulation - no voltage/clock glitching mentioned)."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "Transmits on unlicensed ISM bands (433/915MHz) at low power for a training simulation, not a real satellite uplink - no special licence needed to own or use it in most countries. 915MHz is an Americas ISM allocation; EU users should confirm local allowance for that band vs. the EU's 868MHz LoRa band before transmitting."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "sparse",
+   "last_release": "2026-08",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "FlatSat 1",
+   "Pwnsat FlatSat"
+  ],
+  "sources": [
+   {
+    "url": "https://electroniccats.com/store/flatsat-defcon-34/",
+    "what": "official DEFCON 34 store listing: price, stock status, spec table (RP2040, 2x SX1262, BME280, LIS2DH12, dimensions)"
+   },
+   {
+    "url": "https://electroniccats.com/flat-sat/",
+    "what": "Electronic Cats project overview page"
+   },
+   {
+    "url": "https://github.com/Pwnsat/FlatSat",
+    "what": "original open-source repo (523 stars, pushed 2026-08-09); hardware specs, 8 attack walkthroughs, hardware/ folder"
+   },
+   {
+    "url": "https://github.com/ElectronicCats/FlatSat",
+    "what": "confirmed via GitHub API this is a fork of Pwnsat/FlatSat, not an independent Electronic Cats design"
+   },
+   {
+    "url": "https://github.com/Pwnsat/FlatSat/wiki",
+    "what": "checked documentation completeness - supporting wiki pages returned load errors at check time"
+   }
+  ],
+  "research_gaps": [
+   "GitHub wiki's supporting pages (hardware anatomy, attack walkthroughs, etc.) all returned 'error while loading' when checked on 2026-09-10, despite the wiki home page listing them - unclear if this is a temporary outage or genuinely incomplete documentation.",
+   "A separately-named 'Pwnsat/FlatSat_Firmware' repo referenced by some secondary sources returns 404; firmware appears to live inside the main Pwnsat/FlatSat repo instead.",
+   "Could not confirm exact onboard flash part number beyond '4MB'.",
+   "No dedicated 'training-target' category exists in SCHEMA.md; used hardware-debug as the closest fit.",
+   "This is a narrow, single-purpose training target (space-systems CTF) - the capability list is intentionally focused rather than broad; several 'no' entries above (SDR cluster, GPS, glitching) are included specifically because the space/RF theming might make a buyer assume they're present."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "fire-weasel-board-and-leash-diy-kit",
+  "hardware_id": "fire-weasel",
+  "name": "Fire Weasel Board and Leash DIY Kit",
+  "firmware": "HaleHound-CYD",
+  "firmware_kind": "community",
+  "firmware_repo": "https://github.com/JesseCHale/HaleHound-CYD",
+  "firmware_note": "Nothing ships flashed - the bare kit has no MCU to flash. Once the buyer wires their own CYD (ESP32-2432S028) into the Fire Weasel carrier, HaleHound-CYD (an actively maintained, 1,600+-star open firmware by JesseCHale, sharing branding with the halehound.com store) is the firmware the product line is built around, flashed via the browser-based flash.halehound.com tool. The same CYD hardware also runs Bruce, Marauder and GhostESP if the buyer prefers a different firmware - the vendor page doesn't explicitly restrict it, see research_gaps.",
+  "vendor": "HaleHound",
+  "vendor_url": "https://halehound.com",
+  "product_url": "https://halehound.com/products/fire-weasel-board-and-leash-diy-kit",
+  "category": "accessory",
+  "subcategory": "multitool-carrier-board",
+  "status": "available",
+  "released": null,
+  "price_usd": 48,
+  "price_note": "$48 for the unsoldered DIY kit; $78 for 'Fully Soldered & Assembled' (per task brief - the soldered price loads via a JS variant selector not captured in a static page fetch). Neither price includes the CYD display, CC1101, NRF24L01+PA+LNA or GPS module - see honest_take. For comparison, the same vendor's fully-loaded 'Fire Weasel and Leash PRO DIY KIT' (board + leash + case + CYD + all three radio/GPS modules + wiring) is $185, or built-for-you through an authorized assembly partner for an extra ~$60-100.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "intermediate",
+  "skill_note": "The bare board itself needs no skill to unbox, but it is inert until you source, wire, and flash a CYD plus separately-bought radio modules yourself - the vendor's own PRO-kit copy says the full build 'takes around 45 minutes on average with experience', implying it is not a true first-solder-job beginner project.",
+  "build_effort": "soldering",
+  "build_note": "Sold as either an unsoldered PCB (you solder headers/connections and wire in your own CYD + modules) or a pre-soldered-and-tested bare board (still requires you to wire in your own CYD + modules afterward - soldering the carrier board is not the same as finishing the build).",
+  "stealth": "overt",
+  "form_factor": "board",
+  "summary": "A bare carrier PCB and wearable strap ('leash') sold on their own by HaleHound, for builders who already have (or will separately buy) their own 'CYD' (Cheap Yellow Display, an ESP32 dev board with a 2.8-3.5in touchscreen) plus CC1101 sub-GHz, NRF24L01+PA+LNA 2.4GHz, and GPS modules. Originally designed by the Midwest Gadgets/BkBroiler/Hamspice community and 'relinquished to the HaleHound', it exists to make wiring a HaleHound-CYD-style RF multitool less of an ad-hoc breadboard job.",
+  "honest_take": "The single most important thing to know before buying: as sold, for $48-78, you get a PCB and a strap. Zero MCU, zero radios, zero screen - nothing that transmits, receives, or even boots on its own. It becomes a Flipper-style Wi-Fi/BT/sub-GHz/NRF24/GPS multitool only after you separately source and wire in a ~$15 CYD board, a ~$5-10 CC1101 module, a ~$5-10 amplified NRF24L01 module, and a ~$10 GPS module - none of which are in this box. If you want the finished tool, the vendor's own 'PRO' kit bundles all of that (plus a case) for $185, which is the realistic all-in price of a working Fire Weasel; this listing is for people who already own the modules (e.g. from a previous CYD build) and just want a proper carrier board and strap instead of a breadboard. Whether that convenience is worth $48-78 for a two-part PCB+strap is a judgment call - there's no independent BOM/cost breakdown published to weigh it against.",
+  "best_for": [
+   "Someone who already owns a CYD + CC1101 + NRF24 + GPS and wants a proper carrier board instead of dead-bugging wires",
+   "Builders standardizing on the HaleHound-CYD firmware ecosystem"
+  ],
+  "not_for": [
+   "Anyone expecting a working multitool out of the box - buy the PRO kit or a finished build instead",
+   "First-time solderers with no ESP32/RF module experience"
+  ],
+  "hardware": {
+   "mcu_primary": null,
+   "mcu_primary_note": "The Fire Weasel PCB itself has no MCU - it is a passive carrier/breakout board. Compute (and native Wi-Fi/Bluetooth radios) comes entirely from the buyer's own CYD board (typically an ESP32-2432S028, an ESP32-WROOM class SoC), which is not included in this listing.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": "Explicitly does not ship with any battery; vendor links a third-party Amazon battery as a suggestion.",
+   "charging": null,
+   "pmic": null,
+   "storage": null,
+   "connectivity": [
+    "Breakout headers for buyer-supplied CYD, CC1101, NRF24L01+PA+LNA, and GPS modules"
+   ],
+   "gpio": "Carrier-board breakout pins matching the CYD's exposed SPI/GPIO pins, sized for the specific CC1101/NRF24/GPS modules the vendor also sells.",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Wearable strap/'leash' for carrying the finished multitool",
+    "Designed to accept a 2.8in or 3.5in CYD 'Exposed SPI' variant"
+   ]
+  },
+  "capabilities": {
+   "wifi_scan_24": {
+    "v": "addon",
+    "note": "Requires buyer-supplied CYD (ESP32) running HaleHound-CYD or compatible firmware - the CYD's native Wi-Fi radio, not anything on the Fire Weasel PCB itself."
+   },
+   "wifi_deauth_24": {
+    "v": "addon",
+    "note": "Same as above - native ESP32 Wi-Fi via buyer-supplied CYD + firmware."
+   },
+   "ble_scan": {
+    "v": "addon",
+    "note": "Native ESP32 Bluetooth via buyer-supplied CYD + firmware."
+   },
+   "subghz_rx": {
+    "v": "addon",
+    "note": "Requires a separately purchased CC1101 module (e.g. HaleHound sells an 'E07-C1101' board) wired to the carrier - not included."
+   },
+   "subghz_tx": {
+    "v": "addon",
+    "note": "Same CC1101 module requirement as subghz_rx."
+   },
+   "nrf24_scan": {
+    "v": "addon",
+    "note": "Requires a separately purchased NRF24L01+PA+LNA amplified module - not included."
+   },
+   "mousejack": {
+    "v": "addon",
+    "note": "Depends on the same buyer-supplied NRF24 module and firmware support."
+   },
+   "gps": {
+    "v": "addon",
+    "note": "Requires a separately purchased GPS module (e.g. ATGM336H or NEO-6M) - not included."
+   },
+   "gps_wardrive_log": {
+    "v": "addon",
+    "note": "Depends on the same buyer-supplied GPS module plus firmware wardriving support."
+   },
+   "sd_logging": {
+    "v": "addon",
+    "note": "Depends on the buyer-supplied CYD's onboard microSD slot."
+   },
+   "standalone_untethered": {
+    "v": "addon",
+    "note": "Needs a buyer-supplied battery; none is included."
+   },
+   "ble_spam_apple": {
+    "v": "unknown",
+    "note": "HaleHound-CYD is described generally as covering Wi-Fi/BT/SubGHz/2.4GHz, but sources checked did not explicitly enumerate BLE-spam-by-vendor-type modules; not confirmed either way, and would be addon (needs the buyer's own CYD) regardless."
+   },
+   "ble_spam_android": {
+    "v": "unknown",
+    "note": "Same caveat as ble_spam_apple - not explicitly confirmed in sources checked."
+   },
+   "wifi_monitor_mode": {
+    "v": "addon",
+    "note": "Native ESP32 capability exposed by firmware such as HaleHound-CYD, once the buyer supplies and flashes their own CYD."
+   },
+   "wifi_wardriving": {
+    "v": "addon",
+    "note": "Requires buyer-supplied CYD + GPS module (not included) plus firmware wardriving support; GPS wardriving is explicitly mentioned as a HaleHound-CYD feature in sources checked."
+   },
+   "usb_mass_storage": {
+    "v": "addon",
+    "note": "Depends on the buyer-supplied CYD's own USB port/bootloader behavior - not a function of the Fire Weasel carrier PCB itself."
+   },
+   "ir_tx": {
+    "v": "unknown",
+    "note": "Some CYD variants include an onboard IR LED; not confirmed whether HaleHound-CYD exposes IR transmit, and irrelevant to the bare Fire Weasel board regardless since the CYD is buyer-supplied."
+   },
+   "app_store": {
+    "v": "no",
+    "note": "HaleHound-CYD is a single monolithic firmware image, not an app-store/app-catalog platform like Flipper's."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "As literally sold (a bare PCB and strap with no radios), this carries no more regulatory weight than any blank circuit board. Risk only appears once a buyer wires in their own CC1101/NRF24 modules and flashes offensive-capable firmware (deauth, 2.4GHz spam) - at that point the same legal considerations that apply to any Flipper-style RF multitool apply, and that is on the builder, not this listing."
+  },
+  "ecosystem": {
+   "community": "very-active",
+   "docs_quality": "good",
+   "last_release": "v3.9.5 (2026-08)",
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [],
+  "sources": [
+   {
+    "url": "https://halehound.com/products/fire-weasel-board-and-leash-diy-kit",
+    "what": "official product listing: $48 unsoldered price, 'Fully Soldered & Assembled' option, kit contents (board + leash only)"
+   },
+   {
+    "url": "https://halehound.com/products/fire-weasel-and-leash-pro-diy-kit",
+    "what": "sibling PRO listing ($185) whose full parts list (CYD, CC1101 'E07-C1101', NRF24 'E01-NRF27sx', GPS 'ATGM336H', case, wiring) shows exactly what the bare Board+Leash kit is missing; also names Midwest Gadgets/BkBroiler/Hamspice as Fire Weasel's original designers, 'relinquished to the HaleHound'"
+   },
+   {
+    "url": "https://github.com/JesseCHale/HaleHound-CYD",
+    "what": "firmware repo: 1,694 stars, last push 2026-08-30, v3.9.5, CC1101/NRF24L01+PA+LNA/GPS module support confirmed in README"
+   },
+   {
+    "url": "https://svonberg.org/2026/03/07/halehound-docs-to-review/",
+    "what": "independent third-party notes confirming the three required external modules (CC1101, NRF24L01+PA+LNA, GPS) are not part of the base CYD"
+   },
+   {
+    "url": "https://www.kunalganglani.com/blog/halehound-cyd-wifi-pentesting-review",
+    "what": "third-party review (title/snippet only, not independently fetched in full) estimating a full HaleHound-CYD build with all modules (CYD + CC1101 + NRF24 + GPS) costs roughly $45-65 in parts - useful independent cost cross-check against this listing's $48-78 board-only price and the vendor's own $185 PRO kit"
+   }
+  ],
+  "research_gaps": [
+   "Could not find an explicit vendor statement that the Fire Weasel is officially built for HaleHound-CYD firmware specifically, as opposed to Bruce/Marauder/GhostESP, which the same CYD hardware also runs; inferred from shared branding (halehound.com, 'HaleHound 3D printed case', the flash.halehound.com flasher) but not stated outright anywhere found.",
+   "The $78 'Fully Soldered & Assembled' price came from the task brief; a static page fetch only surfaced the $48 unsoldered price (the soldered price is set via a JS variant selector).",
+   "No capability key exists for 'inert carrier board with zero onboard capability until third-party modules are added' - described in honest_take/summary instead.",
+   "Category set to 'accessory' rather than 'hardware-debug' because, as literally sold, the bare kit teaches no protocol/debug skill by itself - it is a carrier for a multitool, not a practice target; flagged since the brief suggested hardware-debug for all 4 devices in this batch.",
+   "Could not confirm an exact release/launch year for the Fire Weasel board.",
+   "Even once fully built out, this remains a firmware-defined multitool (HaleHound-CYD) rather than a device with its own independent capability set - most entries above are necessarily 'addon' or 'unknown' because they depend on hardware and firmware choices the bare kit does not make for the buyer."
+  ],
+  "_staged_by": "integrate.py"
+ },
+ {
+  "id": "sword-of-secrets",
+  "hardware_id": "sword-of-secrets",
+  "name": "Sword of Secrets",
+  "firmware": "Sword of Secrets firmware",
+  "firmware_kind": "stock",
+  "firmware_repo": "https://github.com/gili-yankovitch/SwordOfSecrets",
+  "firmware_note": "Ships pre-flashed with the first challenge stages. Bootloader is locked by default so only officially encrypted updates can be flashed over USB; an 'open bootloader' fully-hackable variant was announced as a funding stretch goal but delivery could not be confirmed from the campaign's public update log.",
+  "vendor": "Nyx Software Security Solutions",
+  "vendor_url": "https://nyxsecuritysolutions.com",
+  "product_url": "https://www.crowdsupply.com/nyx-software-security-solutions/sword-of-secrets",
+  "category": "hardware-debug",
+  "subcategory": "training-target",
+  "status": "available",
+  "released": "2025",
+  "price_usd": 45,
+  "price_note": "Crowd Supply lists $45 for the board plus $8 US / $18 worldwide shipping, confirmed in stock ('ships within three business days') as of check date. A campaign update warned the post-campaign retail price would be higher than the $45 crowdfunding price, but $45 remains the live listed price.",
+  "price_is_estimate": false,
+  "price_checked": "2026-09-10",
+  "skill_level": "advanced",
+  "skill_note": "Solving stages requires reading datasheets, RISC-V assembly/firmware-level work, and spotting cryptographic implementation flaws - the vendor markets it to 'security researchers, enthusiasts, educators', not total beginners, though a free browser-based emulator lets you preview challenges before buying.",
+  "build_effort": "assembled",
+  "build_note": "Fully assembled, plugs directly into USB (includes a shim to thicken the onboard USB Type-A connector for a snug fit). New content arrives as encrypted USB firmware updates, not hardware changes.",
+  "stealth": "overt",
+  "form_factor": "keychain",
+  "summary": "A keychain-sized, sword-shaped PCB built around a WCH CH32V003 RISC-V microcontroller, a Winbond W25Q128 SPI NOR flash chip, and a CH340E USB-serial bridge, packaged as a multi-stage hardware CTF. Made by Israeli embedded-security researcher Gili Yankovitch under Nyx Software Security Solutions, it shipped its first production batch of 250 units in Dec 2025-Jan 2026 after a 969%-funded Crowd Supply campaign, and the vendor has committed to shipping new encrypted challenge stages over USB for at least a year post-fulfillment.",
+  "honest_take": "The brief's framing of this as 'successor to The Skull CTF by the same maker' needs correcting: Crowd Supply's own page calls it a 'spiritual successor to Uri Shaked's The Skull CTF' - same genre of hardware-puzzle badge, but a different maker entirely (Gili Yankovitch/Nyx vs. Uri Shaked/Wokwi). Don't expect direct continuity of challenges, design, or team between the two. On the hardware: the CH32V003 is a real, extremely cheap (~$0.10-0.15 in volume) RISC-V MCU - the campaign itself jokes about building a secure update mechanism around 'a 10-cent MCU' - so the $45 price is mostly paying for the puzzle design, the encrypted content pipeline, and the promise of ongoing new stages, not exotic silicon. That's a legitimate thing to pay for if the challenge content is good (open firmware and hardware files back that up), but go in knowing you're buying curated content and a subscription-style update stream on commodity hardware, not a beefier board than a Skull or a DVID.",
+  "best_for": [
+   "Practicing RISC-V firmware exploitation and SPI-flash protection bypass end to end",
+   "Anyone who enjoyed The Skull CTF and wants a similar puzzle-badge experience from a different designer"
+  ],
+  "not_for": [
+   "Total beginners with no assembly/firmware background",
+   "Anyone expecting the same puzzles or team as The Skull CTF"
+  ],
+  "hardware": {
+   "mcu_primary": "CH32V003",
+   "mcu_primary_note": "WCH 32-bit RISC-V (QingKe RV32EC core), one of the cheapest MCUs on the market (~$0.10-0.15 in volume) - deliberately minimal/constrained, not a high-power CTF platform.",
+   "mcu_secondary": null,
+   "radios": [],
+   "display": null,
+   "battery_mah": null,
+   "battery_note": null,
+   "charging": null,
+   "pmic": "AMS1117-3.3 linear regulator",
+   "storage": "Winbond W25Q128JVSIQ SPI NOR flash (128Mbit), confirmed in the GitHub repo's bill of materials - one of the challenge targets, breached over SPI. Crowd Supply's own spec table lists it as 'W29Q128', likely a typo; the repo BOM (with datasheet link) is treated as authoritative.",
+   "connectivity": [
+    "USB Type-A (direct plug, via CH340E USB-UART bridge)"
+   ],
+   "gpio": "UART exposed via the CH340E bridge; SPI to the onboard W25Q128 flash is part of the challenge surface.",
+   "sensors": [],
+   "dimensions_mm": null,
+   "weight_g": null,
+   "case": null,
+   "notable_physical": [
+    "Sword-shaped PCB silhouette",
+    "Included plastic shim to thicken the USB connector for a firm fit"
+   ]
+  },
+  "capabilities": {
+   "uart": {
+    "v": "yes",
+    "note": "CH340E exposes a UART path used as part of the challenge/debug surface ('With UART as your guide' per vendor)."
+   },
+   "spi_flash_dump": {
+    "v": "yes",
+    "note": "Challenges explicitly involve 'twisting SPI protocols' and breaching protection registers on the onboard W25Q128 SPI NOR flash."
+   },
+   "jtag_swd": {
+    "v": "no",
+    "note": "CH32V003 uses WCH's proprietary single-wire debug interface (not standard JTAG/SWD), and it is not presented as part of the intended challenge path."
+   },
+   "usb_hid_inject": {
+    "v": "no",
+    "note": "USB path is a CH340E serial bridge for firmware updates/communication, not a HID injection tool."
+   },
+   "scriptable": {
+    "v": "yes",
+    "note": "Firmware and hardware (KiCad) are open source on GitHub; a browser-based RISC-V emulator lets you preview/practice challenges virtually before or without the physical board."
+   },
+   "i2c": {
+    "v": "unknown",
+    "note": "No source found confirming or denying an exposed I2C interface; CH32V003 supports I2C in hardware but no challenge or BOM entry references it."
+   },
+   "glitching": {
+    "v": "unknown",
+    "note": "Challenges involve 'breaching protection registers' on the SPI flash, which could plausibly use voltage/clock glitching, but no source explicitly describes glitching as an intended technique - more likely logic/protocol/crypto tricks per the available challenge descriptions."
+   },
+   "logic_analyzer": {
+    "v": "no",
+    "note": "No onboard logic-analyzer function; solving the hardware stages implies bringing your own analyzer/scope to probe UART and SPI, same as any bare MCU target."
+   },
+   "gps": {
+    "v": "no",
+    "note": "No GPS or any location hardware onboard."
+   },
+   "usb_mass_storage": {
+    "v": "no",
+    "note": "USB path is a CH340E serial bridge for the update/communication protocol, not a mass-storage device."
+   }
+  },
+  "legal": {
+   "import_restricted": [],
+   "risk_level": "low",
+   "notes": "A wired USB puzzle device with no radio at all - a local firmware/hardware exploitation exercise, not a transmitter or network-attack tool. No import or ownership restrictions found anywhere."
+  },
+  "ecosystem": {
+   "community": "active",
+   "docs_quality": "good",
+   "last_release": null,
+   "app_store": "No",
+   "abandoned_risk": "low"
+  },
+  "aliases": [
+   "SoS"
+  ],
+  "sources": [
+   {
+    "url": "https://www.crowdsupply.com/nyx-software-security-solutions/sword-of-secrets",
+    "what": "official campaign/product page: $45 price, in-stock status, CH32V003/W29Q128/CH340E spec list, 'spiritual successor to Uri Shaked's The Skull CTF' line, comparison table with release year 2025"
+   },
+   {
+    "url": "https://www.crowdsupply.com/nyx-software-security-solutions/sword-of-secrets/updates",
+    "what": "campaign update log: funded Sep 2025, first 250 units flashed/tested and shipped to Mouser warehouse Nov 2025-Jan 2026"
+   },
+   {
+    "url": "https://github.com/gili-yankovitch/SwordOfSecrets",
+    "what": "firmware/hardware repo confirmed via GitHub API (44 stars, created Nov 2024, pushed 2026-09-02); README/BOM confirms W25Q128JVSIQ flash part number"
+   },
+   {
+    "url": "https://www.hackster.io/news/gili-yankovitch-s-sword-of-secrets-is-an-open-risc-v-powered-hardware-capture-the-flag-contest-14ac8f0080da",
+    "what": "independent coverage confirming CH32V003 and CH340E, maker Gili Yankovitch"
+   },
+   {
+    "url": "https://github.com/wokwi/the-skull",
+    "what": "confirms The Skull CTF is a separate project by Uri Shaked/Wokwi, not by Gili Yankovitch/Nyx - different makers despite the 'successor' framing"
+   },
+   {
+    "url": "https://hackaday.io/project/203080-the-sword-of-secrets",
+    "what": "Hackaday.io project page corroborating CH32V003 and UART/SPI/USB interfaces"
+   }
+  ],
+  "research_gaps": [
+   "Could not confirm whether the 'open bootloader' stretch goal (fully unlocked flashing) actually shipped - announced as a stretch goal during the campaign, but no explicit delivery confirmation found in the update titles checked.",
+   "I2C support is marked 'unknown' rather than yes/no - CH32V003 supports I2C in hardware, but no source found confirms or denies it being exposed/used on this board.",
+   "Exact board dimensions/weight not published anywhere found.",
+   "Important correction to the brief's premise: this is NOT literally 'the same maker' as The Skull CTF - Crowd Supply's own copy calls it a 'spiritual successor', and The Skull was made by Uri Shaked (Wokwi), a different person/company from Gili Yankovitch (Nyx Software Security Solutions).",
+   "This is a narrow, single-purpose training target (a wired USB CTF puzzle) - the several explicit 'no' wireless/storage entries above are included specifically because other keychain-sized hacking badges commonly have BLE/storage and a buyer might wrongly assume this one does too; it has none of that, by design.",
+   "Single-purpose device: the capability matrix is deliberately short rather than padded with unrelated 'no' entries."
+  ],
+  "_staged_by": "integrate.py"
+ }
+]

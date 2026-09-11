@@ -3,7 +3,11 @@ window.QUIZ = {
   goals: [
     { id:"subghz", label:"Play with radio remotes", icon:"((•))",
       desc:"Garage doors, gate remotes, doorbells, some alarm sensors. Record a signal and send it again.",
-      caps:{ subghz_rx:3, subghz_tx:3, subghz_replay:2.5, subghz_bruteforce:1, subghz_external_antenna:.5 } },
+      /* Weighted on replay, not on merely owning a sub-GHz radio. LoRa mesh
+         nodes transmit and receive on these bands but cannot record and resend
+         an OOK remote, which is what this goal actually describes. */
+      caps:{ subghz_replay:4, subghz_rx:1.5, subghz_tx:1.5, subghz_bruteforce:1.5,
+             subghz_rolling_code:1, subghz_external_antenna:.5 } },
 
     { id:"wifi", label:"Test Wi-Fi security", icon:"≈≈≈",
       desc:"See what networks are around, capture the data needed for offline password testing, knock devices off, or stand up a fake login page.",
@@ -21,6 +25,11 @@ window.QUIZ = {
       desc:"What happens when someone plugs an unknown stick or cable into a computer. The device types commands by itself.",
       caps:{ usb_hid_inject:3, usb_mass_storage:1, usb_ethernet_attack:2, usb_exfil:2,
              hid_remote_trigger:1.5, usb_payload_lang:1, ble_hid:1 } },
+
+    { id:"automotive", label:"Work on car electronics", icon:"[o-o]",
+      desc:"The networks inside a vehicle. Read what the car's computers say to each other, send your own messages, or plug into the diagnostic port. Most of these buses were designed with no authentication at all.",
+      caps:{ can_sniff:3, can_inject:3, can_fd:1.5, obd2:2, can_isolated:1,
+             lin_bus:1, automotive_ethernet:1, scriptable:.5, sd_logging:.5 } },
 
     { id:"detect", label:"Find trackers & surveillance", icon:"(o)",
       desc:"Spot an AirTag following you, a card skimmer on a petrol pump, a rogue Wi-Fi network, a plate-reader camera, or a drone.",
