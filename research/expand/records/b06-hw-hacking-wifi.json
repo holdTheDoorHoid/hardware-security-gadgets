@@ -269,6 +269,10 @@
       "standalone_untethered": {
         "v": "no",
         "note": "Requires a host PC (Python script or PulseView) for every function; no standalone/field mode."
+      },
+      "side_channel_power": {
+        "v": "partial",
+        "note": "Has its own onboard MS9280 ADC used as a differential power-analysis DPA scope, confirmed in the firmware source (adc.c) rather than just marketing copy - a genuinely self-contained capture path, unlike the accessory/target boards elsewhere in this batch. But the vendor's own documentation marks this specific mode 'documentation in progress', making it the least mature of the board's three advertised functions."
       }
     },
     "legal": {
@@ -905,6 +909,10 @@
       "web_ui": {
         "v": "no",
         "note": "No network interface; configured via the ChipWhisperer Python API and Vivado, not a browser."
+      },
+      "side_channel_power": {
+        "v": "addon",
+        "note": "Carries dedicated shunt-resistor measurement points built for clean power-trace capture, but this is a victim/target board with no glitch-or-capture generator of its own (same relationship as its own glitching rating of 'addon') - it needs a CW1200/Lite/Husky to actually sample and record anything. Also worth noting: NewAE's own product page now 404s and the board's current purchase channel is unclear."
       }
     },
     "legal": {
@@ -1370,6 +1378,10 @@
       "logic_analyzer": {
         "v": "no",
         "note": "Not marketed or described as a logic-analyzer product; that is not what the ECP5 bitstream is being built for here."
+      },
+      "pcie_dma": {
+        "v": "claimed",
+        "note": "Vendor positions it as PCILeech-compatible and built for standalone PCIe DMA memory acquisition/patch-match from inside an M.2 slot, but as of the research date this exists only as a pre-launch Crowd Supply listing with zero backers, zero funding, and no published gateware/firmware in its linked GitHub org - there is no working, purchasable unit to independently verify the claim against."
       }
     },
     "legal": {
@@ -1946,7 +1958,7 @@
     "firmware": null,
     "firmware_kind": "n/a",
     "firmware_repo": null,
-    "firmware_note": "Bare expansion board with no firmware of its own. It exists to carry hardware for the Pwnagotchi project (already a separate tracked entry) \u2014 you flash Pwnagotchi's own OS image onto a microSD card yourself.",
+    "firmware_note": "Bare expansion board with no firmware of its own. It exists to carry hardware for the Pwnagotchi project (already a separate tracked entry) — you flash Pwnagotchi's own OS image onto a microSD card yourself.",
     "vendor": "Hacker Gadgets",
     "vendor_url": "https://hackergadgets.com",
     "product_url": "https://hackergadgets.com/products/pwnagotchi-hat-ups-gps-ac-wifi-usb-hub-rtc-all-in-one-hat",
@@ -1955,35 +1967,35 @@
     "status": "out-of-stock",
     "released": null,
     "price_usd": 74.5,
-    "price_note": "Vendor lists $74.50; currently sold out with a waitlist and a 3-5 business day ship estimate once restocked. Does not include a Raspberry Pi Zero/Zero W/Zero 2 W, microSD card, or 18650 cell \u2014 all sold separately.",
+    "price_note": "Vendor lists $74.50; currently sold out with a waitlist and a 3-5 business day ship estimate once restocked. Does not include a Raspberry Pi Zero/Zero W/Zero 2 W, microSD card, or 18650 cell — all sold separately.",
     "price_is_estimate": false,
     "price_checked": "2026-09-10",
     "skill_level": "intermediate",
-    "skill_note": "You still need to source a Pi Zero, flash a Pwnagotchi image yourself, and configure it \u2014 the hat has no setup wizard or onboarding of its own.",
+    "skill_note": "You still need to source a Pi Zero, flash a Pwnagotchi image yourself, and configure it — the hat has no setup wizard or onboarding of its own.",
     "build_effort": "assembly",
-    "build_note": "Solderless: mounts on the Pi Zero's GPIO header. You supply the Pi Zero (W or 2 W), a microSD card, and flash Pwnagotchi's own image \u2014 the board ships with no software pre-loaded. An optional backplate holds a user-supplied 18650 cell for up to ~4 hours runtime per the vendor.",
+    "build_note": "Solderless: mounts on the Pi Zero's GPIO header. You supply the Pi Zero (W or 2 W), a microSD card, and flash Pwnagotchi's own image — the board ships with no software pre-loaded. An optional backplate holds a user-supplied 18650 cell for up to ~4 hours runtime per the vendor.",
     "stealth": "discreet",
     "form_factor": "hat-shield",
-    "summary": "A Raspberry Pi Zero expansion board that bundles the specific hardware Pwnagotchi needs to run standalone: a dual-band MediaTek MT7612U USB WiFi chipset (the vendor states it is the same chipset as Alfa's AWUS036ACM, independently confirmed via a third-party listing), a USB-serial GPS module with PPS output, a UPS circuit for an optional 18650 cell, an internal 4-port USB hub, and a battery-backed RTC. It is bare hardware only \u2014 you provide the Pi Zero and flash Pwnagotchi's own OS image yourself.",
-    "honest_take": "This is an integration convenience, not new capability: every function on this hat exists separately for less (an MT7612U dongle, a USB GPS puck, an RTC module, a USB hub), and Pwnagotchi itself is free, open-source software that has never shipped pre-installed on any commercial product, per its own install docs. What the ~$75 buys is not having to wire four separate peripherals into a Pi Zero's single USB port and GPIO header, plus a UPS so the unit survives being carried around. It ships as a bare board \u2014 no Pwnagotchi pre-installed, no Pi included, no SD card slot of its own (it rides on the Pi's) \u2014 budget extra money and 30-60 minutes of flashing and config before it does anything, and don't mistake 'purpose-built for Pwnagotchi' on the product page for 'comes with Pwnagotchi.'",
+    "summary": "A Raspberry Pi Zero expansion board that bundles the specific hardware Pwnagotchi needs to run standalone: a dual-band MediaTek MT7612U USB WiFi chipset (the vendor states it is the same chipset as Alfa's AWUS036ACM, independently confirmed via a third-party listing), a USB-serial GPS module with PPS output, a UPS circuit for an optional 18650 cell, an internal 4-port USB hub, and a battery-backed RTC. It is bare hardware only — you provide the Pi Zero and flash Pwnagotchi's own OS image yourself.",
+    "honest_take": "This is an integration convenience, not new capability: every function on this hat exists separately for less (an MT7612U dongle, a USB GPS puck, an RTC module, a USB hub), and Pwnagotchi itself is free, open-source software that has never shipped pre-installed on any commercial product, per its own install docs. What the ~$75 buys is not having to wire four separate peripherals into a Pi Zero's single USB port and GPIO header, plus a UPS so the unit survives being carried around. It ships as a bare board — no Pwnagotchi pre-installed, no Pi included, no SD card slot of its own (it rides on the Pi's) — budget extra money and 30-60 minutes of flashing and config before it does anything, and don't mistake 'purpose-built for Pwnagotchi' on the product page for 'comes with Pwnagotchi.'",
     "best_for": [
       "Building a dedicated, always-on Pwnagotchi with wardriving-style GPS logging",
       "Avoiding a rat's-nest of USB peripherals hanging off a Pi Zero"
     ],
     "not_for": [
       "Anyone who doesn't already know they want a Pi Zero-based Pwnagotchi build",
-      "Turnkey out-of-the-box operation \u2014 no software is included",
-      "Buyers who just want to try Pwnagotchi cheaply \u2014 the Pi Zero W's own onboard WiFi can run a basic Pwnagotchi with no hat at all"
+      "Turnkey out-of-the-box operation — no software is included",
+      "Buyers who just want to try Pwnagotchi cheaply — the Pi Zero W's own onboard WiFi can run a basic Pwnagotchi with no hat at all"
     ],
     "hardware": {
       "mcu_primary": null,
-      "mcu_primary_note": "The hat has no application MCU of its own \u2014 it is a passive expansion board relying entirely on the attached Raspberry Pi Zero's SoC (not part of this product).",
+      "mcu_primary_note": "The hat has no application MCU of its own — it is a passive expansion board relying entirely on the attached Raspberry Pi Zero's SoC (not part of this product).",
       "mcu_secondary": null,
       "radios": [
         {
           "ic": "MediaTek MT7612U",
           "role": "wifi",
-          "note": "USB dual-band 802.11ac chipset; vendor states 'same as ALFA AWUS036ACM' \u2014 independently confirmed via a third-party (Getic) listing of the AWUS036ACM's own spec sheet"
+          "note": "USB dual-band 802.11ac chipset; vendor states 'same as ALFA AWUS036ACM' — independently confirmed via a third-party (Getic) listing of the AWUS036ACM's own spec sheet"
         }
       ],
       "display": {
@@ -1997,7 +2009,7 @@
       "battery_note": "No cell included. UPS circuit accepts a user-supplied 18650 via an optional backplate; vendor claims up to 4 hours runtime. Simultaneously charges the cell and powers the Pi Zero.",
       "charging": "USB (5V in; charges an installed 18650 concurrently)",
       "pmic": null,
-      "storage": "None on the hat itself \u2014 relies on the attached Pi Zero's own microSD slot",
+      "storage": "None on the hat itself — relies on the attached Pi Zero's own microSD slot",
       "connectivity": [
         "USB-A",
         "USB-C",
@@ -2028,15 +2040,15 @@
       },
       "wifi_monitor_mode": {
         "v": "claimed",
-        "note": "Vendor states the chipset is 'same as ALFA AWUS036ACM', an mt76-driver-family part with established monitor mode support \u2014 chipset match independently confirmed via a third-party listing, but monitor mode itself not independently re-tested on this exact hat"
+        "note": "Vendor states the chipset is 'same as ALFA AWUS036ACM', an mt76-driver-family part with established monitor mode support — chipset match independently confirmed via a third-party listing, but monitor mode itself not independently re-tested on this exact hat"
       },
       "wifi_injection": {
         "v": "claimed",
-        "note": "Same basis as monitor mode above \u2014 vendor equivalence claim to a known-good chipset, not independently verified"
+        "note": "Same basis as monitor mode above — vendor equivalence claim to a known-good chipset, not independently verified"
       },
       "wifi_deauth_24": {
         "v": "claimed",
-        "note": "Pwnagotchi's own README describes capturing handshakes 'either passively, or by performing authentication and association attacks' \u2014 this is the mechanism the hat's radio would be driven through, not independently tested on this specific board"
+        "note": "Pwnagotchi's own README describes capturing handshakes 'either passively, or by performing authentication and association attacks' — this is the mechanism the hat's radio would be driven through, not independently tested on this specific board"
       },
       "wifi_handshake_capture": {
         "v": "claimed",
@@ -2064,7 +2076,7 @@
       },
       "bt_classic": {
         "v": "no",
-        "note": "Same as above \u2014 no Bluetooth silicon on the hat itself"
+        "note": "Same as above — no Bluetooth silicon on the hat itself"
       },
       "subghz_rx": {
         "v": "no",
@@ -2084,23 +2096,23 @@
       },
       "scriptable": {
         "v": "yes",
-        "note": "Once running Pwnagotchi on Raspberry Pi OS, it's a full Linux system with Python-based plugins \u2014 not a feature of the hat's own hardware, but the practical reality of the stack"
+        "note": "Once running Pwnagotchi on Raspberry Pi OS, it's a full Linux system with Python-based plugins — not a feature of the hat's own hardware, but the practical reality of the stack"
       },
       "web_ui": {
         "v": "unknown",
-        "note": "Pwnagotchi is widely reported in the community to expose a browser-based status UI, but this session could not locate a source confirming it independently of general knowledge \u2014 flagged rather than guessed"
+        "note": "Pwnagotchi is widely reported in the community to expose a browser-based status UI, but this session could not locate a source confirming it independently of general knowledge — flagged rather than guessed"
       }
     },
     "legal": {
       "import_restricted": [],
       "risk_level": "medium",
-      "notes": "Owning the hardware is legal everywhere. Pwnagotchi's default behavior performs authentication/association attacks to force WPA handshakes from nearby networks \u2014 doing this against networks you don't own or lack written authorization to test is a computer-misuse offence in most jurisdictions (e.g. US CFAA, UK Computer Misuse Act). Check your local law."
+      "notes": "Owning the hardware is legal everywhere. Pwnagotchi's default behavior performs authentication/association attacks to force WPA handshakes from nearby networks — doing this against networks you don't own or lack written authorization to test is a computer-misuse offence in most jurisdictions (e.g. US CFAA, UK Computer Misuse Act). Check your local law."
     },
     "ecosystem": {
       "community": "commercial",
       "docs_quality": "sparse",
       "last_release": null,
-      "app_store": "No \u2014 not applicable; runs whatever OS you flash onto the Pi Zero, most commonly Pwnagotchi (a separately tracked project with its own ecosystem)",
+      "app_store": "No — not applicable; runs whatever OS you flash onto the Pi Zero, most commonly Pwnagotchi (a separately tracked project with its own ecosystem)",
       "abandoned_risk": "medium"
     },
     "aliases": [
@@ -2140,7 +2152,7 @@
     "firmware": null,
     "firmware_kind": "n/a",
     "firmware_repo": null,
-    "firmware_note": "Pure hardware NIC. Monitor mode and injection come from the host OS's in-kernel mt76 driver family plus whatever software you run (aircrack-ng, Wireshark, Kismet) \u2014 there is no vendor firmware relevant to security features.",
+    "firmware_note": "Pure hardware NIC. Monitor mode and injection come from the host OS's in-kernel mt76 driver family plus whatever software you run (aircrack-ng, Wireshark, Kismet) — there is no vendor firmware relevant to security features.",
     "vendor": "ALFA Network Inc.",
     "vendor_url": "https://www.alfa.com.tw",
     "product_url": "https://www.alfa.com.tw/products/awus036achm",
@@ -2149,25 +2161,25 @@
     "status": "available",
     "released": null,
     "price_usd": 63.72,
-    "price_note": "lab401 (the reseller named in the brief) lists it at \u20ac59.00, \u2248$63.72 at the FX rate checked. That's a real premium: the identical hardware sells for $36-49 at general electronics resellers (Getic ~$43, Rokland $48.97). lab401 also showed a $79 figure in a separate cached listing that could not be reconciled with the live \u20ac59 page \u2014 flagged as unresolved rather than picking one arbitrarily.",
+    "price_note": "lab401 (the reseller named in the brief) lists it at €59.00, ≈$63.72 at the FX rate checked. That's a real premium: the identical hardware sells for $36-49 at general electronics resellers (Getic ~$43, Rokland $48.97). lab401 also showed a $79 figure in a separate cached listing that could not be reconciled with the live €59 page — flagged as unresolved rather than picking one arbitrarily.",
     "price_is_estimate": false,
     "price_checked": "2026-09-10",
     "skill_level": "intermediate",
-    "skill_note": "Plug-and-play driver-wise on modern Linux (mt76 is in-tree, no DKMS) \u2014 Rokland's own driver guide calls MediaTek chipsets 'plug and play' \u2014 but getting real use out of monitor mode/injection means comfort with aircrack-ng/Wireshark/Kismet.",
+    "skill_note": "Plug-and-play driver-wise on modern Linux (mt76 is in-tree, no DKMS) — Rokland's own driver guide calls MediaTek chipsets 'plug and play' — but getting real use out of monitor mode/injection means comfort with aircrack-ng/Wireshark/Kismet.",
     "build_effort": "assembled",
     "build_note": "Buy and plug into USB. No assembly or flashing of the adapter itself; you configure whatever OS runs on the attached computer.",
     "stealth": "discreet",
     "form_factor": "usb-stick",
-    "summary": "Alfa's 'Mini' dual-band adapter: a MediaTek MT7610U chipset, AC600 class (150 Mbps 2.4GHz / 433 Mbps 5GHz), two RP-SMA connectors for external dipole antennas, and a screen-clip mount, aimed at laptop users who want monitor mode and packet injection with in-kernel Linux support. It is easily confused with the larger, older, RTL8812AU-based AWUS036ACH \u2014 despite the near-identical name, they use different chipsets, different USB connectors (Mini-USB here vs USB-C on the ACH) and different AC classes (AC600 vs AC1200).",
-    "honest_take": "This is 'just a Wi-Fi adapter' in the most literal sense: no display, no attack software, nothing beyond an MT7610U chip and two antenna jacks \u2014 and notably no Bluetooth radio at all, unlike the newer AXM adapter in this same product line. Everything useful it does \u2014 monitor mode, deauth, handshake capture \u2014 comes from free software (aircrack-ng, Wireshark, Kismet) running on your laptop. The chipset itself is fine: MT7610U has mature in-kernel mt76 driver support with no DKMS wrestling, independently confirmed by community documentation (morrownr's USB-WiFi project). But it's a lower tier than the name suggests \u2014 AC600, not the AC1200 that at least one reseller's own product title confusingly implies \u2014 and it is a cheaper, different chipset from the RTL8812AU in the plain (non-M) 'AWUS036ACH.' Categorized here as 'wifi' rather than 'accessory' because monitor-mode/injection support is a deliberate, marketed feature this chipset was selected for. Be clear-eyed that you're paying for a driver-compatible commodity chip, not proprietary capability \u2014 lab401's price is a real premium over general electronics resellers for identical hardware.",
+    "summary": "Alfa's 'Mini' dual-band adapter: a MediaTek MT7610U chipset, AC600 class (150 Mbps 2.4GHz / 433 Mbps 5GHz), two RP-SMA connectors for external dipole antennas, and a screen-clip mount, aimed at laptop users who want monitor mode and packet injection with in-kernel Linux support. It is easily confused with the larger, older, RTL8812AU-based AWUS036ACH — despite the near-identical name, they use different chipsets, different USB connectors (Mini-USB here vs USB-C on the ACH) and different AC classes (AC600 vs AC1200).",
+    "honest_take": "This is 'just a Wi-Fi adapter' in the most literal sense: no display, no attack software, nothing beyond an MT7610U chip and two antenna jacks — and notably no Bluetooth radio at all, unlike the newer AXM adapter in this same product line. Everything useful it does — monitor mode, deauth, handshake capture — comes from free software (aircrack-ng, Wireshark, Kismet) running on your laptop. The chipset itself is fine: MT7610U has mature in-kernel mt76 driver support with no DKMS wrestling, independently confirmed by community documentation (morrownr's USB-WiFi project). But it's a lower tier than the name suggests — AC600, not the AC1200 that at least one reseller's own product title confusingly implies — and it is a cheaper, different chipset from the RTL8812AU in the plain (non-M) 'AWUS036ACH.' Categorized here as 'wifi' rather than 'accessory' because monitor-mode/injection support is a deliberate, marketed feature this chipset was selected for. Be clear-eyed that you're paying for a driver-compatible commodity chip, not proprietary capability — lab401's price is a real premium over general electronics resellers for identical hardware.",
     "best_for": [
       "Laptop-based Wi-Fi monitoring/injection on Linux with minimal driver hassle",
       "A compact secondary adapter for aircrack-ng/Kismet work"
     ],
     "not_for": [
       "Anyone who actually needs the plain ACH's higher AC1200 throughput or Realtek-specific tooling",
-      "Anyone expecting attack software or Bluetooth capability bundled in \u2014 neither is included",
-      "6GHz/WiFi 6E work \u2014 this is an older AC600-class part"
+      "Anyone expecting attack software or Bluetooth capability bundled in — neither is included",
+      "6GHz/WiFi 6E work — this is an older AC600-class part"
     ],
     "hardware": {
       "mcu_primary": null,
@@ -2238,7 +2250,7 @@
       },
       "wifi_wardriving": {
         "v": "partial",
-        "note": "No GPS or logging of its own \u2014 works as the capture radio for wardriving software running on the host (e.g. Kismet)"
+        "note": "No GPS or logging of its own — works as the capture radio for wardriving software running on the host (e.g. Kismet)"
       },
       "wifi_ap_mode": {
         "v": "claimed",
@@ -2284,11 +2296,11 @@
       },
       {
         "url": "https://lab401.com/collections/pentesting-network",
-        "what": "reseller price \u20ac59.00, marketing claim of '5x sensitivity increase', named in original brief as the seller_url"
+        "what": "reseller price €59.00, marketing claim of '5x sensitivity increase', named in original brief as the seller_url"
       },
       {
         "url": "https://store.rokland.com/products/alfa-awus036achm-802-11ac-dual-band-high-power-ac1200-mediatek-wifi-usb-adapter",
-        "what": "chipset confirmation, AC600/433Mbps rating, Kali packet-injection support claim, $48.97 price \u2014 note this listing's own title says 'AC1200' which contradicts the AC600/433Mbps spec stated in its body text"
+        "what": "chipset confirmation, AC600/433Mbps rating, Kali packet-injection support claim, $48.97 price — note this listing's own title says 'AC1200' which contradicts the AC600/433Mbps spec stated in its body text"
       },
       {
         "url": "https://www.getic.com/product/alfa-awus036achm",
@@ -2307,7 +2319,7 @@
       "Exact TX power (dBm), dimensions and weight not published by Alfa or any reseller checked",
       "Release year not confirmed",
       "Official datasheet PDF at alfa-network.eu returned HTTP 403 and could not be reviewed directly",
-      "lab401 showed two different prices (\u20ac59.00 on a direct page fetch vs $79.00 in a separate cached search snippet) \u2014 could not resolve which reflects current live pricing, both are reported rather than silently picking one",
+      "lab401 showed two different prices (€59.00 on a direct page fetch vs $79.00 in a separate cached search snippet) — could not resolve which reflects current live pricing, both are reported rather than silently picking one",
       "PMKID capture and AP-mode support not independently confirmed, only inferred from the general mt76 driver family"
     ]
   },
@@ -2327,26 +2339,26 @@
     "status": "available",
     "released": null,
     "price_usd": 50.0,
-    "price_note": "No single official price \u2014 this is an open-source design. Cheapest currently-buyable full DIY kit found is $50 (463n7.io, requires soldering); a similar Tindie kit runs $65. An 'Assembled Wardriver' (factory-built, no soldering) is also sold by 463n7.io at a further premium (exact current price not confirmed). The original creator's own bare-PCB Tindie listing (jhewitt_net) is currently paused until Jan 2027 and not shippable to the US. The brief's cited $55 does not exactly match any listing found; treat it as within the normal $50-65 kit range rather than a single confirmed price point.",
+    "price_note": "No single official price — this is an open-source design. Cheapest currently-buyable full DIY kit found is $50 (463n7.io, requires soldering); a similar Tindie kit runs $65. An 'Assembled Wardriver' (factory-built, no soldering) is also sold by 463n7.io at a further premium (exact current price not confirmed). The original creator's own bare-PCB Tindie listing (jhewitt_net) is currently paused until Jan 2027 and not shippable to the US. The brief's cited $55 does not exactly match any listing found; treat it as within the normal $50-65 kit range rather than a single confirmed price point.",
     "price_is_estimate": true,
     "price_checked": "2026-09-10",
     "skill_level": "advanced",
-    "skill_note": "You are wiring two separate ESP32 dev boards, a GPS module, an optional SIM800L cellular module, an I2C OLED, and a temperature sensor by hand \u2014 a genuine electronics-assembly project, not a flash-and-go kit, unless you pay extra for a pre-assembled unit from a third party.",
+    "skill_note": "You are wiring two separate ESP32 dev boards, a GPS module, an optional SIM800L cellular module, an I2C OLED, and a temperature sensor by hand — a genuine electronics-assembly project, not a flash-and-go kit, unless you pay extra for a pre-assembled unit from a third party.",
     "build_effort": "soldering",
     "build_note": "Officially distributed as an open-source PCB design (Gerbers and schematics on GitHub) plus third-party DIY kits of components; all connections are through-hole soldering per the project's own assembly docs. A small number of resellers (e.g. 463n7.io) sell factory-assembled units for people who don't want to solder.",
     "stealth": "discreet",
     "form_factor": "box",
     "summary": "An open-source, dual-ESP32-WROOM-32U wardriving rig: one ESP32 handles WiFi scanning, the other handles Bluetooth/BLE scanning plus peripherals (ATGM336H GPS, optional SIM800L cellular module, SSD1306 OLED status display, DS18B20 temperature sensor). Everything logs to a microSD card as WiGLE-format CSV, with the current firmware able to upload directly to WiGLE.net. Joseph Hewitt publishes schematics, Gerbers and firmware on GitHub under GPL-3.0; the bare PCB is normally sold via Tindie, with DIY kits and assembled units available from independent third-party resellers.",
-    "honest_take": "Confirmed as a genuinely distinct project from the 'C5 Wardriver' already in this database, not the same thing under a different name: this rig splits WiFi and Bluetooth scanning across two separate, older ESP32-WROOM-32U modules (2.4GHz-only silicon) rather than one newer single-chip solution, a deliberate architectural choice, not an oversight. It requires real through-hole soldering unless you pay a third-party reseller extra for a pre-built unit \u2014 the original creator's own bare-PCB Tindie listing is currently paused and won't ship to the US, so US buyers are pushed toward third-party kits by default. The firmware is unusually healthy for a single-maintainer hobby project: 368 GitHub stars, 40 forks, and commits into 2026 (OTA updates, direct WiGLE upload, a NimBLE migration for Bluetooth). But this is not a flash-only device \u2014 budget real assembly time and a soldering iron, or pay significantly more for someone else's assembled unit.",
+    "honest_take": "Confirmed as a genuinely distinct project from the 'C5 Wardriver' already in this database, not the same thing under a different name: this rig splits WiFi and Bluetooth scanning across two separate, older ESP32-WROOM-32U modules (2.4GHz-only silicon) rather than one newer single-chip solution, a deliberate architectural choice, not an oversight. It requires real through-hole soldering unless you pay a third-party reseller extra for a pre-built unit — the original creator's own bare-PCB Tindie listing is currently paused and won't ship to the US, so US buyers are pushed toward third-party kits by default. The firmware is unusually healthy for a single-maintainer hobby project: 368 GitHub stars, 40 forks, and commits into 2026 (OTA updates, direct WiGLE upload, a NimBLE migration for Bluetooth). But this is not a flash-only device — budget real assembly time and a soldering iron, or pay significantly more for someone else's assembled unit.",
     "best_for": [
       "Wardriving enthusiasts who want to build rather than buy",
       "WiGLE contributors who want cell-tower (SIM800L) location logging alongside WiFi/BT when GPS is unavailable",
       "Anyone who already owns a soldering iron and wants a cheaper alternative to single-board wardriving units"
     ],
     "not_for": [
-      "Anyone who wants to unbox and go \u2014 no flash-only or assembled path from the original creator right now",
+      "Anyone who wants to unbox and go — no flash-only or assembled path from the original creator right now",
       "US buyers hoping to order the official bare PCB directly from Tindie (that listing currently won't ship to the US)",
-      "5GHz Wi-Fi scanning \u2014 the ESP32-WROOM-32U is 2.4GHz only"
+      "5GHz Wi-Fi scanning — the ESP32-WROOM-32U is 2.4GHz only"
     ],
     "hardware": {
       "mcu_primary": "ESP32-WROOM-32U",
@@ -2382,7 +2394,7 @@
       "pmic": null,
       "storage": "microSD (SPI); 16GB or smaller recommended per project docs",
       "connectivity": [
-        "USB (serial/programming, x2 \u2014 one per ESP32)",
+        "USB (serial/programming, x2 — one per ESP32)",
         "2x IPEX-to-SMA WiFi/BT antenna leads",
         "GPS (UART)",
         "Optional SIM800L cellular"
@@ -2451,7 +2463,7 @@
     "legal": {
       "import_restricted": [],
       "risk_level": "low",
-      "notes": "This is a passive scanner and logger \u2014 it does not transmit attacks, jam, or inject packets, so legal exposure is much lower than most devices in this database. The main consideration is privacy/data-protection law around logging nearby WiFi/Bluetooth device identifiers and uploading them to a public map (WiGLE.net) \u2014 rules on collecting and publishing this kind of data vary by country. Check your local law before uploading collected data publicly."
+      "notes": "This is a passive scanner and logger — it does not transmit attacks, jam, or inject packets, so legal exposure is much lower than most devices in this database. The main consideration is privacy/data-protection law around logging nearby WiFi/Bluetooth device identifiers and uploading them to a public map (WiGLE.net) — rules on collecting and publishing this kind of data vary by country. Check your local law before uploading collected data publicly."
     },
     "ecosystem": {
       "community": "active",
@@ -2484,7 +2496,7 @@
       },
       {
         "url": "https://wardriver.uk/",
-        "what": "confirms no hosted WiGLE-style service on wardriver.uk itself \u2014 uploads go to the third-party WiGLE.net; confirms Tindie as the official PCB sales channel"
+        "what": "confirms no hosted WiGLE-style service on wardriver.uk itself — uploads go to the third-party WiGLE.net; confirms Tindie as the official PCB sales channel"
       },
       {
         "url": "https://www.tindie.com/products/jhewitt_net/portable-esp32-wardriver-pcb-only/",
@@ -2501,9 +2513,9 @@
     ],
     "research_gaps": [
       "Exact initial hardware release date/year for Rev3 not confirmed",
-      "No single official current price from the original creator \u2014 the brief's cited $55 does not exactly match any listing found ($50-65 range across third-party kits)",
+      "No single official current price from the original creator — the brief's cited $55 does not exactly match any listing found ($50-65 range across third-party kits)",
       "Whether Bluetooth Classic (not just BLE) scanning is genuinely implemented is not confirmed",
-      "Runtime/battery figures not published \u2014 the project assumes an external USB power bank",
+      "Runtime/battery figures not published — the project assumes an external USB power bank",
       "Dimensions and weight of the assembled unit not published beyond the suggested minimum enclosure size"
     ]
   },
@@ -2523,26 +2535,26 @@
     "status": "available",
     "released": null,
     "price_usd": 55.0,
-    "price_note": "JustCallMeKoko LLC (JCMK, the reseller named in the brief) lists it at $55.00 but is currently sold out. It's in stock elsewhere at similar or lower prices \u2014 Rokland has it at $49.97, ready to ship. Not significantly reseller-inflated the way the ACHM is.",
+    "price_note": "JustCallMeKoko LLC (JCMK, the reseller named in the brief) lists it at $55.00 but is currently sold out. It's in stock elsewhere at similar or lower prices — Rokland has it at $49.97, ready to ship. Not significantly reseller-inflated the way the ACHM is.",
     "price_is_estimate": false,
     "price_checked": "2026-09-10",
     "skill_level": "intermediate",
-    "skill_note": "Plug-and-play on kernel 5.18+ (mt7921u is in-tree, no DKMS needed), but 6GHz/WiFi 6E monitor-mode and injection workflows are newer and less battle-tested than older Realtek-based adapters \u2014 expect more troubleshooting.",
+    "skill_note": "Plug-and-play on kernel 5.18+ (mt7921u is in-tree, no DKMS needed), but 6GHz/WiFi 6E monitor-mode and injection workflows are newer and less battle-tested than older Realtek-based adapters — expect more troubleshooting.",
     "build_effort": "assembled",
     "build_note": "Buy and plug in via USB-A (USB 3.2 Gen 1). No assembly of the adapter itself.",
     "stealth": "discreet",
     "form_factor": "usb-stick",
     "summary": "A compact WiFi 6E adapter built around a MediaTek MT7921AUN combo chip (no separate general-purpose MCU) covering 2.4/5/6GHz WiFi plus Bluetooth 5.2, with two RP-SMA connectors for detachable dipole antennas and a USB 3.2 Gen 1 Type-A connector. Sold into the pentest/wardriving market specifically for its Linux monitor-mode and injection support, which is real but newer and less mature than Alfa's older Realtek-based adapters.",
-    "honest_take": "The MT7921AUN's monitor-mode and injection support on Linux is genuinely usable today \u2014 in-kernel mt7921u driver, no DKMS needed on kernel 5.18+ \u2014 but it is not the drop-in-and-forget experience of an older RTL8812AU adapter. Community reports (morrownr's USB-WiFi reference doc, and two open GitHub issues filed against this exact chipset/driver combination \u2014 one against morrownr/USB-WiFi, one against openwrt/mt76) describe passive monitor mode working well while 'active monitor mode' has a documented history of breaking the driver, only recently reported fixed on kernel 6.12 and later. If your workflow needs rock-solid injection today, the Realtek-based AWUS036ACH/ACHM are a safer bet; if you specifically need 6GHz/WiFi 6E visibility or onboard Bluetooth 5.2 (which the ACHM lacks entirely), there is no Realtek alternative and this is the adapter for it. As with the other Alfa adapter in this batch, it's 'just' a combo WiFi/BT chip in a plastic shell with two antenna jacks \u2014 the actual attack tooling is separate free software you run on your computer, not anything on the device. No GPS either, despite marketing copy about 'portable WiFi analysis' that could be mistaken for a wardriving feature.",
+    "honest_take": "The MT7921AUN's monitor-mode and injection support on Linux is genuinely usable today — in-kernel mt7921u driver, no DKMS needed on kernel 5.18+ — but it is not the drop-in-and-forget experience of an older RTL8812AU adapter. Community reports (morrownr's USB-WiFi reference doc, and two open GitHub issues filed against this exact chipset/driver combination — one against morrownr/USB-WiFi, one against openwrt/mt76) describe passive monitor mode working well while 'active monitor mode' has a documented history of breaking the driver, only recently reported fixed on kernel 6.12 and later. If your workflow needs rock-solid injection today, the Realtek-based AWUS036ACH/ACHM are a safer bet; if you specifically need 6GHz/WiFi 6E visibility or onboard Bluetooth 5.2 (which the ACHM lacks entirely), there is no Realtek alternative and this is the adapter for it. As with the other Alfa adapter in this batch, it's 'just' a combo WiFi/BT chip in a plastic shell with two antenna jacks — the actual attack tooling is separate free software you run on your computer, not anything on the device. No GPS either, despite marketing copy about 'portable WiFi analysis' that could be mistaken for a wardriving feature.",
     "best_for": [
       "6GHz/WiFi 6E spectrum visibility that older adapters simply cannot see",
       "Modern Linux systems (kernel 5.18+) wanting in-kernel driver support with no DKMS",
       "Situations wanting WiFi + Bluetooth 5.2 scanning from one adapter"
     ],
     "not_for": [
-      "Workflows that need the most battle-tested, rock-solid injection \u2014 Realtek RTL8812AU-based adapters have a longer track record",
+      "Workflows that need the most battle-tested, rock-solid injection — Realtek RTL8812AU-based adapters have a longer track record",
       "Older kernels without mt7921u support",
-      "Wardriving \u2014 no GPS onboard"
+      "Wardriving — no GPS onboard"
     ],
     "hardware": {
       "mcu_primary": null,
@@ -2602,7 +2614,7 @@
       },
       "wifi_injection": {
         "v": "partial",
-        "note": "Works for typical use, but a specific GitHub issue (morrownr/USB-WiFi #387) documents frame-injection problems on this exact chipset/driver combination, corroborated by a related openwrt/mt76 issue (#839) about active monitor mode breaking the driver \u2014 treat as less mature than Realtek alternatives"
+        "note": "Works for typical use, but a specific GitHub issue (morrownr/USB-WiFi #387) documents frame-injection problems on this exact chipset/driver combination, corroborated by a related openwrt/mt76 issue (#839) about active monitor mode breaking the driver — treat as less mature than Realtek alternatives"
       },
       "wifi_deauth_24": {
         "v": "claimed",
@@ -2618,7 +2630,7 @@
       },
       "wifi_wardriving": {
         "v": "partial",
-        "note": "No GPS or onboard logging \u2014 usable as the capture radio with Kismet et al. on the host, same caveat as the ACHM"
+        "note": "No GPS or onboard logging — usable as the capture radio with Kismet et al. on the host, same caveat as the ACHM"
       },
       "wifi_ap_mode": {
         "v": "claimed",
@@ -2630,7 +2642,7 @@
       },
       "gps": {
         "v": "no",
-        "note": "No GPS hardware \u2014 not a wardriving device despite marketing language around 'portable WiFi analysis'"
+        "note": "No GPS hardware — not a wardriving device despite marketing language around 'portable WiFi analysis'"
       },
       "ble_scan": {
         "v": "claimed",

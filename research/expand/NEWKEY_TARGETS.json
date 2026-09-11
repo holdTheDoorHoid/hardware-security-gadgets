@@ -1,0 +1,426 @@
+{
+ "b01-rfid.json": [
+  {
+   "name": "UHFKill",
+   "id": "uhfkill",
+   "suggest": [
+    "uhf_rfid_read",
+    "uhf_rfid_write"
+   ]
+  },
+  {
+   "name": "Industrial Handheld UHF Reader",
+   "id": "lab401-industrial-handheld-uhf-reader",
+   "suggest": [
+    "uhf_rfid_read",
+    "uhf_rfid_write"
+   ]
+  },
+  {
+   "name": "Long-range iCLASS RFID Capture System",
+   "id": "ppe-iclass-r90se-longrange-capture",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  },
+  {
+   "name": "Long-range MaxiProx 5375 125KHz Capture System",
+   "id": "ppe-maxiprox-5375-longrange-capture",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  },
+  {
+   "name": "Stealth Decoy Reader (SDR v2)",
+   "id": "ppe-stealth-decoy-reader-sdr-v2",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  }
+ ],
+ "b02-rfid.json": [
+  {
+   "name": "GGtag",
+   "id": "ggtag",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  },
+  {
+   "name": "ESP-RFID-Tool v2 PRO",
+   "id": "esp-rfid-tool-v2-pro",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  },
+  {
+   "name": "Wiegotcha",
+   "id": "wiegotcha",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  },
+  {
+   "name": "Gatekeeper",
+   "id": "gatekeeper",
+   "suggest": [
+    "wiegand_tap"
+   ]
+  }
+ ],
+ "b03-hw-hacking-rfid.json": [
+  {
+   "name": "ChipSHOVER",
+   "id": "chipshover",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "CW310 Bergen Board (Large FPGA, K410T)",
+   "id": "cw310-bergen-board",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "ChipWhisperer HuskyPlus",
+   "id": "chipwhisperer-huskyplus",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "PhyWhisperer-USB (CW610)",
+   "id": "phywhisperer-usb",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "NewAE Probe Set with Power Supply",
+   "id": "newae-probe-set-psu",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "CW308 UFO Board",
+   "id": "cw308-ufo-board",
+   "suggest": [
+    "side_channel_power"
+   ]
+  }
+ ],
+ "b04-hw-hacking.json": [
+  {
+   "name": "OpticSpy",
+   "id": "opticspy",
+   "suggest": [
+    "optical_covert_rx"
+   ]
+  },
+  {
+   "name": "Socket Target for CW308 (STM32F-SOCKET64)",
+   "id": "newae-cw308-socket-target-stm32f",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "SAM4S CW313 Target",
+   "id": "newae-sam4s-cw313-target",
+   "suggest": [
+    "side_channel_power"
+   ]
+  }
+ ],
+ "b05-hw-hacking.json": [
+  {
+   "name": "CW312T-RP2350",
+   "id": "cw312t-rp2350",
+   "suggest": [
+    "side_channel_power"
+   ]
+  }
+ ],
+ "b06-hw-hacking-wifi.json": [
+  {
+   "name": "Curious Bolt",
+   "id": "curious-bolt",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "CW305 Artix FPGA Target Board",
+   "id": "cw305-artix-fpga-target",
+   "suggest": [
+    "side_channel_power"
+   ]
+  },
+  {
+   "name": "EPIC Erebus",
+   "id": "epic-erebus",
+   "suggest": [
+    "pcie_dma"
+   ]
+  }
+ ],
+ "b07-wifi.json": [
+  {
+   "name": "ESP32-MDK for PortaPack H4M",
+   "id": "esp32-mdk-portapack-h4m",
+   "suggest": [
+    "mesh_lora"
+   ]
+  },
+  {
+   "name": "M5Stack Core2 (Evil-M5Project)",
+   "id": "evil-m5project-core2",
+   "suggest": [
+    "network_host_scan"
+   ]
+  }
+ ],
+ "b08-multi-wifi.json": [
+  {
+   "name": "Bluetooth Nugget (ESP32S3)",
+   "id": "bluetooth-nugget-esp32s3",
+   "suggest": [
+    "mesh_lora"
+   ]
+  },
+  {
+   "name": "Newsheen Hacker Smart Cat Lamp Kit (pre-assembled)",
+   "id": "newsheen-cat-lamp",
+   "suggest": [
+    "mesh_lora"
+   ]
+  }
+ ],
+ "b10-sdr-subghz.json": [
+  {
+   "name": "RTL-SDR/LoRa/GPS/RTC HAT for Raspberry Pi",
+   "id": "rtl-sdr-lora-gps-rtc-hat",
+   "suggest": [
+    "mesh_lora"
+   ]
+  },
+  {
+   "name": "Glytch Mesh Mod for Pager",
+   "id": "glytch-mesh-mod-pager",
+   "suggest": [
+    "mesh_lora"
+   ]
+  },
+  {
+   "name": "Nibble Zero",
+   "id": "nibble-zero",
+   "suggest": [
+    "mesh_lora"
+   ]
+  },
+  {
+   "name": "Nibble Screen Connect",
+   "id": "nibble-screen-connect",
+   "suggest": [
+    "mesh_lora"
+   ]
+  }
+ ],
+ "b11-subghz-usb-hid.json": [
+  {
+   "name": "Open Source Meshtastic Nibble",
+   "id": "retia-meshtastic-nibble",
+   "suggest": [
+    "mesh_lora"
+   ]
+  }
+ ],
+ "b12-network-usb-hid.json": [
+  {
+   "name": "LockedUSB Charge Only Adapter",
+   "id": "lockedusb-charge-only-adapter",
+   "suggest": [
+    "usb_cable_detect",
+    "usb_data_block"
+   ]
+  },
+  {
+   "name": "Netgotchi Pro",
+   "id": "netgotchi-pro",
+   "suggest": [
+    "network_host_scan"
+   ]
+  },
+  {
+   "name": "Negotchi - Network Security Scanner",
+   "id": "negotchi",
+   "suggest": [
+    "network_host_scan"
+   ]
+  }
+ ],
+ "b13-forensics-network.json": [
+  {
+   "name": "WiebeTech Forensic ComboDock v5",
+   "id": "wiebetech-forensic-combodock-v5",
+   "suggest": [
+    "write_block"
+   ]
+  },
+  {
+   "name": "WiebeTech Drive eRazer",
+   "id": "wiebetech-drive-erazer",
+   "suggest": [
+    "drive_wipe"
+   ]
+  },
+  {
+   "name": "O.MG Malicious Cable Detector",
+   "id": "omg-malicious-cable-detector",
+   "suggest": [
+    "side_channel_power",
+    "usb_cable_detect",
+    "usb_data_block"
+   ]
+  }
+ ],
+ "b14-automotive-forensics.json": [
+  {
+   "name": "PAW Protector",
+   "id": "paw-protector",
+   "suggest": [
+    "usb_data_block"
+   ]
+  },
+  {
+   "name": "Paw Detector",
+   "id": "paw-detector",
+   "suggest": [
+    "usb_cable_detect"
+   ]
+  },
+  {
+   "name": "HydraLink",
+   "id": "hydralink",
+   "suggest": [
+    "automotive_ethernet",
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "CANtact Pro",
+   "id": "cantact-pro",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "panda",
+   "id": "panda-comma-ai",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "WiCAN Pro",
+   "id": "wican-pro",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "CANtact v1.2",
+   "id": "cantact-v1-2-hackerwarehouse",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "CANable Pro",
+   "id": "canable-pro",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "CAN Bus for Flipper Zero (Electronic Cats)",
+   "id": "flipper-canbus-electroniccats",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "CANHack Toolkit / CANPico",
+   "id": "canpico-canhack",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "WiCAN",
+   "id": "wican",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  }
+ ],
+ "b15-automotive-ble-cellular-ot.json": [
+  {
+   "name": "PiCCANTE",
+   "id": "piccante-can-firmware",
+   "suggest": [
+    "can_fd",
+    "can_inject",
+    "can_isolated",
+    "can_sniff",
+    "obd2"
+   ]
+  },
+  {
+   "name": "LilyGo T-Deck Plus",
+   "id": "lilygo-t-deck-plus",
+   "suggest": [
+    "mesh_lora"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,3102 @@
+[
+  {
+    "id": "dlogic-dl533n-usb-stick",
+    "hardware_id": "dlogic-dl533n-usb-stick",
+    "name": "USB RFID Reader/Writer DL533N",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": null,
+    "vendor": "D-Logic (Digital Logic Ltd)",
+    "vendor_url": "https://www.d-logic.com",
+    "product_url": "https://lab401.com/products/usb-rfid-reader-writer-dl533n",
+    "category": "rfid-nfc",
+    "subcategory": "hf-reader-writer-usb",
+    "status": "available",
+    "released": null,
+    "price_usd": 54,
+    "price_note": "Lab401 lists it at €49.99 (~US$54 at time of research). D-Logic sells the plain 'USB Stick' variant direct for €39 (~US$42); Lab401's page doesn't show a USD price so the $65 figure from the first pass looks like an over-conversion - treat $54-58 as the more defensible range.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "No GUI - you drive libnfc command-line tools (nfc-list, mfoc, mfcuk, nfc-mfclassic) yourself and read raw APDU-level output.",
+    "build_effort": "assembled",
+    "build_note": "Plug-and-play USB stick. Linux needs libnfc plus a udev rule; official binaries exist for Windows/macOS.",
+    "stealth": "discreet",
+    "form_factor": "usb-stick",
+    "summary": "A direct-plug USB dongle built around the NXP PN533 chip, exposing a libnfc-compatible 13.56MHz reader/writer/emulator. It is the RF front end; all the actual attack logic (mfoc/mfcuk dictionary and darkside/nested key recovery) runs on the host PC through standard open-source libnfc tooling, the same tooling that works with any PN532/PN533-class reader.",
+    "honest_take": "The MIFARE Classic 'cracking' capability people associate with this device is not unique to it - mfoc and mfcuk run against any PN532/PN533 board, including $5-10 generic breakout modules from AliExpress. What D-Logic actually sells for ~$40-55 is a properly engineered, driver-tested, SDK-documented board and support, not exclusive silicon capability. It has zero standalone mode - without a PC running libnfc it is inert, and it does not touch ISO15693 (iCode/library tags) at all because the PN533 silicon doesn't implement that RF interface.",
+    "best_for": [
+      "Linux/libnfc-based NFC development and scripting",
+      "MIFARE Classic key recovery via mfoc/mfcuk from a host PC",
+      "Learning raw ISO14443A protocol without an all-in-one tool's menu abstraction"
+    ],
+    "not_for": [
+      "Anything standalone or untethered - always needs a host PC running libnfc",
+      "ISO15693 (iCode, library/asset tags) - the PN533 chip does not implement that RF interface",
+      "DESFire or MIFARE Plus key recovery - not possible on any current device, this one included"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No separate application MCU - the NXP PN533 itself integrates an 80C51 core that handles the USB/UART host interface directly. NXP's own product pages confirm the PN533/PN532/PN5321A3HN family shares this same 80C51-based architecture.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "NXP PN533",
+          "role": "hf-nfc",
+          "note": "13.56MHz reader/writer/emulator/P2P controller: ISO/IEC14443A (MIFARE), ISO/IEC14443B, FeliCa, ISO18092 P2P. PN533 is the OEM-oriented sibling of the more commonly seen PN532/PN5321A3HN, adding a second UART and higher-current RF driver for reader-module designs like this one; NXP now lists the whole family as 'not recommended for new designs' in favour of the PN7160."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "USB bus powered, ~150mA typical draw per D-Logic's spec sheet.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB (direct-plug stick, no cable)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "70 x 15 x 5 (D-Logic's own 'USB Stick' listing; Lab401 may ship the same or a differently housed variant)",
+      "weight_g": null,
+      "case": "plastic",
+      "notable_physical": [
+        "Direct USB-A plug, no cable",
+        "Internal antenna, no external antenna port"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443A/B and FeliCa reader mode via the PN533."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Writing to MIFARE Classic/Ultralight and compatible tags via libnfc tools (nfc-mfclassic, nfc-mfultralight)."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "MIFARE Classic 1K/4K card emulation and FeliCa card emulation per D-Logic's own spec sheet."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "Runs the standard libnfc-ecosystem attacks: mfoc (known-key dictionary), mfcuk (darkside/keystream recovery). The attack logic lives entirely in the host-side tool, not on the device - any PN532/PN533 reader does this equally well."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "Vendor markets 'DESFire variants' support, which at the PN533 level means UID/application-structure read via ISO14443-4, not AES key recovery. No publicly known attack recovers a DESFire key from the card alone on any device."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Reading/writing NFC Forum Type 4 NDEF records via libnfc-based tooling - a data format, not a security bypass."
+      },
+      "felica": {
+        "v": "yes",
+        "note": "FeliCa reader/writer and card emulation, both at 212/424 kbit/s per the D-Logic spec sheet."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "The PN533 does not implement the ISO15693 RF interface; that needs a different reader IC (e.g. ST25R3916, PN5180)."
+      },
+      "emv_read": {
+        "v": "unknown",
+        "note": "No documented EMV kernel ships with libnfc for this reader; reading a contactless bank card's PAN/expiry would need separate PCSC/EMV software layered on top, and that combination is not confirmed to work with this specific board."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "HF-only chip; no LF (125kHz) hardware of any kind."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "No relay/proxy mode documented for this reader or libnfc's standard toolset against it."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Full libnfc C API on Linux/macOS/Windows; Python bindings (nfcpy) have known PN533 support."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Entirely PC-tethered - no onboard logic beyond the PN533's own command set, no battery, no buttons."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Command-line/library tool only, no bundled web interface."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No storage on the device; any logging happens host-side."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Owning an HF reader/writer is legal essentially everywhere and this exact chip class is used in countless legitimate access-control and payments products. The exposure is in use: reading, cloning or emulating a card you're not authorised to use is a computer-misuse or access-device offence in most jurisdictions. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "DL533N",
+      "DL533N USB Stick"
+    ],
+    "sources": [
+      {
+        "url": "https://lab401.com/products/usb-rfid-reader-writer-dl533n",
+        "what": "reseller spec summary, €49.99 price, LibNFC compatibility list"
+      },
+      {
+        "url": "https://webshop.d-logic.com/dl533n-usb-stick",
+        "what": "official D-Logic spec sheet: PN533 chip, dimensions 70x15x5mm, 150mA draw, €39 price, 0-60mm read range"
+      },
+      {
+        "url": "https://www.d-logic.com/nfc-rfid-reader-sdk/dl533n-series-nfc-rfid-readers/",
+        "what": "DL533N series overview confirming PN533-based design and LibNFC support across form factors"
+      },
+      {
+        "url": "https://www.d-logic.com/knowledge_base/pn533-reader-dl533n-software/",
+        "what": "software/SDK support page"
+      },
+      {
+        "url": "https://www.nxp.com/docs/en/nxp/data-sheets/PN532_C1.pdf",
+        "what": "NXP PN532-family datasheet - confirms ISO14443A/B and FeliCa support, no ISO15693 interface"
+      },
+      {
+        "url": "https://www.nxp.com/products/rfid-nfc/nfc-hf/nfc-readers/nfc-integrated-solution:PN5321A3HN",
+        "what": "NXP's own product page confirming PN5321A3HN and PN532 are the same silicon family, 80C51-core based, now 'not recommended for new designs'"
+      }
+    ],
+    "research_gaps": [
+      "Exact release year not found on any D-Logic or reseller page",
+      "Lab401 shows EUR-only pricing on the fetched page; USD figure here is a currency conversion, not a vendor-quoted USD price",
+      "Whether standard libnfc/PCSC EMV tooling works against this specific reader is not documented anywhere found"
+    ]
+  },
+  {
+    "id": "pn532killer",
+    "hardware_id": "pn532killer",
+    "name": "PN532Killer",
+    "firmware": null,
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/NFC-funs/PN532Killer",
+    "firmware_note": null,
+    "vendor": "NFC-funs (MCUer)",
+    "vendor_url": "https://pn532killer.com",
+    "product_url": "https://pn532killer.com/shop/",
+    "category": "rfid-nfc",
+    "subcategory": "nfc-emulator-sniffer-bare-pcb",
+    "status": "available",
+    "released": null,
+    "price_usd": 29.99,
+    "price_note": "$29.99 consistently on both the official store (marked down from a $39.99 'original') and the MTools Tec reseller (marked down from a $69.99 'original') - treat the higher 'original' prices as permanent-seeming discount theater rather than a real price history. Optional BLE extension is $29.99, LCD extension $9.99-19.99. First-pass $49.99 figure (from a cached MTools listing) is on the high end of what's currently shown.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Bare PCB, no case, no built-in menu - you drive it over UART/USB with the MTools/MTools BLE phone apps or your own serial client.",
+    "build_effort": "assembled",
+    "build_note": "Ships as a ready board; BLE and LCD are separate stacking add-on boards, no soldering required for base functionality.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A bare-PCB NFC reader/emulator/sniffer built around a chip the vendor calls 'AD156', with no public datasheet found for it. It's positioned as a faster, cheaper alternative to genuine PN532 modules and to the Chameleon Ultra for MIFARE Classic/Ultralight/NTAG/ISO15693 emulation and nested/hardnested nonce sniffing.",
+    "honest_take": "The 'Killer' branding oversells it: this isn't breaking anything a PN532 or Chameleon Ultra can't already do, it's a competing implementation on a chip with no independently verifiable datasheet, so the vendor's own performance claims (4x the frame-delay speed of a Chameleon Ultra) can't be checked against a public spec. As of this research pass, the vendor's own documentation lists Darkside and StaticNested key-recovery, plus full relay attack, as 'coming soon' - not shipping - so don't assume that column is live without checking the current firmware changelog. At $29.99 it's Chameleon Ultra money for hardware with far less public scrutiny and no case included.",
+    "best_for": [
+      "Sniffing MIFARE Classic/ISO15693 reader-tag exchanges for nested/hardnested key recovery on a budget",
+      "People already standardised on the MifareOne Tool / MTools workflow"
+    ],
+    "not_for": [
+      "Anyone who wants independently-audited silicon - AD156 has no public datasheet",
+      "Standalone field use without a phone or PC - no built-in screen unless you buy the LCD extension",
+      "Relay attacks - listed by the vendor as in-development, not a shipping feature at research time"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No separate general-purpose MCU documented - firmware runs on the AD156 chip itself, which handles both the RF front end and the UART/USB/BLE command protocol.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "AD156",
+          "role": "hf-nfc",
+          "note": "Undocumented part - no public datasheet or manufacturer info found in this research pass. The vendor positions it as functionally equivalent to, and faster than, the NXP PN532 for ISO14443A/ISO15693 reader/emulator/sniffer duty."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No onboard battery documented on the base board.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "UART (up to 3 Mbps)",
+        "USB",
+        "Bluetooth LE 4.2 (with BLE extension board)"
+      ],
+      "gpio": "Reserved, unpopulated low-frequency card extension header",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "none - bare PCB",
+      "notable_physical": [
+        "Reserved LF (125kHz) extension header",
+        "Stackable BLE and LCD daughterboards"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443A/B, ISO15693 and FeliCa reader mode per vendor documentation."
+      },
+      "hf_1356_emulate": {
+        "v": "yes",
+        "note": "MIFARE Classic (4-byte and 7-byte UID), Ultralight and NTAG emulation."
+      },
+      "hf_1356_write": {
+        "v": "unknown",
+        "note": "Vendor docs describe reader/emulator/sniffer roles; no explicit 'write to a blank card' command was found - emulation slots may be RAM-resident rather than a true card-write function."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "iCode/ISO15693 tag emulation and reader mode listed explicitly by the vendor."
+      },
+      "felica": {
+        "v": "yes",
+        "note": "Listed as a reader-mode protocol by the vendor, alongside ISO14443A/B and ISO15693."
+      },
+      "mifare_classic_attacks": {
+        "v": "partial",
+        "note": "Nested and HardNested nonce collection plus mfkey32v2/mfkey64 key-recovery-from-nonces are implemented and documented as working (HardNested claimed at 2x the nonce-collection speed of a plain PN532). Darkside and StaticNested are explicitly listed by the vendor as 'coming soon' - not shipping at research time."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "Not listed anywhere in the vendor's capability list - reader/emulator scope is Classic/Ultralight/NTAG/ISO15693/FeliCa only."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "Not documented as a supported emulation/reader target."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel or payment-card reading documented."
+      },
+      "nfc_relay": {
+        "v": "claimed",
+        "note": "Vendor site lists NFC relay under 'in development'/research capability - not confirmed as a shipping feature."
+      },
+      "lf_125khz_read": {
+        "v": "unknown",
+        "note": "Board has a reserved, unpopulated LF extension header; no LF firmware or add-on module was found as actually shipping."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF module or firmware confirmed shipping."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF module or firmware confirmed shipping."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "UART command protocol; MifareOne Tool and MTools/MTools BLE apps documented as the primary clients."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Sniff/emulate slots can run without a host once configured, but configuration and capture retrieval still need a phone app or UART client; there is no onboard display without the separate LCD extension."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "Controlled via native phone apps (MTools/MTools BLE) or a UART client, not a browser interface."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No SD card slot documented; captures live in onboard RAM/flash slots."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning the board is legal in most places. Sniffing or cloning a card you don't own or aren't authorised to test is a computer-misuse/access-device offence in most jurisdictions, same as with any MIFARE tool. Check your local law."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": "2026-01",
+      "app_store": "n/a - companion Android app 'MTools' and iOS app 'MTools BLE'",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/NFC-funs/PN532Killer",
+        "what": "repo overview, star/fork counts, MTools app links"
+      },
+      {
+        "url": "https://github.com/NFC-funs/PN532Killer/blob/main/README.md",
+        "what": "AD156 chip name, UART speeds, nested/hardnested attack support, bare-PCB form factor, USB/BLE auto-switching"
+      },
+      {
+        "url": "https://pn532killer.com/",
+        "what": "official capability list: reader/emulator/sniffer modes, key-recovery method list including 'coming soon' items"
+      },
+      {
+        "url": "https://pn532killer.com/shop/",
+        "what": "current pricing for base board, BLE extension, LCD extension"
+      },
+      {
+        "url": "https://shop.mtoolstec.com/product/pn532killer",
+        "what": "reseller listing cross-check for pricing"
+      }
+    ],
+    "research_gaps": [
+      "AD156 chip has no public datasheet - could not confirm manufacturer or silicon origin",
+      "Exact release year not found",
+      "LF 125kHz extension board existence/pricing not found despite the reserved header",
+      "Whether Darkside/StaticNested/relay have shipped since this research pass was not checked against a live firmware changelog"
+    ]
+  },
+  {
+    "id": "hermitx-nfc-cardreader-esp32s3",
+    "hardware_id": "hermitx-nfc-cardreader-esp32s3",
+    "name": "NFC Card Reader Module with ESP32-S3",
+    "firmware": null,
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/HermitX-ES/NFC-Cardreader-Module",
+    "firmware_note": null,
+    "vendor": "HermitX (Ivan Hermida / HermitX SLU)",
+    "vendor_url": "https://www.tindie.com/stores/hermitx/",
+    "product_url": "https://www.tindie.com/products/hermitx/nfc-card-reader-module-with-esp32-s3/",
+    "category": "rfid-nfc",
+    "subcategory": "nfc-dev-board-audio-visual",
+    "status": "available",
+    "released": null,
+    "price_usd": 46.0,
+    "price_note": "$46 on Tindie; $37.52 on Lectronz (same product, independently confirmed) - about a 20% spread between the two storefronts for an identical listing.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Ships as a dev board with maker-project example firmware (Arduino/ESP-IDF/MicroPython/ESPHome) - any pentest-style behaviour has to be written by the buyer.",
+    "build_effort": "flash-only",
+    "build_note": "Open-source example firmware on GitHub (MIT-licensed; hardware design and photos excluded). Flash an example sketch and tap a tag to see the LED/audio demo.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "An ESP32-S3 dev board pairing an NXP PN532-family NFC reader (the product title calls it 'PN5321', the repo's own spec table calls it 'PN532' - NXP's own product pages confirm PN5321A3HN and PN532 are literally the same 80C51-core silicon family, just different ordering codes, so this is not really a contradiction) with 8 addressable RGB LEDs, a 3W I2S speaker and a microSD slot. It's sold and documented as an interactive-art/access-control project platform, not a pentest tool.",
+    "honest_take": "This is explicitly not marketed or documented as a security tool - the maker's own listed use cases are an interactive museum guide, an educational coding kit, and a sound-art installation. Whatever MIFARE read/write capability it has comes entirely from the PN532-family chip and whatever open-source PN532 library you bring yourself; the vendor's repo documents no key-cracking, nested-attack, or emulation-limit discussion at all. If you want that, you're writing it on top of a bare PN532 reader library, the same starting point as a $10 breakout board (and NXP has marked the whole PN532/PN5321 family 'not recommended for new designs' in favour of the PN7160, for what that's worth on a 2026 purchase). The RGB LEDs, speaker and SD slot - not the NFC chip - are the actual reason for the $46 price.",
+    "best_for": [
+      "Access-control or interactive-art projects wanting built-in audio+RGB feedback on tag events",
+      "Makers who want ESP32-S3 Wi-Fi/BLE plus NFC without wiring a separate PN532 breakout"
+    ],
+    "not_for": [
+      "An out-of-the-box pentest tool - no attack/crack firmware ships or is documented",
+      "MIFARE Classic key recovery - not implemented in any of the vendor's own firmware examples"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-S3",
+      "mcu_primary_note": "Exact module variant (WROOM-1, etc.) not specified by the vendor. Dual-core Xtensa LX7 with Wi-Fi and Bluetooth LE.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "NXP PN5321A3HN (= PN532 silicon family)",
+          "role": "hf-nfc",
+          "note": "The product title says 'PN5321', the repo's spec table says 'PN532' - confirmed via NXP's own product pages that PN5321A3HN is simply an ordering code within the PN532 family (same 80C51-core silicon), so this is a labelling quirk, not a real hardware discrepancy. NXP marks the whole family 'not recommended for new designs'."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No onboard battery documented - powered via USB-C or a 5V connector.",
+      "charging": "USB-C",
+      "pmic": null,
+      "storage": "microSD up to 32GB",
+      "connectivity": [
+        "USB-C",
+        "Wi-Fi",
+        "Bluetooth LE"
+      ],
+      "gpio": "ESP32-S3 GPIO broken out (exact pin count not specified)",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "bare PCB, no enclosure",
+      "notable_physical": [
+        "8x WS2812B addressable RGB LEDs",
+        "3W I2S speaker",
+        "microSD slot",
+        "Separate external NFC antenna board (per the Lectronz listing) rather than an onboard antenna",
+        "Ships with an NTAG215 test card"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ISO14443A/B, MIFARE Classic/Ultralight/DESFire UID and structure, FeliCa, NTAG per vendor docs."
+      },
+      "hf_1356_write": {
+        "v": "claimed",
+        "note": "Vendor states read/write capability; not independently confirmed with a working example beyond basic tag detection."
+      },
+      "hf_1356_emulate": {
+        "v": "claimed",
+        "note": "P2P/card emulation mentioned in the product description; no firmware example in the repo demonstrates it."
+      },
+      "mifare_desfire": {
+        "v": "partial",
+        "note": "UID/detect-level access only, the normal PN532-family limit - no key recovery is possible on any device."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No nested/hardnested/dictionary-attack firmware or documentation exists in the vendor's repo - would have to be written from scratch using a separate PN532 attack library."
+      },
+      "felica": {
+        "v": "claimed",
+        "note": "Listed in the reader capability description; not demonstrated in example firmware."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "PN532-family chips do not implement the ISO15693 RF interface; not documented or possible on this hardware."
+      },
+      "nfc_type4_ndef": {
+        "v": "claimed",
+        "note": "PN532-family chips can read/write Type 4 NDEF in general; no dedicated example demonstrating it was found in this repo."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel or payment-card reading example in the repo."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "Not documented or demonstrated."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No LF hardware on this board - HF/NFC only."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Arduino, ESP-IDF, MicroPython and ESPHome framework support documented."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Runs example firmware standalone once flashed (tag -> LED/audio reaction), but has no attack/logging workflow that operates without a host for that purpose."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No web server/browser control documented in the example firmware."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "microSD slot documented for audio files, logs, and configuration data."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "A general-purpose NFC reader/writer dev board is legal to own essentially everywhere. Using it to read or clone a card you're not authorised to access is a separate matter under most countries' computer-misuse laws. Check your local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/hermitx/nfc-card-reader-module-with-esp32-s3/",
+        "what": "product listing: price, chip names as advertised, LED/speaker/SD specs"
+      },
+      {
+        "url": "https://github.com/HermitX-ES/NFC-Cardreader-Module",
+        "what": "firmware repo: spec table calling the chip 'PN532', MIT license scope, stated use cases (museum guide, educational kit, sound art), framework support"
+      },
+      {
+        "url": "https://www.nxp.com/products/rfid-nfc/nfc-hf/nfc-readers/nfc-integrated-solution:PN5321A3HN",
+        "what": "NXP's own product page confirming PN5321A3HN is the same silicon family as PN532, resolving the naming discrepancy between the title and the repo's spec table"
+      },
+      {
+        "url": "https://lectronz.com/products/nfc-card-reader-module",
+        "what": "second storefront listing - independently confirms $37.52 price point, the PN5321/PN532 naming inconsistency, and reveals a separate external antenna board plus a bundled NTAG215 test card"
+      }
+    ],
+    "research_gaps": [
+      "No independent teardown confirming exactly which PN532-family ordering code is populated",
+      "Release date unknown"
+    ]
+  },
+  {
+    "id": "ggtag",
+    "hardware_id": "ggtag",
+    "name": "GGtag",
+    "firmware": null,
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/rgerganov/ggtag",
+    "firmware_note": null,
+    "vendor": "Eurolan Ltd (design by Radoslav Gerganov)",
+    "vendor_url": "https://github.com/rgerganov/ggtag",
+    "product_url": "https://www.crowdsupply.com/eurolan-ltd/ggtag",
+    "category": "rfid-nfc",
+    "subcategory": "lf-emulator-epaper-badge",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 45,
+    "price_note": "Confirmed $45 at Crowd Supply.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Programmed through a browser-based web-serial badge designer or by playing an audio clip - no toolchain needed for basic use; a Python package (ggtag on PyPI) exists for advanced/scripted use.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled board. Programmed over USB serial, Web Serial in-browser, or acoustically via ggwave (FSK audio) from a phone speaker with no cable at all - a CR2032 cell is required for audio-mode programming.",
+    "stealth": "discreet",
+    "form_factor": "wearable",
+    "summary": "An RP2040-based e-paper badge (3.52-inch display) that emulates 125kHz LF RFID tags. RFID emulation works by having the RP2040 compile and flash the existing open-source avrfid EM4100-simulator firmware onto an onboard ATtiny85 co-processor at runtime, rather than through any dedicated RFID silicon. It can be programmed over USB serial, a browser's Web Serial API, or acoustically using the ggwave FSK audio protocol. It is a genuinely single-purpose RFID device (LF emulate only) wrapped in a general-purpose e-paper badge platform.",
+    "honest_take": "It only emulates - GGtag has no reader/scan hardware at all, so it can replay a tag ID you already know, but it cannot capture a badge from someone walking by the way a Proxmark or a covert Wiegand tap can. The '125kHz emulation' isn't a from-scratch implementation either: on each RFID program event the RP2040 compiles and flashes a fresh copy of the existing open-source avrfid project onto the ATtiny85, reusing a technique that predates this product by well over a decade. What's genuinely novel is the e-paper badge form factor and the audio/web-serial programming path, not the RFID capability itself.",
+    "best_for": [
+      "Emulating a known/captured 125kHz EM4100-class card ID from a reprogrammable e-paper badge",
+      "Conference-badge-style projects wanting an unusual RFID trick built in",
+      "Programming a device with nothing but a phone speaker when no cable or computer is at hand"
+    ],
+    "not_for": [
+      "Reading or capturing an unknown badge - it cannot scan or sniff at all",
+      "HF/13.56MHz work (MIFARE, general NFC) - LF 125kHz only",
+      "HID Prox, Indala or other authenticated/proprietary LF formats - avrfid-class emulation covers unauthenticated ASK/FSK formats like EM4100, not the wider LF format list a Proxmark or Flipper Zero covers"
+    ],
+    "hardware": {
+      "mcu_primary": "RP2040",
+      "mcu_primary_note": "Dual-core Cortex-M0+; drives the e-paper display, USB, and ggwave audio encode/decode.",
+      "mcu_secondary": "ATtiny85",
+      "radios": [
+        {
+          "ic": "ATtiny85 (running avrfid firmware)",
+          "role": "lf-125khz",
+          "note": "Not a dedicated RFID transceiver - the RP2040 flashes the existing open-source avrfid EM4100-simulator firmware onto this AVR at runtime, which then bit-bangs the 125kHz coil directly. This is the entire mechanism behind the device's LF emulation."
+        }
+      ],
+      "display": {
+        "type": "E-paper",
+        "size_in": 3.52,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "CR2032 coin cell; required for audio-mode (ggwave) programming and standalone display use. Capacity not specified by the vendor.",
+      "charging": "None - coin cell replace, or runs off USB power in serial mode",
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "USB serial",
+        "Web Serial (browser)",
+        "Audio/ggwave (speaker-to-microphone FSK)"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "PCB with e-paper face, no separate enclosure documented",
+      "notable_physical": [
+        "3.52-inch e-paper display face",
+        "USB/BATT physical slide switch",
+        "CR2032 holder"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "ASK and FSK 125kHz emulation via a dynamically-flashed ATtiny85 running avrfid-derived firmware; covers EM4100-class unauthenticated tags."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No reader/antenna front-end for scanning cards - this device emulates only."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "Not a card writer - it emulates a tag ID directly rather than writing it to a separate blank."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No HF hardware at all - LF only."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No HF/MIFARE hardware or firmware."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "felica": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "No RF reader capability to relay from."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "No magstripe coil driver - RFID-only device."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open 'ggtag' Python package on PyPI plus the browser-based Web Serial badge designer."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Once programmed, the badge displays and emulates without a host; programming itself still needs USB, a browser, or an audio source."
+      },
+      "web_ui": {
+        "v": "partial",
+        "note": "The badge designer runs as a page in the user's own browser talking to the device via the Web Serial API, not a server hosted on the device itself."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No SD card or persistent log storage beyond the currently-programmed badge/tag content."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Emulating a 125kHz tag ID you legitimately captured (e.g. your own badge) is not restricted in most places. Using it to replay someone else's access credential without authorisation is the same unauthorised-access issue as with any LF cloning tool. Check your local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/rgerganov/ggtag",
+        "what": "hardware/firmware repo: RP2040 + ATtiny85 architecture, GPLv3 license, avrfid-based LF emulation mechanism"
+      },
+      {
+        "url": "https://hackaday.com/2023/07/22/rfid-emulator-e-paper-badge-can-be-programmed-with-sound/",
+        "what": "independent coverage confirming release timing (2023) and ggwave audio-programming mechanism"
+      },
+      {
+        "url": "https://www.crowdsupply.com/eurolan-ltd/ggtag",
+        "what": "campaign/product page - $45 price and in-stock status (fetched via search snippet after a direct-fetch 403)"
+      },
+      {
+        "url": "https://www.hackster.io/news/ggtag-is-a-reusable-reprogrammable-epaper-based-badge-with-rfid-c9aed6b7ddd0",
+        "what": "secondary coverage cross-confirming RP2040/e-paper/RFID description"
+      }
+    ],
+    "research_gaps": [
+      "Direct fetch of crowdsupply.com returned HTTP 403 - relied on search-engine snippets and secondary coverage (Hackaday, Hackster, Good e-Reader) to confirm price and availability",
+      "E-paper panel's exact pixel resolution not found",
+      "Whether only EM4100-class tags are covered, or a wider LF format set, is not fully confirmed - avrfid is documented specifically as an EM4100 simulator",
+      "This is a genuinely single-purpose device (LF emulate only, no HF/reader hardware exists) - the long list of explicit 'no' capabilities above reflects that finding, not incomplete research"
+    ]
+  },
+  {
+    "id": "esp-rfid-tool-v2-pro",
+    "hardware_id": "esp-rfid-tool-v2-pro",
+    "name": "ESP-RFID-Tool v2 PRO",
+    "firmware": "Einstein2150 v2 (open source)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/Einstein2150/ESP-RFID-Tool-v2",
+    "firmware_note": "A fork of Corey Harding's earlier open-source ESP-RFID-Tool logging project (tracked separately in this database as 'ESP RFID Tool'). Note the original already had an experimental, MOSFET-less 'bonus' TX/replay/fuzzing mode of its own (confirmed directly in that repo's README) - v2 PRO's real differentiator is making TX a fully-supported, MOSFET-driven feature ('clean and reliable transmission' per the vendor) rather than an unofficial experiment, plus wider automatic bit-format decoding (32/34/35/56-bit vs. the original's 26-37bit focus) and being sold pre-assembled.",
+    "vendor": "Raik Schneider (Einstein2150)",
+    "vendor_url": "https://www.foto-video-it.de",
+    "product_url": "https://www.foto-video-it.de/produkt/esp-rfid-tool-v2-pro/",
+    "category": "rfid-nfc",
+    "subcategory": "wiegand-interceptor",
+    "status": "available",
+    "released": null,
+    "price_usd": 41,
+    "price_note": "€38.00 direct from the vendor (foto-video-it.de) plus shipping from Germany; converted to ~US$41 at research-time rates.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Requires physical access to a reader's Data0/Data1/Ground wiring and working knowledge of Wiegand bit-length math to make sense of captures - a red-team physical-access tool, not a point-and-click gadget.",
+    "build_effort": "assembled",
+    "build_note": "Ships as a ready PCB with a screw-terminal or pin-header Wiegand connector option. OTA firmware updates over its own Wi-Fi/web UI; firmware is open source on GitHub if you'd rather build your own from the schematic.",
+    "stealth": "covert",
+    "form_factor": "board",
+    "summary": "An ESP8266 (ESP-12) board that taps a standard 5V Wiegand reader-to-panel wire run, logs the raw bitstream with automatic UID decoding for common HID bit-length formats, and can actively replay or fuzz a captured or synthesised bitstream back onto the line via MOSFET-driven active pull-downs, all through a mobile-friendly web UI. It has no RFID/NFC radio of its own - it works entirely at the wired Wiegand-signal level, downstream of whatever reader already decoded the card.",
+    "honest_take": "This is a fork of Corey Harding's earlier open-source ESP-RFID-Tool logging project, but the 'v2 PRO adds transmit' framing oversimplifies it - the original already had an experimental TX/replay/fuzzing mode of its own, just explicitly unofficial. What the €38 assembled board actually buys is a properly engineered MOSFET TX path instead of a 'consider it a bonus' hack, wider auto-decoded bit formats, and not having to build it yourself. It only sees what's already in cleartext on the Wiegand wire, which is every legacy HID/Wiegand deployment by design; it does nothing against a modern OSDP or other encrypted reader-to-panel link. The vendor's own 'fuzzing/brute-force' framing and 'qualified professionals only' disclaimer both point at the same thing: this is built for scoped engagements, and casual use on a system you don't own crosses a legal line fast.",
+    "best_for": [
+      "Physical-security engagements auditing a legacy Wiegand access-control installation you are authorised to test",
+      "Logging and replaying captured badge bitstreams, inline or as a portable unit",
+      "Learning Wiegand bit-format math hands-on"
+    ],
+    "not_for": [
+      "OSDP or other encrypted/modern reader-to-panel links - Wiegand only",
+      "Covert long-range capture without physical wire access - this taps the wired reader-to-panel line, it does not read cards over the air itself",
+      "Anyone without explicit written authorisation to test the target access-control system"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP8266EX",
+      "mcu_primary_note": "ESP-12 module. Handles Wiegand GPIO bit-banging, the web UI, and Wi-Fi AP/client networking.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wiegand-interface",
+          "note": "No RFID/NFC radio at all - this reads the wired Data0/Data1 Wiegand lines between an existing reader and its access panel; it never talks to a card over the air itself."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No battery - powered from the tapped installation's own 5-30V supply, or an external source for portable use.",
+      "charging": null,
+      "pmic": null,
+      "storage": "Internal flash for logs, plus FTP log export",
+      "connectivity": [
+        "Wi-Fi (AP or client mode)",
+        "Wiegand (Data0/Data1/Ground - screw terminal or pin header)"
+      ],
+      "gpio": "Wiegand Data0/Data1 lines driven by MOSFETs for active TX/replay",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "bare PCB (screw-terminal or pin-header connector options)",
+      "notable_physical": [
+        "Screw-terminal or male pin-header Wiegand connector options",
+        "5-30V input range for inline installation power tapping"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No RFID air-interface hardware at all - despite the product name, it does not read cards over the air. It only taps an existing reader's already-decoded Wiegand output. A buyer expecting a standalone LF reader will be disappointed."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No radio hardware to write a card with."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No radio hardware to emulate a card with."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No HF hardware either - Wiegand-wire tap only, protocol-agnostic to whatever the donor reader's frequency is."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No card-level attack capability - it operates purely on the decoded Wiegand bitstream, not the card's cryptography."
+      },
+      "ibutton_1wire": {
+        "v": "no",
+        "note": "Not documented; Wiegand only."
+      },
+      "gps": {
+        "v": "no",
+        "note": "No GPS hardware documented."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open-source firmware with OTA updates; MIT-licensed on GitHub."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Mobile-optimised live event monitor, status diagnostics, and configuration, served from the board's own Wi-Fi."
+      },
+      "standalone_untethered": {
+        "v": "partial",
+        "note": "Operates without a permanent PC connection once installed, but needs its own Wi-Fi (AP or client) to be usable."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No SD card - logs are stored in internal flash and exported via FTP or the web UI."
+      },
+      "wiegand_tap": {
+        "v": "yes",
+        "note": "Taps a 5V Wiegand reader-to-panel wire directly, logs the raw bitstream with auto UID decode, and can actively replay/fuzz captured or synthesised bitstreams back onto the line via a MOSFET TX path - the textbook case for this key, and the product's entire purpose."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Owning the board is legal. Splicing it into an access-control reader's wiring to capture or replay badge credentials without the system owner's written authorisation is unauthorised computer/physical-access-system interception in most jurisdictions - this is built for scoped red-team engagements, not casual use. Check your local law."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2026-08",
+      "app_store": "n/a",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "ESP RFID Tool v2 PRO",
+      "ESP-RFID-Tool-v2"
+    ],
+    "sources": [
+      {
+        "url": "https://www.foto-video-it.de/produkt/esp-rfid-tool-v2-pro/",
+        "what": "vendor product page: €38 price, 5-30V input, 1-4096 bit capture range, 32/34/35-bit auto UID calc, intended-use disclaimer"
+      },
+      {
+        "url": "https://github.com/Einstein2150/ESP-RFID-Tool-v2",
+        "what": "firmware repo: ESP12 base, MOSFET active-pull TX mode, 32/34/35/56-bit formats, fuzzing/brute-force feature list, MIT license, confirms it is a fork of Corey Harding's original ESP-RFID-Tool"
+      },
+      {
+        "url": "https://github.com/rfidtool/ESP-RFID-Tool",
+        "what": "the original project (Corey Harding) this forks from - confirms it already had an experimental TX/replay/fuzzing mode of its own, correcting an initial assumption that v2 PRO was the first to add transmit"
+      }
+    ],
+    "research_gaps": [
+      "Exact release/first-sale year not found",
+      "No capability key in the schema covers Wiegand bitstream capture/replay/fuzzing directly - the existing lf_125khz_*/hf_1356_* keys don't apply since this taps a reader's already-decoded wired digital output rather than the RF air interface itself, so they are marked 'no' to flag that this is not an over-the-air RFID reader despite the product name",
+      "Exact divergence point/date from Corey Harding's original ESP-RFID-Tool project is not documented beyond the README's own fork note"
+    ]
+  },
+  {
+    "id": "vicino",
+    "hardware_id": "vicino",
+    "name": "VICINO",
+    "firmware": null,
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/mcqn/nfc-st25r3916",
+    "firmware_note": "No turnkey application firmware ships with the board. MCQN publishes forked ST NFC-RFAL and ST25R3916 Arduino libraries plus wiring examples targeting ESP32-S3, ESP32-S2 Saola 1 and ESP32 LyraT dev boards - the buyer writes/adapts their own sketch against these.",
+    "vendor": "MCQN Ltd",
+    "vendor_url": "https://mcqn.com/",
+    "product_url": "https://www.tindie.com/products/mcqn_ltd/vicino/",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-module",
+    "status": "available",
+    "released": "2024",
+    "price_usd": 40.0,
+    "price_note": "Confirmed current Tindie listing price; only 2 units left in stock at time of check.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "The board itself is a drop-in SPI reader IC, but you must wire it to your own host MCU and build firmware around MCQN's own library forks rather than a mature, widely documented SDK.",
+    "build_effort": "assembled",
+    "build_note": "Ships fully populated (ST25R3916B and antenna already on the PCB); buyer solders/wires the 8-pin header to a host MCU. No enclosure included.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "VICINO is a bare SPI breakout board built around ST's ST25R3916B multi-protocol 13.56MHz NFC/RFID reader IC, designed by UK studio MCQN Ltd as a mechanically and electrically compatible upgrade path for projects built around cheap MFRC522 (RC522) modules. It was originally developed for MCQN's own Museum in a Box v2.0 project, ships assembled and OSHWA-certified (UK000061), and pairs with MCQN's forked ST NFC-RFAL/ST25R3916 Arduino libraries running on an ESP32 host.",
+    "honest_take": "This is not a pentest tool - it's a better-spec'd reader chip in an RC522-shaped footprint, built for a museum tag-reading kiosk, not for card attacks; don't expect Mifare Classic cracking or Flipper-style attack menus out of the box. You still bring your own host MCU, wire SPI yourself, and build firmware against a small (11-star), still-thin-on-docs library fork rather than a mature SDK. At $40 for a chip that street-prices around $8-12 bare from distributors, the premium buys the antenna-tuned PCB, RC522 pin/hole compatibility and OSHW documentation - reasonable if that compatibility saves you a redesign, questionable if you're just comparing raw part cost.",
+    "best_for": [
+      "Projects already wired for RC522 that want a real multi-protocol NFC chip (ISO14443A/B, FeliCa, ISO15693) instead of the cheap Mifare-only MFRC522",
+      "Makers building ESP32-based NFC readers who want ST's official RFAL stack rather than a MFRC522 library"
+    ],
+    "not_for": [
+      "Anyone wanting a ready-to-use standalone pentest tool - this is a component, not a finished gadget",
+      "Mifare Classic/DESFire attack work - no attack tooling is provided or claimed",
+      "Beginners without SPI wiring and embedded firmware experience"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "VICINO is a reader-IC breakout, not a full MCU board - it's designed to pair with an external host; MCQN's own example firmware targets ESP32-S3, ESP32-S2 Saola 1 and ESP32 LyraT dev boards.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "ST25R3916B",
+          "role": "hf-nfc",
+          "note": "Per ST's datasheet: NFC-A/ISO14443A and NFC-B/ISO14443B up to 848kbit/s, NFC-F/FeliCa up to 424kbit/s, NFC-V/ISO15693 up to 53kbit/s, plus NFC-A/NFC-F card emulation and P2P modes."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Unpowered module; draws power from the host over the 8-pin header.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "SPI"
+      ],
+      "gpio": "8-pin 0.1\" header (power, ground, SPI plus control/interrupt lines) positioned to match RC522 boards; pinout differs from RC522 beyond power/ground/SPI, per the product page.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Mounting-hole pattern matches common RC522 breakout boards for drop-in mechanical replacement",
+        "OSHWA-certified open hardware (UK000061); hardware licensed CERN-OHL-S-2.0, docs CC BY-SA"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "ST25R3916B is a multi-protocol 13.56MHz reader IC (NFC-A/ISO14443A, NFC-B/ISO14443B) driven via ST's NFC-RFAL abstraction layer (MCQN fork); confirmed via chip datasheet and the library dependency listed on the product page."
+      },
+      "hf_1356_write": {
+        "v": "claimed",
+        "note": "RFAL supports tag writing, but no VICINO-specific write example was found in the repo's Examples.md at time of research."
+      },
+      "hf_1356_emulate": {
+        "v": "claimed",
+        "note": "ST25R3916B datasheet lists NFC-A/NFC-F card-emulation mode as a chip feature; not demonstrated in VICINO's own example code."
+      },
+      "iso15693": {
+        "v": "yes",
+        "note": "Chip datasheet lists NFC-V/ISO15693 support up to 53kbit/s, implemented by the RFAL library VICINO depends on."
+      },
+      "felica": {
+        "v": "yes",
+        "note": "Chip datasheet lists NFC-F/FeliCa reader mode up to 424kbit/s."
+      },
+      "mifare_classic_attacks": {
+        "v": "unknown",
+        "note": "No MFOC/crypto1-style attack tooling found in the repo; VICINO is positioned as an RC522 reader/writer replacement, not a Mifare-attack tool."
+      },
+      "mifare_desfire": {
+        "v": "unknown",
+        "note": "Chip can reach ISO14443-4 cards at the protocol level, but no DESFire-specific example or claim was found."
+      },
+      "nfc_type4_ndef": {
+        "v": "unknown",
+        "note": "Not demonstrated in the available Examples.md content; RFAL can support NDEF Type 4 in general but no VICINO-specific confirmation was found."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "No EMV kernel or payment-card example anywhere in the repo."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "Not documented."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "ST25R3916B is an HF-only (13.56MHz) chip - no LF hardware."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Programmed as an Arduino/ESP-IDF sketch against MCQN's forked NFC-RFAL and ST25R3916 libraries on listed ESP32 dev boards."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "A bare reader-IC module with no host MCU of its own - entirely dependent on whatever board it's wired to."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No bundled interface of any kind - it's a component."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No storage on the module itself."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "VICINO is a general-purpose 13.56MHz reader/writer chip carrier, functionally similar to RC522 modules already sold worldwide for hobbyist and access-control projects. Owning and experimenting with your own NFC tags is not itself restricted in most jurisdictions; reading, cloning, or writing to cards or access badges you do not own or lack authorization to test can implicate computer-misuse, fraud, or access-control tampering laws depending on jurisdiction. Check your local law - this is not legal advice."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "sparse",
+      "last_release": "2026-03",
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://www.tindie.com/products/mcqn_ltd/vicino/",
+        "what": "price ($40, 2 in stock), pin/mounting compatibility with RC522, seller identity, library dependencies"
+      },
+      {
+        "url": "https://github.com/mcqn/nfc-st25r3916",
+        "what": "firmware/hardware repo: KiCad files, CERN-OHL-S-2.0 license, Examples.md content, repo creation/push dates, star count"
+      },
+      {
+        "url": "https://mcqn.com/ibal243/",
+        "what": "Museum in a Box context and MCQN Ltd vendor description"
+      },
+      {
+        "url": "https://certification.oshwa.org/uk000061.html",
+        "what": "OSHWA certification date (2024-04-05), hardware/docs license terms"
+      },
+      {
+        "url": "https://www.st.com/resource/en/datasheet/st25r3916b.pdf",
+        "what": "ST25R3916B protocol support: ISO14443A/B, FeliCa, ISO15693, card emulation"
+      }
+    ],
+    "research_gaps": [
+      "Exact public launch/release date is unconfirmed; '2024' is inferred from the OSHWA certification date, not a stated ship date",
+      "Physical dimensions and weight were not published anywhere found",
+      "Whether hf_1356_write, hf_1356_emulate, mifare_desfire and nfc_type4_ndef are actually demonstrated in example code (vs. just chip/library-capable) could not be independently verified"
+    ]
+  },
+  {
+    "id": "rfidler",
+    "hardware_id": "rfidler",
+    "name": "RFIDler",
+    "firmware": "RFIDler custom PIC32 firmware (CLI/API over USB-serial)",
+    "firmware_kind": "stock",
+    "firmware_repo": "https://github.com/AdamLaurie/RFIDler",
+    "firmware_note": "Firmware is licensed under a custom NMAP-style license (per the repo's COPYING file), not a standard OSI license; different sub-components (firmware, hardware, python tools) are licensed separately within the same repo. Last firmware commit 2024-09-22.",
+    "vendor": "Aperture Labs Ltd",
+    "vendor_url": "http://www.aperturelabs.com/",
+    "product_url": "http://www.aperturelabs.com/tools.html",
+    "category": "rfid-nfc",
+    "subcategory": "lf-sdr-platform",
+    "status": "diy-only",
+    "released": "2013",
+    "price_usd": 102.0,
+    "price_note": "No vendor currently sells an assembled unit for guaranteed delivery. Aperture Labs' own site still lists RFIDler at £80.00 + VAT + shipping but marks it 'Currently OUT OF STOCK' with no restock date (roughly $100-105 landed at recent GBP/USD rates, before VAT/shipping is even added). Historical Kickstarter-era retail via hackerstickers.com/shop.riftrecon.com was around $129. The task brief's ~$35 figure is not supported by any pricing found; full open Eagle design files are published in-repo for anyone who wants to fabricate one, but no BOM/fab-cost total was found to substantiate a DIY price either.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Using it means learning a CLI-driven LF protocol workflow, and getting one at all now likely means self-fabricating from the published Eagle files and hand-soldering a PIC32 board, since no vendor currently ships assembled units.",
+    "build_effort": "full-diy",
+    "build_note": "Aperture Labs' own listing is out of stock with no restock date; the repo includes open Eagle schematic/board files (RFIDLER V22 beta.sch/.brd) plus a USB-HID bootloader (mphidflash) for firmware updates, but building one now means fabricating and assembling the PCB yourself.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "RFIDler is Aperture Labs' (Adam Laurie) open-hardware, software-defined LF (125/134kHz) reader/writer/emulator built around a Microchip PIC32MX795F512L, controlled over a USB-serial CLI. Firmware source confirms real read, write and one-shot emulate (EMU command) support for a broad sweep of LF formats including EM4X02/4X05, HID Prox (HID26), Indala (64/224-bit), UNIQUE, HITAG1/2, Q5, T55x7, AWID26 and FDXB, with write support specifically for T55x7, Q5 and HITAG2. It has no HF hardware at all.",
+    "honest_take": "This is a decade-plus-old project: Aperture Labs' own store lists it at £80+VAT 'Currently OUT OF STOCK' with no restock date, and the last real firmware commit was September 2024 - treat it as effectively DIY-only now, buildable from the Eagle files in the repo rather than something you can simply order. It's also not standalone in the field: it needs a host PC/terminal over USB the entire time you're using it, unlike a Proxmark3 or Flipper Zero. If you can get or build one, the format coverage is genuinely broad for LF and the emulate command is real (confirmed directly in firmware source, not just marketing copy) - but a Proxmark3 or Flipper Zero will get a newcomer working today with far more active support.",
+    "best_for": [
+      "LF-format researchers who want open, readable PIC32 firmware they can inspect and modify line by line",
+      "Builders comfortable fabricating from open Eagle files, since assembled units are not currently purchasable from any vendor found"
+    ],
+    "not_for": [
+      "Anyone who wants to just buy a working unit today - no active vendor with stock was found",
+      "Field/covert use - it has no standalone battery-powered mode; it is a USB peripheral requiring a host terminal",
+      "HF (13.56MHz) work - LF only, no HF hardware exists on this board"
+    ],
+    "hardware": {
+      "mcu_primary": "PIC32MX795F512L",
+      "mcu_primary_note": "32-bit MIPS-based Microchip PIC32; confirmed in the README and in the Eagle schematic (RFIDLER V22 beta.sch).",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "lf-125khz",
+          "note": "Software-defined LF front end built from discrete analog circuitry on the PIC32 board rather than a single dedicated RFID reader IC; the exact AFE component(s) were not identified from available docs."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "USB-bus powered; no onboard battery found in the documentation.",
+      "charging": null,
+      "pmic": null,
+      "storage": "512KB program flash on the PIC32 (firmware storage only; no separate user-data logging storage found).",
+      "connectivity": [
+        "USB (CDC serial, 115200 baud)",
+        "3.3V/5V UART (RG7 RX / RG8 TX, 115200 baud)"
+      ],
+      "gpio": "UART3 RX/TX broken out (RG7/RG8) in addition to the USB interface; full header pinout not itemized in available documentation.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "No official enclosure included; third-party 3D-printable cases exist (e.g. a Thingiverse 'Aperture Labs RFIDler v22 BETA slim enclosure').",
+      "notable_physical": [
+        "Open hardware Eagle design files (RFIDLER V22 beta.brd/.sch) published in-repo under Hardware/Pic32",
+        "USB HID bootloader (mphidflash) for firmware updates"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "Firmware's 'autotag' command actively detects EM4X02/4X05, Q5, HID26, INDALA64/224, UNIQUE, FDXB, AWID26, HITAG1/2, T55X7 and raw ASK/FSK/PSK modulations, per repo docs and community references; EM4X02/HID26/UNIQUE format handling was independently confirmed by inspecting main.c."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "Confirmed write support for T55x7, Q5 and HITAG2 tag types (repo/community documentation); TWIPE/TRESET commands in main.c manipulate tag contents/config blocks."
+      },
+      "lf_125khz_emulate": {
+        "v": "yes",
+        "note": "Directly confirmed in firmware source (main.c): a generic 'EMU <UID>' one-shot emulation command exists, with in-firmware usage examples for EM4X02, HID26 and UNIQUE tag types via 'SET TAG <TYPE>' + 'EMU'."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No HF hardware exists on this board - it is a pure LF platform."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No HF/Mifare capability at all."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "No HF hardware."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "USB-CDC serial CLI/API intended for host-side scripting/automation."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Operates as a USB/UART peripheral driven by a host CLI terminal; no onboard display, SD logging, or battery for untethered field use was found."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "512KB is program flash only, not a data-logging store."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "CLI/serial only, no web interface."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "RFIDler is an LF reader/writer/emulator capable of cloning and emulating common access-control formats (EM4100, HID Prox, Indala, etc.). Owning the hardware is generally legal as a research/hobbyist tool in most jurisdictions. Using it to read, clone, or emulate an access badge, key fob, or transit card you do not own or are not explicitly authorized to test can violate computer-misuse, fraud, or unauthorized-access laws. Check your local law - this is not legal advice."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "good",
+      "last_release": "2024-09",
+      "app_store": "n/a",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "RFIDler v22"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/AdamLaurie/RFIDler",
+        "what": "repo metadata (485 stars, last push 2024-09-22), README, COPYING license text, Hardware/firmware folder structure"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/AdamLaurie/RFIDler/master/firmware/Pic32/RFIDler.X/src/main.c",
+        "what": "direct source confirmation of read/write/emulate commands and EM4X02/HID26/UNIQUE tag type handling"
+      },
+      {
+        "url": "http://www.aperturelabs.com/tools.html",
+        "what": "current official price (£80+VAT+shipping) and 'Currently OUT OF STOCK' status"
+      },
+      {
+        "url": "https://www.kickstarter.com/projects/1708444109/rfidler-a-software-defined-rfid-reader-writer-emul",
+        "what": "original 2013 Kickstarter campaign confirming release year and original retail context"
+      }
+    ],
+    "research_gaps": [
+      "Full definitive list of all supported LF tag formats (beyond EM4X02/HID26/UNIQUE confirmed directly in source) was aggregated from web search/community references rather than fully re-verified line-by-line in firmware source",
+      "Aperture Labs' own site links to a separate github.com/ApertureLabsLtd/RFIDler repo rather than the AdamLaurie/RFIDler repo used as the primary source here - not confirmed whether these are kept in sync",
+      "Exact LF analog front-end component part number not confirmed",
+      "Physical dimensions and weight not found"
+    ]
+  },
+  {
+    "id": "wiegotcha",
+    "hardware_id": "wiegotcha",
+    "name": "Wiegotcha",
+    "firmware": "wiegotcha.c + install scripts on stock Raspberry Pi OS (Raspbian Jessie/Stretch)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/lixmk/Wiegotcha",
+    "firmware_note": "No LICENSE file exists in the repo (confirmed via GitHub API 404) - effectively all-rights-reserved even though publicly published. Ships as a pre-built Raspbian image (Google Drive link, checksums provided) plus an install.sh/laststep.sh manual path, not packaged firmware.",
+    "vendor": "n/a (DIY project, no commercial vendor)",
+    "vendor_url": null,
+    "product_url": "https://github.com/lixmk/Wiegotcha",
+    "category": "rfid-nfc",
+    "subcategory": "lf-covert-capture",
+    "status": "diy-only",
+    "released": "2017",
+    "price_usd": 130.0,
+    "price_note": "DIY build, no vendor. Electronics alone (Raspberry Pi 3 ~$35, level shifter ~$8, DS3231 RTC ~$7, 8GB+ microSD ~$7, 12V battery w/ 5V USB regulator ~$20, jumper wires/optional haptic motor ~$10) run roughly $85-100. The build is non-functional without a genuine donor reader (HID Maxiprox 5375, Indala ASR-620, or HID R90), which typically adds $50-150+ used on eBay - so a realistic all-in total is closer to $150-250+. The task brief's ~$35 estimate covers roughly just the Pi and doesn't reflect the true build cost.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "The Pi wiring itself is straightforward, but success depends on sourcing and covertly disassembling/re-installing a real commercial access-control reader without detection - that's the hard part, not the electronics.",
+    "build_effort": "full-diy",
+    "build_note": "Requires soldering/wiring a level shifter and DS3231 RTC to specific Pi GPIO pins, flashing a provided Raspbian image or running install.sh manually, then physically gutting and rebuilding a genuine HID Maxiprox 5375, Indala ASR-620 or HID R90 reader shell around it.",
+    "stealth": "implant",
+    "form_factor": "box",
+    "summary": "Wiegotcha is a DIY Raspberry Pi 3 rig, descended from Bishop Fox's Tastic RFID Thief, meant to be built into the shell of a real commercial long-range reader (HID Maxiprox 5375, Indala ASR-620, or HID R90) so it can tap the reader's Wiegand output and log captured badge IDs to SD/CSV, viewable over a Wi-Fi access point's web page. It has no RFID radio of its own.",
+    "honest_take": "There is very little to this beyond a Raspberry Pi, a level shifter, an RTC, and careful GPIO wiring stuffed inside a donor reader shell - the actual engineering is picking a real, working long-range reader to gut and not getting caught planting it, not anything on the Pi side. It does not read RFID itself; it is entirely parasitic on the donor reader's own decode circuitry, so its real capability is whatever that reader already supports. The project is effectively dead: last commit October 2021, the install image lives on an aging Google Drive link, default root/pi passwords are literally 'Wiegotcha', and its own README lists Proxmark3 cloning as an unimplemented 'future plan' - that exact gap is what the separate Gatekeeper fork later added.",
+    "best_for": [
+      "Physical penetration testers who already have a genuine long-range access-control reader they're authorized to modify for a specific engagement",
+      "Demonstrating/understanding Wiegand-tap interception against badge readers in a lab setting"
+    ],
+    "not_for": [
+      "Anyone without a donor reader - Wiegotcha is not a standalone RFID reader on its own",
+      "Live card cloning in the field - it only captures and logs; cloning was never implemented",
+      "Unauthorized use against access-control systems you don't own or lack written permission to test"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Built on a stock Raspberry Pi 3 Model B (Broadcom BCM2837 SoC), not a custom board; the README also notes testing on Pi B+ and Pi 2 (with external Wi-Fi), and states Pi Zero is untested but should work.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wiegand-interface",
+          "note": "Wiegotcha includes no RF reader of its own; it must be hidden inside a genuine HID Maxiprox 5375 (125kHz), Indala ASR-620, or HID R90 (13.56MHz iClass) reader and taps that reader's Wiegand output after it has already decoded a badge."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Powered by a user-supplied 12V battery pack that feeds both the donor reader and, via a 5V USB tap, the Pi; no mAh spec is given in the BOM.",
+      "charging": null,
+      "pmic": null,
+      "storage": "MicroSD card (8GB+) in the Raspberry Pi holds the OS, timestamped CSV capture logs, and web UI files.",
+      "connectivity": [
+        "Wi-Fi (Pi 3 onboard 802.11n, AP mode)",
+        "Ethernet (DHCP)",
+        "Wiegand tap (2-wire D0/D1) into the donor reader's control-panel wiring"
+      ],
+      "gpio": "DS3231 RTC mounted on GPIO pins 1-9; level shifter wired to pins 4, 6, 11, 12 and 17 per the README's wiring diagram.",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "The donor reader's own housing (HID Maxiprox 5375 / Indala ASR-620 / HID R90) serves as the enclosure; Wiegotcha has no case of its own.",
+      "notable_physical": [
+        "Must be physically built into a real, functioning commercial access-control reader to work at all",
+        "Optional haptic motor for silent feedback and optional internal speaker removal, both for stealth"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "partial",
+        "note": "Does not independently demodulate LF RF - it taps the Wiegand output of a donor HID Maxiprox 5375 (or Indala ASR-620) reader that has already decoded the card, and logs the resulting facility/card number."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No write/clone capability was implemented - capture and log only."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No emulation capability."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "Same caveat applies when built into the HID R90 (13.56MHz iClass) donor variant: Wiegotcha only taps the Wiegand bus, relying entirely on the donor reader's own decode."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No write/clone capability - see mifare_classic_attacks note."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No card-cracking capability of any kind - this device only captures an already-decoded Wiegand bitstream, it does not talk to card cryptography."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs headless on the Pi once installed in the donor reader, logging to SD/CSV and broadcasting a Wi-Fi AP for retrieval; no host PC is needed after field placement."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Boots a wlan0 access point at 192.168.150.1 with both ESSID and password defaulting to 'Wiegotcha' (README explicitly warns to change these)."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Captured Wiegand reads are timestamped via the onboard DS3231 RTC and written to CSV on the Pi's SD card."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "A CSV-to-HTML page (credited in the README to Derek Eder's csv-to-html-table) is served for viewing captured badge data; it is read-only, with no cloning or control features."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Fully open C/Python/shell codebase on a stock Raspbian image - freely modifiable, though there's no formal scripting API."
+      },
+      "gps": {
+        "v": "no",
+        "note": "README explicitly lists GPS integration only as an unimplemented 'Future Plans (I should say hopes)' item."
+      },
+      "packet_capture": {
+        "v": "no",
+        "note": "Not a network packet-capture tool - it logs decoded Wiegand credential data, not network traffic."
+      },
+      "wiegand_tap": {
+        "v": "yes",
+        "note": "Parasitic on a donor long-range reader's (Maxiprox 5375/ASR-620/R90) own Wiegand decode - has no RFID radio of its own, purely a wire tap and logger. Note the project is effectively dead (last commit Oct 2021, default root/pi password literally 'Wiegotcha')."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Wiegotcha is purpose-built to be physically hidden inside a real commercial access-control reader to intercept badge credentials from people who have no idea it's there. Distinct from simply owning RFID hardware: covertly implanting a capture device inside someone else's reader and intercepting Wiegand credential data without the system owner's and/or cardholders' authorization is very likely to implicate wiretapping/interception statutes and unauthorized-access/computer-misuse laws in most jurisdictions, on top of physical tampering with the host reader itself. Legitimate use is essentially limited to authorized physical penetration tests with a signed scope covering this exact technique. Check your local law - this is not legal advice."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "good",
+      "last_release": "2021-10",
+      "app_store": "n/a",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [
+      "Long Range RFID Thief"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/lixmk/Wiegotcha",
+        "what": "repo metadata (239 stars, last push 2021-10-25), no LICENSE file present"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/lixmk/Wiegotcha/master/README.md",
+        "what": "full README: donor reader models, Tastic RFID Thief lineage, default credentials, AP/IP config, BOM, wiring instructions, 'future plans' list including unimplemented Proxmark3 cloning and GPS"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/wghozayel/Gatekeeper/master/README.md",
+        "what": "an independent fork's README that restates and corroborates Wiegotcha's donor-reader design, default credentials, and AP setup from outside the original repo"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in the schema covers 'Wiegand bus tap / access-control interception' directly - captured in summary/capability notes instead",
+      "The exfil.co blog post referenced as the primary hardware-build documentation was not independently checked for whether it's still live/accurate",
+      "Exact real-world street price of a used Maxiprox 5375/ASR-620/R90 donor reader varies widely (eBay) and was estimated, not sourced from a specific current listing"
+    ]
+  },
+  {
+    "id": "gatekeeper",
+    "hardware_id": "gatekeeper",
+    "name": "Gatekeeper",
+    "firmware": "gatekeeper.c + gatekeeper_webserv.py on stock Raspberry Pi OS, driving an attached Proxmark3 via expect scripts",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/wghozayel/Gatekeeper",
+    "firmware_note": "No LICENSE file exists in the repo (confirmed via GitHub API 404). Forked/derived from Wiegotcha's codebase and Raspbian-image-based install approach; ships as a downloadable prebuilt image (Google Drive link, sha256 checksums provided) plus an install.sh/laststep.sh manual path.",
+    "vendor": "n/a (DIY project, no commercial vendor)",
+    "vendor_url": null,
+    "product_url": "https://github.com/wghozayel/Gatekeeper",
+    "category": "rfid-nfc",
+    "subcategory": "lf-covert-capture-clone",
+    "status": "diy-only",
+    "released": "2018",
+    "price_usd": 220.0,
+    "price_note": "DIY build, no vendor. Same Wiegotcha-style electronics BOM (~$85-100) plus donor reader (~$50-150+ used) plus a Proxmark3 kit - the repo's own Amazon BOM link points to a lower-cost clone-style unit (~$60-90), not an official RDV4 (which would push cost considerably higher). Realistic all-in total is roughly $200-350+. The task brief's ~$35 estimate is far below any real build cost.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Everything Wiegotcha requires (donor-reader sourcing, covert install, Pi/GPIO wiring), plus setting up and debugging a Proxmark3 client driven through expect scripts on the Pi.",
+    "build_effort": "full-diy",
+    "build_note": "Same wiring/install process as Wiegotcha (level shifter, DS3231 RTC, donor reader teardown/rebuild), plus connecting and configuring a Proxmark3 over USB to the Pi for the clone-and-verify step.",
+    "stealth": "implant",
+    "form_factor": "box",
+    "summary": "Gatekeeper forks Wiegotcha and adds a USB-attached Proxmark3 so a captured Wiegand ID from the same HID Maxiprox 5375/Indala ASR-620/HID R90 donor-reader build can be cloned to a blank card on the spot: submitting the captured ID through the web UI runs an expect script that drives the Proxmark3 to write the ID to a blank card, then re-scans to verify the clone matches.",
+    "honest_take": "Everything true of Wiegotcha applies here too - same Pi-in-a-stolen-reader-shell core, same reliance on the donor reader's own decode, same 'the hard part is the donor reader and not getting caught, not the electronics.' What Gatekeeper genuinely adds is real: gatekeeper_webserv.py's source shows it actually shells out to a Proxmark3 clone-and-verify flow, not just a README promise (and Wiegotcha's own README explicitly lists this as an unimplemented 'future plan', confirming the delta). But look closely and the clone/scan regex only recognizes HID Prox and Indala tag responses - despite the README listing an HID R90 (13.56MHz iClass) donor option, no iClass-specific clone handling was found in the code, so treat the iClass claim as unverified. It's a low-activity single-contributor project (19 stars, last commit April 2024, no releases) forked from an already-dead upstream - expect to patch things yourself.",
+    "best_for": [
+      "Authorized physical pentest teams who want capture-and-clone completed in one field session instead of two separate tools/trips",
+      "Anyone already comfortable with a Wiegotcha build who wants the Proxmark3 cloning step Wiegotcha's own README never implemented"
+    ],
+    "not_for": [
+      "iClass/HF cloning - the actual clone code only pattern-matches HID Prox and Indala responses despite an HF donor reader being listed",
+      "Anyone without both a donor reader and a Proxmark3 - this roughly doubles Wiegotcha's parts list and wiring complexity",
+      "Unauthorized capture or cloning of badges you don't own or aren't explicitly authorized to test"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "Same Raspberry Pi 3 base as Wiegotcha (from which this project is forked), now paired with an external Proxmark3 for cloning.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "wiegand-interface",
+          "note": "Same donor-reader dependency as Wiegotcha (Maxiprox 5375 / ASR-620 / R90) for the initial capture step."
+        },
+        {
+          "ic": "Proxmark3 (exact revision unspecified; BOM links a generic Amazon kit)",
+          "role": "lf-hf",
+          "note": "USB-attached to the Pi and driven via expect scripts (clone.sh/scan.sh) to write the captured HID Prox/Indala ID to a blank card and confirm the write matches."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Same as Wiegotcha: user-supplied 12V battery pack feeding the donor reader and, via a 5V tap, the Pi; no mAh spec given.",
+      "charging": null,
+      "pmic": null,
+      "storage": "MicroSD card in the Raspberry Pi, same role as in Wiegotcha (OS, logs, web files).",
+      "connectivity": [
+        "Wi-Fi (AP mode)",
+        "Ethernet (DHCP)",
+        "Wiegand tap into the donor reader's control-panel wiring",
+        "USB (Pi to Proxmark3)"
+      ],
+      "gpio": "Same RTC/level-shifter wiring pattern as Wiegotcha (RPi pins 1, 3-6, 9, 11, 12, 17).",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Donor reader's own housing; no dedicated case of its own.",
+      "notable_physical": [
+        "Adds a Proxmark3 unit inside/attached to the donor reader shell alongside the Pi, increasing size and wiring complexity over Wiegotcha",
+        "Same optional haptic motor / internal speaker removal stealth options inherited from Wiegotcha"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "partial",
+        "note": "Same Wiegand-tap approach inherited from Wiegotcha: captures the donor reader's already-decoded output rather than independently reading LF RF."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "gatekeeper_webserv.py's GET handler for a submitted 'id' shells out to an expect script (proxmark3/scan/clone.sh) that drives the attached Proxmark3 to write the captured HID Prox/Indala ID to a blank card, then re-scans to verify the clone matches - confirmed directly in the source."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No emulation mode - clone-to-blank-card only, then physical use of the cloned card."
+      },
+      "hf_1356_read": {
+        "v": "partial",
+        "note": "HID R90 iClass donor variant is listed in the README, but the clone/scan source (gatekeeper_webserv.py) only pattern-matches HID Prox and Indala tag responses - no iClass-specific handling was found."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No iClass/HF-specific clone code found despite the HF donor reader option being listed in the README - treat HF cloning as unimplemented."
+      },
+      "mifare_classic_attacks": {
+        "v": "unknown",
+        "note": "The attached Proxmark3 hardware is technically capable of Mifare Classic attacks, but Gatekeeper's own scripts only drive LF HID Prox/Indala clone workflows - no Mifare Classic-specific code was found."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Runs on the Pi plus attached Proxmark3 inside the donor reader shell, powered off the reader's own 12V battery feed; no host PC needed in the field."
+      },
+      "wifi_ap_mode": {
+        "v": "yes",
+        "note": "Same wlan0 AP pattern as Wiegotcha (192.168.150.1; ESSID/password default to 'Gatekeeper')."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Inherits Wiegotcha's DS3231-timestamped CSV logging to SD."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Adds an interactive element beyond Wiegotcha's read-only table: submitting a captured ID via the web UI triggers the Proxmark3 clone-and-verify flow server-side (confirmed in gatekeeper_webserv.py)."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "Open C/Python codebase, same as Wiegotcha, plus the added expect-script Proxmark3 driver layer."
+      },
+      "gps": {
+        "v": "no",
+        "note": "Not implemented, same as Wiegotcha."
+      },
+      "wiegand_tap": {
+        "v": "yes",
+        "note": "Same Wiegand-tap core as its parent Wiegotcha (same donor readers, same wiring), with an added Proxmark3 clone-and-verify step. Source review of gatekeeper_webserv.py confirms the clone flow is real, though it only recognizes HID Prox/Indala responses despite the README listing an iClass-capable donor reader option."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "high",
+      "notes": "Same analysis as Wiegotcha, plus an added step: Gatekeeper doesn't just intercept a badge ID, it clones it to a working card in the field via an attached Proxmark3. Implanting this inside someone else's access-control reader and cloning captured credentials without the system owner's and cardholders' authorization compounds the wiretapping/interception exposure with straightforward unauthorized-access risk (using a cloned credential to open a door you're not permitted to open). Legitimate use is authorized physical-pentest engagements only, with explicit written scope. Check your local law - this is not legal advice."
+    },
+    "ecosystem": {
+      "community": "dormant",
+      "docs_quality": "sparse",
+      "last_release": "2024-04",
+      "app_store": "n/a",
+      "abandoned_risk": "high"
+    },
+    "aliases": [
+      "Long Range RFID Stealing and Cloning"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/wghozayel/Gatekeeper",
+        "what": "repo metadata (19 stars, last push 2024-04-16, created 2018-03-16), file listing, no LICENSE file present"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/wghozayel/Gatekeeper/master/README.md",
+        "what": "full README: explicit lineage from Tastic RFID Thief and Wiegotcha, donor reader models, Proxmark3 integration claim, default credentials, BOM with Proxmark3 kit link"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/wghozayel/Gatekeeper/master/gatekeeper_webserv.py",
+        "what": "source-code confirmation of the clone-on-submit web UI flow and the HID Prox/Indala-only regex pattern matching (no iClass handling found)"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/lixmk/Wiegotcha/master/README.md",
+        "what": "confirms Wiegotcha listed Proxmark3 cloning only as an unimplemented 'future plan', establishing what Gatekeeper actually added"
+      }
+    ],
+    "research_gaps": [
+      "No capability key in the schema covers 'Wiegand bus tap / access-control interception' directly - captured in summary/capability notes instead",
+      "Exact Proxmark3 hardware revision (official RDV4 vs. third-party clone) in the linked Amazon BOM was not confirmed",
+      "Full contents of gatekeeper.c (Wiegand capture logic itself, as opposed to the web server) were not exhaustively reviewed line-by-line"
+    ]
+  },
+  {
+    "id": "7941w-rfid-card-cloner",
+    "hardware_id": "7941w-rfid-card-cloner",
+    "name": "7941W RFID Card Cloner",
+    "firmware": "TDiblik 7941W cloner firmware (C++/PlatformIO, ~788 LOC)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/TDiblik/7941W-rfid-card-cloner",
+    "firmware_note": "Single-purpose firmware with no OTA/update mechanism. Repo is archived (no further commits will land) so this is frozen as-is.",
+    "vendor": "TDiblik (Tomas Diblik) - independent open-source project, not a company",
+    "vendor_url": "https://github.com/tdiblik",
+    "product_url": "https://github.com/TDiblik/7941W-rfid-card-cloner",
+    "category": "rfid-nfc",
+    "subcategory": "DIY dual-frequency (125kHz + 13.56MHz) handheld cloner",
+    "status": "diy-only",
+    "released": "2023",
+    "price_usd": 35,
+    "price_note": "No assembled unit is sold; this is the author's own BOM cost estimate for a Seeed XIAO nRF52840, a 7941W (Gwiot-family) reader/writer module, an Adafruit 8x8 LED matrix, a joystick, a 4xAAA holder, and a 3D-printed case.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Requires soldering/wiring per the repo's schematics, flashing via PlatformIO, 3D-printing a case, and understanding the 7941W's UART protocol. No pre-built kit exists.",
+    "build_effort": "full-diy",
+    "build_note": "Wiring diagrams, a FreeCAD case, and a Python bitmap generator for the LED matrix are included, but there is no BOM-with-links or assembly video - you are sourcing and wiring parts yourself.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "A joystick-and-LED-matrix handheld built around a Seeed XIAO nRF52840 driving a 7941W dual-frequency (125kHz/13.56MHz) reader-writer module, able to scan and clone EM4305/T5577 LF tags and Mifare 1K S50 HF cards to blank/writable tags. It's a solo open-source hobby project, not a commercial product.",
+    "honest_take": "This is a from-scratch DIY clone box, not a polished tool - 6 GitHub stars, 0 forks, archived since March 2024 with no plans to continue, and the 'display' is icon-only feedback (checkmark/X), not real UI. For the same or less effort, a Proxmark3 or Flipper Zero (already in this database) will read/write the same tag families with far better tooling, active firmware, and a real community; this project's only advantage is novelty and total build transparency (every line of firmware is 788 lines you can read yourself).",
+    "best_for": [
+      "hobbyists who want to build their own RFID tool from scratch",
+      "learning the 7941W/Gwiot module's UART protocol",
+      "embedded/firmware tinkering projects"
+    ],
+    "not_for": [
+      "anyone wanting a supported, maintained tool",
+      "field/professional pentest use",
+      "users who don't want to solder or 3D-print a case"
+    ],
+    "hardware": {
+      "mcu_primary": "Nordic nRF52840 (via Seeed Studio XIAO nRF52840 module)",
+      "mcu_primary_note": "Cortex-M4 SoC with onboard BLE radio; the repo gives no indication the Bluetooth capability is used by this firmware.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "7941W dual-frequency reader/writer module (Gwiot-family part; exact silicon not published)",
+          "role": "lf-hf",
+          "note": "Controlled over UART using the module's proprietary command protocol; same module family referenced in other independent projects (e.g. Gwiot 7941E/7941W Arduino tools)."
+        }
+      ],
+      "display": {
+        "type": "8x8 LED matrix (Adafruit Mini 8x8 w/ I2C backpack)",
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "4x AAA battery holder with ON/OFF switch; disposable/rechargeable AAs, no LiPo or charging circuit.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "UART (MCU to 7941W module)",
+        "USB (flashing only, via PlatformIO)",
+        "BLE (onboard nRF52840 radio, not used by this firmware)"
+      ],
+      "gpio": "Joystick input; I2C to LED matrix",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "3D-printed enclosure, FreeCAD source in repo",
+      "notable_physical": [
+        "Joystick-driven menu (S-modes for scan, Z-modes for write)",
+        "8x8 LED matrix status display",
+        "3D-printable case with wiring diagrams included"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "yes",
+        "note": "S2 mode; targets EM4305/T5577."
+      },
+      "lf_125khz_write": {
+        "v": "yes",
+        "note": "Z2 mode writes to writable 125kHz tags (EM4305/T5577)."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No virtual/on-device emulation - physical read-then-write-to-blank-tag only."
+      },
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "S3 mode; targets Mifare 1K S50."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Z3 mode; writes to Mifare 1K S50 (writing UID requires a 'magic'/writable UID card, standard caveat for this tag family)."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No NFC field emulation capability described."
+      },
+      "mifare_classic_attacks": {
+        "v": "unknown",
+        "note": "README doesn't mention nested/darkside key-recovery attacks; appears to be a plain block copy assuming known/default keys, not verified against source in depth."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "Not supported; 7941W/Mifare 1K path only."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "Not mentioned."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "Not mentioned."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "Not mentioned."
+      },
+      "felica": {
+        "v": "no",
+        "note": "Not mentioned."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "Not a magstripe device."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "Not supported."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "No SD card in the BOM."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Fixed single-purpose firmware, no scripting layer."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No network/web interface; joystick + LED matrix only."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery-powered, no computer required for read/write operation."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Building and owning it is legal almost everywhere - it's just an MCU plus an off-the-shelf reader/writer module. Using it to read or clone a 125kHz/13.56MHz credential (access badge, key fob, etc.) you don't own or aren't explicitly authorized to test crosses into unauthorized-access/computer-misuse law in most countries, the same as it would with a Proxmark or Flipper Zero. Check local law before using it on any card that isn't yours."
+    },
+    "ecosystem": {
+      "community": "dead",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "already-abandoned"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://github.com/TDiblik/7941W-rfid-card-cloner",
+        "what": "primary repo - README, BOM, wiring diagrams, case files"
+      },
+      {
+        "url": "https://api.github.com/repos/TDiblik/7941W-rfid-card-cloner",
+        "what": "GitHub API - confirmed 6 stars, 0 forks, archived=true, last push 2024-03-12T21:01:30Z, AGPL-3.0 license"
+      },
+      {
+        "url": "https://www.seeedstudio.com/Seeed-XIAO-BLE-nRF52840-p-5201.html",
+        "what": "official Seeed Studio product page confirming the XIAO nRF52840 base module and its BLE radio"
+      }
+    ],
+    "research_gaps": [
+      "No independent verification of Mifare Classic key-handling (default keys only vs. any attack support)",
+      "No confirmed BOM total cost from an itemized parts list - $35 is an estimate",
+      "Exact silicon/manufacturer of the 7941W module itself is not published anywhere found"
+    ]
+  },
+  {
+    "id": "lab401-rfid-field-detector-ultra",
+    "hardware_id": "lab401-rfid-field-detector-ultra",
+    "name": "RFID Field Detector Ultra - LF/HF/UHF",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "Fully passive analog circuit - no MCU, no firmware.",
+    "vendor": "RRG / Proxgrind (design and manufacture); sold rebranded as 'Ultra' by Lab401",
+    "vendor_url": "https://lab401.com",
+    "product_url": "https://lab401.com/products/rfid-field-detector-ultra",
+    "category": "rfid-nfc",
+    "subcategory": "Passive RF field-presence indicator (tri-band)",
+    "status": "available",
+    "released": null,
+    "price_usd": 33,
+    "price_note": "Confirmed $33.00 directly on Lab401's USD storefront. The same tri-band card is sold by RRG's own store (via KSEC) as the 'RRG RFID Field Detector' for £25.00 - same three-LED (red/green/blue) LF/HF/UHF design, strongly suggesting Lab401's 'Ultra' is that same RRG/Proxgrind product rebranded, not a Lab401 original.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "No setup - hold it near a reader and watch which LED lights.",
+    "build_effort": "assembled",
+    "build_note": "Sealed, epoxy-potted, ready to use out of the box.",
+    "stealth": "discreet",
+    "form_factor": "keychain",
+    "summary": "A completely passive, battery-free card that lights a red, green, or blue LED when it senses an active 125kHz (LF), 13.56MHz (HF), or 860-960MHz (UHF) RFID reader field, respectively, powered parasitically by the field itself. It has no read/write/clone capability of any kind - it only indicates that a field of a given band is present. This is a genuinely single-purpose device, which is why nearly every capability key below is an explicit 'no'.",
+    "honest_take": "This is RRG/Proxgrind's existing tri-band field-detector card resold by Lab401 under the 'Ultra' name - RRG sells the identical red/green/blue LF/HF/UHF card direct (via KSEC) for about the same price, and RRG also sells a cheaper LF/HF-only version ('Proxgrind RFID Field Detector', ~£20/$25 range) that this superseded. It genuinely is a real 3-band design (not just a rebadged 2-band card), which does distinguish it from the sea of $10-20 generic dual-band (LF/HF only) detector-card clones sold on Amazon under names like CHEOTIME, LICAEVEY, Tangxi, and EBTOOLS - but if you don't need UHF detection, one of those generic 2-band cards does the same core job for a fraction of the price. There's no capability key in this schema for 'passive field presence indicator' since it doesn't read or decode any tag data - that's the entirety of what it does.",
+    "best_for": [
+      "quickly identifying which RFID band a reader/door/terminal uses before bringing out a real tool",
+      "physical pentest recon",
+      "RFID hobbyists sorting unlabeled readers"
+    ],
+    "not_for": [
+      "reading, cloning, or identifying specific tags/cards",
+      "anyone who only needs LF/HF and doesn't care about UHF (a cheaper 2-band card suffices)"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No microcontroller - three independent passive LC-resonant-tank + rectifier + LED circuits, each tuned to one band.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "lf-125khz",
+          "note": "Passive field sense, drives a red LED. No IC part number published."
+        },
+        {
+          "ic": null,
+          "role": "hf-1356",
+          "note": "Passive field sense, drives a green LED. No IC part number published."
+        },
+        {
+          "ic": null,
+          "role": "uhf-860-960",
+          "note": "Passive field sense, drives a blue LED. No IC part number published."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "None - entirely powered by the RF field it's detecting; no battery, no charging, nothing to maintain.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "42 x 32 x 3 (per Lab401 listing; RRG's own tri-band listing gives 40 x 40 x 5 - likely the same physical product with slightly different published specs between resellers)",
+      "weight_g": 10,
+      "case": "Industrial epoxy-potted card body with keychain hole",
+      "notable_physical": [
+        "Tri-color LED (red=LF, green=HF, blue=UHF)",
+        "Keychain attachment",
+        "No seams, switches, or battery door"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Detects field presence only; does not read/decode tag or reader data."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No write capability of any kind."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No emulation capability."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Detects field presence only."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "N/A - not a reader/attack tool."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "felica": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "N/A - no logic to script."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully standalone and even battery-free."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "It doesn't read, store, or write any tag data - it just lights an LED - so it doesn't touch unauthorized-access or card-cloning statutes anywhere. Legal to own and carry virtually everywhere; standard 'check local law' caveat still applies generically, but there's essentially no fact pattern where this specific device creates legal exposure on its own."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "RRG RFID Field Detector (tri-band)"
+    ],
+    "sources": [
+      {
+        "url": "https://lab401.com/products/rfid-field-detector-ultra",
+        "what": "Lab401 product listing - confirmed $33.00 USD, €24.95 EUR, 42x32x3mm, 10g, tri-band LED behavior"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/rfid-field-detector-lf-hf-and-uhf-passive-multi-frequency/",
+        "what": "RRG-branded identical tri-band product, £25.00, confirms RRG as designer/manufacturer and references the earlier dual-band Proxgrind model"
+      },
+      {
+        "url": "https://labs.ksec.co.uk/product/proxgrind-rfid-field-detector/",
+        "what": "confirms the predecessor dual-band (LF/HF only) 'Proxgrind RFID Field Detector', £19.99, and that the tri-band model added UHF"
+      },
+      {
+        "url": "https://www.redteamtools.com/RFID_LF_HF_Field_Detector_Card",
+        "what": "comparable LF/HF-only (no UHF) detector card, $25 (was $30), as a same-price 2-band alternative"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists in this schema for 'passive RF field-presence indication' - the device's entire function - so all RFID/NFC keys above are marked 'no' by necessity even though detecting field presence is its whole purpose; this device is genuinely single-purpose, and the sparse capability list reflects that finding rather than incomplete research",
+      "Could not confirm whether Lab401 is a licensed reseller of the RRG product or an independent rebrand/clone of the same reference design",
+      "Dimensions differ slightly between Lab401 (42x32x3mm) and RRG/KSEC (40x40x5mm) listings for what appears to be the same product - not resolved"
+    ]
+  },
+  {
+    "id": "electronic-cats-flipper-magspoof-addon",
+    "hardware_id": "electronic-cats-flipper-magspoof-addon",
+    "name": "Flipper Add-On: MagSpoof",
+    "firmware": "MagSpoof FAP for Flipper Zero",
+    "firmware_kind": "third-party-product",
+    "firmware_repo": "https://github.com/ElectronicCats/magspoof_flipper",
+    "firmware_note": "A Flipper GPIO app (FAP), not a full firmware fork. It's a port of Samy Kamkar's original MagSpoof, adapted by Electronic Cats for their addon board and the Flipper's GPIO/app ecosystem.",
+    "vendor": "Electronic Cats",
+    "vendor_url": "https://electroniccats.com",
+    "product_url": "https://electroniccats.com/store/flipper-add-on-magspoof/",
+    "category": "rfid-nfc",
+    "subcategory": "Flipper Zero GPIO add-on: magstripe emulator",
+    "status": "available",
+    "released": "2023",
+    "price_usd": 28,
+    "price_note": "Confirmed directly on the official Electronic Cats store page: $28.00, in stock. Board only - Flipper Zero and a USB magstripe reader are both required separately and not included.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Requires already owning a Flipper Zero, a separate USB magstripe reader to capture track data, installing the MagSpoof FAP, and hand-editing/loading .mag track files onto the SD card - not plug-and-play out of the box, but well-documented with a 10-step tutorial.",
+    "build_effort": "assembled",
+    "build_note": "Pre-built PCB, no soldering - mounts directly on the Flipper Zero's GPIO header. An optional 3D-printable case (STL) is in the GitHub repo.",
+    "stealth": "overt",
+    "form_factor": "board",
+    "summary": "A GPIO add-on board for the Flipper Zero that wirelessly emulates magnetic-stripe cards: a TC4424 driver chip amplifies the Flipper's pulses through an integrated coil to generate the electromagnetic field a physical swipe would produce, transmitting Track 1 and Track 2 data simultaneously. It requires a companion USB magstripe reader to first capture the target card's track data, and the official page reports only basic transmission confirmed working against one specific reader model (MSR90). It has no RFID/NFC capability at all - magstripe only.",
+    "honest_take": "This is at least the second (arguably third) commercial Flipper GPIO board implementing the exact same Samy Kamkar MagSpoof trick - the Rabbit-Labs 'Multi Pass MagSpoof Flipper Board' (hand-soldered, credit-card-thin PCB, sold on Tindie) does the same job, and Electronic Cats itself separately sells a cheaper standalone 'MagSpoof V4' board (no Flipper required) for $10-18 on the same store page. Electronic Cats is a real open-hardware company (Aguascalientes, Mexico) shipping a genuine PCB with a named driver IC and an open hardware/firmware license, not a shell reseller - so it's a legitimate independent implementation, not a rebadge of Rabbit-Labs' board. But the vendor's own page candidly says the team is 'still testing alternate transmission paths' and has only confirmed basic transmission against one reader model, so treat range/reliability claims cautiously versus the more established standalone MagSpoof devices already in this database.",
+    "best_for": [
+      "Flipper Zero owners who want magstripe emulation without carrying a second device",
+      "authorized magstripe access-control audits",
+      "workshop/CTF demonstrations of magstripe-spoofing"
+    ],
+    "not_for": [
+      "anyone without an existing Flipper Zero and USB magstripe reader",
+      "reliable long-range or high-success-rate emulation against arbitrary readers (only one reader model confirmed so far)",
+      "standalone/no-Flipper use (use Electronic Cats' own MagSpoof V4 or the original MagSpoof instead)",
+      "any RFID/NFC work - this board only does magnetic-stripe emulation"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No onboard MCU - a passive coil-driver board; all logic (track data, timing) runs on the host Flipper Zero's STM32.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "TC4424",
+          "role": "magstripe-coil-driver",
+          "note": "Confirmed in the official spec table on electroniccats.com. Amplifies Flipper GPIO pulses into the magstripe-emulation electromagnetic field; this is a low-frequency inductive driver, not an RFID/NFC radio."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "No onboard battery. Draws from the Flipper Zero's battery via GPIO at 3.3V, or from external/USB 5V power for extended range (physical power-select switch on the board).",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "Flipper Zero GPIO header"
+      ],
+      "gpio": "16-pin Flipper GPIO connector",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None included standard; 3D-printable STL case available separately in the Flipper Add-Ons GitHub repo",
+      "notable_physical": [
+        "Antenna coil integrated directly into the PCB",
+        "3.3V/5V power-select switch",
+        "Mounts directly on the Flipper Zero GPIO header, no cabling"
+      ]
+    },
+    "capabilities": {
+      "magspoof": {
+        "v": "yes",
+        "note": "Core function: Track 1 + Track 2 simultaneous magstripe emulation via coil-driven electromagnetic field, confirmed working (basic transmission) against an MSR90 reader per the official product page."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No RFID hardware at all - magstripe-only device."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "felica": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "No RFID hardware."
+      },
+      "sd_logging": {
+        "v": "addon",
+        "note": "Uses the host Flipper Zero's SD card to store .mag card files; the addon board itself has no storage."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "Controlled via the Flipper's MagSpoof app UI; no scripting layer documented."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "No network interface."
+      },
+      "standalone_untethered": {
+        "v": "addon",
+        "note": "Non-functional without a Flipper Zero host; the pair together is portable, but the board alone does nothing."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and building/testing is legal for authorized security work in most places, and is common practice among red teams and researchers. However, programmable magstripe-emulation hardware falls under 'card-skimming/counterfeiting device' possession statutes in a number of US states and other countries - in some jurisdictions mere possession without intent can be an issue, independent of whether it's ever used against a card you don't own. Get engagement authorization in writing and check local card-skimming-device laws before carrying it."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "Distributed via GitHub (ElectronicCats/magspoof_flipper) and a Hackster.io getting-started guide; not confirmed present in Flipper's official app catalog - appears to require manual sideload via qFlipper/SD card.",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://electroniccats.com/store/flipper-add-on-magspoof/",
+        "what": "official product page - price ($28), specs, TC4424 driver, licenses, MSR90 confirmation, tutorial"
+      },
+      {
+        "url": "https://github.com/ElectronicCats/magspoof_flipper",
+        "what": "firmware repo - 13 stars, 2 forks, not archived, AGPL-3.0/CERN-OHL licensing, credits Samy Kamkar's original MagSpoof"
+      },
+      {
+        "url": "https://www.tindie.com/products/tehrabbitt/rabbit-labstm-multi-pass-magspoof-flipper-board/",
+        "what": "Rabbit-Labs' competing/independent Multi Pass MagSpoof Flipper board - confirms it is a distinct hand-soldered credit-card-thin design from a different maker, not the same product"
+      },
+      {
+        "url": "https://www.hackster.io/electronic-cats/flipper-add-on-magspoof-getting-started-f79658",
+        "what": "getting-started tutorial referenced from the product page"
+      }
+    ],
+    "research_gaps": [
+      "Exact board dimensions/weight not independently confirmed - the official page's WooCommerce fields appear to be shipping-package values, not the actual PCB size, and no separate board-size spec was found",
+      "No confirmed last-commit date for the firmware repo (only that it's not archived and has 13 stars/2 forks)",
+      "Unclear whether Unleashed/custom Flipper firmware is required, or the app runs fine on stock Flipper OS - third-party resellers mention Unleashed, the official page does not"
+    ]
+  },
+  {
+    "id": "proxmark3-rdv4-sim-sam-extension",
+    "hardware_id": "proxmark3-rdv4-sim-sam-extension",
+    "name": "Proxmark 3 RDV4 - SIM/SAM Extension",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": "https://github.com/RfidResearchGroup/proxmark3",
+    "firmware_note": "No firmware of its own - it's a passive ISO 7816 contact slot. Functionality (e.g. `hf iclass sam`, `hf iclass tagsim`) lives entirely in the host Proxmark3's RRG/Iceman firmware, tracked separately as the base 'Proxmark3 RDV4.01' entry.",
+    "vendor": "RRG (RFID Research Group) / Proxgrind - designers and manufacturers of the Proxmark3 RDV4 platform",
+    "vendor_url": "https://proxmark.com",
+    "product_url": "https://lab401.com/products/proxmark-3-rdv4-sim-sam-extension",
+    "category": "rfid-nfc",
+    "subcategory": "Proxmark3 RDV4 accessory: SIM/SAM smart-card slot extension",
+    "status": "available",
+    "released": null,
+    "price_usd": 26,
+    "price_note": "Confirmed $26.00 directly on Lab401's USD storefront (€19.95 on their EUR storefront). Sold standalone for owners of earlier RDV4.0 units; RRG has bundled this extension with every RDV4.01 sold since 2021, so RDV4.01 buyers already have it.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "advanced",
+    "skill_note": "Only useful to someone already running Proxmark3/RRG firmware and pursuing SAM-based research (e.g. HID iCLASS PACS/SIO decode) - not a beginner accessory, and a genuine HID SAM is not something a hobbyist can easily or legitimately obtain.",
+    "build_effort": "assembled",
+    "build_note": "Plug-in module onto the RDV4 mainboard's dedicated SIM/SAM header - no soldering.",
+    "stealth": "discreet",
+    "form_factor": "board",
+    "summary": "A small extension module that plugs into the dedicated SIM/SAM header on a Proxmark 3 RDV4 or RDV4.01 mainboard, exposing a full-size ISO 7816 contact smart-card slot. It enables the Proxmark's RRG/Iceman firmware to interface with a real SIM- or SAM-format smart card for contact-chip operations the Proxmark's contactless RF frontend cannot do alone - for example, the documented `hf iclass sam` command uses a genuine HID SAM inserted here to extract PACS data from an iCLASS card dump. It has no RF/RFID capability of its own - it is purely a contact-interface accessory.",
+    "honest_take": "This does nothing by itself and requires a Proxmark 3 RDV4/RDV4.01 host - it's purely an accessory, already tracked as bundled-in on the base RDV4.01 entry in this database, so only buy it separately if you have an older RDV4.0 without one. The bigger catch isn't the module (a cheap, simple contact-slot board) but what you put in it: a genuine HID SAM is not something sold to the general public, so most buyers will own the slot and never have a legitimate card to put in it - the module's real value is narrow and specific to researchers who already have vetted SAM access. Every RFID/NFC capability key below is 'no' for this exact reason: it has zero contactless capability, that all belongs to the host RDV4.",
+    "best_for": [
+      "RDV4.0 (pre-2021) owners retrofitting SAM support",
+      "researchers with legitimate access to a HID iCLASS SAM or SIM-format smart card doing reader-side crypto research"
+    ],
+    "not_for": [
+      "RDV4.01 owners (already bundled)",
+      "anyone without a legitimately obtained SAM/SIM card to insert",
+      "beginners - this is a niche research accessory, not a general-purpose upgrade"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No processing of its own - a passive slot/extender board. All command logic runs on the host RDV4 mainboard (Proxmark3's ARM MCU + FPGA), which is documented separately.",
+      "mcu_secondary": null,
+      "radios": [],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": null,
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [
+        "ISO 7816 contact interface (full-size SIM/SAM slot)",
+        "Connects to the RDV4/RDV4.01 mainboard's dedicated SIM/SAM header"
+      ],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": null,
+      "notable_physical": [
+        "Full-size SIM/SAM card slot",
+        "Direct header connection to the RDV4 mainboard, no cabling"
+      ]
+    },
+    "capabilities": {
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "This module has no RF frontend of its own - all contactless capability belongs to the host RDV4.01, tracked separately."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "felica": {
+        "v": "no",
+        "note": "N/A - see above."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "N/A - no storage."
+      },
+      "scriptable": {
+        "v": "addon",
+        "note": "Enables SAM-dependent Proxmark client commands (e.g. `hf iclass sam`, `hf iclass sam -f`, `hf iclass tagsim`) once a SAM is inserted, but scripting itself is a host-firmware feature, not this module's."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "standalone_untethered": {
+        "v": "no",
+        "note": "Entirely dependent on a Proxmark3 RDV4/RDV4.01 host; does nothing on its own."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "The extension module itself - an empty ISO 7816 contact slot - is legal to own everywhere the Proxmark3 is. The friction point is the SAM you'd insert: genuine HID iCLASS SAMs are distributed only to vetted/licensed access-control integrators, so using one you weren't legitimately issued could violate its licensing/use terms even though the slot hardware itself is unrestricted."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "good",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [],
+    "sources": [
+      {
+        "url": "https://lab401.com/products/proxmark-3-rdv4-sim-sam-extension",
+        "what": "reseller product page - confirmed $26.00 USD / €19.95, bundled with RDV4.01 since 2021"
+      },
+      {
+        "url": "https://hackerwarehouse.com/product/proxmark3-rdv4-accessory-pack/",
+        "what": "confirms SKU 'RRG-AP1' bundling the SIM/SAM extender with two antennas, attributing it to RFID Research Group (RRG)"
+      },
+      {
+        "url": "https://proxmark.com/proxmark-3-hardware/proxmark-3-rdv4/",
+        "what": "official Proxmark3 RDV4 page - confirms RRG (Chris 'iceman' Herrmann, Kevin '0xFFFF', et al.) as designer/manufacturer, lists a SIM/smart-card reader among device features"
+      },
+      {
+        "url": "https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/commands.md",
+        "what": "confirms `hf iclass sam` command family uses a HID SAM (via this slot) to parse/extract PACS from iCLASS dumps"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists in this schema for 'ISO 7816 contact smart-card slot / SAM interfacing' - the module's entire function - so the RFID/NFC keys above are marked 'no' by necessity even though enabling SAM-based iCLASS operations is exactly what it's for; this is a genuinely single-purpose accessory and the sparse capability list reflects that, not missing research",
+      "Could not confirm physical dimensions or exact connector type of the extension board itself",
+      "Could not independently confirm exact last-release/production date of this specific accessory (vs. the RDV4.01 host, which is tracked separately)"
+    ]
+  },
+  {
+    "id": "cypher-pn532",
+    "hardware_id": "cypher-pn532",
+    "name": "Cypher NFC (cypher-pn532)",
+    "firmware": "Cypher NFC v2.0 (Arduino sketch)",
+    "firmware_kind": "diy",
+    "firmware_repo": "https://github.com/dkyazzentwatwa/cypher-pn532",
+    "firmware_note": "Single Arduino .ino sketch, rewritten from scratch as 'v2.0' with a state-machine menu (replacing boolean-flag navigation). Separate ported sketches exist for the M5Stack Cardputer ADV (CardputerPN532/, reuses the same NFC logic, adds a 'Return to Cypher OS' launcher) and a 'Cypherbox Mini' build (CypherboxMiniPN532/). GitHub release tags only go up to v0.1.2 (2026-05-30), which does not match the README's 'v2.0' label - likely informal/inconsistent versioning by a solo maintainer.",
+    "vendor": "dkyazzentwatwa (independent open-source maintainer)",
+    "vendor_url": "https://github.com/dkyazzentwatwa",
+    "product_url": "https://github.com/dkyazzentwatwa/cypher-pn532",
+    "category": "rfid-nfc",
+    "subcategory": "nfc-workstation-diy",
+    "status": "diy-only",
+    "released": "2024",
+    "price_usd": 25.0,
+    "price_note": "No official kit/BOM price; ~$25 is a parts-cost estimate (ESP32-C3 Super Mini + PN532 module + SSD1306 OLED + SD reader + buttons), sourced piecemeal via the README's Amazon affiliate links. Actual cost varies by seller/region.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "intermediate",
+    "skill_note": "Requires wiring/soldering discrete modules, flashing Arduino IDE 2.x with ESP32 board support, and installing Adafruit_PN532/SSD1306/BusIO libraries. Using the dictionary-attack and magic-card-cloning features requires basic MIFARE Classic knowledge.",
+    "build_effort": "full-diy",
+    "build_note": "No enclosure, kit, or PCB is sold - you source an ESP32-C3 Super Mini, PN532 (I2C), SSD1306 OLED, SPI SD module, and 3 buttons yourself and wire them per the README's pinout, then compile/flash via Arduino CLI.",
+    "stealth": "overt",
+    "form_factor": "handheld",
+    "summary": "Cypher NFC is an open-source, single-maintainer Arduino project that turns an ESP32-C3 + PN532 + SSD1306 OLED + SD card into a pocket NFC workstation: it reads and dumps MIFARE Classic/Ultralight/NTAG cards, runs an onboard dictionary attack against MIFARE Classic keys, clones Gen1a magic cards, and can emulate a Type 4 NDEF tag from a saved dump. A companion sketch ports the same logic to the M5Stack Cardputer ADV and a separate 'Cypherbox Mini' build.",
+    "honest_take": "This is a hobbyist Arduino sketch wired to off-the-shelf modules (PN532, SSD1306, generic SD reader) you can buy on Amazon for well under $25 total - there's no finished product, case, or kit sold; you solder and wire it yourself. Functionally it's a slower, more limited clone of what a Flipper Zero or Proxmark3 already does for MIFARE Classic: the PN532 chip itself can't emulate a MIFARE Classic target (only NTAG/Type4 NDEF), and there's no MIFARE DESFire, ISO15693, or EMV support at all. It's maintained by one person (48 stars, 10 forks, 5 open issues), and the built-in Wi-Fi control mode runs an unauthenticated AP at 192.168.4.1 - don't leave it powered on an open network mid-attack.",
+    "best_for": [
+      "learning NFC/RFID internals by building your own reader from parts",
+      "cheap MIFARE Classic dictionary-attack practice",
+      "hobbyists who already have ESP32/PN532 modules on hand"
+    ],
+    "not_for": [
+      "anyone wanting a finished, cased, ready-to-carry tool",
+      "MIFARE DESFire, ISO15693, or EMV/payment-card work",
+      "MIFARE Classic tag emulation (PN532 hardware cannot do it)",
+      "LF/125kHz work - no LF hardware at all"
+    ],
+    "hardware": {
+      "mcu_primary": "ESP32-C3 (Super Mini board)",
+      "mcu_primary_note": "RISC-V single-core ESP32-C3, used on a 'Super Mini' breakout; memory footprint of the firmware is under 28KB of the available 400KB RAM per the README.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": "NXP PN532",
+          "role": "hf-nfc",
+          "note": "I2C interface (GPIO8 SDA / GPIO9 SCL); handles ISO14443A cards (MIFARE Classic/Ultralight, NTAG)."
+        }
+      ],
+      "display": {
+        "type": "SSD1306 OLED",
+        "size_in": 0.96,
+        "resolution": "128x64",
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "Not specified by the project - powered via USB or an externally-added battery; no battery/charging circuit is part of the documented BOM.",
+      "charging": null,
+      "pmic": null,
+      "storage": "SD card via SPI module (GPIO4 SCK / GPIO5 MISO / GPIO6 MOSI / GPIO10 CS)",
+      "connectivity": [
+        "Wi-Fi (ESP32-C3 built-in, used for Web Control AP)",
+        "BLE (Nordic UART Service for serial control)",
+        "USB (CDC serial / CLI tool)"
+      ],
+      "gpio": "3 tactile buttons: GPIO7 (up), GPIO1 (down), GPIO0 (select)",
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "None documented - bare-board/breadboard build unless the user designs their own enclosure",
+      "notable_physical": [
+        "No official case/kit; wiring is breadboard/perfboard by default",
+        "Ports exist to run the same NFC logic inside an M5Stack Cardputer ADV chassis instead"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "yes",
+        "note": "Auto-detects ISO14443A card type and dumps MIFARE Classic 1K/4K and NTAG/Ultralight (45-231 pages) via PN532."
+      },
+      "hf_1356_write": {
+        "v": "yes",
+        "note": "Writes NDEF (URL/text) to NTAG cards; block-level writes used during magic-card cloning."
+      },
+      "hf_1356_emulate": {
+        "v": "partial",
+        "note": "Emulates a Type 4 NDEF tag from an SD-stored preset; explicitly cannot emulate a MIFARE Classic target - PN532 hardware limitation per the README."
+      },
+      "mifare_classic_attacks": {
+        "v": "yes",
+        "note": "50-key embedded dictionary (expandable via SD KEYS.TXT) runs a per-sector key-recovery attack, reported to complete in ~30s on a typical 1K card; also clones Gen1a magic cards via backdoor auth."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "Not mentioned anywhere in the README/feature list; PN532's crypto support does not extend to DESFire's AES/3DES scheme in this firmware."
+      },
+      "nfc_type4_ndef": {
+        "v": "yes",
+        "note": "Type 4 NDEF tag emulation from SD presets, plus a 'safe read-only APDU lab' for NDEF probing."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "README explicitly lists 'no support for... payment-card APDUs' as a known limitation."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "Not implemented in firmware or documented anywhere, despite the PN532 chip itself supporting ISO15693 in hardware."
+      },
+      "felica": {
+        "v": "no",
+        "note": "Not mentioned in any documentation."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "Not mentioned; no relay/proxy functionality described."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No LF hardware at all - PN532/HF only."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "sd_logging": {
+        "v": "yes",
+        "note": "Auto-incrementing dump filenames (COUNTER.TXT), JSON metadata sidecars, and a CSV scan log (uptime/UID/card type/action)."
+      },
+      "scriptable": {
+        "v": "yes",
+        "note": "USB CLI tool (tools/cypher_pn532_cli.py) plus BLE serial (Nordic UART) for external control/scripting."
+      },
+      "web_ui": {
+        "v": "yes",
+        "note": "Onboard Wi-Fi 'Web Control' mode serves a control page from an access point at 192.168.4.1 - no authentication mentioned."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "OLED + 3-button menu allow full standalone operation without a host PC."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "medium",
+      "notes": "Owning and building the device is legal essentially everywhere - it's generic ESP32/PN532 hobbyist hardware. Risk comes entirely from use: MIFARE Classic dictionary attacks, magic-card cloning, and reading/writing cards you don't own or lack authorization to access are unauthorized-access/fraud offenses in most jurisdictions, independent of the tool used. Check local law before testing on any card or reader you don't own or aren't explicitly authorized to test."
+    },
+    "ecosystem": {
+      "community": "slow",
+      "docs_quality": "good",
+      "last_release": "2026-05",
+      "app_store": "n/a",
+      "abandoned_risk": "medium"
+    },
+    "aliases": [
+      "Cypher PN532",
+      "CYPHER NFC v2.0"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/dkyazzentwatwa/cypher-pn532",
+        "what": "primary repo/README: hardware wiring, feature list, build instructions, licensing"
+      },
+      {
+        "url": "https://github.com/dkyazzentwatwa/cypher-pn532/commits/main",
+        "what": "commit history - confirmed last push 2026-08-08"
+      },
+      {
+        "url": "https://api.github.com/repos/dkyazzentwatwa/cypher-pn532",
+        "what": "GitHub API metadata: created 2024-10-25, 48 stars, 10 forks, 5 open issues, Apache-2.0 license"
+      },
+      {
+        "url": "https://api.github.com/repos/dkyazzentwatwa/cypher-pn532/releases",
+        "what": "release tags v0.1.0-v0.1.2, latest 2026-05-30"
+      }
+    ],
+    "research_gaps": [
+      "No itemized BOM/pricing from the maintainer - $25 is a rough parts-cost estimate, not vendor-quoted.",
+      "No independent security review found of the unauthenticated Wi-Fi control AP.",
+      "Release tags (v0.1.x) don't match the README's 'v2.0' label - unclear if this reflects inconsistent informal versioning or something else.",
+      "No confirmation of real-world dictionary-attack success rate against cards using non-default keys beyond the embedded 50-key list."
+    ]
+  },
+  {
+    "id": "rfid-detector-diagnostic-card-v2",
+    "hardware_id": "rfid-detector-diagnostic-card-v2",
+    "name": "RFID Detector / Diagnostic Card v2",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No firmware - purely passive analog circuitry, nothing to flash or update.",
+    "vendor": "Generic/unbranded OEM (sold by Hacker Warehouse under SKU RRG-RD2)",
+    "vendor_url": "https://hackerwarehouse.com",
+    "product_url": "https://hackerwarehouse.com/product/rfid-detector-diagnostic-card-v2/",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-field-detector",
+    "status": "available",
+    "released": null,
+    "price_usd": 25.0,
+    "price_note": "Hacker Warehouse's tri-band 'v2' card is $25. Their own 2-band ('v1', LF/HF only, no UHF) card is a separate cheaper SKU. RedTeamTools sells a near-identical-construction LF/HF-only card, also $25, using almost word-for-word epoxy-resin marketing copy, strongly suggesting a shared overseas OEM origin rather than an in-house Hacker Warehouse design.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "No setup or configuration - hold it near a reader/terminal and observe which LED lights.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled, epoxy-potted, sealed unit; nothing to build or configure.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A battery-free, credit-card-sized detector potted in epoxy resin that lights one of three color-coded LEDs (red/green/blue) to indicate whether a nearby RFID/NFC reader is transmitting in the 125kHz LF, 13.56MHz HF, or 860-960MHz UHF band. It's powered entirely by rectifying the reader's own RF field, so there's nothing to charge, replace, or maintain. It is a genuinely single-purpose device - it does not read, write, clone, or emulate any tag - which is why almost every capability key below is an explicit 'no'.",
+    "honest_take": "This looks like a generic overseas OEM design rebranded by multiple security-tool resellers, not a Hacker Warehouse original - the same epoxy-card construction and near-identical marketing language shows up on RedTeamTools' 2-band card and MTools Tec's tri-band card, so you're likely paying a security-vendor markup on a commodity part available more cheaply elsewhere. It only tells you THAT a field is present and roughly which band - it can't identify the reader, log anything, measure range/power precisely, or distinguish a legitimate access-control reader from a hidden skimmer. Useful as a quick field-presence check during a physical pentest walkthrough; not a real skimmer detector.",
+    "best_for": [
+      "quickly checking whether a reader/terminal is actually powered and which band it uses",
+      "physical pentesters scouting a site for hidden or unexpected RFID readers",
+      "RFID hobbyists debugging antenna/field placement"
+    ],
+    "not_for": [
+      "identifying or fingerprinting a specific reader model",
+      "reliably detecting a skimming attack in progress (it can't distinguish a skimmer from a legitimate reader)",
+      "any read/write/clone/emulation work - it has no tag interaction capability at all"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No microcontroller - purely passive analog circuit: three separate tuned LC coil + rectifier + LED stages for the three bands, per vendor description.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "lf-125khz",
+          "note": "Discrete tuned coil + rectifier + LED, no IC"
+        },
+        {
+          "ic": null,
+          "role": "hf-1356",
+          "note": "Discrete tuned coil + voltage-doubler + LED, no IC"
+        },
+        {
+          "ic": null,
+          "role": "uhf-860-960",
+          "note": "Discrete antenna element + rectifier + LED, no IC"
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "None - battery-free, powered entirely by rectifying RF energy from the nearby reader's own field.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "51 x 51 x 6 (2 x 2 x 0.25 in per vendor)",
+      "weight_g": 91,
+      "case": "Epoxy-resin-encapsulated card body, fully sealed/potted",
+      "notable_physical": [
+        "Credit-card form factor",
+        "3 color-coded LEDs (red=LF, green=HF, blue=UHF)",
+        "Vendor claims ~10-year functional lifespan"
+      ]
+    },
+    "capabilities": {
+      "detect_skimmer": {
+        "v": "partial",
+        "note": "Lights an LED indicating presence + frequency band (125kHz/13.56MHz/860-960MHz) of ANY nearby active reader field, hidden skimmers included, but cannot identify, log, or fingerprint the device - pure field-presence/band indicator, no data capture."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "Detects field presence only, does not decode tag or reader data."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Detects field presence only."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "N/A - not a reader/attack tool."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "felica": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Fully standalone and battery-free."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "N/A - no logic to script."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "N/A."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Purely passive/receive-only device - it does not transmit, read, write, or store data, so owning and using it carries essentially no legal risk anywhere. It's a diagnostic indicator, not an interception tool."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "RFID Field Detector Card",
+      "RFID LF/HF/UHF Detector Card",
+      "SKU RRG-RD2"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/rfid-detector-diagnostic-card-v2/",
+        "what": "primary product page: price, specs, LED color mapping, epoxy construction claim"
+      },
+      {
+        "url": "https://www.redteamtools.com/RFID_LF_HF_Field_Detector_Card",
+        "what": "near-identical 2-band (LF/HF only) product with matching construction/marketing language, used to infer shared OEM origin"
+      },
+      {
+        "url": "https://shop.mtoolstec.com/product/rfid-detector",
+        "what": "another reseller of an apparently identical tri-band (125kHz/13.56MHz/860-960MHz) LED detector card design"
+      }
+    ],
+    "research_gaps": [
+      "Actual OEM/factory of origin not identified by name - inferred only from matching construction and near-identical marketing copy across 3 resellers (Hacker Warehouse, RedTeamTools, MTools Tec).",
+      "No capability key exists in the schema for generic 'RFID reader-field presence/frequency detection,' the device's core function - approximated here with detect_skimmer (partial); this is a genuinely single-purpose device and the sparse capability list reflects that finding, not incomplete research.",
+      "No independent teardown/verification of the internal LC-tank + rectifier design was found; description relies entirely on vendor marketing copy.",
+      "First release date/year not found."
+    ]
+  },
+  {
+    "id": "rfid-hf-field-generator",
+    "hardware_id": "rfid-hf-field-generator",
+    "name": "RFID HF Field Generator",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No firmware - discrete analog circuit, nothing to flash.",
+    "vendor": "Midwest Gadgets",
+    "vendor_url": "https://www.midwestgadgets.org",
+    "product_url": "https://hackerwarehouse.com/product/rfid-hf-field-generator/",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-field-generator",
+    "status": "available",
+    "released": null,
+    "price_usd": 25.0,
+    "price_note": "Hacker Warehouse resells it at $25. The manufacturer's own storefront (midwestgadgets.org) currently lists the same V2 unit at $30, pre-order only, with a stated restock date of 2026-09-20 and ships without the CR2032 battery (shipping restriction). Unclear whether Hacker Warehouse's $25 stock is older pricing or an older revision.",
+    "price_is_estimate": false,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "Press the momentary switch near a compatible HF/13.56MHz tag or implant - no setup required.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled small PCB card; V1 was reportedly an exposed board with visible discrete components, V2 moved to surface-mount parts and added a bundled repeater sticker to extend range.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A coin-cell-powered 13.56MHz field generator, made by Midwest Gadgets and also resold via Hacker Warehouse, that energizes a passive HF/NFC tag without needing an actual reader present. Press the momentary switch and it radiates a weak 13.56MHz field for a few millimeters - enough to power the community-favorite Dangerous Things xSIID and xLED implants, or any other compliant loose HF tag, without touching it to a phone or reader. It does not read, write, or communicate with the tag in any way - it only supplies power, which is why every read/write/attack capability below is 'no'.",
+    "honest_take": "Contrary to a 'not primarily an implant tool' framing, it actually is: Midwest Gadgets' own product page frames it explicitly around powering the xSIID/xLED implants, and even states the V2 unit 'will only work with the HF 13.56MHz xLED implants.' Community reviews do show it also lighting up unimplanted diagnostic cards and xFD readers, so it will energize any compliant passive HF tag - but don't expect a general-purpose RFID-research bench tool. It's a proof-of-concept-grade hobbyist board (per the maker's own description), range is only a few millimeters, and the manufacturer's own store currently has it as pre-order-only.",
+    "best_for": [
+      "testing or showing off an xSIID/xLED NFC implant without a phone or reader on hand",
+      "quick bench power for a loose HF/NFC tag when you don't want to touch it to an active reader"
+    ],
+    "not_for": [
+      "LF (125kHz) tags - HF/13.56MHz only",
+      "any kind of data read/write/communication - it only energizes a tag, it doesn't talk to it",
+      "long-range or sustained field generation - momentary-switch, millimeters of range"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No microcontroller - discrete LC oscillator/coupler circuit driven directly off the coin cell via a momentary switch, per vendor description and a community reviewer's description of the V1 board.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "hf-1356",
+          "note": "Passive LC coil energized directly by the CR2032 when the momentary switch is pressed; generates a field to power a nearby tag, does not read/write/communicate with it."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": 225,
+      "battery_note": "CR2032 3V coin cell (typical ~225mAh rating), user-supplied - ships without one due to battery shipping restrictions.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": "51 x 25 x 5 (2 x 1 x 0.2 in per Hacker Warehouse listing)",
+      "weight_g": 136,
+      "case": "Small bare PCB card with a momentary push-button",
+      "notable_physical": [
+        "Momentary switch activation (not always-on)",
+        "V2 adds SMD components and includes a 'repeater sticker' to extend range"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Purely a power source for a nearby tag - it has no receiver/decode path, so it cannot read a tag's data."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No communication capability at all."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No communication capability at all."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No LF hardware - HF/13.56MHz only."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "N/A - it never talks to the tag's data layer at all."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "felica": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Battery-powered, no host required to operate."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "N/A - no logic to script."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "N/A."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "The field generator itself is a very low-power, short-range near-field coupler (similar in emission profile to a contactless payment terminal or phone's NFC radio) and isn't a licensed-spectrum transmitter - legal to own and use essentially everywhere. Note this is distinct from the regulatory/medical gray area around the implants themselves (subdermal NFC chips), which is a body-modification question, not something this device raises on its own."
+    },
+    "ecosystem": {
+      "community": "active",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "13.56MHz Field Generator",
+      "HF Field Generator"
+    ],
+    "sources": [
+      {
+        "url": "https://hackerwarehouse.com/product/rfid-hf-field-generator/",
+        "what": "reseller product page: price, CR2032 spec, dimensions, xSIID/xLED use case"
+      },
+      {
+        "url": "https://www.midwestgadgets.org/product-page/13-56mhz-field-generator",
+        "what": "manufacturer's own product page: V2 pricing ($30), pre-order status, momentary switch, xLED-only compatibility note"
+      },
+      {
+        "url": "https://forum.dangerousthings.com/t/13-56mhz-field-generator-by-midwest-gadgets/24006",
+        "what": "community review/discussion: V1 vs V2 construction, ~5mm effective range, use with diagnostic cards and xFD readers beyond just implants"
+      }
+    ],
+    "research_gaps": [
+      "No capability key exists in the schema for 'passive HF field generation to power a tag without a reader' - the device's entire function is not represented in the controlled vocabulary; this is a genuinely single-purpose device and the all-'no' capability list reflects that finding.",
+      "First release year not found.",
+      "No teardown of V2's internal SMD circuit was found, only the vendor's own description and a community reviewer's account of the older V1 board.",
+      "Price/availability discrepancy between Hacker Warehouse ($25, in stock) and the manufacturer's own store ($30, pre-order) not reconciled."
+    ]
+  },
+  {
+    "id": "ard-rfid-blocker",
+    "hardware_id": "ard-rfid-blocker",
+    "name": "ARD RFID Blocker (Pack of 2) - NFC Jammer",
+    "firmware": null,
+    "firmware_kind": "n/a",
+    "firmware_repo": null,
+    "firmware_note": "No firmware - passive/field-powered analog circuit.",
+    "vendor": "Lab401 (product branded 'ARD')",
+    "vendor_url": "https://lab401.com",
+    "product_url": "https://lab401.com/products/rfid-blocker-nfc-jammer",
+    "category": "rfid-nfc",
+    "subcategory": "rfid-jammer-card",
+    "status": "available",
+    "released": null,
+    "price_usd": 22.0,
+    "price_note": "Lab401's own storefront served EUR pricing during research: EUR19.99 list, EUR16.90 current sale price, for a pack of 2. The $22 USD figure could not be independently confirmed in USD - treat as an estimate pending a US-currency checkout.",
+    "price_is_estimate": true,
+    "price_checked": "2026-09-10",
+    "skill_level": "beginner",
+    "skill_note": "No setup - slip a card into a wallet/passport alongside the cards to be protected.",
+    "build_effort": "assembled",
+    "build_note": "Fully assembled, sealed credit-card-format product; nothing to build.",
+    "stealth": "discreet",
+    "form_factor": "pocket",
+    "summary": "A credit-card-sized, battery-free card sold in packs of 2 by Lab401 that's placed in a wallet to disrupt 13.56MHz reads of nearby cards (MIFARE Classic/NTAG, generic NFC, EMV payment cards, passports, HID/iCLASS-family, SkiData). Lab401 markets it as 'active defense,' claiming it protects cards placed above or below it - unlike a Faraday sleeve, which must fully enclose each card individually. It does not read, write, or interact with any card's data - it only disrupts nearby reads - so the entire read/write/clone capability list below is 'no'.",
+    "honest_take": "Lab401's own description - 'no batteries needed, it takes its energy directly from the reader' - is the textbook definition of what the only independent academic study of blocking cards (Alecci et al., RAID 2023) calls a 'reactive' card: a field-powered resonant circuit that only generates noise while a reader is actively energizing it, not a genuinely battery-powered 'active' jammer that transmits continuously. That study found that real-world blocking cards, including some marketed as 'active,' were bypassed in 8 of 11 tested products simply by filtering the card's own (often near-white-noise) signature out of the recorded signal during post-processing - so 'active defense' is best read as a marketing term here, not a technical guarantee. No independent teardown of this specific ARD card was found (only of a different, genuinely battery-powered product, the ArmourCard, which turned out to be a simple coil+microcontroller design), so this classification rests on matching Lab401's own stated mechanism to the published taxonomy, not a physical inspection.",
+    "best_for": [
+      "casual, low-effort deterrence against opportunistic contactless skimming in a crowd",
+      "protecting several cards in one wallet without individually sleeving each one"
+    ],
+    "not_for": [
+      "anyone who needs guaranteed protection against a targeted, technically competent attacker - published research shows blocking-card noise can often be filtered out",
+      "true full-enclosure security - a properly-rated Faraday sleeve/wallet remains the more thoroughly validated option"
+    ],
+    "hardware": {
+      "mcu_primary": null,
+      "mcu_primary_note": "No microcontroller found or claimed. Vendor describes a passive, battery-free circuit that draws its operating power from the interrogating reader's own field - consistent with the 'reactive blocking card' pattern (an LC coil driving a noise-generating circuit only while inside an RF field) defined in independent academic research on this product category.",
+      "mcu_secondary": null,
+      "radios": [
+        {
+          "ic": null,
+          "role": "hf-1356",
+          "note": "Vendor states it 'takes its energy directly from the reader' - i.e. field-powered, does not transmit independently when no reader is present. This is a 13.56MHz-band-only mechanism (matches HF/NFC/EMV read disruption); it is not claimed to disrupt UHF/LF signals."
+        }
+      ],
+      "display": {
+        "type": null,
+        "size_in": null,
+        "resolution": null,
+        "color": false,
+        "touch": false
+      },
+      "battery_mah": null,
+      "battery_note": "None - vendor explicitly states no batteries; field-powered only, consistent with a 'reactive' (not true battery-powered 'active') blocking-card design.",
+      "charging": null,
+      "pmic": null,
+      "storage": null,
+      "connectivity": [],
+      "gpio": null,
+      "sensors": [
+        "none"
+      ],
+      "dimensions_mm": null,
+      "weight_g": null,
+      "case": "Credit-card format, includes a small embedded LED that indicates reader-field proximity",
+      "notable_physical": [
+        "Embedded LED lights when a reader field is detected",
+        "Sold as a pack of 2",
+        "Vendor claims a 45mm protection zone"
+      ]
+    },
+    "capabilities": {
+      "hf_1356_read": {
+        "v": "no",
+        "note": "Not a reader - it disrupts other readers' ability to read nearby cards, it does not read cards itself."
+      },
+      "hf_1356_write": {
+        "v": "no",
+        "note": "No write capability of any kind."
+      },
+      "hf_1356_emulate": {
+        "v": "no",
+        "note": "No emulation capability."
+      },
+      "lf_125khz_read": {
+        "v": "no",
+        "note": "No LF hardware - HF-band jamming only, per vendor's own protected-technologies list."
+      },
+      "lf_125khz_write": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "lf_125khz_emulate": {
+        "v": "no",
+        "note": "No LF hardware."
+      },
+      "mifare_classic_attacks": {
+        "v": "no",
+        "note": "N/A - defensive device, not an attack tool."
+      },
+      "mifare_desfire": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_type4_ndef": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "emv_read": {
+        "v": "no",
+        "note": "N/A - it blocks EMV card reads, it does not perform them."
+      },
+      "iso15693": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "felica": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "magspoof": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "nfc_relay": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "standalone_untethered": {
+        "v": "yes",
+        "note": "Works without a host and without a battery - purely field-powered."
+      },
+      "scriptable": {
+        "v": "no",
+        "note": "N/A - no logic to script."
+      },
+      "web_ui": {
+        "v": "no",
+        "note": "N/A."
+      },
+      "sd_logging": {
+        "v": "no",
+        "note": "N/A."
+      }
+    },
+    "legal": {
+      "import_restricted": [],
+      "risk_level": "low",
+      "notes": "Because it's field-powered rather than an independent transmitter, this behaves legally more like a passive Faraday shield than a true RF jammer, so it should not run into the jamming-device prohibitions that apply to genuinely battery-powered, continuously-transmitting jammers (e.g. 47 U.S.C. Section 333 in the US, and similar rules in the EU/UK). That said, this is not legal advice, and marketing language calling it an 'active jammer' could create ambiguity in a strict jurisdiction - check local rules on RF-disruptive devices before traveling with or relying on it."
+    },
+    "ecosystem": {
+      "community": "commercial",
+      "docs_quality": "sparse",
+      "last_release": null,
+      "app_store": "n/a",
+      "abandoned_risk": "low"
+    },
+    "aliases": [
+      "ARD RFID Defence Card",
+      "ARD NFC Jammer",
+      "ARD RFID Blocker NFC Jammer"
+    ],
+    "sources": [
+      {
+        "url": "https://lab401.com/products/rfid-blocker-nfc-jammer",
+        "what": "primary product page: pricing, 'active defense' claim, protected technologies list, 45mm zone, no-battery claim"
+      },
+      {
+        "url": "https://arxiv.org/abs/2302.08992",
+        "what": "Alecci et al., 'Beware of Pickpockets: A Practical Attack against Blocking Cards' (RAID 2023) - independent academic taxonomy (passive/shielding, reactive, active) and attack results against 11 real blocking cards, including one card 'reactive despite being sold as active'"
+      },
+      {
+        "url": "https://www.eevblog.com/forum/blog/eevblog-890-armourcard-active-rfid-jamming-teardown/",
+        "what": "independent teardown of a different, genuinely battery-powered 'active' blocking card (ArmourCard: STM8L MCU + coil + Li battery), used here only as comparative context for what a true active jammer looks like inside - not a teardown of the ARD card itself"
+      }
+    ],
+    "research_gaps": [
+      "No independent teardown of the ARD card itself was found - the reactive-vs-active classification is inferred by matching the vendor's own stated mechanism to the RAID 2023 taxonomy, not from physically opening this specific card.",
+      "USD pricing not directly observed - Lab401 served EUR pricing during research; the brief's $22 figure is used as price_usd but is unverified.",
+      "No capability key exists in the schema for 'RFID/NFC jamming or noise-based read-blocking,' the device's entire function - this is a genuinely single-purpose device and the all-'no' capability list reflects that, not incomplete research.",
+      "Unknown whether the ARD card specifically was among the 14 blocking cards purchased for the RAID 2023 study - vendors in that study were anonymized in publication."
+    ]
+  }
+]

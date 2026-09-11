@@ -104,6 +104,14 @@
       "standalone_untethered": {
         "v": "no",
         "note": "Purely a passive inline accessory; it has no autonomous function to run."
+      },
+      "usb_data_block": {
+        "v": "yes",
+        "note": "Physically omits/disconnects the D+/D- data pins on a USB-A pass-through so a connected device can only draw power - the textbook case for this key, and the device's entire purpose."
+      },
+      "usb_cable_detect": {
+        "v": "no",
+        "note": "A passive pass-through with no disclosed chip at all (no MCU or detection logic) - it structurally blocks data regardless of what's on the other end, but per this record's own honest_take it does nothing to detect a compromised cable: 'If the cable itself is the implant... the compromise already happened at the cable, upstream of where this adapter sits.' Worth stating explicitly since blocker and detector are easy to conflate."
       }
     },
     "legal": {
@@ -2252,6 +2260,10 @@
       "hf_1356_read": {
         "v": "no",
         "note": "No NFC/RFID hardware."
+      },
+      "network_host_scan": {
+        "v": "yes",
+        "note": "Periodically scans the local Wi-Fi network for hosts, reports newly-joined devices, and runs a honeypot service with a visual/sound alert if touched - directly matches this key's definition, including the 'sometimes with a honeypot' detail. Limited to the one network it's joined to; no ability to detect attacker RF hardware itself."
       }
     },
     "legal": {
@@ -2409,6 +2421,10 @@
       "hf_1356_read": {
         "v": "no",
         "note": "No NFC/RFID hardware."
+      },
+      "network_host_scan": {
+        "v": "yes",
+        "note": "Same open-source firmware (MXZZ/Netgotchi) and identical scan-and-honeypot behavior as the pricier Netgotchi Pro, just in a smaller, non-portable case."
       }
     },
     "legal": {

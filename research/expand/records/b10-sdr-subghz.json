@@ -154,6 +154,10 @@
       "app_store": {
         "v": "no",
         "note": "No dedicated app catalog; relies on generic Linux SDR/LoRa/GPS tooling."
+      },
+      "mesh_lora": {
+        "v": "yes",
+        "note": "Semtech SX1262 LoRa radio (860-960MHz, 22dBm) with out-of-the-box Meshtastic support, confirmed on the vendor's own spec page - one of four bundled radios on this HAT alongside the receive-only RTL-SDR tuner, GPS and RTC."
       }
     },
     "legal": {
@@ -1233,6 +1237,10 @@
       },
       "hf_1356_read": {
         "v": "no"
+      },
+      "mesh_lora": {
+        "v": "yes",
+        "note": "Adds an 868/900MHz radio with integrated antenna to a Hak5 WiFi Pineapple Pager and installs the standard MeshtasticD daemon, confirmed via the vendor's own setup docs - despite living in the 'subghz' candidate bucket, its actual job is Meshtastic mesh comms, not sub-GHz attack/replay work."
       }
     },
     "legal": {
@@ -1392,6 +1400,10 @@
       },
       "ibutton_1wire": {
         "v": "no"
+      },
+      "mesh_lora": {
+        "v": "yes",
+        "note": "Semtech SX1262 (Seeed WIO-SX1262 module) running Meshtastic, Meshcore or Reticulum firmware - a fully open-source design, released as open hardware at HOPE 2025."
       }
     },
     "legal": {
@@ -1558,6 +1570,10 @@
       "web_ui": {
         "v": "addon",
         "note": "Meshtastic itself offers an optional web UI on some builds; not specific to this board."
+      },
+      "mesh_lora": {
+        "v": "yes",
+        "note": "Semtech SX1262 running Meshtastic firmware, with an OLED for reading mesh messages on-device. Note the vendor itself calls Meshcore support only 'preliminary' on this specific board - Meshtastic is the mature path here."
       }
     },
     "legal": {

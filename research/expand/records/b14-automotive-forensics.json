@@ -92,6 +92,14 @@
       },
       "web_ui": {
         "v": "no"
+      },
+      "usb_data_block": {
+        "v": "yes",
+        "note": "Physically severs the D+/D- data lines on a USB-A pass-through while still passing up to 2.4A of charging current, with Apple/Quick-Charge fast-charge detection (TPS2561/TPS2514A/TPD2E001) - the vendor's own demo shows a phone stops enumerating as a data device once it's inline."
+      },
+      "usb_cable_detect": {
+        "v": "no",
+        "note": "Purely a passive data-line blocker with no MCU and no sensing of any kind - per this record's own honest_take, 'it cannot detect or warn you of anything... don't confuse it with Electronic Cats' own Paw Detector, which actually inspects a cable.' Worth stating explicitly since the two products are easy to conflate."
       }
     },
     "legal": {
@@ -215,6 +223,10 @@
       },
       "sd_logging": {
         "v": "no"
+      },
+      "usb_cable_detect": {
+        "v": "yes",
+        "note": "CH32V003 RISC-V MCU runs onboard ADC analysis on the data-line pins to flag the electrical signature of a hidden keylogger/exfiltration implant - matches this key's definition directly. Per this record's own honest_take, it's a heuristic anomaly detector tuned against known implant signatures, not a certified verifier - a well-engineered or time-delayed implant could plausibly slip past it, and it only tests at plug-in time rather than continuously."
       }
     },
     "legal": {
@@ -389,7 +401,7 @@
       },
       {
         "url": "https://oshwhub.com/ant-project/usbkeylogger_v2_bak2",
-        "what": "the actual open-hardware design files (\u7acb\u521b\u5f00\u6e90\u786c\u4ef6/OSHWHub) for the USB-hub variant, confirming Gerbers/BOM-only distribution with no assembled option"
+        "what": "the actual open-hardware design files (立创开源硬件/OSHWHub) for the USB-hub variant, confirming Gerbers/BOM-only distribution with no assembled option"
       }
     ],
     "research_gaps": [
@@ -642,6 +654,34 @@
       },
       "sd_logging": {
         "v": "no"
+      },
+      "automotive_ethernet": {
+        "v": "yes",
+        "note": "USB 3.0 to automotive 100BASE-T1/1000BASE-T1 single-pair Ethernet adapter, enumerating as a native Ethernet interface with no special drivers - this is the device's entire function."
+      },
+      "can_sniff": {
+        "v": "no",
+        "note": "Explicitly Ethernet-only: 'It has no CAN, LIN, or any other automotive-bus support at all.' A real finding for anyone shopping automotive tools, since almost every other budget tool in this comparison is CAN-only and this is the opposite."
+      },
+      "can_inject": {
+        "v": "no",
+        "note": "Same basis - no CAN-bus support of any kind, Ethernet only."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "No CAN bus present at all, so CAN-FD is moot."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "No CAN interface exists on this device to isolate."
+      },
+      "lin_bus": {
+        "v": "no",
+        "note": "Explicitly stated absent alongside CAN in the same sentence."
+      },
+      "obd2": {
+        "v": "no",
+        "note": "No CAN or K-line capability at all; legislated OBD-II rides on one of those two transports, and this device touches neither."
       }
     },
     "legal": {
@@ -794,6 +834,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "Dual-channel USB-to-CAN interface; receiving/sniffing CAN traffic is the baseline function of the product class it's benchmarked against (ICS ValueCAN 4-2, Tiny-CAN II-XL)."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "Same basis - a professional dual-channel CAN interface of this class supports transmit as well as receive; it's explicitly compared to bidirectional interfaces, not passive loggers."
+      },
+      "can_fd": {
+        "v": "yes",
+        "note": "Both channels are CAN/CAN-FD per the spec sheet."
+      },
+      "can_isolated": {
+        "v": "yes",
+        "note": "Galvanically isolated between the CAN side and USB/host side - a headline differentiator over the base CANtact and the reason it's benchmarked against isolated competitors like ValueCAN."
+      },
+      "obd2": {
+        "v": "unknown",
+        "note": "Ships with dual DB9 connectors, not an OBD-II connector, and no OBD-II protocol interpretation (PID/DTC handling) is documented anywhere in the record - it's a raw CAN interface you could wire to an OBD-II port's CAN pins yourself, but that isn't confirmed as a supported or marketed use case. Also now fully discontinued/sold out per Crowd Supply, so this is moot for new buyers regardless."
       }
     },
     "legal": {
@@ -933,6 +993,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "comma's own tool for reading vehicle CAN traffic (openpilot/opendbc/cabana ecosystem); works as a plain CAN-to-USB adapter independent of openpilot."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "openpilot fundamentally requires sending CAN messages (steering/gas/brake) back onto the vehicle bus, and panda works standalone as a general CAN-to-USB adapter for this - transmit is core to its purpose, not an incidental feature."
+      },
+      "can_fd": {
+        "v": "yes",
+        "note": "CAN-FD support on all 3 of its CAN buses plus one multiplexed bus, confirmed on comma's own current shop page - a genuine spec bump over prior panda generations (4x the CPU, STM32H725)."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "Per this record's own honest_take: 'comma has never published a galvanic-isolation claim anywhere in its documentation - assume it is NOT isolated', unlike CANable Pro or the discontinued CANtact Pro, which both market isolation as a headline feature."
+      },
+      "obd2": {
+        "v": "unknown",
+        "note": "Whether the current 'red panda' SKU connects via an actual OBD-II connector or a proprietary harness is explicitly unconfirmed in this record's own research_gaps, and no legislated K-line OBD-II protocol support is documented - opendbc's focus is manufacturer-specific CAN messages for driving assistance, not classic OBD-II diagnostic PID queries."
       }
     },
     "legal": {
@@ -1099,6 +1179,30 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "Covers ISO15765-4 CAN, J1939 CAN, raw CAN, MS-CAN, GM HS-CAN and single-wire CAN (GMLAN) reception, plus legacy K-line protocols - reading vehicle bus traffic is the core function of an OBD-II scanner."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "Inherits 'the base WiCAN feature set', and the sibling base WiCAN explicitly lists SavvyCAN/BUSMaster/python-can/SocketCAN compatibility - all full bidirectional CAN toolchains, not read-only loggers - so transmit is supported, not just query/response OBD polling."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "Per this record's own honest_take, CAN-FD 'is never mentioned anywhere in the spec sheet despite being increasingly common on 2021+ vehicles' - a real gap for a device this otherwise protocol-complete."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "No galvanic-isolation claim anywhere in the spec sheet per this record's own research_gaps - a convenience/diagnostics tool for your own vehicle, not a lab-grade isolated bench interface."
+      },
+      "lin_bus": {
+        "v": "no",
+        "note": "Not present in an otherwise unusually exhaustive protocol list (six CAN-family variants plus three K-line protocols) - LIN's total absence from that list is itself informative."
+      },
+      "obd2": {
+        "v": "yes",
+        "note": "Purpose-built OBD-II scanner: a dedicated OBD interpreter chip covering every legislated OBD-II protocol (CAN and legacy K-line alike) plus ELM327/ELM329/STN/VT instruction-set emulation for compatibility with Car Scanner, Torque, BimmerCode, etc. - matches or beats a $150+ OBDLink MX+ on paper per the vendor's own comparison table."
       }
     },
     "legal": {
@@ -1243,6 +1347,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "Original open-source CANtact design; receiving CAN traffic via SocketCAN/slcan is the baseline function this Hacker Warehouse repackaging inherits unchanged."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "Same inherited baseline - CANtact's SocketCAN/slcan support is bidirectional, not receive-only."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "Explicit per the original CANtact's own published comparison table (quoted in this record): the base design 'has no CAN-FD support'."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "Same source: the base CANtact design 'is not galvanically isolated' - a real gap versus the isolated CANable Pro, which costs less."
+      },
+      "obd2": {
+        "v": "partial",
+        "note": "Ships with an RJ45-to-OBD-II adapter and included Cat5 cable, giving genuine physical OBD-II port connectivity for CAN-based OBD-II - but it's a raw CAN interface with no dedicated protocol-interpretation firmware, and being CAN-only it can't reach the legacy K-line OBD-II protocols some pre-2008 vehicles still use."
       }
     },
     "legal": {
@@ -1393,6 +1517,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "Single-channel USB-to-CAN adapter; slcan/candleLight/Cangaroo all provide standard CAN receive."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "candleLight firmware gives native SocketCAN support, which is bidirectional; slcan and the canard Python library likewise support transmit, not just logging."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "Per this record's own honest_take, isolation and CAN-FD are mutually exclusive across this vendor's own catalog: the isolated Pro/Pro 1.1 (this record) is CAN 2.0-only, while the non-isolated sibling CANable 2.0 has (beta) CAN-FD instead."
+      },
+      "can_isolated": {
+        "v": "yes",
+        "note": "5kV isolation on the current 1.1 revision (2.5kV on the original) - the headline feature of this specific SKU, per the vendor's own current pricing/spec pages."
+      },
+      "obd2": {
+        "v": "unknown",
+        "note": "Ships with a bare 3-pin screw terminal (CANH/CANL/GND), not an OBD-II connector, and no OBD-II protocol support or adapter cable is documented anywhere in the record - it could be wired to a CAN-based OBD-II port's pins, but that isn't a marketed or confirmed use case for this SKU."
       }
     },
     "legal": {
@@ -1552,6 +1696,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "MCP2515 SPI CAN controller GPIO add-on; the official app supports packet sniffing with hex/normal display and SD-card logging."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "The official app also supports packet injection/replay, including saved-and-modified packets, per the vendor."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "Vendor explicitly states it is 'directly incompatible' with CAN-FD vehicles - the MCP2515 is a classic-CAN-only controller."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "Per this record's own research_gaps, isolation is 'not mentioned, presumed absent' - a compact $35 GPIO add-on with no isolation IC or feature documented anywhere."
+      },
+      "obd2": {
+        "v": "claimed",
+        "note": "Vendor states it 'also supports OBD2 scanning and UDS diagnostics', but this record frames it explicitly as a vendor claim ('per the vendor') rather than something independently confirmed in the app's source or documentation."
       }
     },
     "legal": {
@@ -1714,6 +1878,26 @@
       "glitching": {
         "v": "no",
         "note": "Not voltage/clock glitching - the toolkit's attacks are protocol-timing based (bit-banging valid/invalid CAN frames), a different technique from hardware fault injection."
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "The published bus-off/frame-corruption attack technique fundamentally requires precise real-time monitoring of bus state to time its bit-level interference, and the underlying hardware (MCP2517FD CAN-FD controller) is a full CAN controller capable of ordinary receive."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "The toolkit's whole purpose is precisely-timed bit-level interference on a live bus - denial-of-service (bus-off attacks) and selective frame corruption - a more surgical form of injection than plain frame transmission, not less."
+      },
+      "can_fd": {
+        "v": "yes",
+        "note": "Built on Microchip's MCP2517FD CAN-FD controller and MCP2562FD CAN-FD transceiver - CAN-FD-capable hardware, though the published attack technique itself targets classic CAN framing/arbitration/error-handling behavior specifically, not CAN-FD's different error model."
+      },
+      "can_isolated": {
+        "v": "unknown",
+        "note": "Per this record's own research_gaps: 'No galvanic isolation is mentioned for the CANPico board; treated as unconfirmed/likely absent rather than asserted' - keeping that same hedge here rather than asserting either way."
+      },
+      "obd2": {
+        "v": "unknown",
+        "note": "This is a data-link-layer attack research toolkit, not built or marketed as a vehicle diagnostic tool, and no OBD-II protocol support is documented - though the CAN-FD-capable hardware could physically reach a live vehicle's OBD-II port if wired to it."
       }
     },
     "legal": {
@@ -1880,6 +2064,26 @@
       },
       "glitching": {
         "v": "no"
+      },
+      "can_sniff": {
+        "v": "yes",
+        "note": "CAN-to-Wi-Fi/BLE bridge; works with RealDash, SavvyCAN, BUSMaster and python-can/SocketCAN, all of which read CAN traffic as a baseline."
+      },
+      "can_inject": {
+        "v": "yes",
+        "note": "The same tool ecosystem (SavvyCAN, python-can/SocketCAN) supports bidirectional CAN, not just logging - and the companion Web-CAN client explicitly works over WebSocket/WebUSB for live interaction, not passive capture only."
+      },
+      "can_fd": {
+        "v": "no",
+        "note": "Per this record's own research_gaps, the firmware README confirms 'CAN2.0A/B up to 1Mbit/s with no CAN-FD mention' - step up to WiCAN Pro or panda for CAN-FD, per this record's own honest_take."
+      },
+      "can_isolated": {
+        "v": "no",
+        "note": "Per this record's own honest_take: 'it is CAN 2.0 only with no galvanic isolation' - a telemetry/convenience tool for your own vehicle, not a lab-grade isolated interface."
+      },
+      "obd2": {
+        "v": "partial",
+        "note": "Sold in an actual OBD-II dongle form factor (the WiCAN-OBD SKU) giving real physical OBD-II port connectivity, but unlike WiCAN Pro it has no dedicated OBD interpreter chip or ELM327/ELM329/STN/VT emulation documented - basic CAN 2.0 diagnostics via the OBD-II port, not the Pro's full legislated-protocol coverage."
       }
     },
     "legal": {

@@ -424,6 +424,10 @@
       "usb_mass_storage": {
         "v": "no",
         "note": "Enumerates as a USB serial/programming device, not mass storage."
+      },
+      "mesh_lora": {
+        "v": "yes",
+        "note": "RFM95 (Semtech SX1276) radio, ships pre-loaded with mainline Meshtastic firmware, and per the GitHub repo the board design has actually been merged upstream into the Meshtastic project itself - about as confirmed as this capability gets."
       }
     },
     "legal": {
@@ -950,7 +954,7 @@
     "status": "available",
     "released": null,
     "price_usd": 66.33,
-    "price_note": "\u00a349.00 GBP converted at the 2026-09-09 GBP/USD rate (~1.354). Black variant is sold out; Silver variant is in stock.",
+    "price_note": "£49.00 GBP converted at the 2026-09-09 GBP/USD rate (~1.354). Black variant is sold out; Silver variant is in stock.",
     "price_is_estimate": false,
     "price_checked": "2026-09-10",
     "skill_level": "beginner",
@@ -1064,7 +1068,7 @@
     "sources": [
       {
         "url": "https://maltronics.com/products/malduino-w",
-        "what": "price (\u00a349), stock status by color, feature list (web interface, DuckyScript compatibility, 4MB storage, dual USB-A/C)"
+        "what": "price (£49), stock status by color, feature list (web interface, DuckyScript compatibility, 4MB storage, dual USB-A/C)"
       },
       {
         "url": "https://github.com/maltronics/MalDuino-W",
@@ -1101,7 +1105,7 @@
     "status": "out-of-stock",
     "released": null,
     "price_usd": 47.39,
-    "price_note": "\u00a335.00 GBP converted at the 2026-09-09 GBP/USD rate (~1.354). Listed as sold out.",
+    "price_note": "£35.00 GBP converted at the 2026-09-09 GBP/USD rate (~1.354). Listed as sold out.",
     "price_is_estimate": false,
     "price_checked": "2026-09-10",
     "skill_level": "beginner",
@@ -1205,7 +1209,7 @@
     "sources": [
       {
         "url": "https://maltronics.com/products/malduino-3",
-        "what": "price (\u00a335), sold-out status, 128MB storage, dual USB-A/C, 34 keyboard locales, 3-position switch behavior"
+        "what": "price (£35), sold-out status, 128MB storage, dual USB-A/C, 34 keyboard locales, 3-position switch behavior"
       },
       {
         "url": "https://docs.maltronics.com/devices/malduino-3",
